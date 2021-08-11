@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Card snapshot 1`] = `
+<Box
+  borderRadius="lg"
+  borderWidth="1px"
+  overflow="hidden"
+  padding={4}
+  shadow="sm"
+>
+  Hiya
+</Box>
+`;

@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`wrapper snapshot 1`] = `
+<Box
+  maxW="400px"
+  mt={8}
+  mx="auto"
+  w="100%"
+/>
+`;

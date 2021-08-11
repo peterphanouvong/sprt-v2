@@ -1,0 +1,3 @@
+mutation DeleteEvent($id: Float!) {
+  deleteEvent(id: $id)
+}

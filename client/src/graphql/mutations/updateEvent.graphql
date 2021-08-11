@@ -1,0 +1,5 @@
+mutation UpdateEvent($input: EventInput!, $id: Float!) {
+  updateEvent(input: $input, id: $id) {
+    ...RegularEvent
+  }
+}

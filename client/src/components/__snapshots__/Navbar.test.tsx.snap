@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`navbar snapshot 1`] = `
+<Box
+  display="flex"
+  justifyContent="flex-end"
+  paddingX={16}
+  paddingY={8}
+>
+  <HStack
+    spacing={8}
+  >
+    <Link
+      href="/login"
+    >
+      <Link>
+        Login
+      </Link>
+    </Link>
+    <Link
+      href="/register"
+    >
+      <Link>
+        Register
+      </Link>
+    </Link>
+  </HStack>
+</Box>
+`;
