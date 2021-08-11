@@ -29,7 +29,7 @@ const Register: React.FC<Props> = ({}) => {
   return (
     <Wrapper variant="small">
       <Heading as="h1" fontSize="x-large" mb={4}>
-        Register
+        Register updated
       </Heading>
       <Formik
         initialValues={{ username: "", password: "", email: "" }}
