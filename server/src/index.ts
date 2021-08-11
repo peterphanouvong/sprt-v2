@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import express from "express";
-// import Redis from "ioredis";
+import "dotenv-safe/config";
 import redis from "redis";
 import session from "express-session";
 import connectRedis from "connect-redis";
@@ -31,11 +31,9 @@ import { EventAttendee } from "./entities/EventAttendee";
 const main = async () => {
   const conn = await createConnection({
     type: "postgres",
-    database: "sprt",
-    username: "peterphanouvong",
-    password: "",
+    url: process.env.DATABASE_URL,
     logging: true,
-    synchronize: true,
+    // synchronize: true,
     entities: [
       Post,
       User,
@@ -64,11 +62,11 @@ const main = async () => {
 
   app.use(
     cors({
-      origin: ["http://localhost:3000", "https://studio.apollographql.com"],
+      origin: [process.env.CORS_ORIGIN, "https://studio.apollographql.com"],
       credentials: true,
     })
   );
-
+  app.set("trust proxy", 1);
   app.use(
     session({
       name: COOKIE_NAME,
@@ -82,8 +80,9 @@ const main = async () => {
         httpOnly: true,
         sameSite: "lax", // csrf
         secure: __prod__, // cookie only works in https
+        domain: __prod__ ? ".peterphanouvong.com" : undefined,
       },
-      secret: "secret",
+      secret: process.env.SESSION_SECRET,
       resave: false,
     })
   );
@@ -103,7 +102,7 @@ const main = async () => {
     cors: false,
   });
 
-  app.listen(4000, () => {
+  app.listen(parseInt(process.env.PORT), () => {
     console.log("server started on localhost:4000");
   });
 };

@@ -1,6 +1,6 @@
 import { User } from "../entities/User";
 import { MyContext } from "src/types";
-import argon2 from "argon2";
+import bcrypt from "bcrypt";
 import {
   Arg,
   Ctx,
@@ -90,7 +90,10 @@ export class UserResolver {
       };
     }
 
-    User.update({ id: userId }, { password: await argon2.hash(newPassword) });
+    User.update(
+      { id: userId },
+      { password: await bcrypt.hash(newPassword, 10) }
+    );
 
     req.session.userId = user.id;
 
@@ -145,7 +148,7 @@ export class UserResolver {
     if (errors) {
       return { errors };
     }
-    const hashedPassword = await argon2.hash(options.password);
+    const hashedPassword = await bcrypt.hash(options.password, 10);
     let user;
     try {
       const res = await getConnection()
@@ -202,7 +205,7 @@ export class UserResolver {
         ],
       };
     }
-    const valid = await argon2.verify(user.password, password);
+    const valid = await bcrypt.compare(user.password, password);
     if (!valid) {
       return {
         errors: [{ field: "password", message: "incorrect password" }],

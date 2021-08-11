@@ -10,7 +10,7 @@ import {
   OneToMany,
 } from "typeorm";
 import { ClubEvent } from "./ClubEvent";
-import { EventAttendee } from "./EventAttendee";
+// import { EventAttendee } from "./EventAttendee";
 import { User } from "./User";
 
 @ObjectType()

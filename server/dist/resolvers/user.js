@@ -17,7 +17,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserResolver = void 0;
 const User_1 = require("../entities/User");
-const argon2_1 = __importDefault(require("argon2"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const type_graphql_1 = require("type-graphql");
 const constants_1 = require("../constants");
 const UsernamePasswordInput_1 = require("./UsernamePasswordInput");
@@ -94,7 +94,7 @@ let UserResolver = class UserResolver {
                 ],
             };
         }
-        User_1.User.update({ id: userId }, { password: await argon2_1.default.hash(newPassword) });
+        User_1.User.update({ id: userId }, { password: await bcrypt_1.default.hash(newPassword, 10) });
         req.session.userId = user.id;
         return { user };
     }
@@ -121,7 +121,7 @@ let UserResolver = class UserResolver {
         if (errors) {
             return { errors };
         }
-        const hashedPassword = await argon2_1.default.hash(options.password);
+        const hashedPassword = await bcrypt_1.default.hash(options.password, 10);
         let user;
         try {
             const res = await typeorm_1.getConnection()
@@ -168,7 +168,7 @@ let UserResolver = class UserResolver {
                 ],
             };
         }
-        const valid = await argon2_1.default.verify(user.password, password);
+        const valid = await bcrypt_1.default.compare(user.password, password);
         if (!valid) {
             return {
                 errors: [{ field: "password", message: "incorrect password" }],

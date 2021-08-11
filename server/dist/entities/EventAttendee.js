@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventAttendee = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
-const Event_1 = require("./Event");
 const User_1 = require("./User");
 let EventAttendee = class EventAttendee extends typeorm_1.BaseEntity {
 };
@@ -20,10 +19,6 @@ __decorate([
     typeorm_1.PrimaryColumn(),
     __metadata("design:type", Number)
 ], EventAttendee.prototype, "eventId", void 0);
-__decorate([
-    typeorm_1.ManyToOne(() => Event_1.Event, (e) => e.eventAttendeeConn),
-    __metadata("design:type", Event_1.Event)
-], EventAttendee.prototype, "event", void 0);
 __decorate([
     typeorm_1.PrimaryColumn(),
     __metadata("design:type", Number)

@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 const express_1 = __importDefault(require("express"));
+require("dotenv-safe/config");
 const redis_1 = __importDefault(require("redis"));
 const express_session_1 = __importDefault(require("express-session"));
 const connect_redis_1 = __importDefault(require("connect-redis"));
@@ -32,11 +33,8 @@ const EventAttendee_1 = require("./entities/EventAttendee");
 const main = async () => {
     const conn = await typeorm_1.createConnection({
         type: "postgres",
-        database: "sprt",
-        username: "peterphanouvong",
-        password: "",
+        url: process.env.DATABASE_URL,
         logging: true,
-        synchronize: true,
         entities: [
             Post_1.Post,
             User_1.User,
@@ -57,9 +55,10 @@ const main = async () => {
     const RedisStore = connect_redis_1.default(express_session_1.default);
     const redisClient = redis_1.default.createClient();
     app.use(cors_1.default({
-        origin: ["http://localhost:3000", "https://studio.apollographql.com"],
+        origin: [process.env.CORS_ORIGIN, "https://studio.apollographql.com"],
         credentials: true,
     }));
+    app.set("trust proxy", 1);
     app.use(express_session_1.default({
         name: constants_1.COOKIE_NAME,
         store: new RedisStore({
@@ -72,8 +71,9 @@ const main = async () => {
             httpOnly: true,
             sameSite: "lax",
             secure: constants_1.__prod__,
+            domain: constants_1.__prod__ ? ".peterphanouvong.com" : undefined,
         },
-        secret: "secret",
+        secret: process.env.SESSION_SECRET,
         resave: false,
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
@@ -88,7 +88,7 @@ const main = async () => {
         app,
         cors: false,
     });
-    app.listen(4000, () => {
+    app.listen(parseInt(process.env.PORT), () => {
         console.log("server started on localhost:4000");
     });
 };

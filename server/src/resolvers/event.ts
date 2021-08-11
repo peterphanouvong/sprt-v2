@@ -12,8 +12,8 @@ import {
 import { MyContext } from "src/types";
 import { isAuth } from "../middleware/isAuth";
 import { Event } from "../entities/Event";
-import { EventAttendee } from "../entities/EventAttendee";
-import { User } from "../entities/User";
+// import { EventAttendee } from "../entities/EventAttendee";
+// import { User } from "../entities/User";
 
 @InputType()
 class EventInput {
@@ -138,22 +138,22 @@ export class EventResolver {
     return true;
   }
 
-  @Mutation(() => Boolean)
-  async addAttendee(
-    @Arg("id") id: number,
-    @Arg("userId") userId: number
-  ): Promise<Boolean> {
-    // find the event
-    const event = await Event.findOne(id);
+  // @Mutation(() => Boolean)
+  // async addAttendee(
+  //   @Arg("id") id: number,
+  //   @Arg("userId") userId: number
+  // ): Promise<Boolean> {
+  //   // find the event
+  //   const event = await Event.findOne(id);
 
-    // find the user
-    const user = await User.findOne(userId);
+  //   // find the user
+  //   const user = await User.findOne(userId);
 
-    // create eventAttendee(eventId, userId)
-    await EventAttendee.insert({ event, attendee: user });
+  //   // create eventAttendee(eventId, userId)
+  //   await EventAttendee.insert({ event, attendee: user });
 
-    // add ea to eventConn & userConn\
+  //   // add ea to eventConn & userConn\
 
-    return true;
-  }
+  //   return true;
+  // }
 }
