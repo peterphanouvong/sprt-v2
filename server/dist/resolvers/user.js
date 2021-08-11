@@ -138,16 +138,14 @@ let UserResolver = class UserResolver {
             user = res.raw[0];
         }
         catch (err) {
-            if (err.code === "23505" || err.details.includes("already exists")) {
-                return {
-                    errors: [
-                        {
-                            field: "username",
-                            message: "that username has been taken",
-                        },
-                    ],
-                };
-            }
+            return {
+                errors: [
+                    {
+                        field: "username",
+                        message: "that username has been taken",
+                    },
+                ],
+            };
         }
         req.session.userId = user.id;
         return { user };

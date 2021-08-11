@@ -165,17 +165,17 @@ export class UserResolver {
 
       user = res.raw[0];
     } catch (err) {
-      if (err.code === "23505" || err.details.includes("already exists")) {
-        // duplicate username
-        return {
-          errors: [
-            {
-              field: "username",
-              message: "that username has been taken",
-            },
-          ],
-        };
-      }
+      // if (err.code === "23505" || err.details.includes("already exists")) {
+      // duplicate username
+      return {
+        errors: [
+          {
+            field: "username",
+            message: "that username has been taken",
+          },
+        ],
+      };
+      // }
     }
 
     // log in the user
