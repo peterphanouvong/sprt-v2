@@ -41,7 +41,7 @@ EventInput = __decorate([
 ], EventInput);
 let EventResolver = class EventResolver {
     async events() {
-        return Event_1.Event.find({ relations: ["host", "attendees"] });
+        return Event_1.Event.find({ relations: ["host"] });
     }
     event(id) {
         return Event_1.Event.findOne(id, { relations: ["host"] });

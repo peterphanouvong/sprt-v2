@@ -48,8 +48,8 @@ export class Event extends BaseEntity {
   clubs: ClubEvent[];
 
   // @Field(() => [EventAttendee])
-  @OneToMany(() => EventAttendee, (ea) => ea.event)
-  eventAttendeeConn: EventAttendee[];
+  // @OneToMany(() => EventAttendee, (ea) => ea.event)
+  // eventAttendeeConn: EventAttendee[];
 
   // @Field(() => [User])
   // attendees: User[];
