@@ -54,7 +54,6 @@ export type Mutation = {
   createEvent: Event;
   updateEvent?: Maybe<Event>;
   deleteEvent: Scalars['Boolean'];
-  addAttendee: Scalars['Boolean'];
 };
 
 
@@ -108,12 +107,6 @@ export type MutationUpdateEventArgs = {
 
 
 export type MutationDeleteEventArgs = {
-  id: Scalars['Float'];
-};
-
-
-export type MutationAddAttendeeArgs = {
-  userId: Scalars['Float'];
   id: Scalars['Float'];
 };
 
@@ -277,7 +270,7 @@ export type EventsQuery = { __typename?: 'Query', events: Array<{ __typename?: '
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, username: string, email: string, createdAt: string }> };
+export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, username: string, email: string }> };
 
 export type PostQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -471,7 +464,6 @@ export const MeDocument = gql`
     id
     username
     email
-    createdAt
   }
 }
     `;

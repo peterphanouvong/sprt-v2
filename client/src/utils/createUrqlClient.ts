@@ -12,12 +12,14 @@ import {
   // CreateEventMutation,
   // CreatePostMutation,
   DeletePostMutationVariables,
+  LoginMutation,
   // EventsDocument,
   // EventsQuery,
   // LoginMutation,
   LogoutMutation,
   MeDocument,
   MeQuery,
+  RegisterMutation,
   // PostsDocument,
   // PostsQuery,
   // RegisterMutation,
@@ -119,39 +121,39 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 () => ({ me: null })
               );
             },
-            // login: (_result, args, cache, info) => {
-            //   betterUpdateQuery<LoginMutation, MeQuery>(
-            //     cache,
-            //     { query: MeDocument },
-            //     _result,
-            //     (result, query) => {
-            //       console.log(query);
-            //       if (result.login.errors) {
-            //         return query;
-            //       } else {
-            //         return {
-            //           me: result.login.user,
-            //         };
-            //       }
-            //     }
-            //   );
-            // },
-            // register: (_result, args, cache, info) => {
-            //   betterUpdateQuery<RegisterMutation, MeQuery>(
-            //     cache,
-            //     { query: MeDocument },
-            //     _result,
-            //     (result, query) => {
-            //       if (result.register.errors) {
-            //         return query;
-            //       } else {
-            //         return {
-            //           me: result.register.user,
-            //         };
-            //       }
-            //     }
-            //   );
-            // },
+            login: (_result, args, cache, info) => {
+              betterUpdateQuery<LoginMutation, MeQuery>(
+                cache,
+                { query: MeDocument },
+                _result,
+                (result, query) => {
+                  console.log(query);
+                  if (result.login.errors) {
+                    return query;
+                  } else {
+                    return {
+                      me: result.login.user,
+                    };
+                  }
+                }
+              );
+            },
+            register: (_result, args, cache, info) => {
+              betterUpdateQuery<RegisterMutation, MeQuery>(
+                cache,
+                { query: MeDocument },
+                _result,
+                (result, query) => {
+                  if (result.register.errors) {
+                    return query;
+                  } else {
+                    return {
+                      me: result.register.user,
+                    };
+                  }
+                }
+              );
+            },
           },
         },
       }),
