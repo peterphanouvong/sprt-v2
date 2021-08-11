@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import express from "express";
 import "dotenv-safe/config";
-import redis from "redis";
+import Redis from "ioredis";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
@@ -58,7 +58,7 @@ const main = async () => {
   const app = express();
 
   const RedisStore = connectRedis(session);
-  const redisClient = redis.createClient();
+  const redis = new Redis(process.env.REDIS_URL);
 
   app.use(
     cors({
@@ -71,7 +71,7 @@ const main = async () => {
     session({
       name: COOKIE_NAME,
       store: new RedisStore({
-        client: redisClient,
+        client: redis,
         disableTouch: true,
       }),
       saveUninitialized: false,

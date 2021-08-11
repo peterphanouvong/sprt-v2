@@ -205,7 +205,8 @@ export class UserResolver {
         ],
       };
     }
-    const valid = await bcrypt.compare(user.password, password);
+    const valid = await bcrypt.compare(password, user.password);
+    console.log(valid);
     if (!valid) {
       return {
         errors: [{ field: "password", message: "incorrect password" }],
