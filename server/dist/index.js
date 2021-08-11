@@ -54,11 +54,11 @@ const main = async () => {
     const app = express_1.default();
     const RedisStore = connect_redis_1.default(express_session_1.default);
     const redis = new ioredis_1.default(process.env.REDIS_URL);
+    app.set("trust proxy", 1);
     app.use(cors_1.default({
         origin: [process.env.CORS_ORIGIN, "https://studio.apollographql.com"],
         credentials: true,
     }));
-    app.set("trust proxy", 1);
     app.use(express_session_1.default({
         name: constants_1.COOKIE_NAME,
         store: new RedisStore({
@@ -71,7 +71,7 @@ const main = async () => {
             httpOnly: true,
             sameSite: "lax",
             secure: constants_1.__prod__,
-            domain: constants_1.__prod__ ? ".peterphanouvong.com" : undefined,
+            domain: constants_1.__prod__ ? ".sprt.fun" : undefined,
         },
         secret: process.env.SESSION_SECRET,
         resave: false,

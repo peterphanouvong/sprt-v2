@@ -60,13 +60,13 @@ const main = async () => {
   const RedisStore = connectRedis(session);
   const redis = new Redis(process.env.REDIS_URL);
 
+  app.set("trust proxy", 1);
   app.use(
     cors({
       origin: [process.env.CORS_ORIGIN, "https://studio.apollographql.com"],
       credentials: true,
     })
   );
-  app.set("trust proxy", 1);
   app.use(
     session({
       name: COOKIE_NAME,
@@ -80,7 +80,7 @@ const main = async () => {
         httpOnly: true,
         sameSite: "lax", // csrf
         secure: __prod__, // cookie only works in https
-        domain: __prod__ ? ".peterphanouvong.com" : undefined,
+        domain: __prod__ ? ".sprt.fun" : undefined,
       },
       secret: process.env.SESSION_SECRET,
       resave: false,
