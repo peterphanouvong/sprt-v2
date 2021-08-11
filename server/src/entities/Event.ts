@@ -51,8 +51,8 @@ export class Event extends BaseEntity {
   @OneToMany(() => EventAttendee, (ea) => ea.event)
   eventAttendeeConn: EventAttendee[];
 
-  @Field(() => [User])
-  attendees: User[];
+  // @Field(() => [User])
+  // attendees: User[];
 
   @Field()
   @Column({ type: "int", default: 0 })

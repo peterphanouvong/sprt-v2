@@ -16,7 +16,10 @@ const Home: React.FC<Props> = ({}) => {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    if (data) setEvents(data.events);
+    if (data) {
+      console.log(data);
+      setEvents(data.events);
+    }
   }, [data]);
 
   const addEvent = (e) => {

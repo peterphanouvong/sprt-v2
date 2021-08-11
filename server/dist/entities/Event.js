@@ -61,10 +61,6 @@ __decorate([
     __metadata("design:type", Array)
 ], Event.prototype, "eventAttendeeConn", void 0);
 __decorate([
-    type_graphql_1.Field(() => [User_1.User]),
-    __metadata("design:type", Array)
-], Event.prototype, "attendees", void 0);
-__decorate([
     type_graphql_1.Field(),
     typeorm_1.Column({ type: "int", default: 0 }),
     __metadata("design:type", Number)
