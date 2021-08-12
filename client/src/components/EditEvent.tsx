@@ -12,6 +12,7 @@ import {
   Divider,
   ModalFooter,
   IconButton,
+  MenuItem,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import React from "react";
@@ -32,11 +33,9 @@ const EditEvent: React.FC<Props> = ({ event }) => {
 
   return (
     <>
-      <IconButton
-        aria-label="edit event"
-        icon={<EditIcon />}
-        onClick={onOpen}
-      />
+      <MenuItem onClick={onOpen} icon={<EditIcon />}>
+        Edit
+      </MenuItem>
 
       <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -94,7 +93,6 @@ const EditEvent: React.FC<Props> = ({ event }) => {
                     name="description"
                     placeholder="what's going down?"
                     label="Description"
-                    required
                   />
                 </VStack>
 
