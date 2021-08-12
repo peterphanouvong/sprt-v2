@@ -32,7 +32,10 @@ const EventCard: React.FC<Props> = ({ event, removeEvent, editEvent }) => {
             <Box mr={4}></Box>
             <Box>
               <Heading fontSize="x-large">UTS: {event.title}</Heading>
-              <Text color="GrayText">{parseDatePretty(event.datetime)}</Text>
+              <Text color="GrayText">
+                {parseDatePretty(event.datetime)} [
+                {Intl.DateTimeFormat().resolvedOptions().timeZone}]
+              </Text>
               <Box color="GrayText">
                 Hosted by{" "}
                 <Box display="inline" textTransform="capitalize">
