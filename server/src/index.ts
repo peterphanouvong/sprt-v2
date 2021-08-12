@@ -63,7 +63,11 @@ const main = async () => {
   app.set("trust proxy", 1);
   app.use(
     cors({
-      origin: [process.env.CORS_ORIGIN, "https://studio.apollographql.com"],
+      origin: [
+        process.env.CORS_ORIGIN,
+        "https://sprt-test.vercel.app",
+        "https://studio.apollographql.com",
+      ],
       credentials: true,
     })
   );
