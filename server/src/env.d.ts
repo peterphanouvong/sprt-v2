@@ -5,6 +5,6 @@ declare namespace NodeJS {
     PORT: string;
     SESSION_SECRET: string;
     CORS_ORIGIN: string;
-    TEST_CORS_ORIGIN: string;
+    COOKIE_DOMAIN: string;
   }
 }
