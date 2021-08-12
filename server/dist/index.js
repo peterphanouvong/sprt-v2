@@ -75,7 +75,7 @@ const main = async () => {
             httpOnly: true,
             sameSite: "lax",
             secure: constants_1.__prod__,
-            domain: constants_1.__prod__ ? ".sprt.fun" : undefined,
+            domain: constants_1.__prod__ ? process.env.NEXT_PUBLIC_DOMAIN : undefined,
         },
         secret: process.env.SESSION_SECRET,
         resave: false,
