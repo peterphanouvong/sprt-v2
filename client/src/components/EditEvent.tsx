@@ -53,7 +53,7 @@ const EditEvent: React.FC<Props> = ({ event }) => {
           <Formik
             initialValues={{
               title: event.title ?? "",
-              description: event.title ?? "",
+              description: event.description ?? "",
               location: event.location ?? "",
               datetime: parseDate(event.datetime) ?? "",
             }}

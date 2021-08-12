@@ -25,22 +25,24 @@ const EventCard: React.FC<Props> = ({ event, removeEvent }) => {
   return (
     <Card>
       <Box display="flex" justifyContent="space-between">
-        <Box display="flex" alignItems="center">
-          <ClubIcon />
-
-          <Box mr={4}></Box>
-          <Box>
-            <Heading fontSize="x-large">UTS: {event.title}</Heading>
-            <Text color="GrayText">{parseDatePretty(event.datetime)}</Text>
-            <Text color="GrayText">
-              Hosted by{" "}
-              <Text display="inline" textTransform="capitalize">
-                {event.host.username}
-              </Text>{" "}
-              <ChevronRightIcon /> {event.location}
-            </Text>
+        <Box>
+          <Box display="flex" alignItems="center">
+            <ClubIcon />
+            <Box mr={4}></Box>
+            <Box>
+              <Heading fontSize="x-large">UTS: {event.title}</Heading>
+              <Text color="GrayText">{parseDatePretty(event.datetime)}</Text>
+              <Text color="GrayText">
+                Hosted by{" "}
+                <Text display="inline" textTransform="capitalize">
+                  {event.host.username}
+                </Text>{" "}
+                <ChevronRightIcon /> {event.location}
+              </Text>
+            </Box>
           </Box>
-          <Text>{event.description}</Text>
+
+          <Text mt={4}>{event.description}</Text>
         </Box>
 
         <Box float="right" top={0}>
