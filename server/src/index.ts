@@ -9,7 +9,7 @@ import { createConnection } from "typeorm";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 
-import { COOKIE_NAME, __prod__, __test__ } from "./constants";
+import { COOKIE_NAME, __prod__ } from "./constants";
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
@@ -65,7 +65,7 @@ const main = async () => {
     cors({
       origin: [
         process.env.CORS_ORIGIN,
-        process.env.TEST_CORS_ORIGIN,
+        "https://sprt-test.vercel.app",
         "https://studio.apollographql.com",
       ],
       credentials: true,
@@ -84,11 +84,7 @@ const main = async () => {
         httpOnly: true,
         sameSite: "lax", // csrf
         secure: __prod__, // cookie only works in https
-        domain: __prod__
-          ? ".sprt.fun"
-          : __test__
-          ? ".sprt-test.vercel.app"
-          : undefined,
+        domain: __prod__ ? ".sprt.fun" : undefined,
       },
       secret: process.env.SESSION_SECRET,
       resave: false,
