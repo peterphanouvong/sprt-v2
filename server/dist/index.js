@@ -18,6 +18,7 @@ const hello_1 = require("./resolvers/hello");
 const post_1 = require("./resolvers/post");
 const user_1 = require("./resolvers/user");
 const event_1 = require("./resolvers/event");
+const club_1 = require("./resolvers/club");
 const Post_1 = require("./entities/Post");
 const User_1 = require("./entities/User");
 const path_1 = __importDefault(require("path"));
@@ -82,7 +83,13 @@ const main = async () => {
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
         schema: await type_graphql_1.buildSchema({
-            resolvers: [hello_1.HelloResolver, post_1.PostResolver, user_1.UserResolver, event_1.EventResolver],
+            resolvers: [
+                hello_1.HelloResolver,
+                post_1.PostResolver,
+                user_1.UserResolver,
+                event_1.EventResolver,
+                club_1.ClubResolver,
+            ],
             validate: false,
         }),
         context: ({ req, res }) => ({ req, res, redis }),
