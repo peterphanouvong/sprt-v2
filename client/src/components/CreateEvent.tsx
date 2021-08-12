@@ -90,7 +90,6 @@ const CreateEvent: React.FC<Props> = ({ addEvent }) => {
                     name="description"
                     placeholder="what's going down?"
                     label="Description"
-                    required
                   />
                 </VStack>
 

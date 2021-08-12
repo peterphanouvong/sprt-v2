@@ -24,10 +24,10 @@ import { TextareaField } from "./TextareaField";
 
 interface Props {
   event: Event;
-  // editEvent:
+  editEvent: (e: Event) => void;
 }
 
-const EditEvent: React.FC<Props> = ({ event }) => {
+const EditEvent: React.FC<Props> = ({ event, editEvent }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [, updateEvent] = useUpdateEventMutation();
 
@@ -59,11 +59,13 @@ const EditEvent: React.FC<Props> = ({ event }) => {
             }}
             onSubmit={async (values) => {
               console.log(values);
-              await updateEvent({
+              const res = await updateEvent({
                 input: values,
                 id: event.id,
               });
+              console.log(res);
               onClose();
+              editEvent(res.data.updateEvent);
             }}
           >
             {(props) => (

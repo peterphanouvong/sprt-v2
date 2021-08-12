@@ -19,9 +19,10 @@ import { EditEvent } from "./EditEvent";
 interface Props {
   event: Event;
   removeEvent: (id: any) => void;
+  editEvent: (e: Event) => void;
 }
 
-const EventCard: React.FC<Props> = ({ event, removeEvent }) => {
+const EventCard: React.FC<Props> = ({ event, removeEvent, editEvent }) => {
   return (
     <Card>
       <Box display="flex" justifyContent="space-between">
@@ -32,20 +33,20 @@ const EventCard: React.FC<Props> = ({ event, removeEvent }) => {
             <Box>
               <Heading fontSize="x-large">UTS: {event.title}</Heading>
               <Text color="GrayText">{parseDatePretty(event.datetime)}</Text>
-              <Text color="GrayText">
+              <Box color="GrayText">
                 Hosted by{" "}
-                <Text display="inline" textTransform="capitalize">
+                <Box display="inline" textTransform="capitalize">
                   {event.host.username}
-                </Text>{" "}
+                </Box>{" "}
                 <ChevronRightIcon /> {event.location}
-              </Text>
+              </Box>
             </Box>
           </Box>
 
           <Text mt={4}>{event.description}</Text>
         </Box>
 
-        <Box float="right" top={0}>
+        <Box float="right">
           <Menu>
             <MenuButton
               as={IconButton}
@@ -55,7 +56,7 @@ const EventCard: React.FC<Props> = ({ event, removeEvent }) => {
               variant="outline"
             />
             <MenuList>
-              <EditEvent event={event} />
+              <EditEvent editEvent={editEvent} event={event} />
               <DeleteEvent removeEvent={removeEvent} eventId={event.id} />
             </MenuList>
           </Menu>
