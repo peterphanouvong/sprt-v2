@@ -58,7 +58,7 @@ const main = async () => {
     app.use(cors_1.default({
         origin: [
             process.env.CORS_ORIGIN,
-            "https://sprt-test.vercel.app",
+            "https://www.sprt.rest",
             "https://studio.apollographql.com",
         ],
         credentials: true,
@@ -75,7 +75,7 @@ const main = async () => {
             httpOnly: true,
             sameSite: "lax",
             secure: constants_1.__prod__,
-            domain: constants_1.__prod__ ? ".sprt.fun" : undefined,
+            domain: constants_1.__prod__ ? ".sprt.rest" : undefined,
         },
         secret: process.env.SESSION_SECRET,
         resave: false,
