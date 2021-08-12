@@ -1,44 +1,67 @@
-import { DeleteIcon } from "@chakra-ui/icons";
-import { Heading, IconButton, Text } from "@chakra-ui/react";
+import { ChevronRightIcon, HamburgerIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Heading,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  Text,
+} from "@chakra-ui/react";
 import React from "react";
-import { useDeleteEventMutation } from "../generated/graphql";
 import { Event } from "../models";
+import { parseDatePretty } from "../utils/parseDate";
 import { Card } from "./Card";
+import { ClubIcon } from "./ClubIcon";
+import { DeleteEvent } from "./DeleteEvent";
 import { EditEvent } from "./EditEvent";
 
 interface Props {
   event: Event;
-
   removeEvent: (id: any) => void;
+  editEvent: (e: Event) => void;
 }
 
-const EventCard: React.FC<Props> = ({
-  event,
-
-  removeEvent,
-}) => {
-  const [, deleteEvent] = useDeleteEventMutation();
-
+const EventCard: React.FC<Props> = ({ event, removeEvent, editEvent }) => {
   return (
     <Card>
-      <Heading>{event.title}</Heading>
-      <Text>{event.description}</Text>
-      <Text>{event.location}</Text>
-      <Text>{event.host.username}</Text>
-      <Text>{event.datetime}</Text>
-      <IconButton
-        aria-label="delete event"
-        icon={<DeleteIcon />}
-        onClick={async () => {
-          const success = await deleteEvent({ id: event.id });
-          if (!success) {
-            console.log("event doesn't exist");
-          } else {
-            removeEvent(event.id);
-          }
-        }}
-      />
-      <EditEvent event={event} />
+      <Box display="flex" justifyContent="space-between">
+        <Box>
+          <Box display="flex" alignItems="center">
+            <ClubIcon />
+            <Box mr={4}></Box>
+            <Box>
+              <Heading fontSize="x-large">UTS: {event.title}</Heading>
+              <Text color="GrayText">{parseDatePretty(event.datetime)}</Text>
+              <Box color="GrayText">
+                Hosted by{" "}
+                <Box display="inline" textTransform="capitalize">
+                  {event.host.username}
+                </Box>{" "}
+                <ChevronRightIcon /> {event.location}
+              </Box>
+            </Box>
+          </Box>
+
+          <Text mt={4}>{event.description}</Text>
+        </Box>
+
+        <Box float="right">
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              border="none"
+              aria-label="Options"
+              icon={<HamburgerIcon />}
+              variant="outline"
+            />
+            <MenuList>
+              <EditEvent editEvent={editEvent} event={event} />
+              <DeleteEvent removeEvent={removeEvent} eventId={event.id} />
+            </MenuList>
+          </Menu>
+        </Box>
+      </Box>
     </Card>
   );
 };

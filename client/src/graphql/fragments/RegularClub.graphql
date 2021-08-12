@@ -1,0 +1,8 @@
+fragment RegularClub on Club {
+  id
+  name
+  email
+  description
+  createdAt
+  updatedAt
+}

@@ -14,6 +14,7 @@ import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
 import { EventResolver } from "./resolvers/event";
+import { ClubResolver } from "./resolvers/club";
 
 import { Post } from "./entities/Post";
 import { User } from "./entities/User";
@@ -93,7 +94,13 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, PostResolver, UserResolver, EventResolver],
+      resolvers: [
+        HelloResolver,
+        PostResolver,
+        UserResolver,
+        EventResolver,
+        ClubResolver,
+      ],
       validate: false,
     }),
     context: ({ req, res }) => ({ req, res, redis }),

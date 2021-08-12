@@ -12,6 +12,7 @@ import {
   Divider,
   ModalFooter,
   IconButton,
+  MenuItem,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import React from "react";
@@ -23,20 +24,18 @@ import { TextareaField } from "./TextareaField";
 
 interface Props {
   event: Event;
-  // editEvent:
+  editEvent: (e: Event) => void;
 }
 
-const EditEvent: React.FC<Props> = ({ event }) => {
+const EditEvent: React.FC<Props> = ({ event, editEvent }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [, updateEvent] = useUpdateEventMutation();
 
   return (
     <>
-      <IconButton
-        aria-label="edit event"
-        icon={<EditIcon />}
-        onClick={onOpen}
-      />
+      <MenuItem onClick={onOpen} icon={<EditIcon />}>
+        Edit
+      </MenuItem>
 
       <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -54,17 +53,19 @@ const EditEvent: React.FC<Props> = ({ event }) => {
           <Formik
             initialValues={{
               title: event.title ?? "",
-              description: event.title ?? "",
+              description: event.description ?? "",
               location: event.location ?? "",
               datetime: parseDate(event.datetime) ?? "",
             }}
             onSubmit={async (values) => {
               console.log(values);
-              await updateEvent({
+              const res = await updateEvent({
                 input: values,
                 id: event.id,
               });
+              console.log(res);
               onClose();
+              editEvent(res.data.updateEvent);
             }}
           >
             {(props) => (
@@ -94,7 +95,6 @@ const EditEvent: React.FC<Props> = ({ event }) => {
                     name="description"
                     placeholder="what's going down?"
                     label="Description"
-                    required
                   />
                 </VStack>
 
