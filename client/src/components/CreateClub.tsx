@@ -14,7 +14,6 @@ import {
 import { Formik, Form } from "formik";
 import React from "react";
 import { Club, useCreateClubMutation } from "../generated/graphql";
-import { Card } from "./Card";
 import { InputField } from "./InputField";
 import { TextareaField } from "./TextareaField";
 
@@ -27,20 +26,20 @@ const CreateClub: React.FC<Props> = ({ addClub }) => {
   const [, createClub] = useCreateClubMutation();
   return (
     <>
-      <Button onClick={onOpen} fontWeight='normal' width='full'>
+      <Button onClick={onOpen} fontWeight="normal" width="full">
         Create a New Club!
       </Button>
 
-      <Modal size='3xl' isOpen={isOpen} onClose={onClose}>
+      <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <Box
-            display='flex'
-            justifyContent='space-between'
-            alignItems='center'
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
             padding={4}
           >
-            <Heading fontSize='large'>Create Club</Heading>
+            <Heading fontSize="large">Create Club</Heading>
             <CloseButton onClick={onClose} />
           </Box>
           <Divider />
@@ -59,42 +58,42 @@ const CreateClub: React.FC<Props> = ({ addClub }) => {
           >
             {(props) => (
               <Form>
-                <VStack align='stretch' spacing={4} padding={4}>
+                <VStack align="stretch" spacing={4} padding={4}>
                   <InputField
-                    name='name'
-                    placeholder='name'
-                    label='Name'
+                    name="name"
+                    placeholder="name"
+                    label="Name"
                     required
                   />
 
                   <InputField
-                    name='email'
-                    placeholder='email'
-                    label='Email'
+                    name="email"
+                    placeholder="email"
+                    label="Email"
                     required
                   />
 
                   <TextareaField
-                    name='description'
+                    name="description"
                     placeholder="what's up?"
-                    label='Description'
+                    label="Description"
                     required
                   />
                 </VStack>
 
                 <ModalFooter>
                   <Button
-                    colorScheme='orange'
-                    variant='ghost'
+                    colorScheme="orange"
+                    variant="ghost"
                     mr={3}
                     onClick={onClose}
                   >
                     Close
                   </Button>
                   <Button
-                    colorScheme='orange'
+                    colorScheme="orange"
                     isLoading={props.isSubmitting}
-                    type='submit'
+                    type="submit"
                   >
                     Post
                   </Button>
