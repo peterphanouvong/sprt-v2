@@ -3,7 +3,8 @@ fragment RegularEvent on Event {
   title
   description
   location
-  datetime
+  startTime
+  endTime
   hostId
   host {
     id

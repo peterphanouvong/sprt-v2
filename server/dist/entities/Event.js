@@ -41,7 +41,12 @@ __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.Column(),
     __metadata("design:type", Date)
-], Event.prototype, "datetime", void 0);
+], Event.prototype, "startTime", void 0);
+__decorate([
+    type_graphql_1.Field(() => String),
+    typeorm_1.Column(),
+    __metadata("design:type", Date)
+], Event.prototype, "endTime", void 0);
 __decorate([
     type_graphql_1.Field(),
     typeorm_1.Column(),

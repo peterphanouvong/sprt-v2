@@ -15,7 +15,7 @@ import { DeleteEntity } from "../components/DeleteEntity";
 
 interface Props {}
 
-const Club: React.FC<Props> = ({}) => {
+const Clubs: React.FC<Props> = ({}) => {
   const [{ data, fetching }] = useClubsQuery();
   const [, deleteClub] = useDeleteClubMutation();
 
@@ -66,4 +66,4 @@ const Club: React.FC<Props> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Club);
+export default withUrqlClient(createUrqlClient)(Clubs);

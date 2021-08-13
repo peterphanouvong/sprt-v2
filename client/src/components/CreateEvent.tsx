@@ -15,6 +15,7 @@ import format from "date-fns/format";
 import { Formik, Form } from "formik";
 import React from "react";
 import { useCreateEventMutation } from "../generated/graphql";
+import { EventForm } from "./EventForm";
 import { InputField } from "./InputField";
 import { TextareaField } from "./TextareaField";
 
@@ -27,10 +28,36 @@ const CreateEvent: React.FC<Props> = ({}) => {
   // const [, createPost] = useCreatePostMutation();
   const [, createEvent] = useCreateEventMutation();
 
+  const onSubmit = async (values) => {
+    console.log(values);
+
+    const formattedStartTime = format(
+      new Date(values.startTime),
+      "yyyy-MM-dd hh:mm:ss xxx"
+    );
+
+    const formattedEndTime = format(
+      new Date(values.endTime),
+      "yyyy-MM-dd hh:mm:ss xxx"
+    );
+
+    const { error, data } = await createEvent({
+      input: {
+        ...values,
+        startTime: formattedStartTime,
+        endTime: formattedEndTime,
+      },
+    });
+
+    if (!error) {
+      // addEvent(data.createEvent);
+      onClose();
+    }
+  };
+
   return (
     <>
       <Button onClick={onOpen}>Create event +</Button>
-
       <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -44,85 +71,7 @@ const CreateEvent: React.FC<Props> = ({}) => {
             <CloseButton onClick={onClose} />
           </Box>
           <Divider />
-
-          <Formik
-            initialValues={{
-              title: "",
-              description: "",
-              location: "",
-              datetime: "",
-            }}
-            onSubmit={async (values) => {
-              console.log(values);
-              const formattedDate = format(
-                new Date(values.datetime),
-                "yyyy-MM-dd hh:mm:ss xxx"
-              );
-              const { error, data } = await createEvent({
-                input: {
-                  ...values,
-                  datetime: formattedDate,
-                },
-              });
-
-              if (!error) {
-                // addEvent(data.createEvent);
-                onClose();
-              }
-            }}
-          >
-            {(props) => (
-              <Form>
-                <VStack align="stretch" spacing={4} padding={4}>
-                  <InputField
-                    name="title"
-                    placeholder="what's it called?"
-                    label="Title"
-                    required
-                  />
-
-                  <InputField
-                    name="datetime"
-                    placeholder="when do I show up?"
-                    label="Date &amp; time"
-                    required
-                    type="datetime-local"
-                  />
-
-                  <InputField
-                    name="location"
-                    placeholder="where's it happening?"
-                    label="Location"
-                    required
-                  />
-
-                  <TextareaField
-                    name="description"
-                    placeholder="what's going down?"
-                    label="Description"
-                  />
-                </VStack>
-
-                <ModalFooter>
-                  <Button
-                    colorScheme="orange"
-                    variant="ghost"
-                    mr={3}
-                    onClick={onClose}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    colorScheme="orange"
-                    isLoading={props.isSubmitting}
-                    type="submit"
-                  >
-                    Create
-                  </Button>
-                </ModalFooter>
-              </Form>
-            )}
-          </Formik>
+          <EventForm onClose={onClose} onSubmit={onSubmit} />
         </ModalContent>
       </Modal>
     </>

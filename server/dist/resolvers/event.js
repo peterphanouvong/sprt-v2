@@ -36,7 +36,11 @@ __decorate([
 __decorate([
     type_graphql_1.Field(),
     __metadata("design:type", String)
-], EventInput.prototype, "datetime", void 0);
+], EventInput.prototype, "startTime", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], EventInput.prototype, "endTime", void 0);
 EventInput = __decorate([
     type_graphql_1.InputType()
 ], EventInput);

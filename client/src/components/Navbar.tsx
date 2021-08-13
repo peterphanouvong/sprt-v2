@@ -14,6 +14,7 @@ const Navbar: React.FC<Props> = ({}) => {
   const [{ data, fetching }] = useMeQuery({});
 
   let body = null;
+  let left = null;
 
   //data loading d
   if (fetching) {
@@ -21,11 +22,11 @@ const Navbar: React.FC<Props> = ({}) => {
   } else if (!data?.me) {
     body = (
       <HStack spacing={8}>
-        <NextLink href='/login'>
-          <Link>Login</Link>
+        <NextLink href="/login">
+          <Link>login</Link>
         </NextLink>
-        <NextLink href='/register'>
-          <Link>Register</Link>
+        <NextLink href="/register">
+          <Link>register</Link>
         </NextLink>
         <SettingsDrawer />
       </HStack>
@@ -35,10 +36,7 @@ const Navbar: React.FC<Props> = ({}) => {
   } else {
     body = (
       <HStack spacing={8}>
-        <NextLink href='/club'>
-          <Link>My Clubs</Link>
-        </NextLink>
-        <NextLink href='/'>
+        <NextLink href="/">
           <Link>{data.me.username}</Link>
         </NextLink>
         <Button
@@ -46,12 +44,23 @@ const Navbar: React.FC<Props> = ({}) => {
             logout();
           }}
           isLoading={logoutFetching}
-          variant='link'
-          fontWeight='normal'
+          variant="link"
+          fontWeight="normal"
         >
-          Logout
+          logout
         </Button>
         <SettingsDrawer />
+      </HStack>
+    );
+
+    left = (
+      <HStack spacing={8}>
+        <NextLink href="/clubs">
+          <Link>clubs</Link>
+        </NextLink>
+        <NextLink href="/events">
+          <Link>events</Link>
+        </NextLink>
       </HStack>
     );
   }
@@ -59,23 +68,27 @@ const Navbar: React.FC<Props> = ({}) => {
   return (
     <Box
       paddingX={16}
-      paddingY={2}
-      display='flex'
-      justifyContent='space-between'
-      borderBottomColor='gray.200'
-      boxShadow='sm'
-      borderBottomWidth='1px'
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      borderBottomColor="gray.200"
+      boxShadow="sm"
+      borderBottomWidth="1px"
       mb={8}
-      position='sticky'
+      position="sticky"
       top={0}
-      zIndex='10'
+      zIndex="10"
       bg={colorMode === "dark" ? "gray.800" : `white`}
     >
-      <NextLink href='/home'>
-        <a>
-          <Logo color={colorMode === "dark" ? "white" : "black"} />
-        </a>
-      </NextLink>
+      <Box display="flex" alignItems="center">
+        <NextLink href="/home">
+          <a style={{ paddingTop: "6px" }}>
+            <Logo color={colorMode === "dark" ? "white" : "black"} />
+          </a>
+        </NextLink>
+        <Box mr={4} />
+        {left}
+      </Box>
       {body}
     </Box>
   );

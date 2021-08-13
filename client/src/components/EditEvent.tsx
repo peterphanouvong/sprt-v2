@@ -1,25 +1,19 @@
 import { EditIcon } from "@chakra-ui/icons";
 import {
   useDisclosure,
-  VStack,
   Heading,
-  Button,
   Modal,
   ModalOverlay,
   ModalContent,
   Box,
   CloseButton,
   Divider,
-  ModalFooter,
   MenuItem,
 } from "@chakra-ui/react";
 import format from "date-fns/format";
-import { Formik, Form } from "formik";
 import React from "react";
 import { Event, useUpdateEventMutation } from "../generated/graphql";
-import { parseDate } from "../utils/parseDate";
-import { InputField } from "./InputField";
-import { TextareaField } from "./TextareaField";
+import { EventForm } from "./EventForm";
 
 interface Props {
   event: Event;
@@ -29,6 +23,27 @@ interface Props {
 const EditEvent: React.FC<Props> = ({ event }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [, updateEvent] = useUpdateEventMutation();
+
+  const onSubmit = async (values) => {
+    const formattedStartTime = format(
+      new Date(values.startTime),
+      "yyyy-MM-dd hh:mm:ss xxx"
+    );
+    const formattedEndTime = format(
+      new Date(values.endTime),
+      "yyyy-MM-dd hh:mm:ss xxx"
+    );
+    await updateEvent({
+      input: {
+        ...values,
+        startTime: formattedStartTime,
+        endTime: formattedEndTime,
+      },
+      id: event.id,
+    });
+    onClose();
+    // editEvent(res.data.updateEvent);
+  };
 
   return (
     <>
@@ -49,79 +64,7 @@ const EditEvent: React.FC<Props> = ({ event }) => {
             <CloseButton onClick={onClose} />
           </Box>
           <Divider />
-          <Formik
-            initialValues={{
-              title: event.title ?? "",
-              description: event.description ?? "",
-              location: event.location ?? "",
-              datetime: parseDate(event.datetime) ?? "",
-            }}
-            onSubmit={async (values) => {
-              const formattedDate = format(
-                new Date(values.datetime),
-                "yyyy-MM-dd hh:mm:ss xxx"
-              );
-              const res = await updateEvent({
-                input: {
-                  ...values,
-                  datetime: formattedDate,
-                },
-                id: event.id,
-              });
-              onClose();
-              // editEvent(res.data.updateEvent);
-            }}
-          >
-            {(props) => (
-              <Form>
-                <VStack align="stretch" spacing={4} padding={4}>
-                  <InputField
-                    name="title"
-                    placeholder="what's it called?"
-                    label="Title"
-                    required
-                  />
-
-                  <InputField
-                    name="datetime"
-                    placeholder="when do I show up?"
-                    label="Date &amp; time"
-                    required
-                    type="datetime-local"
-                  />
-                  <InputField
-                    name="location"
-                    placeholder="where's it happening?"
-                    label="Location"
-                    required
-                  />
-                  <TextareaField
-                    name="description"
-                    placeholder="what's going down?"
-                    label="Description"
-                  />
-                </VStack>
-
-                <ModalFooter>
-                  <Button
-                    colorScheme="orange"
-                    variant="ghost"
-                    mr={3}
-                    onClick={onClose}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    colorScheme="orange"
-                    isLoading={props.isSubmitting}
-                    type="submit"
-                  >
-                    Edit
-                  </Button>
-                </ModalFooter>
-              </Form>
-            )}
-          </Formik>
+          <EventForm event={event} onClose={onClose} onSubmit={onSubmit} />
         </ModalContent>
       </Modal>
     </>

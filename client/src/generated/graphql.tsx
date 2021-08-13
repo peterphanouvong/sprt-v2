@@ -39,7 +39,8 @@ export type Event = {
   title: Scalars['String'];
   description: Scalars['String'];
   location: Scalars['String'];
-  datetime: Scalars['String'];
+  startTime: Scalars['String'];
+  endTime: Scalars['String'];
   hostId: Scalars['Float'];
   host: User;
   attendees: Array<User>;
@@ -52,7 +53,8 @@ export type EventInput = {
   title: Scalars['String'];
   description: Scalars['String'];
   location: Scalars['String'];
-  datetime: Scalars['String'];
+  startTime: Scalars['String'];
+  endTime: Scalars['String'];
 };
 
 export type FieldError = {
@@ -226,7 +228,7 @@ export type RegularClubFragment = { __typename?: 'Club', id: number, name: strin
 
 export type RegularErrorFragment = { __typename?: 'FieldError', message: string, field: string };
 
-export type RegularEventFragment = { __typename?: 'Event', id: number, title: string, description: string, location: string, datetime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string }> };
+export type RegularEventFragment = { __typename?: 'Event', id: number, title: string, description: string, location: string, startTime: string, endTime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string }> };
 
 export type RegularUserFragment = { __typename?: 'User', id: number, username: string, email: string };
 
@@ -259,7 +261,7 @@ export type CreateEventMutationVariables = Exact<{
 }>;
 
 
-export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'Event', id: number, title: string, description: string, location: string, datetime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string }> } };
+export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'Event', id: number, title: string, description: string, location: string, startTime: string, endTime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string }> } };
 
 export type CreatePostMutationVariables = Exact<{
   input: PostInput;
@@ -322,7 +324,7 @@ export type UpdateEventMutationVariables = Exact<{
 }>;
 
 
-export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: Maybe<{ __typename?: 'Event', id: number, title: string, description: string, location: string, datetime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string }> }> };
+export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: Maybe<{ __typename?: 'Event', id: number, title: string, description: string, location: string, startTime: string, endTime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string }> }> };
 
 export type ClubsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -332,7 +334,7 @@ export type ClubsQuery = { __typename?: 'Query', clubs: Array<{ __typename?: 'Cl
 export type EventsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type EventsQuery = { __typename?: 'Query', events: Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, datetime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string }> }> };
+export type EventsQuery = { __typename?: 'Query', events: Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, startTime: string, endTime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string }> }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -381,7 +383,8 @@ export const RegularEventFragmentDoc = gql`
   title
   description
   location
-  datetime
+  startTime
+  endTime
   hostId
   host {
     id
