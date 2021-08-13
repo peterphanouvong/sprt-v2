@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from "type-graphql";
+import { Field, FieldResolver, Int, ObjectType, Root } from "type-graphql";
 import {
   CreateDateColumn,
   Entity,
@@ -10,6 +10,7 @@ import {
   OneToMany,
 } from "typeorm";
 import { ClubEvent } from "./ClubEvent";
+import { EventAttendee } from "./EventAttendee";
 // import { EventAttendee } from "./EventAttendee";
 import { User } from "./User";
 
@@ -47,12 +48,11 @@ export class Event extends BaseEntity {
   @OneToMany(() => ClubEvent, (ce) => ce.event)
   clubs: ClubEvent[];
 
-  // @Field(() => [EventAttendee])
-  // @OneToMany(() => EventAttendee, (ea) => ea.event)
-  // eventAttendeeConn: EventAttendee[];
+  @OneToMany(() => EventAttendee, (ea) => ea.event)
+  attendeeConnection: EventAttendee[];
 
-  // @Field(() => [User])
-  // attendees: User[];
+  @Field(() => [User])
+  attendees: User[];
 
   @Field()
   @Column({ type: "int", default: 0 })

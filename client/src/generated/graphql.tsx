@@ -14,6 +14,22 @@ export type Scalars = {
   Float: number;
 };
 
+export type Club = {
+  __typename?: 'Club';
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  email: Scalars['String'];
+  description: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+};
+
+export type ClubInput = {
+  name: Scalars['String'];
+  description: Scalars['String'];
+  email: Scalars['String'];
+};
+
 export type Event = {
   __typename?: 'Event';
   id: Scalars['Int'];
@@ -23,6 +39,7 @@ export type Event = {
   datetime: Scalars['String'];
   hostId: Scalars['Float'];
   host: User;
+  attendees: Array<User>;
   points: Scalars['Float'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
@@ -51,9 +68,12 @@ export type Mutation = {
   register: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
+  addAttendee: User;
   createEvent: Event;
   updateEvent?: Maybe<Event>;
   deleteEvent: Scalars['Boolean'];
+  createClub: Club;
+  deleteClub: Scalars['Boolean'];
 };
 
 
@@ -95,6 +115,11 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationAddAttendeeArgs = {
+  eventId: Scalars['Int'];
+};
+
+
 export type MutationCreateEventArgs = {
   input: EventInput;
 };
@@ -107,6 +132,16 @@ export type MutationUpdateEventArgs = {
 
 
 export type MutationDeleteEventArgs = {
+  id: Scalars['Float'];
+};
+
+
+export type MutationCreateClubArgs = {
+  input: ClubInput;
+};
+
+
+export type MutationDeleteClubArgs = {
   id: Scalars['Float'];
 };
 
@@ -142,6 +177,7 @@ export type Query = {
   me?: Maybe<User>;
   events: Array<Event>;
   event?: Maybe<Event>;
+  clubs: Array<Club>;
 };
 
 
@@ -183,13 +219,22 @@ export type UsernamePasswordInput = {
   password: Scalars['String'];
 };
 
+export type RegularClubFragment = { __typename?: 'Club', id: number, name: string, email: string, description: string, createdAt: string, updatedAt: string };
+
 export type RegularErrorFragment = { __typename?: 'FieldError', message: string, field: string };
 
-export type RegularEventFragment = { __typename?: 'Event', id: number, title: string, description: string, location: string, datetime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string } };
+export type RegularEventFragment = { __typename?: 'Event', id: number, title: string, description: string, location: string, datetime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string }> };
 
 export type RegularUserFragment = { __typename?: 'User', id: number, username: string, email: string };
 
 export type RegularUserResponseFragment = { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string, email: string }> };
+
+export type AddAttendeeMutationVariables = Exact<{
+  eventId: Scalars['Int'];
+}>;
+
+
+export type AddAttendeeMutation = { __typename?: 'Mutation', addAttendee: { __typename?: 'User', id: number, username: string, email: string } };
 
 export type ChangePasswordMutationVariables = Exact<{
   newPassword: Scalars['String'];
@@ -199,12 +244,19 @@ export type ChangePasswordMutationVariables = Exact<{
 
 export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string, email: string }> } };
 
+export type CreateClubMutationVariables = Exact<{
+  input: ClubInput;
+}>;
+
+
+export type CreateClubMutation = { __typename?: 'Mutation', createClub: { __typename?: 'Club', id: number, name: string, email: string, description: string, createdAt: string, updatedAt: string } };
+
 export type CreateEventMutationVariables = Exact<{
   input: EventInput;
 }>;
 
 
-export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'Event', id: number, title: string, description: string, location: string, datetime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string } } };
+export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'Event', id: number, title: string, description: string, location: string, datetime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string }> } };
 
 export type CreatePostMutationVariables = Exact<{
   input: PostInput;
@@ -212,6 +264,13 @@ export type CreatePostMutationVariables = Exact<{
 
 
 export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number, description: string, title: string, creatorId: number, createdAt: string, points: number, updatedAt: string, descriptionSnippet: string, creator: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string } } };
+
+export type DeleteClubMutationVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type DeleteClubMutation = { __typename?: 'Mutation', deleteClub: boolean };
 
 export type DeleteEventMutationVariables = Exact<{
   id: Scalars['Float'];
@@ -260,12 +319,17 @@ export type UpdateEventMutationVariables = Exact<{
 }>;
 
 
-export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: Maybe<{ __typename?: 'Event', id: number, title: string, description: string, location: string, datetime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string } }> };
+export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: Maybe<{ __typename?: 'Event', id: number, title: string, description: string, location: string, datetime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string }> }> };
+
+export type ClubsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ClubsQuery = { __typename?: 'Query', clubs: Array<{ __typename?: 'Club', id: number, name: string, email: string, description: string, createdAt: string, updatedAt: string }> };
 
 export type EventsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type EventsQuery = { __typename?: 'Query', events: Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, datetime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string } }> };
+export type EventsQuery = { __typename?: 'Query', events: Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, datetime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string }> }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -287,6 +351,23 @@ export type PostsQueryVariables = Exact<{
 
 export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: number, description: string, title: string, creatorId: number, createdAt: string, points: number, updatedAt: string, descriptionSnippet: string, creator: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string } }> } };
 
+export const RegularClubFragmentDoc = gql`
+    fragment RegularClub on Club {
+  id
+  name
+  email
+  description
+  createdAt
+  updatedAt
+}
+    `;
+export const RegularUserFragmentDoc = gql`
+    fragment RegularUser on User {
+  id
+  username
+  email
+}
+    `;
 export const RegularEventFragmentDoc = gql`
     fragment RegularEvent on Event {
   id
@@ -302,22 +383,18 @@ export const RegularEventFragmentDoc = gql`
     createdAt
     updatedAt
   }
+  attendees {
+    ...RegularUser
+  }
   points
   createdAt
   updatedAt
 }
-    `;
+    ${RegularUserFragmentDoc}`;
 export const RegularErrorFragmentDoc = gql`
     fragment RegularError on FieldError {
   message
   field
-}
-    `;
-export const RegularUserFragmentDoc = gql`
-    fragment RegularUser on User {
-  id
-  username
-  email
 }
     `;
 export const RegularUserResponseFragmentDoc = gql`
@@ -331,6 +408,17 @@ export const RegularUserResponseFragmentDoc = gql`
 }
     ${RegularErrorFragmentDoc}
 ${RegularUserFragmentDoc}`;
+export const AddAttendeeDocument = gql`
+    mutation AddAttendee($eventId: Int!) {
+  addAttendee(eventId: $eventId) {
+    ...RegularUser
+  }
+}
+    ${RegularUserFragmentDoc}`;
+
+export function useAddAttendeeMutation() {
+  return Urql.useMutation<AddAttendeeMutation, AddAttendeeMutationVariables>(AddAttendeeDocument);
+};
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($newPassword: String!, $token: String!) {
   changePassword(newPassword: $newPassword, token: $token) {
@@ -341,6 +429,17 @@ export const ChangePasswordDocument = gql`
 
 export function useChangePasswordMutation() {
   return Urql.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument);
+};
+export const CreateClubDocument = gql`
+    mutation CreateClub($input: ClubInput!) {
+  createClub(input: $input) {
+    ...RegularClub
+  }
+}
+    ${RegularClubFragmentDoc}`;
+
+export function useCreateClubMutation() {
+  return Urql.useMutation<CreateClubMutation, CreateClubMutationVariables>(CreateClubDocument);
 };
 export const CreateEventDocument = gql`
     mutation CreateEvent($input: EventInput!) {
@@ -377,6 +476,15 @@ export const CreatePostDocument = gql`
 
 export function useCreatePostMutation() {
   return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument);
+};
+export const DeleteClubDocument = gql`
+    mutation DeleteClub($id: Float!) {
+  deleteClub(id: $id)
+}
+    `;
+
+export function useDeleteClubMutation() {
+  return Urql.useMutation<DeleteClubMutation, DeleteClubMutationVariables>(DeleteClubDocument);
 };
 export const DeleteEventDocument = gql`
     mutation DeleteEvent($id: Float!) {
@@ -446,6 +554,17 @@ export const UpdateEventDocument = gql`
 
 export function useUpdateEventMutation() {
   return Urql.useMutation<UpdateEventMutation, UpdateEventMutationVariables>(UpdateEventDocument);
+};
+export const ClubsDocument = gql`
+    query Clubs {
+  clubs {
+    ...RegularClub
+  }
+}
+    ${RegularClubFragmentDoc}`;
+
+export function useClubsQuery(options: Omit<Urql.UseQueryArgs<ClubsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<ClubsQuery>({ query: ClubsDocument, ...options });
 };
 export const EventsDocument = gql`
     query Events {

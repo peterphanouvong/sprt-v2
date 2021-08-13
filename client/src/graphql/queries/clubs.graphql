@@ -1,0 +1,5 @@
+query Clubs {
+  clubs {
+    ...RegularClub
+  }
+}

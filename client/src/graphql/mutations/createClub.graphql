@@ -1,0 +1,5 @@
+mutation CreateClub($input: ClubInput!) {
+  createClub(input: $input) {
+    ...RegularClub
+  }
+}

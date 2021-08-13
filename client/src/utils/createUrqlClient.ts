@@ -9,9 +9,13 @@ import {
 } from "urql";
 import { pipe, tap } from "wonka";
 import {
+  DeleteClubMutationVariables,
+  DeleteEventMutationVariables,
   // CreateEventMutation,
   // CreatePostMutation,
   DeletePostMutationVariables,
+  EventsDocument,
+  EventsQuery,
   LoginMutation,
   // EventsDocument,
   // EventsQuery,
@@ -20,6 +24,7 @@ import {
   MeDocument,
   MeQuery,
   RegisterMutation,
+  UpdateEventMutation,
   // PostsDocument,
   // PostsQuery,
   // RegisterMutation,
@@ -107,6 +112,21 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
+            createEvent: (result, args, cache, info) => {
+              cache.updateQuery({ query: EventsDocument }, (data) => {
+                console.log("result", result);
+                console.log("data", data);
+                //@ts-ignore
+                data.events.push(result.createEvent);
+                return data;
+              });
+            },
+            deleteEvent: (_result, args, cache, info) => {
+              cache.invalidate({
+                __typename: "Event",
+                id: (args as DeleteEventMutationVariables).id,
+              });
+            },
             deletePost: (_result, args, cache, info) => {
               cache.invalidate({
                 __typename: "Post",

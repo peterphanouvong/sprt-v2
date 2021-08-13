@@ -1,6 +1,4 @@
-import { EditIcon } from "@chakra-ui/icons";
 import {
-  useDisclosure,
   VStack,
   Heading,
   Button,
@@ -11,30 +9,26 @@ import {
   CloseButton,
   Divider,
   ModalFooter,
-  MenuItem,
+  useDisclosure,
 } from "@chakra-ui/react";
-import format from "date-fns/format";
 import { Formik, Form } from "formik";
 import React from "react";
-import { Event, useUpdateEventMutation } from "../generated/graphql";
-import { parseDate } from "../utils/parseDate";
+import { Club, useCreateClubMutation } from "../generated/graphql";
 import { InputField } from "./InputField";
 import { TextareaField } from "./TextareaField";
 
 interface Props {
-  event: Event;
-  // editEvent: (e: Event) => void;
+  addClub: (data: Club) => void;
 }
 
-const EditEvent: React.FC<Props> = ({ event }) => {
+const CreateClub: React.FC<Props> = ({ addClub }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [, updateEvent] = useUpdateEventMutation();
-
+  const [, createClub] = useCreateClubMutation();
   return (
     <>
-      <MenuItem onClick={onOpen} icon={<EditIcon />}>
-        Edit
-      </MenuItem>
+      <Button onClick={onOpen} fontWeight="normal" width="full">
+        Create a New Club!
+      </Button>
 
       <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -45,60 +39,45 @@ const EditEvent: React.FC<Props> = ({ event }) => {
             alignItems="center"
             padding={4}
           >
-            <Heading fontSize="large">Edit event</Heading>
+            <Heading fontSize="large">Create Club</Heading>
             <CloseButton onClick={onClose} />
           </Box>
           <Divider />
+
           <Formik
-            initialValues={{
-              title: event.title ?? "",
-              description: event.description ?? "",
-              location: event.location ?? "",
-              datetime: parseDate(event.datetime) ?? "",
-            }}
+            initialValues={{ name: "", description: "", email: "" }}
             onSubmit={async (values) => {
-              const formattedDate = format(
-                new Date(values.datetime),
-                "yyyy-MM-dd hh:mm:ss xxx"
-              );
-              const res = await updateEvent({
-                input: {
-                  ...values,
-                  datetime: formattedDate,
-                },
-                id: event.id,
-              });
-              onClose();
-              // editEvent(res.data.updateEvent);
+              console.log(values);
+              const { data, error } = await createClub({ input: values });
+              console.log(data);
+              if (!error) {
+                onClose();
+                addClub(data.createClub);
+              }
             }}
           >
             {(props) => (
               <Form>
                 <VStack align="stretch" spacing={4} padding={4}>
                   <InputField
-                    name="title"
-                    placeholder="what's it called?"
-                    label="Title"
+                    name="name"
+                    placeholder="name"
+                    label="Name"
                     required
                   />
 
                   <InputField
-                    name="datetime"
-                    placeholder="when do I show up?"
-                    label="Date &amp; time"
-                    required
-                    type="datetime-local"
-                  />
-                  <InputField
-                    name="location"
-                    placeholder="where's it happening?"
-                    label="Location"
+                    name="email"
+                    placeholder="email"
+                    label="Email"
                     required
                   />
+
                   <TextareaField
                     name="description"
-                    placeholder="what's going down?"
+                    placeholder="what's up?"
                     label="Description"
+                    required
                   />
                 </VStack>
 
@@ -109,14 +88,14 @@ const EditEvent: React.FC<Props> = ({ event }) => {
                     mr={3}
                     onClick={onClose}
                   >
-                    Cancel
+                    Close
                   </Button>
                   <Button
                     colorScheme="orange"
                     isLoading={props.isSubmitting}
                     type="submit"
                   >
-                    Edit
+                    Post
                   </Button>
                 </ModalFooter>
               </Form>
@@ -128,4 +107,4 @@ const EditEvent: React.FC<Props> = ({ event }) => {
   );
 };
 
-export { EditEvent };
+export default CreateClub;

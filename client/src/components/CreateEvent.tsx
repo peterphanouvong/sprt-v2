@@ -11,6 +11,7 @@ import {
   Divider,
   ModalFooter,
 } from "@chakra-ui/react";
+import format from "date-fns/format";
 import { Formik, Form } from "formik";
 import React from "react";
 import { useCreateEventMutation } from "../generated/graphql";
@@ -18,10 +19,10 @@ import { InputField } from "./InputField";
 import { TextareaField } from "./TextareaField";
 
 interface Props {
-  addEvent: (e: any) => void;
+  // addEvent: (e: any) => void;
 }
 
-const CreateEvent: React.FC<Props> = ({ addEvent }) => {
+const CreateEvent: React.FC<Props> = ({}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   // const [, createPost] = useCreatePostMutation();
   const [, createEvent] = useCreateEventMutation();
@@ -53,10 +54,19 @@ const CreateEvent: React.FC<Props> = ({ addEvent }) => {
             }}
             onSubmit={async (values) => {
               console.log(values);
-              const { error, data } = await createEvent({ input: values });
+              const formattedDate = format(
+                new Date(values.datetime),
+                "yyyy-MM-dd hh:mm:ss xxx"
+              );
+              const { error, data } = await createEvent({
+                input: {
+                  ...values,
+                  datetime: formattedDate,
+                },
+              });
 
               if (!error) {
-                addEvent(data.createEvent);
+                // addEvent(data.createEvent);
                 onClose();
               }
             }}
