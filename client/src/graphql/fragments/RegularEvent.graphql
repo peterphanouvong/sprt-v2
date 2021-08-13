@@ -12,6 +12,9 @@ fragment RegularEvent on Event {
     createdAt
     updatedAt
   }
+  attendees {
+    ...RegularUser
+  }
   points
   createdAt
   updatedAt

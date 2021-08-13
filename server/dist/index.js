@@ -13,7 +13,9 @@ const cors_1 = __importDefault(require("cors"));
 const typeorm_1 = require("typeorm");
 const apollo_server_express_1 = require("apollo-server-express");
 const type_graphql_1 = require("type-graphql");
+const path_1 = __importDefault(require("path"));
 const constants_1 = require("./constants");
+const createUserLoader_1 = require("./utils/createUserLoader");
 const hello_1 = require("./resolvers/hello");
 const post_1 = require("./resolvers/post");
 const user_1 = require("./resolvers/user");
@@ -21,7 +23,6 @@ const event_1 = require("./resolvers/event");
 const club_1 = require("./resolvers/club");
 const Post_1 = require("./entities/Post");
 const User_1 = require("./entities/User");
-const path_1 = __importDefault(require("path"));
 const Event_1 = require("./entities/Event");
 const Club_1 = require("./entities/Club");
 const ClubEvent_1 = require("./entities/ClubEvent");
@@ -92,7 +93,12 @@ const main = async () => {
             ],
             validate: false,
         }),
-        context: ({ req, res }) => ({ req, res, redis }),
+        context: ({ req, res }) => ({
+            req,
+            res,
+            redis,
+            userLoader: createUserLoader_1.createUserLoader(),
+        }),
     });
     await apolloServer.start();
     apolloServer.applyMiddleware({

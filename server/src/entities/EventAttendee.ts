@@ -1,6 +1,12 @@
 import { ObjectType } from "type-graphql";
-import { Entity, BaseEntity, ManyToOne, PrimaryColumn } from "typeorm";
-// import { Event } from "./Event";
+import {
+  Entity,
+  BaseEntity,
+  ManyToOne,
+  PrimaryColumn,
+  JoinColumn,
+} from "typeorm";
+import { Event } from "./Event";
 import { User } from "./User";
 
 @ObjectType()
@@ -9,12 +15,12 @@ export class EventAttendee extends BaseEntity {
   @PrimaryColumn()
   eventId: number;
 
-  // @ManyToOne(() => Event, (e) => e.eventAttendeeConn)
-  // event: Event;
+  @ManyToOne(() => Event, (event) => event.attendeeConnection)
+  event: Event;
 
   @PrimaryColumn()
   attendeeId: number;
 
-  @ManyToOne(() => User, (s) => s.eventAttendeeConn)
+  @ManyToOne(() => User, (user) => user.eventConnection)
   attendee: User;
 }

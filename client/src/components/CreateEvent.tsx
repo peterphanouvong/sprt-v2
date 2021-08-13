@@ -19,10 +19,10 @@ import { InputField } from "./InputField";
 import { TextareaField } from "./TextareaField";
 
 interface Props {
-  addEvent: (e: any) => void;
+  // addEvent: (e: any) => void;
 }
 
-const CreateEvent: React.FC<Props> = ({ addEvent }) => {
+const CreateEvent: React.FC<Props> = ({}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   // const [, createPost] = useCreatePostMutation();
   const [, createEvent] = useCreateEventMutation();
@@ -66,7 +66,7 @@ const CreateEvent: React.FC<Props> = ({ addEvent }) => {
               });
 
               if (!error) {
-                addEvent(data.createEvent);
+                // addEvent(data.createEvent);
                 onClose();
               }
             }}

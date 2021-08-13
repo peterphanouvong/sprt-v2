@@ -16,6 +16,9 @@ exports.EventResolver = void 0;
 const type_graphql_1 = require("type-graphql");
 const isAuth_1 = require("../middleware/isAuth");
 const Event_1 = require("../entities/Event");
+const User_1 = require("../entities/User");
+const EventAttendee_1 = require("../entities/EventAttendee");
+const typeorm_1 = require("typeorm");
 let EventInput = class EventInput {
 };
 __decorate([
@@ -38,15 +41,40 @@ EventInput = __decorate([
     type_graphql_1.InputType()
 ], EventInput);
 let EventResolver = class EventResolver {
+    async attendees(event, { userLoader }) {
+        const eventAttendeeIds = await typeorm_1.getConnection().query(`
+      select "attendeeId" 
+      from "event_attendee"
+      where "eventId" = ${event.id};
+    `);
+        return userLoader.loadMany(eventAttendeeIds.map((e) => e.attendeeId));
+    }
+    host(event, { userLoader }) {
+        return userLoader.load(event.hostId);
+    }
+    async addAttendee({ req }, eventId) {
+        const exists = await EventAttendee_1.EventAttendee.find({
+            eventId,
+            attendeeId: req.session.userId,
+        });
+        if (exists.length !== 0) {
+            throw Error("that person is already attending the event");
+        }
+        await EventAttendee_1.EventAttendee.create({
+            eventId: eventId,
+            attendeeId: req.session.userId,
+        }).save();
+        return await User_1.User.findOne(req.session.userId);
+    }
     async events() {
-        return Event_1.Event.find({ relations: ["host"] });
+        return Event_1.Event.find();
     }
     event(id) {
-        return Event_1.Event.findOne(id, { relations: ["host"] });
+        return Event_1.Event.findOne(id);
     }
     async createEvent({ req }, input) {
         const { id } = await Event_1.Event.create(Object.assign(Object.assign({}, input), { hostId: req.session.userId })).save();
-        const event = await Event_1.Event.findOne(id, { relations: ["host"] });
+        const event = await Event_1.Event.findOne(id);
         return event;
     }
     async updateEvent({ req }, id, input) {
@@ -58,7 +86,7 @@ let EventResolver = class EventResolver {
             return null;
         }
         await Event_1.Event.update(id, Object.assign({}, input));
-        return Event_1.Event.findOne(id, { relations: ["host"] });
+        return Event_1.Event.findOne(id);
     }
     async deleteEvent(id, { req }) {
         const event = await Event_1.Event.findOne(id);
@@ -72,6 +100,31 @@ let EventResolver = class EventResolver {
         return true;
     }
 };
+__decorate([
+    type_graphql_1.FieldResolver(() => User_1.User),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Event_1.Event, Object]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "attendees", null);
+__decorate([
+    type_graphql_1.FieldResolver(() => User_1.User),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Event_1.Event, Object]),
+    __metadata("design:returntype", void 0)
+], EventResolver.prototype, "host", null);
+__decorate([
+    type_graphql_1.Mutation(() => User_1.User),
+    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
+    __param(0, type_graphql_1.Ctx()),
+    __param(1, type_graphql_1.Arg("eventId", () => type_graphql_1.Int)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "addAttendee", null);
 __decorate([
     type_graphql_1.Query(() => [Event_1.Event]),
     __metadata("design:type", Function),
