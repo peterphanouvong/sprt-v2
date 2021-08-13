@@ -14,7 +14,7 @@ import { DeleteIcon } from "@chakra-ui/icons";
 
 interface Props {}
 
-const Club: React.FC<Props> = ({}) => {
+const Clubs: React.FC<Props> = ({}) => {
   const [{ data, fetching }] = useClubsQuery();
   const [clubs, setClubs] = useState<ClubInterface[]>();
   const [, deleteClub] = useDeleteClubMutation();
@@ -57,7 +57,7 @@ const Club: React.FC<Props> = ({}) => {
             <IconButton
               mt={4}
               icon={<DeleteIcon />}
-              aria-label='Delete post'
+              aria-label="Delete post"
               onClick={async () => {
                 const success = await deleteClub({ id: e.id });
                 if (success) {
@@ -73,4 +73,4 @@ const Club: React.FC<Props> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Club);
+export default withUrqlClient(createUrqlClient)(Clubs);
