@@ -1,3 +1,0 @@
-mutation DeleteClub($id: Float!) {
-  deleteClub(id: $id)
-}

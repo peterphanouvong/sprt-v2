@@ -52,7 +52,7 @@ export class User extends BaseEntity {
   club_admin: ClubAdmin[];
 
   @OneToMany(() => EventAttendee, (ca) => ca.attendee)
-  eventConnection: EventAttendee[];
+  eventAttendeeConn: EventAttendee[];
 
   @Field(() => String)
   @CreateDateColumn()

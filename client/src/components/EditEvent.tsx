@@ -11,22 +11,23 @@ import {
   CloseButton,
   Divider,
   ModalFooter,
+  IconButton,
   MenuItem,
 } from "@chakra-ui/react";
-import format from "date-fns/format";
 import { Formik, Form } from "formik";
 import React from "react";
-import { Event, useUpdateEventMutation } from "../generated/graphql";
+import { useUpdateEventMutation } from "../generated/graphql";
+import { Event } from "../models";
 import { parseDate } from "../utils/parseDate";
 import { InputField } from "./InputField";
 import { TextareaField } from "./TextareaField";
 
 interface Props {
   event: Event;
-  // editEvent: (e: Event) => void;
+  editEvent: (e: Event) => void;
 }
 
-const EditEvent: React.FC<Props> = ({ event }) => {
+const EditEvent: React.FC<Props> = ({ event, editEvent }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [, updateEvent] = useUpdateEventMutation();
 
@@ -57,19 +58,14 @@ const EditEvent: React.FC<Props> = ({ event }) => {
               datetime: parseDate(event.datetime) ?? "",
             }}
             onSubmit={async (values) => {
-              const formattedDate = format(
-                new Date(values.datetime),
-                "yyyy-MM-dd hh:mm:ss xxx"
-              );
+              console.log(values);
               const res = await updateEvent({
-                input: {
-                  ...values,
-                  datetime: formattedDate,
-                },
+                input: values,
                 id: event.id,
               });
+              console.log(res);
               onClose();
-              // editEvent(res.data.updateEvent);
+              editEvent(res.data.updateEvent);
             }}
           >
             {(props) => (

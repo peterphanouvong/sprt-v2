@@ -1,28 +1,16 @@
-import { ChevronRightIcon, HamburgerIcon, WarningIcon } from "@chakra-ui/icons";
+import { ChevronRightIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
   Box,
-  Button,
   Heading,
   IconButton,
-  UnorderedList,
   Menu,
   MenuButton,
-  MenuItem,
   MenuList,
   Text,
-  ListItem,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
-import { Event, useAddAttendeeMutation, User } from "../generated/graphql";
-// import { Event } from "../models";
-import { useMeQuery } from "../generated/graphql";
+import React from "react";
+import { Event } from "../models";
 import { parseDatePretty } from "../utils/parseDate";
-import { MetaDataText } from "./ MetaDataText";
 import { Card } from "./Card";
 import { ClubIcon } from "./ClubIcon";
 import { DeleteEvent } from "./DeleteEvent";
@@ -30,16 +18,11 @@ import { EditEvent } from "./EditEvent";
 
 interface Props {
   event: Event;
-  // removeEvent: (id: any) => void;
-  // editEvent: (e: Event) => void;
+  removeEvent: (id: any) => void;
+  editEvent: (e: Event) => void;
 }
 
-const EventCard: React.FC<Props> = ({ event }) => {
-  const [, addAttendee] = useAddAttendeeMutation();
-  const [attendees, setAttendees] = useState<User[]>(event.attendees);
-
-  const [{ data }] = useMeQuery();
-  if (!data) return <>loading...</>;
+const EventCard: React.FC<Props> = ({ event, removeEvent, editEvent }) => {
   return (
     <Card>
       <Box display="flex" justifyContent="space-between">
@@ -49,19 +32,17 @@ const EventCard: React.FC<Props> = ({ event }) => {
             <Box mr={4}></Box>
             <Box>
               <Heading fontSize="x-large">UTS: {event.title}</Heading>
-              <MetaDataText>
-                {parseDatePretty(event.datetime)} [
-                {Intl.DateTimeFormat().resolvedOptions().timeZone}]
-              </MetaDataText>
-              <Box mt={-1}>
-                <MetaDataText>Hosted by </MetaDataText>
-                <MetaDataText>{event.host.username}</MetaDataText>{" "}
-                <MetaDataText>
-                  <ChevronRightIcon /> {event.location}
-                </MetaDataText>
+              <Text color="GrayText">{parseDatePretty(event.datetime)}</Text>
+              <Box color="GrayText">
+                Hosted by{" "}
+                <Box display="inline" textTransform="capitalize">
+                  {event.host.username}
+                </Box>{" "}
+                <ChevronRightIcon /> {event.location}
               </Box>
             </Box>
           </Box>
+
           <Text mt={4}>{event.description}</Text>
         </Box>
 
@@ -69,59 +50,18 @@ const EventCard: React.FC<Props> = ({ event }) => {
           <Menu>
             <MenuButton
               as={IconButton}
+              border="none"
               aria-label="Options"
               icon={<HamburgerIcon />}
-              variant="ghost"
+              variant="outline"
             />
             <MenuList>
-              {data.me?.id === event.host.id ? (
-                <>
-                  <EditEvent event={event} />
-                  <DeleteEvent eventId={event.id} />
-                </>
-              ) : (
-                <MenuItem icon={<WarningIcon />}>Report</MenuItem>
-              )}
+              <EditEvent editEvent={editEvent} event={event} />
+              <DeleteEvent removeEvent={removeEvent} eventId={event.id} />
             </MenuList>
           </Menu>
         </Box>
       </Box>
-
-      <Box mt={4}>
-        <Accordion allowToggle>
-          <AccordionItem>
-            <AccordionButton>
-              <Box flex="1" textAlign="left">
-                <Text fontWeight="medium">Attendees</Text>
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-            <AccordionPanel>
-              <UnorderedList>
-                {attendees.map((attendee) => (
-                  <ListItem key={attendee.id}>{attendee.username}</ListItem>
-                ))}
-              </UnorderedList>
-            </AccordionPanel>
-          </AccordionItem>
-        </Accordion>
-      </Box>
-
-      <Button
-        onClick={async () => {
-          const res = await addAttendee({ eventId: event.id });
-          console.log(res);
-          if (res.data) {
-            // @ts-ignore
-            setAttendees([...attendees, res.data.addAttendee]);
-          }
-        }}
-        mt={4}
-        isFullWidth={true}
-        variant="solid"
-      >
-        Join
-      </Button>
     </Card>
   );
 };

@@ -7,8 +7,8 @@ interface Props {}
 
 const ClubIcon: React.FC<Props> = ({}) => {
   return (
-    <Box width={20} height={20} borderRadius={8} overflow="hidden">
-      <Image width={80} height={80} src={logo} />
+    <Box width={16} height={16} borderRadius={8} overflow="hidden">
+      <Image width={64} height={64} src={logo} />
     </Box>
   );
 };

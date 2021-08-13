@@ -1,5 +1,0 @@
-mutation AddAttendee($eventId: Int!) {
-  addAttendee(eventId: $eventId) {
-    ...RegularUser
-  }
-}

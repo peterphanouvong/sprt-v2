@@ -13,16 +13,14 @@ const cors_1 = __importDefault(require("cors"));
 const typeorm_1 = require("typeorm");
 const apollo_server_express_1 = require("apollo-server-express");
 const type_graphql_1 = require("type-graphql");
-const path_1 = __importDefault(require("path"));
 const constants_1 = require("./constants");
-const createUserLoader_1 = require("./utils/createUserLoader");
 const hello_1 = require("./resolvers/hello");
 const post_1 = require("./resolvers/post");
 const user_1 = require("./resolvers/user");
 const event_1 = require("./resolvers/event");
-const club_1 = require("./resolvers/club");
 const Post_1 = require("./entities/Post");
 const User_1 = require("./entities/User");
+const path_1 = __importDefault(require("path"));
 const Event_1 = require("./entities/Event");
 const Club_1 = require("./entities/Club");
 const ClubEvent_1 = require("./entities/ClubEvent");
@@ -60,7 +58,7 @@ const main = async () => {
     app.use(cors_1.default({
         origin: [
             process.env.CORS_ORIGIN,
-            "https://www.sprt.rest",
+            "https://sprt-test.vercel.app",
             "https://studio.apollographql.com",
         ],
         credentials: true,
@@ -77,28 +75,17 @@ const main = async () => {
             httpOnly: true,
             sameSite: "lax",
             secure: constants_1.__prod__,
-            domain: constants_1.__prod__ ? ".sprt.rest" : undefined,
+            domain: constants_1.__prod__ ? ".sprt.fun" : undefined,
         },
         secret: process.env.SESSION_SECRET,
         resave: false,
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
         schema: await type_graphql_1.buildSchema({
-            resolvers: [
-                hello_1.HelloResolver,
-                post_1.PostResolver,
-                user_1.UserResolver,
-                event_1.EventResolver,
-                club_1.ClubResolver,
-            ],
+            resolvers: [hello_1.HelloResolver, post_1.PostResolver, user_1.UserResolver, event_1.EventResolver],
             validate: false,
         }),
-        context: ({ req, res }) => ({
-            req,
-            res,
-            redis,
-            userLoader: createUserLoader_1.createUserLoader(),
-        }),
+        context: ({ req, res }) => ({ req, res, redis }),
     });
     await apolloServer.start();
     apolloServer.applyMiddleware({
