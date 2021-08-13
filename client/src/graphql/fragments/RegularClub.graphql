@@ -5,4 +5,5 @@ fragment RegularClub on Club {
   description
   createdAt
   updatedAt
+  phoneNumber
 }

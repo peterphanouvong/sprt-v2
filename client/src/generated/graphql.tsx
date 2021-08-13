@@ -19,6 +19,7 @@ export type Club = {
   id: Scalars['Int'];
   name: Scalars['String'];
   email: Scalars['String'];
+  phoneNumber: Scalars['Float'];
   description: Scalars['String'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
@@ -212,7 +213,7 @@ export type UsernamePasswordInput = {
   password: Scalars['String'];
 };
 
-export type RegularClubFragment = { __typename?: 'Club', id: number, name: string, email: string, description: string, createdAt: string, updatedAt: string };
+export type RegularClubFragment = { __typename?: 'Club', id: number, name: string, email: string, description: string, createdAt: string, updatedAt: string, phoneNumber: number };
 
 export type RegularErrorFragment = { __typename?: 'FieldError', message: string, field: string };
 
@@ -235,7 +236,7 @@ export type CreateClubMutationVariables = Exact<{
 }>;
 
 
-export type CreateClubMutation = { __typename?: 'Mutation', createClub: { __typename?: 'Club', id: number, name: string, email: string, description: string, createdAt: string, updatedAt: string } };
+export type CreateClubMutation = { __typename?: 'Mutation', createClub: { __typename?: 'Club', id: number, name: string, email: string, description: string, createdAt: string, updatedAt: string, phoneNumber: number } };
 
 export type CreateEventMutationVariables = Exact<{
   input: EventInput;
@@ -310,7 +311,7 @@ export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: Maybe
 export type ClubsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ClubsQuery = { __typename?: 'Query', clubs: Array<{ __typename?: 'Club', id: number, name: string, email: string, description: string, createdAt: string, updatedAt: string }> };
+export type ClubsQuery = { __typename?: 'Query', clubs: Array<{ __typename?: 'Club', id: number, name: string, email: string, description: string, createdAt: string, updatedAt: string, phoneNumber: number }> };
 
 export type EventsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -345,6 +346,7 @@ export const RegularClubFragmentDoc = gql`
   description
   createdAt
   updatedAt
+  phoneNumber
 }
     `;
 export const RegularEventFragmentDoc = gql`
