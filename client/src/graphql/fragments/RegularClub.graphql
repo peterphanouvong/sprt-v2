@@ -2,8 +2,11 @@ fragment RegularClub on Club {
   id
   name
   email
+  phoneNumber
   description
   createdAt
   updatedAt
-  phoneNumber
+  admins {
+    ...RegularUser
+  }
 }

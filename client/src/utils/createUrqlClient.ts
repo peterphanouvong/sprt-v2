@@ -4,44 +4,36 @@ import {
   dedupExchange,
   Exchange,
   fetchExchange,
-  // gql,
   stringifyVariables,
 } from "urql";
 import { pipe, tap } from "wonka";
 import {
+  ClubsDocument,
   DeleteClubMutationVariables,
   DeleteEventMutationVariables,
-  // CreateEventMutation,
-  // CreatePostMutation,
   DeletePostMutationVariables,
   EventsDocument,
-  EventsQuery,
   LoginMutation,
-  // EventsDocument,
-  // EventsQuery,
-  // LoginMutation,
   LogoutMutation,
   MeDocument,
   MeQuery,
   RegisterMutation,
-  UpdateEventMutation,
-  // PostsDocument,
-  // PostsQuery,
-  // RegisterMutation,
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 import { isServer } from "./isServer";
 
-const errorExchange: Exchange = ({ forward }) => (ops$) => {
-  return pipe(
-    forward(ops$),
-    tap(({ error }) => {
-      if (error?.message.includes("not authenticated")) {
-        router.replace("/login");
-      }
-    })
-  );
-};
+const errorExchange: Exchange =
+  ({ forward }) =>
+  (ops$) => {
+    return pipe(
+      forward(ops$),
+      tap(({ error }) => {
+        if (error?.message.includes("not authenticated")) {
+          router.replace("/login");
+        }
+      })
+    );
+  };
 
 export const cursorPagination = (): Resolver => {
   return (_parent, fieldArgs, cache, info) => {
@@ -112,6 +104,19 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
+            createClub: (result, args, cache, info) => {
+              cache.updateQuery({ query: ClubsDocument }, (data) => {
+                //@ts-ignore
+                data.clubs.push(result.createClub);
+                return data;
+              });
+            },
+            deleteClub: (_result, args, cache, info) => {
+              cache.invalidate({
+                __typename: "Club",
+                id: (args as DeleteClubMutationVariables).id,
+              });
+            },
             createEvent: (result, args, cache, info) => {
               cache.updateQuery({ query: EventsDocument }, (data) => {
                 console.log("result", result);

@@ -1,4 +1,4 @@
-import { ChevronRightIcon, HamburgerIcon, WarningIcon } from "@chakra-ui/icons";
+import { ChevronRightIcon, WarningIcon } from "@chakra-ui/icons";
 import {
   Accordion,
   AccordionButton,
@@ -8,12 +8,8 @@ import {
   Box,
   Button,
   Heading,
-  IconButton,
   UnorderedList,
-  Menu,
-  MenuButton,
   MenuItem,
-  MenuList,
   Text,
   ListItem,
 } from "@chakra-ui/react";
@@ -27,6 +23,7 @@ import { Card } from "./Card";
 import { ClubIcon } from "./ClubIcon";
 import { DeleteEvent } from "./DeleteEvent";
 import { EditEvent } from "./EditEvent";
+import { OptionsButton } from "./OptionsButton";
 
 interface Props {
   event: Event;
@@ -42,13 +39,13 @@ const EventCard: React.FC<Props> = ({ event }) => {
   if (!data) return <>loading...</>;
   return (
     <Card>
-      <Box display="flex" justifyContent="space-between">
+      <Box display='flex' justifyContent='space-between'>
         <Box>
-          <Box display="flex" alignItems="center">
+          <Box display='flex' alignItems='center'>
             <ClubIcon />
             <Box mr={4}></Box>
             <Box>
-              <Heading fontSize="x-large">UTS: {event.title}</Heading>
+              <Heading fontSize='x-large'>UTS: {event.title}</Heading>
               <MetaDataText>
                 {parseDatePretty(event.datetime)} [
                 {Intl.DateTimeFormat().resolvedOptions().timeZone}]
@@ -65,25 +62,17 @@ const EventCard: React.FC<Props> = ({ event }) => {
           <Text mt={4}>{event.description}</Text>
         </Box>
 
-        <Box float="right">
-          <Menu>
-            <MenuButton
-              as={IconButton}
-              aria-label="Options"
-              icon={<HamburgerIcon />}
-              variant="ghost"
-            />
-            <MenuList>
-              {data.me?.id === event.host.id ? (
-                <>
-                  <EditEvent event={event} />
-                  <DeleteEvent eventId={event.id} />
-                </>
-              ) : (
-                <MenuItem icon={<WarningIcon />}>Report</MenuItem>
-              )}
-            </MenuList>
-          </Menu>
+        <Box float='right'>
+          <OptionsButton>
+            {data.me?.id === event.host.id ? (
+              <>
+                <EditEvent event={event} />
+                <DeleteEvent eventId={event.id} />
+              </>
+            ) : (
+              <MenuItem icon={<WarningIcon />}>Report</MenuItem>
+            )}
+          </OptionsButton>
         </Box>
       </Box>
 
@@ -91,8 +80,8 @@ const EventCard: React.FC<Props> = ({ event }) => {
         <Accordion allowToggle>
           <AccordionItem>
             <AccordionButton>
-              <Box flex="1" textAlign="left">
-                <Text fontWeight="medium">Attendees</Text>
+              <Box flex='1' textAlign='left'>
+                <Text fontWeight='medium'>Attendees</Text>
               </Box>
               <AccordionIcon />
             </AccordionButton>
@@ -118,7 +107,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
         }}
         mt={4}
         isFullWidth={true}
-        variant="solid"
+        variant='solid'
       >
         Join
       </Button>

@@ -11,24 +11,20 @@ import {
   Divider,
   ModalFooter,
   useDisclosure,
-  InputGroup,
-  InputLeftElement,
-  Input,
-  FormLabel,
-  FormControl,
 } from "@chakra-ui/react";
-import { Formik, Form, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import React from "react";
 import { Club, useCreateClubMutation } from "../generated/graphql";
 import { InputField } from "./InputField";
 import { TextareaField } from "./TextareaField";
 import * as Yup from "yup";
+import { errorMessageToObject } from "../utils/errorMessageToObject";
 
 interface Props {
-  addClub: (data: Club) => void;
+  // addClub: (data: Club) => void;
 }
 
-const CreateClub: React.FC<Props> = ({ addClub }) => {
+const CreateClub: React.FC<Props> = ({}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [, createClub] = useCreateClubMutation();
 
@@ -76,13 +72,15 @@ const CreateClub: React.FC<Props> = ({ addClub }) => {
               phoneNumber: "",
             }}
             validationSchema={CreateClubSchema}
-            onSubmit={async (values) => {
+            onSubmit={async (values, { setErrors }) => {
               console.log(values);
               const { data, error } = await createClub({ input: values });
               console.log(data);
               if (!error) {
                 onClose();
-                addClub(data.createClub);
+                // addClub(data.createClub);
+              } else {
+                setErrors(errorMessageToObject(error.message));
               }
             }}
           >

@@ -8,67 +8,60 @@ import {
   useDeleteClubMutation,
 } from "../generated/graphql";
 import { Card } from "../components/Card";
-import { Heading, IconButton, Spinner, Text } from "@chakra-ui/react";
+import { Box, Heading, Spinner, Text } from "@chakra-ui/react";
 import CreateClub from "../components/CreateClub";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { OptionsButton } from "../components/OptionsButton";
+import { DeleteEntity } from "../components/DeleteEntity";
 
 interface Props {}
 
 const Club: React.FC<Props> = ({}) => {
   const [{ data, fetching }] = useClubsQuery();
-  const [clubs, setClubs] = useState<ClubInterface[]>();
   const [, deleteClub] = useDeleteClubMutation();
 
-  useEffect(() => {
-    if (data) {
-      // console.log(data.clubs);
-      setClubs(data.clubs);
+  const handleDelete = async (id: number): Promise<string | null> => {
+    const { error } = await deleteClub({ id });
+    if (error) {
+      console.log(error);
+      return error.message;
     }
-  }, [data]);
-
-  const addClub = (data: ClubInterface) => {
-    console.log(data);
-    setClubs([data, ...clubs]);
-  };
-
-  const removeClub = (id: number) => {
-    const newClubs = clubs.filter((club) => club.id !== id);
-    setClubs(newClubs);
+    return null;
   };
 
   if (!fetching && !data) {
     return <div>No data...</div>;
   }
 
-  if (!clubs) {
+  if (!data) {
     return <Spinner />;
   }
 
   return (
     <Layout>
-      {clubs.map((e) => {
-        console.log(e);
+      {data.clubs.map((e) => {
         return (
           <Card key={e.id}>
-            <Heading>{e.name}</Heading>
-            <Text>{e.description}</Text>
-            <Text>{e.email}</Text>
-            {/* <Text>{e.host.username}</Text> */}
-            <IconButton
-              mt={4}
-              icon={<DeleteIcon />}
-              aria-label='Delete post'
-              onClick={async () => {
-                const success = await deleteClub({ id: e.id });
-                if (success) {
-                  removeClub(e.id);
-                }
-              }}
-            />
+            <Box display='flex' justifyContent='space-between'>
+              <Box>
+                <Heading>{e.name}</Heading>
+                {e.admins.map((admin) => (
+                  <Text key={admin.username}>Owner: {admin.username}</Text>
+                ))}
+                <Text>Email: {e.email}</Text>
+                <Text>{e.description}</Text>
+              </Box>
+              {/* <Text>{e.host.username}</Text> */}
+              <OptionsButton>
+                <DeleteEntity
+                  handleDelete={() => handleDelete(e.id)}
+                  entityName={"Club"}
+                />
+              </OptionsButton>
+            </Box>
           </Card>
         );
       })}
-      <CreateClub addClub={addClub} />
+      <CreateClub />
     </Layout>
   );
 };
