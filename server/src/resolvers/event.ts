@@ -35,7 +35,7 @@ class EventInput {
 
 @Resolver(Event)
 export class EventResolver {
-  @FieldResolver(() => User)
+  @FieldResolver(() => User) // Maybe should be [User]???
   async attendees(@Root() event: Event, @Ctx() { userLoader }: MyContext) {
     // get a list of the attendeeIds
     const eventAttendeeIds = await getConnection().query(`
