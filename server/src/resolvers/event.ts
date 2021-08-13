@@ -30,7 +30,10 @@ class EventInput {
   location: string;
 
   @Field()
-  datetime: string;
+  startTime: string;
+
+  @Field()
+  endTime: string;
 }
 
 @Resolver(Event)

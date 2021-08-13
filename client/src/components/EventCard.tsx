@@ -50,7 +50,8 @@ const EventCard: React.FC<Props> = ({ event }) => {
             <Box>
               <Heading fontSize="x-large">UTS: {event.title}</Heading>
               <MetaDataText>
-                {parseDatePretty(event.datetime)} [
+                {parseDatePretty(event.startTime)} -{" "}
+                {parseDatePretty(event.endTime)} [
                 {Intl.DateTimeFormat().resolvedOptions().timeZone}]
               </MetaDataText>
               <Box mt={-1}>

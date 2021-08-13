@@ -35,7 +35,11 @@ export class Event extends BaseEntity {
 
   @Field(() => String)
   @Column()
-  datetime!: Date;
+  startTime!: Date;
+
+  @Field(() => String)
+  @Column()
+  endTime: Date;
 
   @Field()
   @Column()

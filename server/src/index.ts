@@ -52,11 +52,11 @@ const main = async () => {
     ],
     migrations: [path.join(__dirname, "./migrations/*")],
   });
-
-  conn.runMigrations();
-
   // Post.delete({});
   // Event.delete({});
+  // EventAttendee.delete({});
+
+  conn.runMigrations();
 
   const app = express();
 

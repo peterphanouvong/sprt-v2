@@ -13,6 +13,8 @@ const Home: React.FC<Props> = ({}) => {
   const [{ data, fetching }] = useEventsQuery();
   const [{ data: meData }] = useMeQuery();
 
+  console.log(data);
+
   if (!fetching && !data) {
     return <div>No data...</div>;
   }
