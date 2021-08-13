@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClubResolver = void 0;
 const type_graphql_1 = require("type-graphql");
 const Club_1 = require("../entities/Club");
+const User_1 = require("../entities/User");
+const typeorm_1 = require("typeorm");
 let ClubInput = class ClubInput {
 };
 __decorate([
@@ -29,6 +31,10 @@ __decorate([
     type_graphql_1.Field(),
     __metadata("design:type", String)
 ], ClubInput.prototype, "email", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], ClubInput.prototype, "phoneNumber", void 0);
 ClubInput = __decorate([
     type_graphql_1.InputType()
 ], ClubInput);
@@ -47,6 +53,15 @@ let ClubResolver = class ClubResolver {
         }
         await Club_1.Club.delete({ id });
         return true;
+    }
+    async admins(club, { userLoader }) {
+        const clubAdminIds = await typeorm_1.getConnection().query(`
+      select "adminId" 
+      from "club_admin"
+      where "clubId" = ${club.id};
+    `);
+        console.log(clubAdminIds);
+        return userLoader.loadMany(clubAdminIds.map((e) => e.adminId));
     }
 };
 __decorate([
@@ -69,6 +84,14 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], ClubResolver.prototype, "deleteClub", null);
+__decorate([
+    type_graphql_1.FieldResolver(() => User_1.User),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Club_1.Club, Object]),
+    __metadata("design:returntype", Promise)
+], ClubResolver.prototype, "admins", null);
 ClubResolver = __decorate([
     type_graphql_1.Resolver(Club_1.Club)
 ], ClubResolver);

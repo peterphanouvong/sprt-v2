@@ -37,6 +37,11 @@ __decorate([
     type_graphql_1.Field(),
     typeorm_1.Column(),
     __metadata("design:type", String)
+], Club.prototype, "phoneNumber", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    typeorm_1.Column(),
+    __metadata("design:type", String)
 ], Club.prototype, "description", void 0);
 __decorate([
     typeorm_1.OneToMany(() => ClubEvent_1.ClubEvent, (ce) => ce.club),

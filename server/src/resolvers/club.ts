@@ -8,10 +8,14 @@ import {
   Field,
   Ctx,
   UseMiddleware,
+  FieldResolver,
+  Root,
 } from "type-graphql";
 import { MyContext } from "src/types";
 import { isAuth } from "../middleware/isAuth";
 import { Club } from "../entities/Club";
+import { User } from "../entities/User";
+import { getConnection } from "typeorm";
 
 @InputType()
 class ClubInput {
@@ -23,6 +27,9 @@ class ClubInput {
 
   @Field()
   email: string;
+
+  @Field()
+  phoneNumber: string;
 }
 
 @Resolver(Club)
@@ -52,5 +59,21 @@ export class ClubResolver {
 
     await Club.delete({ id });
     return true;
+  }
+
+  @FieldResolver(() => User)
+  async admins(@Root() club: Club, @Ctx() { userLoader }: MyContext) {
+    // get a list of the attendeeIds
+    const clubAdminIds = await getConnection().query(`
+      select "adminId" 
+      from "club_admin"
+      where "clubId" = ${club.id};
+    `);
+
+    // clubAdminIds = [ { clubId: 1 } ]
+    console.log(clubAdminIds);
+    return userLoader.loadMany(
+      clubAdminIds.map((e: { adminId: number }) => e.adminId)
+    );
   }
 }

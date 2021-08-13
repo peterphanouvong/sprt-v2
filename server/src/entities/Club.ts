@@ -30,6 +30,10 @@ export class Club extends BaseEntity {
 
   @Field()
   @Column()
+  phoneNumber!: string;
+
+  @Field()
+  @Column()
   description: string;
 
   @OneToMany(() => ClubEvent, (ce) => ce.club)
