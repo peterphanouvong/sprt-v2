@@ -14,10 +14,10 @@ import { useDeleteEventMutation } from "../generated/graphql";
 
 interface Props {
   eventId: number;
-  // removeEvent: (id: any) => void;
+  removeEvent: (id: any) => void;
 }
 
-const DeleteEvent: React.FC<Props> = ({ eventId }) => {
+const DeleteEvent: React.FC<Props> = ({ eventId, removeEvent }) => {
   const [, deleteEvent] = useDeleteEventMutation();
 
   const [isOpen, setIsOpen] = React.useState(false);
@@ -56,8 +56,7 @@ const DeleteEvent: React.FC<Props> = ({ eventId }) => {
                   if (!success) {
                     console.log("event doesn't exist");
                   } else {
-                    // removeEvent(eventId);
-                    onClose();
+                    removeEvent(eventId);
                   }
                 }}
                 ml={2}

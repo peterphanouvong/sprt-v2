@@ -21,10 +21,10 @@ const Navbar: React.FC<Props> = ({}) => {
   } else if (!data?.me) {
     body = (
       <HStack spacing={8}>
-        <NextLink href='/login'>
+        <NextLink href="/login">
           <Link>Login</Link>
         </NextLink>
-        <NextLink href='/register'>
+        <NextLink href="/register">
           <Link>Register</Link>
         </NextLink>
         <SettingsDrawer />
@@ -35,10 +35,7 @@ const Navbar: React.FC<Props> = ({}) => {
   } else {
     body = (
       <HStack spacing={8}>
-        <NextLink href='/club'>
-          <Link>My Clubs</Link>
-        </NextLink>
-        <NextLink href='/'>
+        <NextLink href="/">
           <Link>{data.me.username}</Link>
         </NextLink>
         <Button
@@ -46,8 +43,8 @@ const Navbar: React.FC<Props> = ({}) => {
             logout();
           }}
           isLoading={logoutFetching}
-          variant='link'
-          fontWeight='normal'
+          variant="link"
+          fontWeight="normal"
         >
           Logout
         </Button>
@@ -60,18 +57,18 @@ const Navbar: React.FC<Props> = ({}) => {
     <Box
       paddingX={16}
       paddingY={2}
-      display='flex'
-      justifyContent='space-between'
-      borderBottomColor='gray.200'
-      boxShadow='sm'
-      borderBottomWidth='1px'
+      display="flex"
+      justifyContent="space-between"
+      borderBottomColor="gray.200"
+      boxShadow="sm"
+      borderBottomWidth="1px"
       mb={8}
-      position='sticky'
+      position="sticky"
       top={0}
-      zIndex='10'
+      zIndex="10"
       bg={colorMode === "dark" ? "gray.800" : `white`}
     >
-      <NextLink href='/home'>
+      <NextLink href="/home">
         <a>
           <Logo color={colorMode === "dark" ? "white" : "black"} />
         </a>

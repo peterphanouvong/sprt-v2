@@ -8,19 +8,16 @@ import cors from "cors";
 import { createConnection } from "typeorm";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
-import path from "path";
 
 import { COOKIE_NAME, __prod__ } from "./constants";
-import { createUserLoader } from "./utils/createUserLoader";
-
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
 import { EventResolver } from "./resolvers/event";
-import { ClubResolver } from "./resolvers/club";
 
 import { Post } from "./entities/Post";
 import { User } from "./entities/User";
+import path from "path";
 import { Event } from "./entities/Event";
 import { Club } from "./entities/Club";
 import { ClubEvent } from "./entities/ClubEvent";
@@ -68,7 +65,7 @@ const main = async () => {
     cors({
       origin: [
         process.env.CORS_ORIGIN,
-        "https://www.sprt.rest",
+        "https://sprt-test.vercel.app",
         "https://studio.apollographql.com",
       ],
       credentials: true,
@@ -87,7 +84,7 @@ const main = async () => {
         httpOnly: true,
         sameSite: "lax", // csrf
         secure: __prod__, // cookie only works in https
-        domain: __prod__ ? ".sprt.rest" : undefined,
+        domain: __prod__ ? ".sprt.fun" : undefined,
       },
       secret: process.env.SESSION_SECRET,
       resave: false,
@@ -96,21 +93,10 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [
-        HelloResolver,
-        PostResolver,
-        UserResolver,
-        EventResolver,
-        ClubResolver,
-      ],
+      resolvers: [HelloResolver, PostResolver, UserResolver, EventResolver],
       validate: false,
     }),
-    context: ({ req, res }) => ({
-      req,
-      res,
-      redis,
-      userLoader: createUserLoader(),
-    }),
+    context: ({ req, res }) => ({ req, res, redis }),
   });
 
   await apolloServer.start();
