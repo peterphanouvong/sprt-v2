@@ -17,6 +17,8 @@ const type_graphql_1 = require("type-graphql");
 const isAuth_1 = require("../middleware/isAuth");
 const Event_1 = require("../entities/Event");
 const User_1 = require("../entities/User");
+const EventAttendee_1 = require("../entities/EventAttendee");
+const typeorm_1 = require("typeorm");
 let EventInput = class EventInput {
 };
 __decorate([
@@ -39,8 +41,27 @@ EventInput = __decorate([
     type_graphql_1.InputType()
 ], EventInput);
 let EventResolver = class EventResolver {
-    host(event) {
-        return User_1.User.findOne(event.hostId);
+    async attendees(event, { userLoader }) {
+        const eventAttendeeIds = await typeorm_1.getConnection().query(`
+      select "attendeeId" 
+      from "event_attendee"
+      where "eventId" = ${event.id};
+    `);
+        return userLoader.loadMany(eventAttendeeIds.map((e) => e.attendeeId));
+    }
+    host(event, { userLoader }) {
+        return userLoader.load(event.hostId);
+    }
+    async addAttendee({ req }, eventId) {
+        const exists = await EventAttendee_1.EventAttendee.find({ eventId, attendeeId: 1 });
+        if (exists.length !== 0) {
+            throw Error("that person is already attending the event");
+        }
+        await EventAttendee_1.EventAttendee.create({
+            eventId,
+            attendeeId: 1,
+        }).save();
+        return await User_1.User.findOne(req.session.id);
     }
     async events() {
         return Event_1.Event.find();
@@ -79,10 +100,27 @@ let EventResolver = class EventResolver {
 __decorate([
     type_graphql_1.FieldResolver(() => User_1.User),
     __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Event_1.Event]),
+    __metadata("design:paramtypes", [Event_1.Event, Object]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "attendees", null);
+__decorate([
+    type_graphql_1.FieldResolver(() => User_1.User),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Event_1.Event, Object]),
     __metadata("design:returntype", void 0)
 ], EventResolver.prototype, "host", null);
+__decorate([
+    type_graphql_1.Mutation(() => User_1.User),
+    __param(0, type_graphql_1.Ctx()),
+    __param(1, type_graphql_1.Arg("eventId", () => type_graphql_1.Int)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "addAttendee", null);
 __decorate([
     type_graphql_1.Query(() => [Event_1.Event]),
     __metadata("design:type", Function),

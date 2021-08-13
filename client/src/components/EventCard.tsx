@@ -12,6 +12,7 @@ import {
 import React from "react";
 import { Event } from "../models";
 import { parseDatePretty } from "../utils/parseDate";
+import { MetaDataText } from "./ MetaDataText";
 import { Card } from "./Card";
 import { ClubIcon } from "./ClubIcon";
 import { DeleteEvent } from "./DeleteEvent";
@@ -33,16 +34,16 @@ const EventCard: React.FC<Props> = ({ event, removeEvent, editEvent }) => {
             <Box mr={4}></Box>
             <Box>
               <Heading fontSize="x-large">UTS: {event.title}</Heading>
-              <Text color="GrayText">
+              <MetaDataText>
                 {parseDatePretty(event.datetime)} [
                 {Intl.DateTimeFormat().resolvedOptions().timeZone}]
-              </Text>
-              <Box color="GrayText">
-                Hosted by{" "}
-                <Box display="inline" textTransform="capitalize">
-                  {event.host.username}
-                </Box>{" "}
-                <ChevronRightIcon /> {event.location}
+              </MetaDataText>
+              <Box mt={-1}>
+                <MetaDataText>Hosted by </MetaDataText>
+                <MetaDataText>{event.host.username}</MetaDataText>{" "}
+                <MetaDataText>
+                  <ChevronRightIcon /> {event.location}
+                </MetaDataText>
               </Box>
             </Box>
           </Box>

@@ -16,13 +16,11 @@ export class EventAttendee extends BaseEntity {
   eventId: number;
 
   @ManyToOne(() => Event, (event) => event.attendeeConnection)
-  @JoinColumn({ name: "eventId" })
   event: Event;
 
   @PrimaryColumn()
   attendeeId: number;
 
   @ManyToOne(() => User, (user) => user.eventConnection)
-  @JoinColumn({ name: "attendeeId" })
   attendee: User;
 }

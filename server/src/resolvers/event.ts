@@ -15,6 +15,8 @@ import { MyContext } from "src/types";
 import { isAuth } from "../middleware/isAuth";
 import { Event } from "../entities/Event";
 import { User } from "../entities/User";
+import { EventAttendee } from "../entities/EventAttendee";
+import { createQueryBuilder, getConnection } from "typeorm";
 
 @InputType()
 class EventInput {
@@ -34,8 +36,44 @@ class EventInput {
 @Resolver(Event)
 export class EventResolver {
   @FieldResolver(() => User)
-  host(@Root() event: Event) {
-    return User.findOne(event.hostId);
+  async attendees(@Root() event: Event, @Ctx() { userLoader }: MyContext) {
+    // get a list of the attendeeIds
+    const eventAttendeeIds = await getConnection().query(`
+      select "attendeeId" 
+      from "event_attendee"
+      where "eventId" = ${event.id};
+    `);
+
+    // eventAttendeeIds = [ { attendeeId: 1 } ]
+    return userLoader.loadMany(
+      eventAttendeeIds.map((e: { attendeeId: number }) => e.attendeeId)
+    );
+  }
+
+  @FieldResolver(() => User)
+  host(@Root() event: Event, @Ctx() { userLoader }: MyContext) {
+    return userLoader.load(event.hostId);
+  }
+
+  @Mutation(() => User)
+  // @UseMiddleware(isAuth)
+  async addAttendee(
+    @Ctx() { req }: MyContext,
+    @Arg("eventId", () => Int) eventId: number
+  ): Promise<User | undefined> {
+    const exists = await EventAttendee.find({ eventId, attendeeId: 1 });
+
+    // alreay attending
+    if (exists.length !== 0) {
+      throw Error("that person is already attending the event");
+    }
+
+    await EventAttendee.create({
+      eventId,
+      attendeeId: 1,
+    }).save();
+
+    return await User.findOne(req.session.id);
   }
 
   @Query(() => [Event])
