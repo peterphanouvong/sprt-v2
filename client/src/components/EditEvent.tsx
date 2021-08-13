@@ -16,18 +16,17 @@ import {
 import format from "date-fns/format";
 import { Formik, Form } from "formik";
 import React from "react";
-import { useUpdateEventMutation } from "../generated/graphql";
-import { Event } from "../models";
+import { Event, useUpdateEventMutation } from "../generated/graphql";
 import { parseDate } from "../utils/parseDate";
 import { InputField } from "./InputField";
 import { TextareaField } from "./TextareaField";
 
 interface Props {
   event: Event;
-  editEvent: (e: Event) => void;
+  // editEvent: (e: Event) => void;
 }
 
-const EditEvent: React.FC<Props> = ({ event, editEvent }) => {
+const EditEvent: React.FC<Props> = ({ event }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [, updateEvent] = useUpdateEventMutation();
 
@@ -70,7 +69,7 @@ const EditEvent: React.FC<Props> = ({ event, editEvent }) => {
                 id: event.id,
               });
               onClose();
-              editEvent(res.data.updateEvent);
+              // editEvent(res.data.updateEvent);
             }}
           >
             {(props) => (
