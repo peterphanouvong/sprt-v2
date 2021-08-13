@@ -3,9 +3,10 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { Layout } from "../components/Layout";
 import { Event, useEventsQuery, useMeQuery } from "../generated/graphql";
-import { Box, Spinner, VStack } from "@chakra-ui/react";
+import { Box, Grid, Spinner, VStack } from "@chakra-ui/react";
 import { CreateEvent } from "../components/CreateEvent";
 import { EventCard } from "../components/EventCard";
+import { Card } from "../components/Card";
 
 interface Props {}
 
@@ -49,22 +50,27 @@ const Home: React.FC<Props> = ({}) => {
 
   return (
     <Layout>
-      {meData?.me && <CreateEvent addEvent={addEvent} />}
-      <Box mt={4} />
-      <VStack spacing={4} align="stretch">
-        {events
-          .sort((a, b) => b.updatedAt - a.updatedAt)
-          .map((e) => {
-            return (
-              <EventCard
-                key={e.id}
-                event={e}
-                removeEvent={removeEvent}
-                editEvent={editEvent}
-              />
-            );
-          })}
-      </VStack>
+      <Grid alignItems="flex-start" templateColumns="5fr 2fr" gap={4}>
+        <Box>
+          {meData?.me && <CreateEvent addEvent={addEvent} />}
+          <Box mt={4} />
+          <VStack spacing={4} align="stretch">
+            {events
+              .sort((a, b) => b.updatedAt - a.updatedAt)
+              .map((e) => {
+                return (
+                  <EventCard
+                    key={e.id}
+                    event={e}
+                    removeEvent={removeEvent}
+                    editEvent={editEvent}
+                  />
+                );
+              })}
+          </VStack>
+        </Box>
+        <Card></Card>
+      </Grid>
     </Layout>
   );
 };

@@ -8,12 +8,13 @@ import {
   Field,
   Ctx,
   UseMiddleware,
+  FieldResolver,
+  Root,
 } from "type-graphql";
 import { MyContext } from "src/types";
 import { isAuth } from "../middleware/isAuth";
 import { Event } from "../entities/Event";
-// import { EventAttendee } from "../entities/EventAttendee";
-// import { User } from "../entities/User";
+import { User } from "../entities/User";
 
 @InputType()
 class EventInput {
@@ -28,62 +29,23 @@ class EventInput {
 
   @Field()
   datetime: string;
-
-  // @Field()
-  // hostId: number;
 }
-
-// @ObjectType()
-// class PaginatedEvents {
-//   @Field(() => [Post])
-//   posts: Post[];
-
-//   @Field(() => Boolean)
-//   hasMore: boolean;
-// }
 
 @Resolver(Event)
 export class EventResolver {
+  @FieldResolver(() => User)
+  host(@Root() event: Event) {
+    return User.findOne(event.hostId);
+  }
+
   @Query(() => [Event])
   async events(): Promise<Event[]> {
-    // @Arg("limit", () => Int) limit: number,
-    // @Arg("cursor", () => String, { nullable: true }) cursor: string | null
-
-    return Event.find({ relations: ["host"] });
-
-    // const realLimit = Math.min(50, limit);
-    // const realLimitPlusOne = realLimit + 1;
-    // const replacements: any[] = [realLimitPlusOne];
-    // if (cursor) {
-    //   replacements.push(new Date(parseInt(cursor)));
-    // }
-    // const posts = await getConnection().query(
-    //   `
-    //     select p.*,
-    //     json_build_object(
-    //       'id', u.id,
-    //       'username', u.username,
-    //       'email', u.email,
-    //       'createdAt', u."createdAt",
-    //       'updatedAt', u."updatedAt"
-    //     ) creator
-    //     from post p
-    //     inner join "user" u on u.id = p."creatorId"
-    //     ${cursor ? `where p."createdAt" < $2` : ""}
-    //     order by p."createdAt" DESC
-    //     limit $1
-    //   `,
-    //   replacements
-    // );
-    // return {
-    //   posts: posts.slice(0, realLimit),
-    //   hasMore: posts.length === realLimitPlusOne,
-    // };
+    return Event.find();
   }
 
   @Query(() => Event, { nullable: true })
   event(@Arg("id", () => Int) id: number): Promise<Event | undefined> {
-    return Event.findOne(id, { relations: ["host"] });
+    return Event.findOne(id);
   }
 
   @Mutation(() => Event)
@@ -96,7 +58,7 @@ export class EventResolver {
       ...input,
       hostId: req.session.userId,
     }).save();
-    const event = await Event.findOne(id, { relations: ["host"] });
+    const event = await Event.findOne(id);
     return event;
   }
 
@@ -116,7 +78,7 @@ export class EventResolver {
     }
 
     await Event.update(id, { ...input });
-    return Event.findOne(id, { relations: ["host"] });
+    return Event.findOne(id);
   }
 
   @Mutation(() => Boolean)
@@ -137,23 +99,4 @@ export class EventResolver {
     await Event.delete({ id, hostId: req.session.userId });
     return true;
   }
-
-  // @Mutation(() => Boolean)
-  // async addAttendee(
-  //   @Arg("id") id: number,
-  //   @Arg("userId") userId: number
-  // ): Promise<Boolean> {
-  //   // find the event
-  //   const event = await Event.findOne(id);
-
-  //   // find the user
-  //   const user = await User.findOne(userId);
-
-  //   // create eventAttendee(eventId, userId)
-  //   await EventAttendee.insert({ event, attendee: user });
-
-  //   // add ea to eventConn & userConn\
-
-  //   return true;
-  // }
 }

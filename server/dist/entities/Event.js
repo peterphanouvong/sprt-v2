@@ -13,6 +13,7 @@ exports.Event = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const ClubEvent_1 = require("./ClubEvent");
+const EventAttendee_1 = require("./EventAttendee");
 const User_1 = require("./User");
 let Event = class Event extends typeorm_1.BaseEntity {
 };
@@ -55,6 +56,14 @@ __decorate([
     typeorm_1.OneToMany(() => ClubEvent_1.ClubEvent, (ce) => ce.event),
     __metadata("design:type", Array)
 ], Event.prototype, "clubs", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => EventAttendee_1.EventAttendee, (ea) => ea.event),
+    __metadata("design:type", Array)
+], Event.prototype, "attendeeConnection", void 0);
+__decorate([
+    type_graphql_1.Field(() => [User_1.User]),
+    __metadata("design:type", Array)
+], Event.prototype, "attendees", void 0);
 __decorate([
     type_graphql_1.Field(),
     typeorm_1.Column({ type: "int", default: 0 }),

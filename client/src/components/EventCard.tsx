@@ -1,6 +1,7 @@
 import { ChevronRightIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
   Box,
+  Button,
   Heading,
   IconButton,
   Menu,
@@ -45,7 +46,6 @@ const EventCard: React.FC<Props> = ({ event, removeEvent, editEvent }) => {
               </Box>
             </Box>
           </Box>
-
           <Text mt={4}>{event.description}</Text>
         </Box>
 
@@ -53,10 +53,9 @@ const EventCard: React.FC<Props> = ({ event, removeEvent, editEvent }) => {
           <Menu>
             <MenuButton
               as={IconButton}
-              border="none"
               aria-label="Options"
               icon={<HamburgerIcon />}
-              variant="outline"
+              variant="ghost"
             />
             <MenuList>
               <EditEvent editEvent={editEvent} event={event} />
@@ -65,6 +64,9 @@ const EventCard: React.FC<Props> = ({ event, removeEvent, editEvent }) => {
           </Menu>
         </Box>
       </Box>
+      <Button mt={4} isFullWidth={true} variant="solid">
+        Join
+      </Button>
     </Card>
   );
 };

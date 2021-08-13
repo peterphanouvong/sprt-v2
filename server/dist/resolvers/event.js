@@ -16,6 +16,7 @@ exports.EventResolver = void 0;
 const type_graphql_1 = require("type-graphql");
 const isAuth_1 = require("../middleware/isAuth");
 const Event_1 = require("../entities/Event");
+const User_1 = require("../entities/User");
 let EventInput = class EventInput {
 };
 __decorate([
@@ -38,15 +39,18 @@ EventInput = __decorate([
     type_graphql_1.InputType()
 ], EventInput);
 let EventResolver = class EventResolver {
+    host(event) {
+        return User_1.User.findOne(event.hostId);
+    }
     async events() {
-        return Event_1.Event.find({ relations: ["host"] });
+        return Event_1.Event.find();
     }
     event(id) {
-        return Event_1.Event.findOne(id, { relations: ["host"] });
+        return Event_1.Event.findOne(id);
     }
     async createEvent({ req }, input) {
         const { id } = await Event_1.Event.create(Object.assign(Object.assign({}, input), { hostId: req.session.userId })).save();
-        const event = await Event_1.Event.findOne(id, { relations: ["host"] });
+        const event = await Event_1.Event.findOne(id);
         return event;
     }
     async updateEvent({ req }, id, input) {
@@ -58,7 +62,7 @@ let EventResolver = class EventResolver {
             return null;
         }
         await Event_1.Event.update(id, Object.assign({}, input));
-        return Event_1.Event.findOne(id, { relations: ["host"] });
+        return Event_1.Event.findOne(id);
     }
     async deleteEvent(id, { req }) {
         const event = await Event_1.Event.findOne(id);
@@ -72,6 +76,13 @@ let EventResolver = class EventResolver {
         return true;
     }
 };
+__decorate([
+    type_graphql_1.FieldResolver(() => User_1.User),
+    __param(0, type_graphql_1.Root()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Event_1.Event]),
+    __metadata("design:returntype", void 0)
+], EventResolver.prototype, "host", null);
 __decorate([
     type_graphql_1.Query(() => [Event_1.Event]),
     __metadata("design:type", Function),

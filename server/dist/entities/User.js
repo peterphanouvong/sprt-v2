@@ -64,7 +64,7 @@ __decorate([
 __decorate([
     typeorm_1.OneToMany(() => EventAttendee_1.EventAttendee, (ca) => ca.attendee),
     __metadata("design:type", Array)
-], User.prototype, "eventAttendeeConn", void 0);
+], User.prototype, "eventConnection", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.CreateDateColumn(),
