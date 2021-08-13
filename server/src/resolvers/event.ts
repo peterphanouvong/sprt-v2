@@ -73,7 +73,7 @@ export class EventResolver {
 
     await EventAttendee.create({
       eventId: eventId,
-      attendeeId: 1,
+      attendeeId: req.session.userId,
     }).save();
 
     return await User.findOne(req.session.userId);
