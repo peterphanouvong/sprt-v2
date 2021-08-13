@@ -56,12 +56,15 @@ export class EventResolver {
   }
 
   @Mutation(() => User)
-  // @UseMiddleware(isAuth)
+  @UseMiddleware(isAuth)
   async addAttendee(
     @Ctx() { req }: MyContext,
     @Arg("eventId", () => Int) eventId: number
   ): Promise<User | undefined> {
-    const exists = await EventAttendee.find({ eventId, attendeeId: 1 });
+    const exists = await EventAttendee.find({
+      eventId,
+      attendeeId: req.session.userId,
+    });
 
     // alreay attending
     if (exists.length !== 0) {
@@ -69,11 +72,11 @@ export class EventResolver {
     }
 
     await EventAttendee.create({
-      eventId,
+      eventId: eventId,
       attendeeId: 1,
     }).save();
 
-    return await User.findOne(req.session.id);
+    return await User.findOne(req.session.userId);
   }
 
   @Query(() => [Event])

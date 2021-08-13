@@ -53,15 +53,18 @@ let EventResolver = class EventResolver {
         return userLoader.load(event.hostId);
     }
     async addAttendee({ req }, eventId) {
-        const exists = await EventAttendee_1.EventAttendee.find({ eventId, attendeeId: 1 });
+        const exists = await EventAttendee_1.EventAttendee.find({
+            eventId,
+            attendeeId: req.session.userId,
+        });
         if (exists.length !== 0) {
             throw Error("that person is already attending the event");
         }
         await EventAttendee_1.EventAttendee.create({
-            eventId,
+            eventId: eventId,
             attendeeId: 1,
         }).save();
-        return await User_1.User.findOne(req.session.id);
+        return await User_1.User.findOne(req.session.userId);
     }
     async events() {
         return Event_1.Event.find();
@@ -115,6 +118,7 @@ __decorate([
 ], EventResolver.prototype, "host", null);
 __decorate([
     type_graphql_1.Mutation(() => User_1.User),
+    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
     __param(0, type_graphql_1.Ctx()),
     __param(1, type_graphql_1.Arg("eventId", () => type_graphql_1.Int)),
     __metadata("design:type", Function),

@@ -1,16 +1,24 @@
 import { ChevronRightIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
   Button,
   Heading,
   IconButton,
+  UnorderedList,
   Menu,
   MenuButton,
   MenuList,
   Text,
+  ListItem,
 } from "@chakra-ui/react";
-import React from "react";
-import { Event } from "../models";
+import React, { useState } from "react";
+import { Event, useAddAttendeeMutation, User } from "../generated/graphql";
+// import { Event } from "../models";
 import { parseDatePretty } from "../utils/parseDate";
 import { MetaDataText } from "./ MetaDataText";
 import { Card } from "./Card";
@@ -20,11 +28,14 @@ import { EditEvent } from "./EditEvent";
 
 interface Props {
   event: Event;
-  removeEvent: (id: any) => void;
-  editEvent: (e: Event) => void;
+  // removeEvent: (id: any) => void;
+  // editEvent: (e: Event) => void;
 }
 
-const EventCard: React.FC<Props> = ({ event, removeEvent, editEvent }) => {
+const EventCard: React.FC<Props> = ({ event }) => {
+  const [, addAttendee] = useAddAttendeeMutation();
+  const [attendees, setAttendees] = useState<User[]>(event.attendees);
+
   return (
     <Card>
       <Box display="flex" justifyContent="space-between">
@@ -59,13 +70,46 @@ const EventCard: React.FC<Props> = ({ event, removeEvent, editEvent }) => {
               variant="ghost"
             />
             <MenuList>
-              <EditEvent editEvent={editEvent} event={event} />
-              <DeleteEvent removeEvent={removeEvent} eventId={event.id} />
+              <EditEvent event={event} />
+              <DeleteEvent eventId={event.id} />
             </MenuList>
           </Menu>
         </Box>
       </Box>
-      <Button mt={4} isFullWidth={true} variant="solid">
+
+      <Box mt={4}>
+        <Accordion allowToggle>
+          <AccordionItem>
+            <AccordionButton>
+              <Box flex="1" textAlign="left">
+                <Text fontWeight="medium">Attendees</Text>
+              </Box>
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel>
+              <UnorderedList>
+                {attendees.map((attendee) => (
+                  <ListItem key={attendee.id}>{attendee.username}</ListItem>
+                ))}
+              </UnorderedList>
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+      </Box>
+
+      <Button
+        onClick={async () => {
+          const res = await addAttendee({ eventId: event.id });
+          console.log(res);
+          if (res.data) {
+            // @ts-ignore
+            setAttendees([...attendees, res.data.addAttendee]);
+          }
+        }}
+        mt={4}
+        isFullWidth={true}
+        variant="solid"
+      >
         Join
       </Button>
     </Card>
