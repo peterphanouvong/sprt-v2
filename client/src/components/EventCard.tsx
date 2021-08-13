@@ -1,4 +1,4 @@
-import { ChevronRightIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { ChevronRightIcon, HamburgerIcon, WarningIcon } from "@chakra-ui/icons";
 import {
   Accordion,
   AccordionButton,
@@ -12,6 +12,7 @@ import {
   UnorderedList,
   Menu,
   MenuButton,
+  MenuItem,
   MenuList,
   Text,
   ListItem,
@@ -19,6 +20,7 @@ import {
 import React, { useState } from "react";
 import { Event, useAddAttendeeMutation, User } from "../generated/graphql";
 // import { Event } from "../models";
+import { useMeQuery } from "../generated/graphql";
 import { parseDatePretty } from "../utils/parseDate";
 import { MetaDataText } from "./ MetaDataText";
 import { Card } from "./Card";
@@ -36,6 +38,8 @@ const EventCard: React.FC<Props> = ({ event }) => {
   const [, addAttendee] = useAddAttendeeMutation();
   const [attendees, setAttendees] = useState<User[]>(event.attendees);
 
+  const [{ data }] = useMeQuery();
+  if (!data) return <>loading...</>;
   return (
     <Card>
       <Box display="flex" justifyContent="space-between">
@@ -70,8 +74,14 @@ const EventCard: React.FC<Props> = ({ event }) => {
               variant="ghost"
             />
             <MenuList>
-              <EditEvent event={event} />
-              <DeleteEvent eventId={event.id} />
+              {data.me?.id === event.host.id ? (
+                <>
+                  <EditEvent event={event} />
+                  <DeleteEvent eventId={event.id} />
+                </>
+              ) : (
+                <MenuItem icon={<WarningIcon />}>Report</MenuItem>
+              )}
             </MenuList>
           </Menu>
         </Box>
