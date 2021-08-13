@@ -1,26 +1,19 @@
 import { EditIcon } from "@chakra-ui/icons";
 import {
   useDisclosure,
-  VStack,
   Heading,
-  Button,
   Modal,
   ModalOverlay,
   ModalContent,
   Box,
   CloseButton,
   Divider,
-  ModalFooter,
   MenuItem,
 } from "@chakra-ui/react";
 import format from "date-fns/format";
-import { Formik, Form } from "formik";
 import React from "react";
 import { Event, useUpdateEventMutation } from "../generated/graphql";
-import { parseDate } from "../utils/parseDate";
 import { EventForm } from "./EventForm";
-import { InputField } from "./InputField";
-import { TextareaField } from "./TextareaField";
 
 interface Props {
   event: Event;
@@ -40,7 +33,7 @@ const EditEvent: React.FC<Props> = ({ event }) => {
       new Date(values.endTime),
       "yyyy-MM-dd hh:mm:ss xxx"
     );
-    const res = await updateEvent({
+    await updateEvent({
       input: {
         ...values,
         startTime: formattedStartTime,
