@@ -1,14 +1,17 @@
-import { ChevronRightIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { ChevronRightIcon, HamburgerIcon, WarningIcon } from "@chakra-ui/icons";
 import {
+  AlertIcon,
   Box,
   Heading,
   IconButton,
   Menu,
   MenuButton,
+  MenuItem,
   MenuList,
   Text,
 } from "@chakra-ui/react";
 import React from "react";
+import { useMeQuery } from "../generated/graphql";
 import { Event } from "../models";
 import { parseDatePretty } from "../utils/parseDate";
 import { Card } from "./Card";
@@ -23,6 +26,8 @@ interface Props {
 }
 
 const EventCard: React.FC<Props> = ({ event, removeEvent, editEvent }) => {
+  const [{ data }] = useMeQuery();
+  if (!data) return <>loading...</>;
   return (
     <Card>
       <Box display="flex" justifyContent="space-between">
@@ -59,8 +64,14 @@ const EventCard: React.FC<Props> = ({ event, removeEvent, editEvent }) => {
               variant="outline"
             />
             <MenuList>
-              <EditEvent editEvent={editEvent} event={event} />
-              <DeleteEvent removeEvent={removeEvent} eventId={event.id} />
+              {data.me?.id === event.host.id ? (
+                <>
+                  <EditEvent editEvent={editEvent} event={event} />
+                  <DeleteEvent removeEvent={removeEvent} eventId={event.id} />
+                </>
+              ) : (
+                <MenuItem icon={<WarningIcon />}>Report</MenuItem>
+              )}
             </MenuList>
           </Menu>
         </Box>
