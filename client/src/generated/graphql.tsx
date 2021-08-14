@@ -19,7 +19,9 @@ export type Club = {
   id: Scalars['Int'];
   name: Scalars['String'];
   email: Scalars['String'];
+  phoneNumber: Scalars['String'];
   description: Scalars['String'];
+  admins: Array<User>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
 };
@@ -28,6 +30,7 @@ export type ClubInput = {
   name: Scalars['String'];
   description: Scalars['String'];
   email: Scalars['String'];
+  phoneNumber: Scalars['String'];
 };
 
 export type Event = {
@@ -75,6 +78,7 @@ export type Mutation = {
   updateEvent?: Maybe<Event>;
   deleteEvent: Scalars['Boolean'];
   createClub: Club;
+  addAdmin: Scalars['Boolean'];
   deleteClub: Scalars['Boolean'];
 };
 
@@ -140,6 +144,12 @@ export type MutationDeleteEventArgs = {
 
 export type MutationCreateClubArgs = {
   input: ClubInput;
+};
+
+
+export type MutationAddAdminArgs = {
+  adminId: Scalars['Float'];
+  clubId: Scalars['Float'];
 };
 
 
@@ -221,7 +231,7 @@ export type UsernamePasswordInput = {
   password: Scalars['String'];
 };
 
-export type RegularClubFragment = { __typename?: 'Club', id: number, name: string, email: string, description: string, createdAt: string, updatedAt: string };
+export type RegularClubFragment = { __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string }> };
 
 export type RegularErrorFragment = { __typename?: 'FieldError', message: string, field: string };
 
@@ -251,7 +261,7 @@ export type CreateClubMutationVariables = Exact<{
 }>;
 
 
-export type CreateClubMutation = { __typename?: 'Mutation', createClub: { __typename?: 'Club', id: number, name: string, email: string, description: string, createdAt: string, updatedAt: string } };
+export type CreateClubMutation = { __typename?: 'Mutation', createClub: { __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string }> } };
 
 export type CreateEventMutationVariables = Exact<{
   input: EventInput;
@@ -326,7 +336,7 @@ export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: Maybe
 export type ClubsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ClubsQuery = { __typename?: 'Query', clubs: Array<{ __typename?: 'Club', id: number, name: string, email: string, description: string, createdAt: string, updatedAt: string }> };
+export type ClubsQuery = { __typename?: 'Query', clubs: Array<{ __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string }> }> };
 
 export type EventsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -353,16 +363,6 @@ export type PostsQueryVariables = Exact<{
 
 export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: number, description: string, title: string, creatorId: number, createdAt: string, points: number, updatedAt: string, descriptionSnippet: string, creator: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string } }> } };
 
-export const RegularClubFragmentDoc = gql`
-    fragment RegularClub on Club {
-  id
-  name
-  email
-  description
-  createdAt
-  updatedAt
-}
-    `;
 export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
   id
@@ -370,6 +370,20 @@ export const RegularUserFragmentDoc = gql`
   email
 }
     `;
+export const RegularClubFragmentDoc = gql`
+    fragment RegularClub on Club {
+  id
+  name
+  email
+  phoneNumber
+  description
+  createdAt
+  updatedAt
+  admins {
+    ...RegularUser
+  }
+}
+    ${RegularUserFragmentDoc}`;
 export const RegularEventFragmentDoc = gql`
     fragment RegularEvent on Event {
   id

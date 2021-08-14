@@ -1,6 +1,5 @@
 import {
   useDisclosure,
-  VStack,
   Heading,
   Button,
   Modal,
@@ -9,15 +8,11 @@ import {
   Box,
   CloseButton,
   Divider,
-  ModalFooter,
 } from "@chakra-ui/react";
 import format from "date-fns/format";
-import { Formik, Form } from "formik";
 import React from "react";
 import { useCreateEventMutation } from "../generated/graphql";
 import { EventForm } from "./EventForm";
-import { InputField } from "./InputField";
-import { TextareaField } from "./TextareaField";
 
 interface Props {
   // addEvent: (e: any) => void;
@@ -41,7 +36,7 @@ const CreateEvent: React.FC<Props> = ({}) => {
       "yyyy-MM-dd hh:mm:ss xxx"
     );
 
-    const { error, data } = await createEvent({
+    const { error } = await createEvent({
       input: {
         ...values,
         startTime: formattedStartTime,

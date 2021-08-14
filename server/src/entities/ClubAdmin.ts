@@ -9,7 +9,7 @@ export class ClubAdmin extends BaseEntity {
   @PrimaryColumn()
   clubId: number;
 
-  @ManyToOne(() => Club, (club) => club.admins)
+  @ManyToOne(() => Club, (club) => club.adminConnection)
   club: Club;
 
   @PrimaryColumn()

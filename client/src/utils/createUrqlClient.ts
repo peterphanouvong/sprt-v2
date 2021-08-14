@@ -4,30 +4,20 @@ import {
   dedupExchange,
   Exchange,
   fetchExchange,
-  // gql,
   stringifyVariables,
 } from "urql";
 import { pipe, tap } from "wonka";
 import {
+  ClubsDocument,
   DeleteClubMutationVariables,
   DeleteEventMutationVariables,
-  // CreateEventMutation,
-  // CreatePostMutation,
   DeletePostMutationVariables,
   EventsDocument,
-  EventsQuery,
   LoginMutation,
-  // EventsDocument,
-  // EventsQuery,
-  // LoginMutation,
   LogoutMutation,
   MeDocument,
   MeQuery,
   RegisterMutation,
-  UpdateEventMutation,
-  // PostsDocument,
-  // PostsQuery,
-  // RegisterMutation,
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 import { isServer } from "./isServer";
@@ -112,7 +102,20 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
-            createEvent: (result, args, cache, info) => {
+            createClub: (result, _args, cache, _info) => {
+              cache.updateQuery({ query: ClubsDocument }, (data) => {
+                //@ts-ignore
+                data.clubs.push(result.createClub);
+                return data;
+              });
+            },
+            deleteClub: (_result, args, cache, _info) => {
+              cache.invalidate({
+                __typename: "Club",
+                id: (args as DeleteClubMutationVariables).id,
+              });
+            },
+            createEvent: (result, _args, cache, _info) => {
               cache.updateQuery({ query: EventsDocument }, (data) => {
                 console.log("result", result);
                 console.log("data", data);
@@ -121,19 +124,19 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 return data;
               });
             },
-            deleteEvent: (_result, args, cache, info) => {
+            deleteEvent: (_result, args, cache, _info) => {
               cache.invalidate({
                 __typename: "Event",
                 id: (args as DeleteEventMutationVariables).id,
               });
             },
-            deletePost: (_result, args, cache, info) => {
+            deletePost: (_result, args, cache, _info) => {
               cache.invalidate({
                 __typename: "Post",
                 id: (args as DeletePostMutationVariables).id,
               });
             },
-            logout: (_result, args, cache, info) => {
+            logout: (_result, _args, cache, _info) => {
               betterUpdateQuery<LogoutMutation, MeQuery>(
                 cache,
                 { query: MeDocument },
@@ -141,7 +144,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 () => ({ me: null })
               );
             },
-            login: (_result, args, cache, info) => {
+            login: (_result, _args, cache, _info) => {
               betterUpdateQuery<LoginMutation, MeQuery>(
                 cache,
                 { query: MeDocument },
@@ -158,7 +161,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 }
               );
             },
-            register: (_result, args, cache, info) => {
+            register: (_result, _args, cache, _info) => {
               betterUpdateQuery<RegisterMutation, MeQuery>(
                 cache,
                 { query: MeDocument },

@@ -15,6 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClubResolver = void 0;
 const type_graphql_1 = require("type-graphql");
 const Club_1 = require("../entities/Club");
+const User_1 = require("../entities/User");
+const typeorm_1 = require("typeorm");
+const ClubAdmin_1 = require("../entities/ClubAdmin");
 let ClubInput = class ClubInput {
 };
 __decorate([
@@ -29,33 +32,100 @@ __decorate([
     type_graphql_1.Field(),
     __metadata("design:type", String)
 ], ClubInput.prototype, "email", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], ClubInput.prototype, "phoneNumber", void 0);
 ClubInput = __decorate([
     type_graphql_1.InputType()
 ], ClubInput);
 let ClubResolver = class ClubResolver {
-    async createClub(input) {
-        return Club_1.Club.create(input).save();
+    async createClub(input, { req }) {
+        const duplicateName = await Club_1.Club.find({ name: input.name });
+        if (duplicateName.length > 0) {
+            throw Error(`{"name": "A club already exists with this name"}`);
+        }
+        const duplicateEmail = await Club_1.Club.find({ email: input.email });
+        if (duplicateEmail.length > 0) {
+            throw Error(`{"email": "A club already exists with this email"}`);
+        }
+        const duplicateNumber = await Club_1.Club.find({ phoneNumber: input.phoneNumber });
+        if (duplicateNumber.length > 0) {
+            throw Error(`{"phoneNumber": "A club already exists with this phone number"}`);
+        }
+        const club = await Club_1.Club.create(input).save();
+        this.addAdmin(club.id, req.session.userId);
+        return club;
+    }
+    async addAdmin(clubId, adminId) {
+        const exists = await ClubAdmin_1.ClubAdmin.find({
+            clubId: clubId,
+            adminId: adminId,
+        });
+        if (exists.length) {
+            throw Error("that person is already an admin");
+        }
+        const res = await ClubAdmin_1.ClubAdmin.create({
+            clubId: clubId,
+            adminId: adminId,
+        }).save();
+        console.log(res);
+        return true;
     }
     async clubs() {
         return Club_1.Club.find({});
     }
-    async deleteClub(id) {
+    async deleteClub(id, { req }) {
         console.log(id);
         const club = await Club_1.Club.findOne(id);
+        const admins = await typeorm_1.getConnection().query(`
+    select "adminId" 
+    from "club_admin"
+    where "clubId" = ${id};
+  `);
         if (!club) {
             return false;
         }
+        console.log(club);
+        if (!admins
+            .map((user) => user.adminId)
+            .includes(req.session.userId)) {
+            throw Error("User is not authorised to delete this club");
+        }
+        this.removeAllAdminsFromClub(id);
         await Club_1.Club.delete({ id });
         return true;
+    }
+    async removeAllAdminsFromClub(clubId) {
+        await ClubAdmin_1.ClubAdmin.delete({ clubId: clubId });
+        return true;
+    }
+    async admins(club, { userLoader }) {
+        const clubAdminIds = await typeorm_1.getConnection().query(`
+      select "adminId" 
+      from "club_admin"
+      where "clubId" = ${club.id};
+    `);
+        console.log(clubAdminIds);
+        return userLoader.loadMany(clubAdminIds.map((e) => e.adminId));
     }
 };
 __decorate([
     type_graphql_1.Mutation(() => Club_1.Club),
     __param(0, type_graphql_1.Arg("input")),
+    __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [ClubInput]),
+    __metadata("design:paramtypes", [ClubInput, Object]),
     __metadata("design:returntype", Promise)
 ], ClubResolver.prototype, "createClub", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg("clubId")),
+    __param(1, type_graphql_1.Arg("adminId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
+], ClubResolver.prototype, "addAdmin", null);
 __decorate([
     type_graphql_1.Query(() => [Club_1.Club]),
     __metadata("design:type", Function),
@@ -65,10 +135,19 @@ __decorate([
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
     __param(0, type_graphql_1.Arg("id")),
+    __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], ClubResolver.prototype, "deleteClub", null);
+__decorate([
+    type_graphql_1.FieldResolver(() => User_1.User),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Club_1.Club, Object]),
+    __metadata("design:returntype", Promise)
+], ClubResolver.prototype, "admins", null);
 ClubResolver = __decorate([
     type_graphql_1.Resolver(Club_1.Club)
 ], ClubResolver);

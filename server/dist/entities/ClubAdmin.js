@@ -21,7 +21,7 @@ __decorate([
     __metadata("design:type", Number)
 ], ClubAdmin.prototype, "clubId", void 0);
 __decorate([
-    typeorm_1.ManyToOne(() => Club_1.Club, (club) => club.admins),
+    typeorm_1.ManyToOne(() => Club_1.Club, (club) => club.adminConnection),
     __metadata("design:type", Club_1.Club)
 ], ClubAdmin.prototype, "club", void 0);
 __decorate([
