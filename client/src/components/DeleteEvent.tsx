@@ -10,10 +10,13 @@ const DeleteEvent: React.FC<Props> = ({ eventId }) => {
   const [, deleteEvent] = useDeleteEventMutation();
 
   const handleDelete = async () => {
-    const success = await deleteEvent({ id: eventId });
-    if (!success) {
-      console.log("event doesn't exist");
+    const { error } = await deleteEvent({ id: eventId });
+
+    if (error) {
+      return error.message;
     }
+
+    return null;
   };
 
   return <DeleteEntity handleDelete={handleDelete} entityName={"Event"} />;

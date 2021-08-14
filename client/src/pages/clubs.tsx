@@ -1,12 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { Layout } from "../components/Layout";
-import {
-  Club as ClubInterface,
-  useClubsQuery,
-  useDeleteClubMutation,
-} from "../generated/graphql";
+import { useClubsQuery, useDeleteClubMutation } from "../generated/graphql";
 import { Card } from "../components/Card";
 import { Box, Heading, Spinner, Text } from "@chakra-ui/react";
 import CreateClub from "../components/CreateClub";

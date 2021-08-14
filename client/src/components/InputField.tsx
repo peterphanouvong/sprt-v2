@@ -2,8 +2,6 @@ import {
   FormLabel,
   Input,
   FormErrorMessage,
-  ComponentWithAs,
-  InputElementProps,
   InputLeftElement,
   FormControl,
   InputGroup,
@@ -23,12 +21,12 @@ const InputField: React.FC<InputFieldProps> = ({
   icon,
   ...props
 }) => {
-  const [field, { error, touched }] = useField(props);
+  const [field, { error }] = useField(props);
   return (
     <FormControl isInvalid={!!error} isRequired={props.required}>
       <FormLabel htmlFor={field.name}>{label}</FormLabel>
       <InputGroup>
-        {icon && <InputLeftElement pointerEvents='none' children={icon} />}
+        {icon && <InputLeftElement pointerEvents="none" children={icon} />}
         <Input
           {...field}
           {...props}
