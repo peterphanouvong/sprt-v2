@@ -1,9 +1,23 @@
-import { WarningIcon } from "@chakra-ui/icons";
-import { Box, Heading, MenuItem, Text } from "@chakra-ui/react";
+import { AddIcon, WarningIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Button,
+  Heading,
+  MenuItem,
+  Skeleton,
+  Text,
+} from "@chakra-ui/react";
 import React from "react";
-import { Club, useDeleteClubMutation, useMeQuery } from "../generated/graphql";
+import {
+  Club,
+  useDeleteClubMutation,
+  useMeQuery,
+  User,
+} from "../generated/graphql";
+import { AccordionUsers } from "./AccordionUsers";
 import { Card } from "./Card";
 import { DeleteEntity } from "./DeleteEntity";
+import { FollowClub } from "./FollowClub";
 import { OptionsButton } from "./OptionsButton";
 
 interface Props {
@@ -13,6 +27,7 @@ interface Props {
 const ClubCard: React.FC<Props> = ({ club }) => {
   const [, deleteClub] = useDeleteClubMutation();
   const [{ data: userData }] = useMeQuery();
+  const [followers, setFollowers] = React.useState(club.followers);
 
   const isAuthorised = (club: Club) => {
     if (!userData) {
@@ -23,6 +38,10 @@ const ClubCard: React.FC<Props> = ({ club }) => {
       .includes(userData.me?.username);
   };
 
+  const addFollower = () => {
+    setFollowers([...followers, userData.me as User]);
+  };
+
   const handleDelete = async (id: number): Promise<string | null> => {
     const { error } = await deleteClub({ id });
     if (error) {
@@ -31,6 +50,11 @@ const ClubCard: React.FC<Props> = ({ club }) => {
     }
     return null;
   };
+
+  if (!userData) {
+    return <Skeleton height='250px'></Skeleton>;
+  }
+
   return (
     <Card>
       <Box display='flex' justifyContent='space-between'>
@@ -42,7 +66,6 @@ const ClubCard: React.FC<Props> = ({ club }) => {
           <Text>Email: {club.email}</Text>
           <Text>{club.description}</Text>
         </Box>
-        {/* <Text>{club.host.username}</Text> */}
         <OptionsButton>
           {isAuthorised(club) ? (
             <>
@@ -56,6 +79,13 @@ const ClubCard: React.FC<Props> = ({ club }) => {
           )}
         </OptionsButton>
       </Box>
+      <FollowClub
+        followerList={club.followers}
+        clubId={club.id}
+        data={userData}
+        addFollower={addFollower}
+      />
+      <AccordionUsers userType={"Followers"} userList={followers} />
     </Card>
   );
 };

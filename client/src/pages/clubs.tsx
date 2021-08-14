@@ -9,7 +9,14 @@ import {
   useMeQuery,
 } from "../generated/graphql";
 import { Card } from "../components/Card";
-import { Box, Heading, MenuItem, Spinner, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  MenuItem,
+  Spinner,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import CreateClub from "../components/CreateClub";
 import { OptionsButton } from "../components/OptionsButton";
 import { DeleteEntity } from "../components/DeleteEntity";
@@ -31,11 +38,13 @@ const Clubs: React.FC<Props> = ({}) => {
 
   return (
     <Layout>
-      <CreateClub />
-      {data.clubs.map((club: Club) => {
-        console.log(club);
-        return <ClubCard key={club.id} club={club} />;
-      })}
+      <VStack spacing={4} align='stretch'>
+        <CreateClub />
+        {data.clubs.map((club: Club) => {
+          console.log(club);
+          return <ClubCard key={club.id} club={club} />;
+        })}
+      </VStack>
     </Layout>
   );
 };

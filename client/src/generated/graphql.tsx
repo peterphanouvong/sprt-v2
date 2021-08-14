@@ -79,7 +79,7 @@ export type Mutation = {
   updateEvent?: Maybe<Event>;
   deleteEvent: Scalars['Boolean'];
   createClub: Club;
-  addClubFollower: Scalars['Boolean'];
+  followClub: Scalars['Boolean'];
   addAdmin: Scalars['Boolean'];
   deleteClub: Scalars['Boolean'];
 };
@@ -149,7 +149,7 @@ export type MutationCreateClubArgs = {
 };
 
 
-export type MutationAddClubFollowerArgs = {
+export type MutationFollowClubArgs = {
   followerId: Scalars['Float'];
   clubId: Scalars['Float'];
 };
@@ -305,6 +305,14 @@ export type DeletePostMutationVariables = Exact<{
 
 
 export type DeletePostMutation = { __typename?: 'Mutation', deletePost: boolean };
+
+export type FollowClubMutationVariables = Exact<{
+  followerId: Scalars['Float'];
+  clubId: Scalars['Float'];
+}>;
+
+
+export type FollowClubMutation = { __typename?: 'Mutation', followClub: boolean };
 
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
@@ -531,6 +539,15 @@ export const DeletePostDocument = gql`
 
 export function useDeletePostMutation() {
   return Urql.useMutation<DeletePostMutation, DeletePostMutationVariables>(DeletePostDocument);
+};
+export const FollowClubDocument = gql`
+    mutation FollowClub($followerId: Float!, $clubId: Float!) {
+  followClub(followerId: $followerId, clubId: $clubId)
+}
+    `;
+
+export function useFollowClubMutation() {
+  return Urql.useMutation<FollowClubMutation, FollowClubMutationVariables>(FollowClubDocument);
 };
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {
