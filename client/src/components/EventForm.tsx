@@ -10,9 +10,20 @@ interface Props {
   event?: Event;
   onClose: () => void;
   onSubmit: (values: any) => Promise<void>;
+  submitMessage: string;
 }
 
-const EventForm: React.FC<Props> = ({ event, onClose, onSubmit }) => {
+const EventForm: React.FC<Props> = ({
+  event,
+  onClose,
+  onSubmit,
+  submitMessage,
+}) => {
+  const matchTimes = (e: any, values: any) => {
+    console.log(e.target.value);
+    values.endTime = e.target.value;
+  };
+
   return (
     <Formik
       initialValues={
@@ -32,7 +43,9 @@ const EventForm: React.FC<Props> = ({ event, onClose, onSubmit }) => {
               endTime: "",
             }
       }
-      onSubmit={(values) => onSubmit(values)}
+      onSubmit={(values) => {
+        onSubmit(values);
+      }}
     >
       {(props) => (
         <Form>
@@ -50,6 +63,7 @@ const EventForm: React.FC<Props> = ({ event, onClose, onSubmit }) => {
               label="Start time"
               required
               type="datetime-local"
+              onBlurCapture={(x) => matchTimes(x, props.values)}
             />
 
             <InputField
@@ -57,13 +71,16 @@ const EventForm: React.FC<Props> = ({ event, onClose, onSubmit }) => {
               placeholder="when do I leave?"
               label="End time"
               type="datetime-local"
+              min={props.values.startTime}
             />
+
             <InputField
               name="location"
               placeholder="where's it happening?"
               label="Location"
               required
             />
+
             <TextareaField
               name="description"
               placeholder="what's going down?"
@@ -85,7 +102,7 @@ const EventForm: React.FC<Props> = ({ event, onClose, onSubmit }) => {
               isLoading={props.isSubmitting}
               type="submit"
             >
-              Edit
+              {submitMessage}
             </Button>
           </ModalFooter>
         </Form>

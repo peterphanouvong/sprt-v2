@@ -64,7 +64,12 @@ const EditEvent: React.FC<Props> = ({ event }) => {
             <CloseButton onClick={onClose} />
           </Box>
           <Divider />
-          <EventForm event={event} onClose={onClose} onSubmit={onSubmit} />
+          <EventForm
+            event={event}
+            onClose={onClose}
+            onSubmit={onSubmit}
+            submitMessage="Save"
+          />
         </ModalContent>
       </Modal>
     </>
