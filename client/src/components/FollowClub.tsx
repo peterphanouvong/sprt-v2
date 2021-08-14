@@ -4,8 +4,8 @@ import React from "react";
 import {
   MeQuery,
   useFollowClubMutation,
-  useMeQuery,
   User,
+  useUnfollowClubMutation,
 } from "../generated/graphql";
 
 interface Props {
@@ -13,6 +13,7 @@ interface Props {
   clubId: number;
   data: MeQuery;
   addFollower: () => void;
+  removeFollower: () => void;
 }
 
 const FollowClub: React.FC<Props> = ({
@@ -20,26 +21,41 @@ const FollowClub: React.FC<Props> = ({
   clubId,
   data,
   addFollower,
+  removeFollower,
 }) => {
   const [isFollowing, setIsFollowing] = React.useState(
     followerList.map((user) => user.id).includes(data.me?.id)
   );
   const [, followClub] = useFollowClubMutation();
-  // const [{ data, fetching }] = useMeQuery();
+  const [, unfollowClub] = useUnfollowClubMutation();
 
-  const handleFollow = async (): Promise<void> => {
+  const handleButton = async (): Promise<void> => {
     if (!isFollowing) {
-      const { error } = await followClub({
-        followerId: data.me?.id,
-        clubId: clubId,
-      });
-      if (!error) {
-        addFollower();
-      }
+      handleFollow();
     } else {
-      // unfollow
+      handleUnfollow();
     }
     setIsFollowing(!isFollowing);
+  };
+
+  const handleFollow = async (): Promise<void> => {
+    const { error } = await followClub({
+      followerId: data.me?.id,
+      clubId: clubId,
+    });
+    if (!error) {
+      addFollower();
+    }
+  };
+
+  const handleUnfollow = async (): Promise<void> => {
+    const { error } = await unfollowClub({
+      followerId: data.me?.id,
+      clubId: clubId,
+    });
+    if (!error) {
+      removeFollower();
+    }
   };
 
   if (!data) {
@@ -54,7 +70,7 @@ const FollowClub: React.FC<Props> = ({
       leftIcon={isFollowing ? <MinusIcon /> : <AddIcon />}
       colorScheme='teal'
       variant='solid'
-      onClick={handleFollow}
+      onClick={handleButton}
     >
       {isFollowing ? "Unfollow" : "Follow"}
     </Button>

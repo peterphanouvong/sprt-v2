@@ -42,6 +42,13 @@ const ClubCard: React.FC<Props> = ({ club }) => {
     setFollowers([...followers, userData.me as User]);
   };
 
+  const removeFollower = () => {
+    console.log(followers);
+    const newFollowers = followers.filter((user) => user.id !== userData.me.id);
+    console.log(newFollowers);
+    setFollowers(newFollowers);
+  };
+
   const handleDelete = async (id: number): Promise<string | null> => {
     const { error } = await deleteClub({ id });
     if (error) {
@@ -84,6 +91,7 @@ const ClubCard: React.FC<Props> = ({ club }) => {
         clubId={club.id}
         data={userData}
         addFollower={addFollower}
+        removeFollower={removeFollower}
       />
       <AccordionUsers userType={"Followers"} userList={followers} />
     </Card>
