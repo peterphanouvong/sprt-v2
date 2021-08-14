@@ -66,7 +66,11 @@ const CreateEvent: React.FC<Props> = ({}) => {
             <CloseButton onClick={onClose} />
           </Box>
           <Divider />
-          <EventForm onClose={onClose} onSubmit={onSubmit} />
+          <EventForm
+            onClose={onClose}
+            onSubmit={onSubmit}
+            submitMessage="Create"
+          />
         </ModalContent>
       </Modal>
     </>
