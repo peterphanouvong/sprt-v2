@@ -49,9 +49,13 @@ __decorate([
     __metadata("design:type", Array)
 ], Club.prototype, "events", void 0);
 __decorate([
-    typeorm_1.OneToMany(() => ClubFollower_1.ClubFollower, (cf) => cf.club),
+    type_graphql_1.Field(() => [User_1.User]),
     __metadata("design:type", Array)
 ], Club.prototype, "followers", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => ClubFollower_1.ClubFollower, (cf) => cf.club),
+    __metadata("design:type", Array)
+], Club.prototype, "followerConnection", void 0);
 __decorate([
     type_graphql_1.Field(() => [User_1.User]),
     __metadata("design:type", Array)
