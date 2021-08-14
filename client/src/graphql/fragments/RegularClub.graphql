@@ -9,4 +9,7 @@ fragment RegularClub on Club {
   admins {
     ...RegularUser
   }
+  followers {
+    ...RegularUser
+  }
 }

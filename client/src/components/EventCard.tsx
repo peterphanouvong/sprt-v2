@@ -19,6 +19,7 @@ import { Event, useAddAttendeeMutation, User } from "../generated/graphql";
 import { useMeQuery } from "../generated/graphql";
 import { parseDatePretty } from "../utils/parseDate";
 import { MetaDataText } from "./ MetaDataText";
+import { AccordionUsers } from "./AccordionUsers";
 import { Card } from "./Card";
 import { ClubIcon } from "./ClubIcon";
 import { DeleteEvent } from "./DeleteEvent";
@@ -77,25 +78,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
         </Box>
       </Box>
 
-      <Box mt={4}>
-        <Accordion allowToggle>
-          <AccordionItem>
-            <AccordionButton>
-              <Box flex='1' textAlign='left'>
-                <Text fontWeight='medium'>Attendees</Text>
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-            <AccordionPanel>
-              <UnorderedList>
-                {attendees.map((attendee) => (
-                  <ListItem key={attendee.id}>{attendee.username}</ListItem>
-                ))}
-              </UnorderedList>
-            </AccordionPanel>
-          </AccordionItem>
-        </Accordion>
-      </Box>
+      <AccordionUsers userType={"Attendees"} userList={attendees} />
 
       <Button
         onClick={async () => {
