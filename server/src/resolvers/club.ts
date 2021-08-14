@@ -78,6 +78,20 @@ export class ClubResolver {
     return true;
   }
 
+  @Mutation(() => Boolean)
+  async unfollowClub(
+    @Arg("clubId") clubId: number,
+    @Arg("followerId") followerId: number
+  ): Promise<boolean> {
+    const following = await ClubFollower.find({ clubId, followerId });
+    if (following.length === 0) {
+      throw Error("User is already not following this club");
+    }
+
+    const res = await ClubFollower.delete({ clubId, followerId });
+    return true;
+  }
+
   @FieldResolver(() => User)
   async followers(@Root() club: Club, @Ctx() { userLoader }: MyContext) {
     // get a list of the attendeeIds
