@@ -3,6 +3,7 @@ fragment RegularEvent on Event {
   title
   description
   location
+  capacity
   startTime
   endTime
   hostId
