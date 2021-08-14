@@ -12,11 +12,11 @@ import {
   Root,
 } from "type-graphql";
 import { MyContext } from "src/types";
-import { isAuth } from "../middleware/isAuth";
 import { Club } from "../entities/Club";
 import { User } from "../entities/User";
 import { getConnection } from "typeorm";
 import { ClubAdmin } from "../entities/ClubAdmin";
+import { ClubFollower } from "../entities/ClubFollower";
 
 @InputType()
 class ClubInput {
@@ -62,6 +62,36 @@ export class ClubResolver {
     this.addAdmin(club.id, req.session.userId);
 
     return club;
+  }
+
+  @Mutation(() => Boolean)
+  async followClub(
+    @Arg("clubId") clubId: number,
+    @Arg("followerId") followerId: number
+  ): Promise<boolean> {
+    const following = await ClubFollower.find({ clubId, followerId });
+    if (following.length > 0) {
+      throw Error("User is already following this club");
+    }
+
+    const res = await ClubFollower.create({ clubId, followerId }).save();
+    return true;
+  }
+
+  @FieldResolver(() => User)
+  async followers(@Root() club: Club, @Ctx() { userLoader }: MyContext) {
+    // get a list of the attendeeIds
+    const clubFollowerIds = await getConnection().query(`
+      select "followerId" 
+      from "club_follower"
+      where "clubId" = ${club.id};
+    `);
+
+    // clubAdminIds = [ { clubId: 1 } ]
+    console.log(clubFollowerIds);
+    return userLoader.loadMany(
+      clubFollowerIds.map((e: { followerId: number }) => e.followerId)
+    );
   }
 
   @Mutation(() => Boolean)
@@ -120,8 +150,6 @@ export class ClubResolver {
 
     // Delete admins from club
     this.removeAllAdminsFromClub(id);
-
-    // TODO: check if authorized with organisers/owners
 
     await Club.delete({ id });
     return true;

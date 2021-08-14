@@ -40,8 +40,11 @@ export class Club extends BaseEntity {
   @OneToMany(() => ClubEvent, (ce) => ce.club)
   events: ClubEvent[];
 
+  @Field(() => [User])
+  followers: User[];
+
   @OneToMany(() => ClubFollower, (cf) => cf.club)
-  followers: ClubFollower[];
+  followerConnection: ClubFollower[];
 
   @Field(() => [User])
   admins: User[];

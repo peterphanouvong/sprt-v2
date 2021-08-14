@@ -18,6 +18,7 @@ const Club_1 = require("../entities/Club");
 const User_1 = require("../entities/User");
 const typeorm_1 = require("typeorm");
 const ClubAdmin_1 = require("../entities/ClubAdmin");
+const ClubFollower_1 = require("../entities/ClubFollower");
 let ClubInput = class ClubInput {
 };
 __decorate([
@@ -56,6 +57,23 @@ let ClubResolver = class ClubResolver {
         const club = await Club_1.Club.create(input).save();
         this.addAdmin(club.id, req.session.userId);
         return club;
+    }
+    async followClub(clubId, followerId) {
+        const following = await ClubFollower_1.ClubFollower.find({ clubId, followerId });
+        if (following.length > 0) {
+            throw Error("User is already following this club");
+        }
+        const res = await ClubFollower_1.ClubFollower.create({ clubId, followerId }).save();
+        return true;
+    }
+    async followers(club, { userLoader }) {
+        const clubFollowerIds = await typeorm_1.getConnection().query(`
+      select "followerId" 
+      from "club_follower"
+      where "clubId" = ${club.id};
+    `);
+        console.log(clubFollowerIds);
+        return userLoader.loadMany(clubFollowerIds.map((e) => e.followerId));
     }
     async addAdmin(clubId, adminId) {
         const exists = await ClubAdmin_1.ClubAdmin.find({
@@ -118,6 +136,22 @@ __decorate([
     __metadata("design:paramtypes", [ClubInput, Object]),
     __metadata("design:returntype", Promise)
 ], ClubResolver.prototype, "createClub", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg("clubId")),
+    __param(1, type_graphql_1.Arg("followerId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
+], ClubResolver.prototype, "followClub", null);
+__decorate([
+    type_graphql_1.FieldResolver(() => User_1.User),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Club_1.Club, Object]),
+    __metadata("design:returntype", Promise)
+], ClubResolver.prototype, "followers", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
     __param(0, type_graphql_1.Arg("clubId")),
