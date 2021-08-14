@@ -52,9 +52,11 @@ const main = async () => {
     ],
     migrations: [path.join(__dirname, "./migrations/*")],
   });
-  // Post.delete({});
-  // Event.delete({});
-  // EventAttendee.delete({});
+  // await Post.delete({});
+  // await Event.delete({});
+  // await EventAttendee.delete({});
+  // await Club.delete({});
+  // await ClubAdmin.delete({});
 
   conn.runMigrations();
 

@@ -41,7 +41,7 @@ const Clubs: React.FC<Props> = ({}) => {
       {data.clubs.map((e) => {
         return (
           <Card key={e.id}>
-            <Box display='flex' justifyContent='space-between'>
+            <Box display="flex" justifyContent="space-between">
               <Box>
                 <Heading>{e.name}</Heading>
                 {e.admins.map((admin) => (

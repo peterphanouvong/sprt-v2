@@ -21,9 +21,9 @@ export type Club = {
   email: Scalars['String'];
   phoneNumber: Scalars['String'];
   description: Scalars['String'];
+  admins: Array<User>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
-  admins: Array<User>;
 };
 
 export type ClubInput = {
@@ -78,6 +78,7 @@ export type Mutation = {
   updateEvent?: Maybe<Event>;
   deleteEvent: Scalars['Boolean'];
   createClub: Club;
+  addAdmin: Scalars['Boolean'];
   deleteClub: Scalars['Boolean'];
 };
 
@@ -143,6 +144,12 @@ export type MutationDeleteEventArgs = {
 
 export type MutationCreateClubArgs = {
   input: ClubInput;
+};
+
+
+export type MutationAddAdminArgs = {
+  adminId: Scalars['Float'];
+  clubId: Scalars['Float'];
 };
 
 
