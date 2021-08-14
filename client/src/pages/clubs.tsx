@@ -47,6 +47,7 @@ const Clubs: React.FC<Props> = ({}) => {
 
   return (
     <Layout>
+      <CreateClub />
       {data.clubs.map((e: Club) => {
         console.log(e);
         return (
@@ -77,7 +78,6 @@ const Clubs: React.FC<Props> = ({}) => {
           </Card>
         );
       })}
-      <CreateClub />
     </Layout>
   );
 };
