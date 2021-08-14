@@ -1,5 +1,5 @@
 .DS_STORE
 node_modules
-.env
-.env.production
+# .env
+# .env.production
 ormconfig.json
