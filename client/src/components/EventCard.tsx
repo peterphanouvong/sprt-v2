@@ -80,7 +80,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
 
       <AccordionUsers
         userType={`Attendees (${attendees.length}${
-          event.capacity && `/${event.capacity}`
+          event.capacity ? `/${event.capacity}` : ""
         })`}
         userList={attendees}
       />
