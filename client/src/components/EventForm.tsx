@@ -1,6 +1,16 @@
-import { VStack, ModalFooter, Button } from "@chakra-ui/react";
+import {
+  VStack,
+  ModalFooter,
+  Button,
+  Checkbox,
+  FormControl,
+  FormLabel,
+  Switch,
+  Box,
+  Text,
+} from "@chakra-ui/react";
 import { Formik, Form } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import { Event } from "../generated/graphql";
 import { parseDate } from "../utils/parseDate";
 import { InputField } from "./InputField";
@@ -19,6 +29,17 @@ const EventForm: React.FC<Props> = ({
   onSubmit,
   submitMessage,
 }) => {
+  const [hasCapacity, setHasCapacity] = useState(
+    event ? (!!event.capacity ? true : false) : true
+  );
+
+  const toggleCapacity = (values: any) => {
+    if (hasCapacity) {
+      values.capacity = "";
+    }
+    setHasCapacity(!hasCapacity);
+  };
+
   const matchTimes = (e: any, values: any) => {
     console.log(e.target.value);
     values.endTime = e.target.value;
@@ -32,6 +53,7 @@ const EventForm: React.FC<Props> = ({
               title: event.title ?? "",
               description: event.description ?? "",
               location: event.location ?? "",
+              capacity: event.capacity ?? "",
               startTime: parseDate(event.startTime) ?? "",
               endTime: parseDate(event.endTime) ?? "",
             }
@@ -41,10 +63,15 @@ const EventForm: React.FC<Props> = ({
               location: "",
               startTime: "",
               endTime: "",
+              capacity: "",
             }
       }
       onSubmit={(values) => {
-        onSubmit(values);
+        console.log(values);
+        onSubmit({
+          ...values,
+          capacity: values.capacity,
+        });
       }}
     >
       {(props) => (
@@ -57,6 +84,12 @@ const EventForm: React.FC<Props> = ({
               required
             />
 
+            <InputField
+              name="location"
+              placeholder="where's it happening?"
+              label="Location"
+              required
+            />
             <InputField
               name="startTime"
               placeholder="when do I show up?"
@@ -73,13 +106,32 @@ const EventForm: React.FC<Props> = ({
               type="datetime-local"
               min={props.values.startTime}
             />
+            <Box>
+              <FormLabel width="min" htmlFor="email-alerts">
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="flex-start"
+                >
+                  <Text mr={2}>Capacity</Text>
+                  <Switch
+                    id="email-alerts"
+                    size="sm"
+                    isChecked={hasCapacity}
+                    onChange={() => toggleCapacity(props.values)}
+                    colorScheme="orange"
+                  />
+                </Box>
+              </FormLabel>
 
-            <InputField
-              name="location"
-              placeholder="where's it happening?"
-              label="Location"
-              required
-            />
+              <InputField
+                hidden={!hasCapacity}
+                name="capacity"
+                placeholder="how many peeps?"
+                type="number"
+                min={0}
+              />
+            </Box>
 
             <TextareaField
               name="description"

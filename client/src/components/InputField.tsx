@@ -5,14 +5,20 @@ import {
   InputLeftElement,
   FormControl,
   InputGroup,
+  NumberInput,
+  NumberInputField,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInputStepper,
 } from "@chakra-ui/react";
 import { useField } from "formik";
 import React, { InputHTMLAttributes, ReactElement } from "react";
 
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   name: string;
-  label: string;
+  label?: string;
   icon?: ReactElement<any, any>;
+  isNumberInput?: boolean;
 };
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -24,7 +30,7 @@ const InputField: React.FC<InputFieldProps> = ({
   const [field, { error }] = useField(props);
   return (
     <FormControl isInvalid={!!error} isRequired={props.required}>
-      <FormLabel htmlFor={field.name}>{label}</FormLabel>
+      {label && <FormLabel htmlFor={field.name}>{label}</FormLabel>}
       <InputGroup>
         {icon && <InputLeftElement pointerEvents="none" children={icon} />}
         <Input

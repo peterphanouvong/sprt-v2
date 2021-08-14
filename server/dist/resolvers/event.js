@@ -41,6 +41,10 @@ __decorate([
     type_graphql_1.Field(),
     __metadata("design:type", String)
 ], EventInput.prototype, "endTime", void 0);
+__decorate([
+    type_graphql_1.Field({ nullable: true }),
+    __metadata("design:type", Number)
+], EventInput.prototype, "capacity", void 0);
 EventInput = __decorate([
     type_graphql_1.InputType()
 ], EventInput);
@@ -89,6 +93,7 @@ let EventResolver = class EventResolver {
         if (req.session.userId !== event.hostId) {
             return null;
         }
+        console.log(input);
         await Event_1.Event.update(id, Object.assign({}, input));
         return Event_1.Event.findOne(id);
     }

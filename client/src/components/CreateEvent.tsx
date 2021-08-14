@@ -12,6 +12,7 @@ import {
 import format from "date-fns/format";
 import React from "react";
 import { useCreateEventMutation } from "../generated/graphql";
+import { formatDateForPostgres } from "../utils/parseDate";
 import { EventForm } from "./EventForm";
 
 interface Props {
@@ -26,21 +27,12 @@ const CreateEvent: React.FC<Props> = ({}) => {
   const onSubmit = async (values) => {
     console.log(values);
 
-    const formattedStartTime = format(
-      new Date(values.startTime),
-      "yyyy-MM-dd hh:mm:ss xxx"
-    );
-
-    const formattedEndTime = format(
-      new Date(values.endTime),
-      "yyyy-MM-dd hh:mm:ss xxx"
-    );
-
     const { error } = await createEvent({
       input: {
         ...values,
-        startTime: formattedStartTime,
-        endTime: formattedEndTime,
+        startTime: formatDateForPostgres(values.startTime),
+        endTime: formatDateForPostgres(values.endTime),
+        capacity: values.capacity === "" ? null : parseInt(values.capacity),
       },
     });
 

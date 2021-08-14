@@ -34,6 +34,9 @@ class EventInput {
 
   @Field()
   endTime: string;
+
+  @Field({ nullable: true })
+  capacity: number;
 }
 
 @Resolver(Event)
@@ -120,6 +123,7 @@ export class EventResolver {
     if (req.session.userId !== event.hostId) {
       return null;
     }
+    console.log(input);
 
     await Event.update(id, { ...input });
     return Event.findOne(id);
