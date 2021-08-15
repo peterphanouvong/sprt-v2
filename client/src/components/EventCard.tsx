@@ -41,16 +41,17 @@ const EventCard: React.FC<Props> = ({ event }) => {
         variant: "subtle",
         description: `We've added you as an attendee to "${event.title}"`,
         status: "success",
-        duration: 9000,
+        duration: 5000,
         isClosable: true,
       });
     } else if (error) {
       toast({
         title: "Error",
         variant: "subtle",
+        position: "top",
         description: `${error.message}`,
         status: "error",
-        duration: 9000,
+        duration: 5000,
         isClosable: true,
       });
     }
