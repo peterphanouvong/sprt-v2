@@ -1,12 +1,7 @@
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
-import { Button, Skeleton } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import React from "react";
-import {
-  MeQuery,
-  useFollowClubMutation,
-  useMeQuery,
-  User,
-} from "../generated/graphql";
+import { MeQuery, useFollowClubMutation, User } from "../generated/graphql";
 
 interface Props {
   followerList: Array<User>;
@@ -25,7 +20,6 @@ const FollowClub: React.FC<Props> = ({
     followerList.map((user) => user.id).includes(data.me?.id)
   );
   const [, followClub] = useFollowClubMutation();
-  // const [{ data, fetching }] = useMeQuery();
 
   const handleFollow = async (): Promise<void> => {
     if (!isFollowing) {
@@ -44,7 +38,7 @@ const FollowClub: React.FC<Props> = ({
 
   if (!data) {
     return (
-      <Button isLoading={true} colorScheme='teal'>
+      <Button isLoading={true} colorScheme="teal">
         Follow
       </Button>
     );
@@ -52,8 +46,8 @@ const FollowClub: React.FC<Props> = ({
   return (
     <Button
       leftIcon={isFollowing ? <MinusIcon /> : <AddIcon />}
-      colorScheme='teal'
-      variant='solid'
+      colorScheme="teal"
+      variant="solid"
       onClick={handleFollow}
     >
       {isFollowing ? "Unfollow" : "Follow"}

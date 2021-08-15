@@ -15,35 +15,24 @@ import {
   CloseButton,
 } from "@chakra-ui/react";
 import React from "react";
-import { useMeQuery } from "../generated/graphql";
 
 interface Props {
   handleDelete: () => Promise<string | null>;
   entityName: string;
-  // admins: Array<User>;
 }
 
-const DeleteEntity: React.FC<Props> = ({
-  handleDelete,
-  entityName,
-  // admins,
-}) => {
+const DeleteEntity: React.FC<Props> = ({ handleDelete, entityName }) => {
   const [isOpen, setIsOpen] = React.useState(false);
-  // const [adminUsernames, setAdminUsernames] = React.useState(
-  //   admins.map((admin) => admin.username)
-  // );
+
   const [deleteError, setDeleteError] = React.useState<string | null>(null);
   const onClose = () => setIsOpen(false);
   const cancelRef = React.useRef();
-  const [{ data }] = useMeQuery();
 
   return (
     <>
       <MenuItem
-        // isDisabled={!(data && adminUsernames.includes(data.me?.username))}
         onClick={() => {
           setIsOpen(true);
-          // console.log(data);
         }}
         icon={<DeleteIcon />}
       >

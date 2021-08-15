@@ -1,3 +1,4 @@
+import { CheckIcon } from "@chakra-ui/icons";
 import {
   Box,
   Accordion,
@@ -5,20 +6,23 @@ import {
   AccordionButton,
   AccordionIcon,
   AccordionPanel,
-  UnorderedList,
   ListItem,
   Text,
 } from "@chakra-ui/react";
 import React from "react";
 import { User } from "../generated/graphql";
-import { MetaDataText } from "./ MetaDataText";
 
 interface Props {
   userType: string;
   userList: Array<User>;
+  numHighlighted?: number;
 }
 
-const AccordionUsers: React.FC<Props> = ({ userType, userList }) => {
+const AccordionUsers: React.FC<Props> = ({
+  userType,
+  userList,
+  numHighlighted = 0,
+}) => {
   return (
     <Box mt={4}>
       <Accordion allowToggle>
@@ -34,23 +38,36 @@ const AccordionUsers: React.FC<Props> = ({ userType, userList }) => {
             <AccordionIcon />
           </AccordionButton>
           <AccordionPanel p={0}>
-            {/* <UnorderedList> */}
-            {userList.map((attendee) => (
-              <ListItem
-                paddingY={1}
-                paddingX={4}
-                borderTop="1px solid"
-                _hover={{
-                  backgroundColor: "gray.50",
-                }}
-                borderColor="gray.100"
-                listStyleType="none"
-                key={attendee.id}
-              >
-                <MetaDataText>{attendee.username}</MetaDataText>
-              </ListItem>
-            ))}
-            {/* </UnorderedList> */}
+            {userList.map((attendee, index) => {
+              const isHighlighted = index < numHighlighted;
+              return (
+                <ListItem
+                  paddingY={1}
+                  paddingX={4}
+                  listStyleType="none"
+                  key={attendee.id}
+                  background={isHighlighted ? "green.50" : "yellow.50"}
+                  _hover={{
+                    backgroundColor: isHighlighted ? "green.100" : "yellow.100",
+                  }}
+                >
+                  <Box
+                    fontSize="sm"
+                    color={isHighlighted ? "green.900" : "yellow.900"}
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    {attendee.username}
+                    {isHighlighted ? (
+                      <CheckIcon color="green" />
+                    ) : (
+                      <Text>(waitlist)</Text>
+                    )}
+                  </Box>
+                </ListItem>
+              );
+            })}
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
