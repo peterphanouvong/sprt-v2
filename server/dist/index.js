@@ -32,6 +32,7 @@ const ClubFollower_1 = require("./entities/ClubFollower");
 const ClubMember_1 = require("./entities/ClubMember");
 const ClubAdmin_1 = require("./entities/ClubAdmin");
 const EventAttendee_1 = require("./entities/EventAttendee");
+const ClubRequestedMember_1 = require("./entities/ClubRequestedMember");
 const main = async () => {
     const conn = await typeorm_1.createConnection({
         type: "postgres",
@@ -47,12 +48,13 @@ const main = async () => {
             ClubFollower_1.ClubFollower,
             ClubMember_1.ClubMember,
             ClubAdmin_1.ClubAdmin,
+            ClubRequestedMember_1.ClubRequestedMember,
             Sport_1.Sport,
             ClubSport_1.ClubSport,
         ],
         migrations: [path_1.default.join(__dirname, "./migrations/*")],
     });
-    conn.runMigrations();
+    await conn.runMigrations();
     const app = express_1.default();
     const RedisStore = connect_redis_1.default(express_session_1.default);
     const redis = new ioredis_1.default(process.env.REDIS_URL);

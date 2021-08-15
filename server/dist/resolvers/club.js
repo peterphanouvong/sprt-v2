@@ -19,6 +19,7 @@ const User_1 = require("../entities/User");
 const typeorm_1 = require("typeorm");
 const ClubAdmin_1 = require("../entities/ClubAdmin");
 const ClubFollower_1 = require("../entities/ClubFollower");
+const ClubRequestedMember_1 = require("../entities/ClubRequestedMember");
 let ClubInput = class ClubInput {
 };
 __decorate([
@@ -112,6 +113,20 @@ let ClubResolver = class ClubResolver {
         console.log(clubFollowerIds);
         return userLoader.loadMany(clubFollowerIds.map((e) => e.followerId));
     }
+    async addRequestedMember(clubId, requestedMemberId) {
+        const exists = await ClubRequestedMember_1.ClubRequestedMember.find({
+            clubId: clubId,
+            requestedMemberId: requestedMemberId,
+        });
+        if (exists.length) {
+            throw Error("you have already requested to be a member of this club");
+        }
+        const res = await ClubRequestedMember_1.ClubRequestedMember.create({
+            clubId: clubId,
+            requestedMemberId: requestedMemberId,
+        }).save();
+        return true;
+    }
     async addAdmin(clubId, adminId) {
         const exists = await ClubAdmin_1.ClubAdmin.find({
             clubId: clubId,
@@ -164,6 +179,15 @@ let ClubResolver = class ClubResolver {
         console.log(clubAdminIds);
         return userLoader.loadMany(clubAdminIds.map((e) => e.adminId));
     }
+    async requestedMembers(club, { userLoader }) {
+        var _a;
+        const requestedMemberIds = await typeorm_1.getConnection().query(`
+      select array_agg("requestedMemberId")
+      from "club_requested_member"
+      where "clubId" = ${club.id};
+    `);
+        return userLoader.loadMany((_a = requestedMemberIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
+    }
 };
 __decorate([
     type_graphql_1.Mutation(() => Club_1.Club),
@@ -209,6 +233,14 @@ __decorate([
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
     __param(0, type_graphql_1.Arg("clubId")),
+    __param(1, type_graphql_1.Arg("requestedMemberId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
+], ClubResolver.prototype, "addRequestedMember", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg("clubId")),
     __param(1, type_graphql_1.Arg("adminId")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, Number]),
@@ -236,6 +268,14 @@ __decorate([
     __metadata("design:paramtypes", [Club_1.Club, Object]),
     __metadata("design:returntype", Promise)
 ], ClubResolver.prototype, "admins", null);
+__decorate([
+    type_graphql_1.FieldResolver(() => User_1.User),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Club_1.Club, Object]),
+    __metadata("design:returntype", Promise)
+], ClubResolver.prototype, "requestedMembers", null);
 ClubResolver = __decorate([
     type_graphql_1.Resolver(Club_1.Club)
 ], ClubResolver);

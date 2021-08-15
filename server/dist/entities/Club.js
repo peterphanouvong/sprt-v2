@@ -16,6 +16,7 @@ const ClubAdmin_1 = require("./ClubAdmin");
 const ClubEvent_1 = require("./ClubEvent");
 const ClubFollower_1 = require("./ClubFollower");
 const ClubMember_1 = require("./ClubMember");
+const ClubRequestedMember_1 = require("./ClubRequestedMember");
 const User_1 = require("./User");
 let Club = class Club extends typeorm_1.BaseEntity {
 };
@@ -56,6 +57,14 @@ __decorate([
     typeorm_1.OneToMany(() => ClubFollower_1.ClubFollower, (cf) => cf.club),
     __metadata("design:type", Array)
 ], Club.prototype, "followerConnection", void 0);
+__decorate([
+    type_graphql_1.Field(() => [User_1.User]),
+    __metadata("design:type", Array)
+], Club.prototype, "requestedMembers", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => ClubRequestedMember_1.ClubRequestedMember, (cm) => cm.club),
+    __metadata("design:type", Array)
+], Club.prototype, "requestedMemberConnection", void 0);
 __decorate([
     type_graphql_1.Field(() => [User_1.User]),
     __metadata("design:type", Array)
