@@ -32,6 +32,7 @@ const ClubFollower_1 = require("./entities/ClubFollower");
 const ClubMember_1 = require("./entities/ClubMember");
 const ClubAdmin_1 = require("./entities/ClubAdmin");
 const EventAttendee_1 = require("./entities/EventAttendee");
+const ClubRequestedMember_1 = require("./entities/ClubRequestedMember");
 const main = async () => {
     const conn = await typeorm_1.createConnection({
         type: "postgres",
@@ -47,6 +48,7 @@ const main = async () => {
             ClubFollower_1.ClubFollower,
             ClubMember_1.ClubMember,
             ClubAdmin_1.ClubAdmin,
+            ClubRequestedMember_1.ClubRequestedMember,
             Sport_1.Sport,
             ClubSport_1.ClubSport,
         ],

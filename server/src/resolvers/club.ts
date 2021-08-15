@@ -17,6 +17,7 @@ import { User } from "../entities/User";
 import { getConnection } from "typeorm";
 import { ClubAdmin } from "../entities/ClubAdmin";
 import { ClubFollower } from "../entities/ClubFollower";
+import { ClubRequestedMember } from "../entities/ClubRequestedMember";
 
 @InputType()
 class ClubInput {
@@ -109,6 +110,27 @@ export class ClubResolver {
   }
 
   @Mutation(() => Boolean)
+  async addRequestedMember(
+    @Arg("clubId") clubId: number,
+    @Arg("requestedMemberId") requestedMemberId: number
+  ): Promise<boolean> {
+    const exists = await ClubRequestedMember.find({
+      clubId: clubId,
+      requestedMemberId: requestedMemberId,
+    });
+
+    if (exists.length) {
+      throw Error("you have already requested to be a member of this club");
+    }
+
+    const res = await ClubRequestedMember.create({
+      clubId: clubId,
+      requestedMemberId: requestedMemberId,
+    }).save();
+    return true;
+  }
+
+  @Mutation(() => Boolean)
   async addAdmin(
     @Arg("clubId") clubId: number,
     @Arg("adminId") adminId: number
@@ -188,5 +210,18 @@ export class ClubResolver {
     return userLoader.loadMany(
       clubAdminIds.map((e: { adminId: number }) => e.adminId)
     );
+  }
+
+  @FieldResolver(() => User)
+  async requestedMembers(@Root() club: Club, @Ctx() { userLoader }: MyContext) {
+    // get a list of the requestedMemberIds
+    const requestedMemberIds = await getConnection().query(`
+      select array_agg("requestedMemberId")
+      from "club_requested_member"
+      where "clubId" = ${club.id};
+    `);
+    // clubAdminIds = [ { clubId: 1 } ]
+    // console.log(clubAdminIds);
+    return userLoader.loadMany(requestedMemberIds[0].array_agg ?? []);
   }
 }

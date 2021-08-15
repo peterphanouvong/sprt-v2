@@ -14,6 +14,8 @@ import { ClubFollower } from "./ClubFollower";
 import { ClubMember } from "./ClubMember";
 import { ClubAdmin } from "./ClubAdmin";
 import { EventAttendee } from "./EventAttendee";
+import { Club } from "./Club";
+import { ClubRequestedMember } from "./ClubRequestedMember";
 
 @ObjectType()
 @Entity()
@@ -53,6 +55,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => EventAttendee, (ca) => ca.attendee)
   eventConnection: EventAttendee[];
+
+  @OneToMany(() => ClubRequestedMember, (crm) => crm.requestedMember)
+  clubRequestedMemberConnection: ClubRequestedMember[];
 
   @Field(() => String)
   @CreateDateColumn()

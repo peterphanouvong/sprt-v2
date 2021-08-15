@@ -22,6 +22,7 @@ export type Club = {
   phoneNumber: Scalars['String'];
   description: Scalars['String'];
   followers: Array<User>;
+  requestedMembers: Array<User>;
   admins: Array<User>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
@@ -83,6 +84,7 @@ export type Mutation = {
   createClub: Club;
   followClub: Scalars['Boolean'];
   unfollowClub: Scalars['Boolean'];
+  addRequestedMember: Scalars['Boolean'];
   addAdmin: Scalars['Boolean'];
   deleteClub: Scalars['Boolean'];
 };
@@ -160,6 +162,12 @@ export type MutationFollowClubArgs = {
 
 export type MutationUnfollowClubArgs = {
   followerId: Scalars['Float'];
+  clubId: Scalars['Float'];
+};
+
+
+export type MutationAddRequestedMemberArgs = {
+  requestedMemberId: Scalars['Float'];
   clubId: Scalars['Float'];
 };
 
@@ -264,6 +272,14 @@ export type AddAttendeeMutationVariables = Exact<{
 
 
 export type AddAttendeeMutation = { __typename?: 'Mutation', addAttendee: { __typename?: 'User', id: number, username: string, email: string } };
+
+export type AddRequestedMemberMutationVariables = Exact<{
+  userId: Scalars['Float'];
+  clubId: Scalars['Float'];
+}>;
+
+
+export type AddRequestedMemberMutation = { __typename?: 'Mutation', addRequestedMember: boolean };
 
 export type ChangePasswordMutationVariables = Exact<{
   newPassword: Scalars['String'];
@@ -472,6 +488,15 @@ export const AddAttendeeDocument = gql`
 
 export function useAddAttendeeMutation() {
   return Urql.useMutation<AddAttendeeMutation, AddAttendeeMutationVariables>(AddAttendeeDocument);
+};
+export const AddRequestedMemberDocument = gql`
+    mutation AddRequestedMember($userId: Float!, $clubId: Float!) {
+  addRequestedMember(requestedMemberId: $userId, clubId: $clubId)
+}
+    `;
+
+export function useAddRequestedMemberMutation() {
+  return Urql.useMutation<AddRequestedMemberMutation, AddRequestedMemberMutationVariables>(AddRequestedMemberDocument);
 };
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($newPassword: String!, $token: String!) {
