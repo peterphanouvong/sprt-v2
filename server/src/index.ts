@@ -30,6 +30,7 @@ import { ClubFollower } from "./entities/ClubFollower";
 import { ClubMember } from "./entities/ClubMember";
 import { ClubAdmin } from "./entities/ClubAdmin";
 import { EventAttendee } from "./entities/EventAttendee";
+import { ClubRequestedMember } from "./entities/ClubRequestedMember";
 
 const main = async () => {
   const conn = await createConnection({
@@ -47,6 +48,7 @@ const main = async () => {
       ClubFollower,
       ClubMember,
       ClubAdmin,
+      ClubRequestedMember,
       Sport,
       ClubSport,
     ],
