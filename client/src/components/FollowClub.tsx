@@ -1,5 +1,5 @@
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
-import { Button, Skeleton } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import React from "react";
 import {
   MeQuery,

@@ -1,21 +1,8 @@
 import { ChevronRightIcon, WarningIcon } from "@chakra-ui/icons";
-import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-  Box,
-  Button,
-  Heading,
-  UnorderedList,
-  MenuItem,
-  Text,
-  ListItem,
-} from "@chakra-ui/react";
+import { Box, Button, Heading, MenuItem, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Event, useAddAttendeeMutation, User } from "../generated/graphql";
-// import { Event } from "../models";
+
 import { useMeQuery } from "../generated/graphql";
 import { parseDatePretty } from "../utils/parseDate";
 import { MetaDataText } from "./ MetaDataText";
@@ -28,8 +15,6 @@ import { OptionsButton } from "./OptionsButton";
 
 interface Props {
   event: Event;
-  // removeEvent: (id: any) => void;
-  // editEvent: (e: Event) => void;
 }
 
 const EventCard: React.FC<Props> = ({ event }) => {
@@ -80,9 +65,10 @@ const EventCard: React.FC<Props> = ({ event }) => {
 
       <AccordionUsers
         userType={`Attendees (${attendees.length}${
-          event.capacity && `/${event.capacity}`
+          event.capacity ? `/${event.capacity}` : ""
         })`}
         userList={attendees}
+        numHighlighted={event.capacity}
       />
 
       <Button

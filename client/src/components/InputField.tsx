@@ -5,11 +5,6 @@ import {
   InputLeftElement,
   FormControl,
   InputGroup,
-  NumberInput,
-  NumberInputField,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInputStepper,
 } from "@chakra-ui/react";
 import { useField } from "formik";
 import React, { InputHTMLAttributes, ReactElement } from "react";

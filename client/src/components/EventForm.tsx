@@ -2,8 +2,6 @@ import {
   VStack,
   ModalFooter,
   Button,
-  Checkbox,
-  FormControl,
   FormLabel,
   Switch,
   Box,

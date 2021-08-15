@@ -10,7 +10,6 @@ import {
   Divider,
   MenuItem,
 } from "@chakra-ui/react";
-import format from "date-fns/format";
 import React from "react";
 import { Event, useUpdateEventMutation } from "../generated/graphql";
 import { formatDateForPostgres } from "../utils/parseDate";
@@ -18,7 +17,6 @@ import { EventForm } from "./EventForm";
 
 interface Props {
   event: Event;
-  // editEvent: (e: Event) => void;
 }
 
 const EditEvent: React.FC<Props> = ({ event }) => {
@@ -40,7 +38,6 @@ const EditEvent: React.FC<Props> = ({ event }) => {
     } else {
       onClose();
     }
-    // editEvent(res.data.updateEvent);
   };
 
   return (
