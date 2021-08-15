@@ -32,6 +32,8 @@ const ClubCard: React.FC<Props> = ({ club }) => {
   const [, addRequestedMember] = useAddRequestedMemberMutation();
   const toast = useToast();
 
+  const [hasRequestedToJoin, setHasRequestedToJoin] = React.useState(false);
+
   const [followers, setFollowers] = React.useState(club.followers);
 
   const isAuthorised = (club: Club) => {
@@ -90,6 +92,8 @@ const ClubCard: React.FC<Props> = ({ club }) => {
         description: error.message,
       });
     }
+
+    setHasRequestedToJoin(true);
   };
 
   if (!userData) {
@@ -129,7 +133,7 @@ const ClubCard: React.FC<Props> = ({ club }) => {
       />
       <AccordionUsers userType={"Followers"} userList={followers} />
       <Button colorScheme="orange" mt={2} onClick={requestToJoinClub}>
-        Request to join
+        {hasRequestedToJoin ? "Already requested" : "Request to join"}
       </Button>
     </Card>
   );
