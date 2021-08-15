@@ -60,7 +60,7 @@ const main = async () => {
   // await Club.delete({});
   // await ClubAdmin.delete({});
 
-  conn.runMigrations();
+  await conn.runMigrations();
 
   const app = express();
 

@@ -54,7 +54,7 @@ const main = async () => {
         ],
         migrations: [path_1.default.join(__dirname, "./migrations/*")],
     });
-    conn.runMigrations();
+    await conn.runMigrations();
     const app = express_1.default();
     const RedisStore = connect_redis_1.default(express_session_1.default);
     const redis = new ioredis_1.default(process.env.REDIS_URL);
