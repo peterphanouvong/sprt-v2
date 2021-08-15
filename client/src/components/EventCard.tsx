@@ -1,17 +1,24 @@
 import { ChevronRightIcon, WarningIcon } from "@chakra-ui/icons";
-import { Box, Button, Heading, MenuItem, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  MenuItem,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Event, useAddAttendeeMutation, User } from "../generated/graphql";
 
 import { useMeQuery } from "../generated/graphql";
 import { parseDatePretty } from "../utils/parseDate";
 import { MetaDataText } from "./ MetaDataText";
-import { AccordionUsers } from "./AccordionUsers";
 import { Card } from "./Card";
 import { ClubIcon } from "./ClubIcon";
 import { DeleteEvent } from "./DeleteEvent";
 import { EditEvent } from "./EditEvent";
 import { OptionsButton } from "./OptionsButton";
+import { ViewAttendeesModalButton } from "./ViewAttendeesModalButton";
 
 interface Props {
   event: Event;
@@ -20,8 +27,35 @@ interface Props {
 const EventCard: React.FC<Props> = ({ event }) => {
   const [, addAttendee] = useAddAttendeeMutation();
   const [attendees, setAttendees] = useState<User[]>(event.attendees);
-
+  const toast = useToast();
   const [{ data }] = useMeQuery();
+
+  const joinEvent = async () => {
+    const { error, data } = await addAttendee({ eventId: event.id });
+
+    if (data && !error) {
+      // @ts-ignore
+      setAttendees([...attendees, data.addAttendee]);
+      toast({
+        title: "Joined event",
+        variant: "subtle",
+        description: `We've added you as an attendee to "${event.title}"`,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    } else if (error) {
+      toast({
+        title: "Error",
+        variant: "subtle",
+        description: `${error.message}`,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
+
   if (!data) return <>loading...</>;
   return (
     <Card>
@@ -63,27 +97,13 @@ const EventCard: React.FC<Props> = ({ event }) => {
         </Box>
       </Box>
 
-      <AccordionUsers
-        userType={`Attendees (${attendees.length}${
-          event.capacity ? `/${event.capacity}` : ""
-        })`}
-        userList={attendees}
-        numHighlighted={event.capacity}
+      <ViewAttendeesModalButton
+        capacity={event.capacity}
+        attendees={attendees}
+        joinEvent={joinEvent}
       />
 
-      <Button
-        onClick={async () => {
-          const res = await addAttendee({ eventId: event.id });
-          console.log(res);
-          if (res.data) {
-            // @ts-ignore
-            setAttendees([...attendees, res.data.addAttendee]);
-          }
-        }}
-        mt={4}
-        isFullWidth={true}
-        variant="solid"
-      >
+      <Button onClick={joinEvent} mt={4} isFullWidth={true} variant="solid">
         Join
       </Button>
     </Card>
