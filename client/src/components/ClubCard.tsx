@@ -10,6 +10,7 @@ import {
 import { AccordionUsers } from "./AccordionUsers";
 import { Card } from "./Card";
 import { DeleteEntity } from "./DeleteEntity";
+import { EditClub } from "./EditClub";
 import { FollowClub } from "./FollowClub";
 import { OptionsButton } from "./OptionsButton";
 
@@ -52,12 +53,12 @@ const ClubCard: React.FC<Props> = ({ club }) => {
   };
 
   if (!userData) {
-    return <Skeleton height="250px"></Skeleton>;
+    return <Skeleton height='250px'></Skeleton>;
   }
 
   return (
     <Card>
-      <Box display="flex" justifyContent="space-between">
+      <Box display='flex' justifyContent='space-between'>
         <Box>
           <Heading>{club.name}</Heading>
           {club.admins.map((admin) => (
@@ -69,6 +70,7 @@ const ClubCard: React.FC<Props> = ({ club }) => {
         <OptionsButton>
           {isAuthorised(club) ? (
             <>
+              <EditClub club={club} />
               <DeleteEntity
                 handleDelete={() => handleDelete(club.id)}
                 entityName={"Club"}

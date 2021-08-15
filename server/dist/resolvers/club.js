@@ -58,6 +58,35 @@ let ClubResolver = class ClubResolver {
         this.addAdmin(club.id, req.session.userId);
         return club;
     }
+    async updateClub({ req }, clubId, input) {
+        const club = await Club_1.Club.findOne(clubId);
+        if (!club) {
+            throw Error("Club does not exist");
+        }
+        const admins = await ClubAdmin_1.ClubAdmin.find({ clubId });
+        const adminIds = admins.map((admin) => admin.adminId);
+        if (!adminIds.includes(req.session.userId)) {
+            throw Error("User is not authorised");
+        }
+        const duplicateName = await Club_1.Club.find({ name: input.name });
+        console.log(duplicateName);
+        if (duplicateName.length > 0 &&
+            !duplicateName.map((c) => c.name).includes(club.name)) {
+            throw Error(`{"name": "A club already exists with this name"}`);
+        }
+        const duplicateEmail = await Club_1.Club.find({ email: input.email });
+        if (duplicateEmail.length > 0 &&
+            !duplicateEmail.map((c) => c.email).includes(club.email)) {
+            throw Error(`{"email": "A club already exists with this email"}`);
+        }
+        const duplicateNumber = await Club_1.Club.find({ phoneNumber: input.phoneNumber });
+        if (duplicateNumber.length > 0 &&
+            !duplicateNumber.map((c) => c.phoneNumber).includes(club.phoneNumber)) {
+            throw Error(`{"phoneNumber": "A club already exists with this phone number"}`);
+        }
+        await Club_1.Club.update(clubId, Object.assign({}, input));
+        return Club_1.Club.findOne(clubId);
+    }
     async followClub(clubId, followerId) {
         const following = await ClubFollower_1.ClubFollower.find({ clubId, followerId });
         if (following.length > 0) {
@@ -144,6 +173,15 @@ __decorate([
     __metadata("design:paramtypes", [ClubInput, Object]),
     __metadata("design:returntype", Promise)
 ], ClubResolver.prototype, "createClub", null);
+__decorate([
+    type_graphql_1.Mutation(() => Club_1.Club, { nullable: true }),
+    __param(0, type_graphql_1.Ctx()),
+    __param(1, type_graphql_1.Arg("clubId")),
+    __param(2, type_graphql_1.Arg("input")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number, ClubInput]),
+    __metadata("design:returntype", Promise)
+], ClubResolver.prototype, "updateClub", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
     __param(0, type_graphql_1.Arg("clubId")),

@@ -64,6 +64,55 @@ export class ClubResolver {
     return club;
   }
 
+  @Mutation(() => Club, { nullable: true })
+  async updateClub(
+    @Ctx() { req }: MyContext,
+    @Arg("clubId") clubId: number,
+    @Arg("input") input: ClubInput
+  ): Promise<Club | null | undefined> {
+    const club = await Club.findOne(clubId);
+    if (!club) {
+      throw Error("Club does not exist");
+    }
+    const admins = await ClubAdmin.find({ clubId });
+
+    const adminIds = admins.map((admin) => admin.adminId);
+    if (!adminIds.includes(req.session.userId)) {
+      throw Error("User is not authorised");
+    }
+
+    const duplicateName = await Club.find({ name: input.name });
+    console.log(duplicateName);
+    if (
+      duplicateName.length > 0 &&
+      !duplicateName.map((c) => c.name).includes(club.name)
+    ) {
+      throw Error(`{"name": "A club already exists with this name"}`);
+    }
+
+    const duplicateEmail = await Club.find({ email: input.email });
+    if (
+      duplicateEmail.length > 0 &&
+      !duplicateEmail.map((c) => c.email).includes(club.email)
+    ) {
+      throw Error(`{"email": "A club already exists with this email"}`);
+    }
+
+    const duplicateNumber = await Club.find({ phoneNumber: input.phoneNumber });
+    if (
+      duplicateNumber.length > 0 &&
+      !duplicateNumber.map((c) => c.phoneNumber).includes(club.phoneNumber)
+    ) {
+      throw Error(
+        `{"phoneNumber": "A club already exists with this phone number"}`
+      );
+    }
+
+    await Club.update(clubId, { ...input });
+
+    return Club.findOne(clubId);
+  }
+
   @Mutation(() => Boolean)
   async followClub(
     @Arg("clubId") clubId: number,

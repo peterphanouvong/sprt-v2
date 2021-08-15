@@ -23,12 +23,15 @@ const Clubs: React.FC<Props> = ({}) => {
 
   return (
     <Layout>
-      <VStack spacing={4} align="stretch">
+      <VStack spacing={4} align='stretch'>
         <CreateClub />
-        {data.clubs.map((club: Club) => {
-          console.log(club);
-          return <ClubCard key={club.id} club={club} />;
-        })}
+        {/* {data.clubs.} */}
+        {data.clubs
+          .sort((clubA, clubB) => clubA.id - clubB.id)
+          .map((club: Club) => {
+            console.log(club);
+            return <ClubCard key={club.id} club={club} />;
+          })}
       </VStack>
     </Layout>
   );
