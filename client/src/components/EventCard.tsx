@@ -82,7 +82,6 @@ const EventCard: React.FC<Props> = ({ event }) => {
         }}
         mt={4}
         isFullWidth={true}
-        variant="solid"
       >
         Join
       </Button>
