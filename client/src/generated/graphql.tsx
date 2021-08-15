@@ -82,6 +82,7 @@ export type Mutation = {
   updateEvent?: Maybe<Event>;
   deleteEvent: Scalars['Boolean'];
   createClub: Club;
+  updateClub?: Maybe<Club>;
   followClub: Scalars['Boolean'];
   unfollowClub: Scalars['Boolean'];
   addRequestedMember: Scalars['Boolean'];
@@ -151,6 +152,12 @@ export type MutationDeleteEventArgs = {
 
 export type MutationCreateClubArgs = {
   input: ClubInput;
+};
+
+
+export type MutationUpdateClubArgs = {
+  input: ClubInput;
+  clubId: Scalars['Float'];
 };
 
 
@@ -373,6 +380,14 @@ export type UnfollowClubMutationVariables = Exact<{
 
 
 export type UnfollowClubMutation = { __typename?: 'Mutation', unfollowClub: boolean };
+
+export type UpdateClubMutationVariables = Exact<{
+  input: ClubInput;
+  clubId: Scalars['Float'];
+}>;
+
+
+export type UpdateClubMutation = { __typename?: 'Mutation', updateClub?: Maybe<{ __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string }> }> };
 
 export type UpdateEventMutationVariables = Exact<{
   input: EventInput;
@@ -640,6 +655,17 @@ export const UnfollowClubDocument = gql`
 
 export function useUnfollowClubMutation() {
   return Urql.useMutation<UnfollowClubMutation, UnfollowClubMutationVariables>(UnfollowClubDocument);
+};
+export const UpdateClubDocument = gql`
+    mutation UpdateClub($input: ClubInput!, $clubId: Float!) {
+  updateClub(input: $input, clubId: $clubId) {
+    ...RegularClub
+  }
+}
+    ${RegularClubFragmentDoc}`;
+
+export function useUpdateClubMutation() {
+  return Urql.useMutation<UpdateClubMutation, UpdateClubMutationVariables>(UpdateClubDocument);
 };
 export const UpdateEventDocument = gql`
     mutation UpdateEvent($input: EventInput!, $id: Float!) {
