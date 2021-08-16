@@ -37,7 +37,7 @@ __decorate([
 ], Club.prototype, "email", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column(),
+    typeorm_1.Column({ unique: true }),
     __metadata("design:type", String)
 ], Club.prototype, "phoneNumber", void 0);
 __decorate([
@@ -45,38 +45,6 @@ __decorate([
     typeorm_1.Column(),
     __metadata("design:type", String)
 ], Club.prototype, "description", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => ClubEvent_1.ClubEvent, (ce) => ce.club),
-    __metadata("design:type", Array)
-], Club.prototype, "events", void 0);
-__decorate([
-    type_graphql_1.Field(() => [User_1.User]),
-    __metadata("design:type", Array)
-], Club.prototype, "followers", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => ClubFollower_1.ClubFollower, (cf) => cf.club),
-    __metadata("design:type", Array)
-], Club.prototype, "followerConnection", void 0);
-__decorate([
-    type_graphql_1.Field(() => [User_1.User]),
-    __metadata("design:type", Array)
-], Club.prototype, "requestedMembers", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => ClubRequestedMember_1.ClubRequestedMember, (cm) => cm.club),
-    __metadata("design:type", Array)
-], Club.prototype, "requestedMemberConnection", void 0);
-__decorate([
-    type_graphql_1.Field(() => [User_1.User]),
-    __metadata("design:type", Array)
-], Club.prototype, "admins", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => ClubAdmin_1.ClubAdmin, (ca) => ca.club),
-    __metadata("design:type", Array)
-], Club.prototype, "adminConnection", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => ClubMember_1.ClubMember, (cm) => cm.club),
-    __metadata("design:type", Array)
-], Club.prototype, "members", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.CreateDateColumn(),
@@ -87,6 +55,38 @@ __decorate([
     typeorm_1.UpdateDateColumn(),
     __metadata("design:type", Date)
 ], Club.prototype, "updatedAt", void 0);
+__decorate([
+    type_graphql_1.Field(() => [User_1.User]),
+    __metadata("design:type", Array)
+], Club.prototype, "followers", void 0);
+__decorate([
+    type_graphql_1.Field(() => [User_1.User]),
+    __metadata("design:type", Array)
+], Club.prototype, "requestedMembers", void 0);
+__decorate([
+    type_graphql_1.Field(() => [User_1.User]),
+    __metadata("design:type", Array)
+], Club.prototype, "admins", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => ClubEvent_1.ClubEvent, (ce) => ce.club),
+    __metadata("design:type", Array)
+], Club.prototype, "eventConnection", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => ClubFollower_1.ClubFollower, (cf) => cf.club),
+    __metadata("design:type", Array)
+], Club.prototype, "followerConnection", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => ClubRequestedMember_1.ClubRequestedMember, (cm) => cm.club),
+    __metadata("design:type", Array)
+], Club.prototype, "requestedMemberConnection", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => ClubAdmin_1.ClubAdmin, (ca) => ca.club),
+    __metadata("design:type", Array)
+], Club.prototype, "adminConnection", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => ClubMember_1.ClubMember, (cm) => cm.club),
+    __metadata("design:type", Array)
+], Club.prototype, "memberConnection", void 0);
 Club = __decorate([
     type_graphql_1.ObjectType(),
     typeorm_1.Entity()

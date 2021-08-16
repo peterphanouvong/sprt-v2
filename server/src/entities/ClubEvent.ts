@@ -6,16 +6,24 @@ import { Event } from "./Event";
 @ObjectType()
 @Entity()
 export class ClubEvent extends BaseEntity {
+  /**
+   * Fields
+   */
+
   @PrimaryColumn()
   clubId: number;
-
-  @ManyToOne(() => Club, (club) => club.events)
-  club: Club;
 
   @PrimaryColumn()
   eventId: number;
 
-  @ManyToOne(() => Event, (e) => e.clubs, {
+  /**
+   * Connections
+   */
+
+  @ManyToOne(() => Club, (club) => club.eventConnection)
+  club: Club;
+
+  @ManyToOne(() => Event, (e) => e.clubConnection, {
     onDelete: "CASCADE",
   })
   event: Event;

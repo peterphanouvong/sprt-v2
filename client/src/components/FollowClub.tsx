@@ -1,5 +1,5 @@
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
-import { Button } from "@chakra-ui/react";
+import { Button, useToast } from "@chakra-ui/react";
 import React from "react";
 import {
   MeQuery,
@@ -28,6 +28,7 @@ const FollowClub: React.FC<Props> = ({
   );
   const [, followClub] = useFollowClubMutation();
   const [, unfollowClub] = useUnfollowClubMutation();
+  const toast = useToast();
 
   const handleButton = async (): Promise<void> => {
     if (!isFollowing) {
@@ -45,6 +46,17 @@ const FollowClub: React.FC<Props> = ({
     });
     if (!error) {
       addFollower();
+    } else {
+      console.log(error);
+      toast({
+        title: "Error",
+        variant: "subtle",
+        position: "top",
+        description: error.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 
@@ -60,7 +72,7 @@ const FollowClub: React.FC<Props> = ({
 
   if (!data) {
     return (
-      <Button isLoading={true} colorScheme='orange'>
+      <Button isLoading={true} colorScheme="orange">
         Follow
       </Button>
     );
@@ -68,8 +80,8 @@ const FollowClub: React.FC<Props> = ({
   return (
     <Button
       leftIcon={isFollowing ? <MinusIcon /> : <AddIcon />}
-      colorScheme='orange'
-      variant='solid'
+      colorScheme="orange"
+      variant="solid"
       onClick={handleButton}
     >
       {isFollowing ? "Unfollow" : "Follow"}

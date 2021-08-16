@@ -63,14 +63,6 @@ __decorate([
     __metadata("design:type", User_1.User)
 ], Event.prototype, "host", void 0);
 __decorate([
-    typeorm_1.OneToMany(() => ClubEvent_1.ClubEvent, (ce) => ce.event),
-    __metadata("design:type", Array)
-], Event.prototype, "clubs", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => EventAttendee_1.EventAttendee, (ea) => ea.event),
-    __metadata("design:type", Array)
-], Event.prototype, "attendeeConnection", void 0);
-__decorate([
     type_graphql_1.Field(() => [User_1.User]),
     __metadata("design:type", Array)
 ], Event.prototype, "attendees", void 0);
@@ -89,6 +81,14 @@ __decorate([
     typeorm_1.UpdateDateColumn(),
     __metadata("design:type", Date)
 ], Event.prototype, "updatedAt", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => ClubEvent_1.ClubEvent, (ce) => ce.event),
+    __metadata("design:type", Array)
+], Event.prototype, "clubConnection", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => EventAttendee_1.EventAttendee, (ea) => ea.event),
+    __metadata("design:type", Array)
+], Event.prototype, "attendeeConnection", void 0);
 Event = __decorate([
     type_graphql_1.ObjectType(),
     typeorm_1.Entity()

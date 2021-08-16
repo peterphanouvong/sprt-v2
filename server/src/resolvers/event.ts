@@ -16,7 +16,7 @@ import { isAuth } from "../middleware/isAuth";
 import { Event } from "../entities/Event";
 import { User } from "../entities/User";
 import { EventAttendee } from "../entities/EventAttendee";
-import { createQueryBuilder, getConnection } from "typeorm";
+import { getConnection } from "typeorm";
 
 @InputType()
 class EventInput {
@@ -41,16 +41,17 @@ class EventInput {
 
 @Resolver(Event)
 export class EventResolver {
-  @FieldResolver(() => User) // Maybe should be [User]???
+  /**
+   * Field Resolvers
+   */
+
+  @FieldResolver(() => [User])
   async attendees(@Root() event: Event, @Ctx() { userLoader }: MyContext) {
-    // get a list of the attendeeIds
     const eventAttendeeIds = await getConnection().query(`
       select "attendeeId" 
       from "event_attendee"
       where "eventId" = ${event.id};
     `);
-
-    // eventAttendeeIds = [ { attendeeId: 1 } ]
     return userLoader.loadMany(
       eventAttendeeIds.map((e: { attendeeId: number }) => e.attendeeId)
     );
@@ -61,30 +62,25 @@ export class EventResolver {
     return userLoader.load(event.hostId);
   }
 
-  @Mutation(() => User)
+  /**
+   * CRUD
+   */
+
+  // Create
+  @Mutation(() => Event)
   @UseMiddleware(isAuth)
-  async addAttendee(
+  async createEvent(
     @Ctx() { req }: MyContext,
-    @Arg("eventId", () => Int) eventId: number
-  ): Promise<User | undefined> {
-    const exists = await EventAttendee.find({
-      eventId,
-      attendeeId: req.session.userId,
-    });
-
-    // alreay attending
-    if (exists.length !== 0) {
-      throw Error("that person is already attending the event");
-    }
-
-    await EventAttendee.create({
-      eventId: eventId,
-      attendeeId: req.session.userId,
+    @Arg("input") input: EventInput
+  ): Promise<Event | undefined> {
+    const event = await Event.create({
+      ...input,
+      hostId: req.session.userId,
     }).save();
-
-    return await User.findOne(req.session.userId);
+    return event;
   }
 
+  // Read
   @Query(() => [Event])
   async events(): Promise<Event[]> {
     return Event.find();
@@ -95,41 +91,29 @@ export class EventResolver {
     return Event.findOne(id);
   }
 
-  @Mutation(() => Event)
-  @UseMiddleware(isAuth)
-  async createEvent(
-    @Ctx() { req }: MyContext,
-    @Arg("input") input: EventInput
-  ): Promise<Event | undefined> {
-    const { id } = await Event.create({
-      ...input,
-      hostId: req.session.userId,
-    }).save();
-    const event = await Event.findOne(id);
-    return event;
-  }
-
+  // Update
   @Mutation(() => Event, { nullable: true })
   async updateEvent(
     @Ctx() { req }: MyContext,
     @Arg("id") id: number,
     @Arg("input") input: EventInput
-  ): Promise<Event | null | undefined> {
-    const event = await Event.findOne(id);
-    if (!event) {
-      return null;
-    }
-
-    if (req.session.userId !== event.hostId) {
-      return null;
-    }
-    console.log(input);
-
-    await Event.update(id, { ...input });
-    return Event.findOne(id);
+  ): Promise<Event | null> {
+    const { raw } = await getConnection()
+      .createQueryBuilder()
+      .update(Event)
+      .set({ ...input })
+      .where('id = :id and "hostId" = :hostId', {
+        id,
+        hostId: req.session.userId,
+      })
+      .returning("*")
+      .execute();
+    return raw[0];
   }
 
+  // Delete
   @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
   async deleteEvent(
     @Arg("id") id: number,
     @Ctx() { req }: MyContext
@@ -146,5 +130,28 @@ export class EventResolver {
 
     await Event.delete({ id, hostId: req.session.userId });
     return true;
+  }
+
+  /**
+   * Other
+   */
+
+  @Mutation(() => User)
+  @UseMiddleware(isAuth)
+  async addAttendee(
+    @Ctx() { req }: MyContext,
+    @Arg("eventId", () => Int) eventId: number
+  ): Promise<User | undefined> {
+    try {
+      await EventAttendee.insert({
+        eventId: eventId,
+        attendeeId: req.session.userId,
+      });
+    } catch (error) {
+      if (error.detail.includes("already exists")) {
+        throw Error(`That user is already attending the event!`);
+      }
+    }
+    return await User.findOne(req.session.userId);
   }
 }

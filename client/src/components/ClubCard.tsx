@@ -98,12 +98,12 @@ const ClubCard: React.FC<Props> = ({ club }) => {
   };
 
   if (!userData) {
-    return <Skeleton height='250px'></Skeleton>;
+    return <Skeleton height="250px"></Skeleton>;
   }
 
   return (
     <Card>
-      <Box display='flex' justifyContent='space-between'>
+      <Box display="flex" justifyContent="space-between">
         <Box>
           <Heading>{club.name}</Heading>
           {club.admins.map((admin) => (

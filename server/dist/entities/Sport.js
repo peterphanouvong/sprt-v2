@@ -28,7 +28,7 @@ __decorate([
 __decorate([
     typeorm_1.OneToMany(() => ClubSport_1.ClubSport, (cs) => cs.sport),
     __metadata("design:type", Array)
-], Sport.prototype, "clubs", void 0);
+], Sport.prototype, "clubSportConnection", void 0);
 Sport = __decorate([
     type_graphql_1.ObjectType(),
     typeorm_1.Entity()

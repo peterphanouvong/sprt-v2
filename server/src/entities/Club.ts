@@ -18,6 +18,10 @@ import { User } from "./User";
 @ObjectType()
 @Entity()
 export class Club extends BaseEntity {
+  /**
+   * Fields
+   */
+
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id!: number;
@@ -31,36 +35,12 @@ export class Club extends BaseEntity {
   email!: string;
 
   @Field()
-  @Column()
+  @Column({ unique: true })
   phoneNumber!: string;
 
   @Field()
   @Column()
   description: string;
-
-  @OneToMany(() => ClubEvent, (ce) => ce.club)
-  events: ClubEvent[];
-
-  @Field(() => [User])
-  followers: User[];
-
-  @OneToMany(() => ClubFollower, (cf) => cf.club)
-  followerConnection: ClubFollower[];
-
-  @Field(() => [User])
-  requestedMembers: User[];
-
-  @OneToMany(() => ClubRequestedMember, (cm) => cm.club)
-  requestedMemberConnection: ClubRequestedMember[];
-
-  @Field(() => [User])
-  admins: User[];
-
-  @OneToMany(() => ClubAdmin, (ca) => ca.club)
-  adminConnection: ClubAdmin[];
-
-  @OneToMany(() => ClubMember, (cm) => cm.club)
-  members: ClubMember[];
 
   @Field(() => String)
   @CreateDateColumn()
@@ -69,4 +49,37 @@ export class Club extends BaseEntity {
   @Field(() => String)
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Field(() => [User])
+  followers: User[];
+
+  @Field(() => [User])
+  requestedMembers: User[];
+
+  @Field(() => [User])
+  admins: User[];
+
+  /**
+   * Connections
+   */
+
+  @OneToMany(() => ClubEvent, (ce) => ce.club)
+  eventConnection: ClubEvent[];
+
+  @OneToMany(() => ClubFollower, (cf) => cf.club)
+  followerConnection: ClubFollower[];
+
+  @OneToMany(() => ClubRequestedMember, (cm) => cm.club)
+  requestedMemberConnection: ClubRequestedMember[];
+
+  @OneToMany(() => ClubAdmin, (ca) => ca.club)
+  adminConnection: ClubAdmin[];
+
+  @OneToMany(() => ClubMember, (cm) => cm.club)
+  memberConnection: ClubMember[];
 }
+
+/**
+ * Notes:
+ * I would like to consider this for many to many relationships: "adminIds": [1,2,3] --> This will make sql things easier
+ */

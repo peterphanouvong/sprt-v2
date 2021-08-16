@@ -21,15 +21,15 @@ __decorate([
     __metadata("design:type", Number)
 ], ClubFollower.prototype, "clubId", void 0);
 __decorate([
-    typeorm_1.ManyToOne(() => Club_1.Club, (club) => club.followers),
-    __metadata("design:type", Club_1.Club)
-], ClubFollower.prototype, "club", void 0);
-__decorate([
     typeorm_1.PrimaryColumn(),
     __metadata("design:type", Number)
 ], ClubFollower.prototype, "followerId", void 0);
 __decorate([
-    typeorm_1.ManyToOne(() => User_1.User, (u) => u.following_clubs),
+    typeorm_1.ManyToOne(() => Club_1.Club, (club) => club.followers),
+    __metadata("design:type", Club_1.Club)
+], ClubFollower.prototype, "club", void 0);
+__decorate([
+    typeorm_1.ManyToOne(() => User_1.User, (u) => u.clubFollowerConnection),
     __metadata("design:type", User_1.User)
 ], ClubFollower.prototype, "follower", void 0);
 ClubFollower = __decorate([
