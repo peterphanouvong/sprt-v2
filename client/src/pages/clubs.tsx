@@ -7,10 +7,12 @@ import { Club, useClubsQuery } from "../generated/graphql";
 import { Spinner, VStack } from "@chakra-ui/react";
 import CreateClub from "../components/CreateClub";
 import { ClubCard } from "../components/ClubCard";
+import { useIsAuth } from "../utils/useIsAuth";
 
 interface Props {}
 
 const Clubs: React.FC<Props> = ({}) => {
+  useIsAuth();
   const [{ data, fetching }] = useClubsQuery();
 
   if (!fetching && !data) {
@@ -23,11 +25,12 @@ const Clubs: React.FC<Props> = ({}) => {
 
   return (
     <Layout>
-      <VStack spacing={4} align='stretch'>
+      <VStack spacing={4} align="stretch">
         <CreateClub />
         {/* {data.clubs.} */}
         {data.clubs
           .sort((clubA, clubB) => clubA.id - clubB.id)
+          //@ts-ignore
           .map((club: Club) => {
             console.log(club);
             return <ClubCard key={club.id} club={club} />;
