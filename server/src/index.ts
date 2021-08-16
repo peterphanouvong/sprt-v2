@@ -94,7 +94,7 @@ const main = async () => {
         httpOnly: true,
         sameSite: "lax", // csrf
         secure: __prod__, // cookie only works in https
-        domain: __prod__ ? ".sprt.rest" : undefined,
+        domain: __prod__ ? ".sprt.fun" : undefined,
       },
       secret: process.env.SESSION_SECRET,
       resave: false,

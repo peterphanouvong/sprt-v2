@@ -1,3 +1,4 @@
 dump.rdb
 scripts/
 .env
+node_modules
