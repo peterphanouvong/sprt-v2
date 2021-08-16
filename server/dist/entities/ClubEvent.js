@@ -21,15 +21,15 @@ __decorate([
     __metadata("design:type", Number)
 ], ClubEvent.prototype, "clubId", void 0);
 __decorate([
-    typeorm_1.ManyToOne(() => Club_1.Club, (club) => club.events),
-    __metadata("design:type", Club_1.Club)
-], ClubEvent.prototype, "club", void 0);
-__decorate([
     typeorm_1.PrimaryColumn(),
     __metadata("design:type", Number)
 ], ClubEvent.prototype, "eventId", void 0);
 __decorate([
-    typeorm_1.ManyToOne(() => Event_1.Event, (e) => e.clubs, {
+    typeorm_1.ManyToOne(() => Club_1.Club, (club) => club.eventConnection),
+    __metadata("design:type", Club_1.Club)
+], ClubEvent.prototype, "club", void 0);
+__decorate([
+    typeorm_1.ManyToOne(() => Event_1.Event, (e) => e.clubConnection, {
         onDelete: "CASCADE",
     }),
     __metadata("design:type", Event_1.Event)

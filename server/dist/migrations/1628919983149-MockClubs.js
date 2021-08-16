@@ -33,7 +33,7 @@ class MockClubs1628919983149 {
       insert into "club_admin" ("clubId", "adminId") values (999, 999);
     `);
     }
-    async down(queryRunner) { }
+    async down(_) { }
 }
 exports.MockClubs1628919983149 = MockClubs1628919983149;
 //# sourceMappingURL=1628919983149-MockClubs.js.map

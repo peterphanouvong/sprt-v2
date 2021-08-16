@@ -23,8 +23,7 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
   const [, createClub] = useCreateClubMutation();
   const [, updateClub] = useUpdateClubMutation();
 
-  const phoneRegExp =
-    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+  const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
   const CreateClubSchema = Yup.object().shape({
     email: Yup.string()
@@ -43,6 +42,7 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
     console.log(values);
     const { data, error } = await createClub({ input: values });
     console.log(data);
+    console.log(error);
     if (!error) {
       onClose();
       // addClub(data.createClub);
@@ -93,47 +93,47 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
       {(props) => {
         return (
           <Form>
-            <VStack align='stretch' spacing={4} padding={4}>
+            <VStack align="stretch" spacing={4} padding={4}>
               <InputField
-                name='name'
+                name="name"
                 placeholder="What's your club name?"
-                label='Name'
+                label="Name"
               />
 
               <InputField
-                name='email'
-                placeholder='example@email.com'
-                label='Email'
-                icon={<EmailIcon color='gray.300' />}
+                name="email"
+                placeholder="example@email.com"
+                label="Email"
+                icon={<EmailIcon color="gray.300" />}
               />
 
               <InputField
-                name='phoneNumber'
-                placeholder='04XXXXXXXX'
-                label='Phone Number'
-                icon={<PhoneIcon color='gray.300' />}
+                name="phoneNumber"
+                placeholder="04XXXXXXXX"
+                label="Phone Number"
+                icon={<PhoneIcon color="gray.300" />}
               />
 
               <TextareaField
-                name='description'
+                name="description"
                 placeholder="What's up?"
-                label='Description'
+                label="Description"
               />
             </VStack>
 
             <ModalFooter>
               <Button
-                colorScheme='orange'
-                variant='ghost'
+                colorScheme="orange"
+                variant="ghost"
                 mr={3}
                 onClick={onClose}
               >
                 Close
               </Button>
               <Button
-                colorScheme='orange'
+                colorScheme="orange"
                 isLoading={props.isSubmitting}
-                type='submit'
+                type="submit"
               >
                 {formType}
               </Button>

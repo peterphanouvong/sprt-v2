@@ -13,6 +13,10 @@ import { User } from "./User";
 @ObjectType()
 @Entity()
 export class Post extends BaseEntity {
+  /**
+   * Fields
+   */
+
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id!: number;

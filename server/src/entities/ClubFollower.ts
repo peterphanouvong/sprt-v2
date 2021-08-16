@@ -6,15 +6,23 @@ import { User } from "./User";
 @ObjectType()
 @Entity()
 export class ClubFollower extends BaseEntity {
+  /**
+   * Fields
+   */
+
   @PrimaryColumn()
   clubId: number;
-
-  @ManyToOne(() => Club, (club) => club.followers)
-  club: Club;
 
   @PrimaryColumn()
   followerId: number;
 
-  @ManyToOne(() => User, (u) => u.following_clubs)
+  /**
+   * Connections
+   */
+
+  @ManyToOne(() => Club, (club) => club.followers)
+  club: Club;
+
+  @ManyToOne(() => User, (u) => u.clubFollowerConnection)
   follower: User;
 }

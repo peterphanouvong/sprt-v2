@@ -11,6 +11,10 @@ import { ClubSport } from "./ClubSport";
 @ObjectType()
 @Entity()
 export class Sport extends BaseEntity {
+  /**
+   * Fields
+   */
+
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id!: number;
@@ -19,6 +23,10 @@ export class Sport extends BaseEntity {
   @Column({ unique: true })
   name!: string;
 
+  /**
+   * Connections
+   */
+
   @OneToMany(() => ClubSport, (cs) => cs.sport)
-  clubs: [];
+  clubSportConnection: [];
 }

@@ -51,26 +51,6 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "events", void 0);
 __decorate([
-    typeorm_1.OneToMany(() => ClubFollower_1.ClubFollower, (cf) => cf.follower),
-    __metadata("design:type", Array)
-], User.prototype, "following_clubs", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => ClubMember_1.ClubMember, (cm) => cm.member),
-    __metadata("design:type", Array)
-], User.prototype, "club_member", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => ClubAdmin_1.ClubAdmin, (ca) => ca.admin),
-    __metadata("design:type", Array)
-], User.prototype, "club_admin", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => EventAttendee_1.EventAttendee, (ca) => ca.attendee),
-    __metadata("design:type", Array)
-], User.prototype, "eventConnection", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => ClubRequestedMember_1.ClubRequestedMember, (crm) => crm.requestedMember),
-    __metadata("design:type", Array)
-], User.prototype, "clubRequestedMemberConnection", void 0);
-__decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.CreateDateColumn(),
     __metadata("design:type", Date)
@@ -80,6 +60,26 @@ __decorate([
     typeorm_1.UpdateDateColumn(),
     __metadata("design:type", Date)
 ], User.prototype, "updatedAt", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => ClubFollower_1.ClubFollower, (cf) => cf.follower),
+    __metadata("design:type", Array)
+], User.prototype, "clubFollowerConnection", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => ClubMember_1.ClubMember, (cm) => cm.member),
+    __metadata("design:type", Array)
+], User.prototype, "clubMemberConnection", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => ClubAdmin_1.ClubAdmin, (ca) => ca.admin),
+    __metadata("design:type", Array)
+], User.prototype, "clubAdminConnection", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => EventAttendee_1.EventAttendee, (ca) => ca.attendee),
+    __metadata("design:type", Array)
+], User.prototype, "eventAttendeeConnection", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => ClubRequestedMember_1.ClubRequestedMember, (crm) => crm.requestedMember),
+    __metadata("design:type", Array)
+], User.prototype, "clubRequestedMemberConnection", void 0);
 User = __decorate([
     type_graphql_1.ObjectType(),
     typeorm_1.Entity()
