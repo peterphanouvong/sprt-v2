@@ -8,6 +8,7 @@ import { CreateEvent } from "../components/CreateEvent";
 import { EventCard } from "../components/EventCard";
 import { Card } from "../components/Card";
 import { useIsAuth } from "../utils/useIsAuth";
+
 interface Props {}
 
 const Events: React.FC<Props> = ({}) => {
