@@ -12,7 +12,7 @@ import {
 import { withUrqlClient } from "next-urql";
 
 import { Card } from "../components/Card";
-import CreatePost from "../components/CreatePost";
+import PostCreateButton from "../components/PostCreateButton";
 import {
   useDeletePostMutation,
   useMeQuery,
@@ -40,9 +40,9 @@ const Index = () => {
 
   return (
     <Layout>
-      <Grid alignItems="flex-start" templateColumns="5fr 2fr" gap={4}>
-        <VStack spacing={4} align="stretch">
-          {meData.me && <CreatePost pageProps={null} />}
+      <Grid alignItems='flex-start' templateColumns='5fr 2fr' gap={4}>
+        <VStack spacing={4} align='stretch'>
+          {meData.me && <PostCreateButton pageProps={null} />}
           {!data && fetching ? (
             <div>loading...</div>
           ) : (
@@ -50,12 +50,12 @@ const Index = () => {
               !post ? null : (
                 <Card key={post.id}>
                   <Box mb={2}>
-                    <Heading as="h2" fontSize="lg">
+                    <Heading as='h2' fontSize='lg'>
                       <NextLink href={`/post/[id]`} as={`/post/${post.id}`}>
                         <Link>{post.title}</Link>
                       </NextLink>
                     </Heading>
-                    <Text fontSize="sm" color="gray">
+                    <Text fontSize='sm' color='gray'>
                       posted by {post.creator.username}
                     </Text>
                   </Box>
@@ -63,7 +63,7 @@ const Index = () => {
                   <IconButton
                     mt={4}
                     icon={<DeleteIcon />}
-                    aria-label="Delete post"
+                    aria-label='Delete post'
                     onClick={() => deletePost({ id: post.id })}
                   />
                   {/* <Text>{post.</Text> */}

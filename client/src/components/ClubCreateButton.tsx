@@ -1,6 +1,4 @@
-import { EmailIcon, PhoneIcon } from "@chakra-ui/icons";
 import {
-  VStack,
   Heading,
   Button,
   Modal,
@@ -9,16 +7,9 @@ import {
   Box,
   CloseButton,
   Divider,
-  ModalFooter,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Formik, Form } from "formik";
 import React from "react";
-import { useCreateClubMutation } from "../generated/graphql";
-import { InputField } from "./InputField";
-import { TextareaField } from "./TextareaField";
-import * as Yup from "yup";
-import { errorMessageToObject } from "../utils/errorMessageToObject";
 import { ClubForm } from "./ClubForm";
 
 interface Props {
@@ -55,4 +46,4 @@ const CreateClub: React.FC<Props> = ({}) => {
   );
 };
 
-export default CreateClub;
+export { CreateClub };
