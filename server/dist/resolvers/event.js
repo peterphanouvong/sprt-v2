@@ -62,7 +62,7 @@ let EventResolver = class EventResolver {
     }
     async createEvent({ req }, input) {
         const event = await Event_1.Event.create(Object.assign(Object.assign({}, input), { hostId: req.session.userId })).save();
-        return event;
+        return Event_1.Event.findOne(event.id);
     }
     async events() {
         return Event_1.Event.find();
