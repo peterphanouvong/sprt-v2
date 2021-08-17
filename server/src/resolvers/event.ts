@@ -77,7 +77,7 @@ export class EventResolver {
       ...input,
       hostId: req.session.userId,
     }).save();
-    return event;
+    return Event.findOne(event.id);
   }
 
   // Read
