@@ -18,10 +18,10 @@ import {
 } from "../generated/graphql";
 import { AccordionUsers } from "./AccordionUsers";
 import { Card } from "./Card";
-import { DeleteEntity } from "./DeleteEntity";
-import { EditClub } from "./EditClub";
-import { FollowClub } from "./FollowClub";
+import { ClubEditButton } from "./ClubEditButton";
+import { ClubFollowButton } from "./ClubFollowButton";
 import { OptionsButton } from "./OptionsButton";
+import { ClubDeleteButton } from "./ClubDeleteButton";
 
 interface Props {
   club: Club;
@@ -57,15 +57,6 @@ const ClubCard: React.FC<Props> = ({ club }) => {
     setFollowers(newFollowers);
   };
 
-  const handleDelete = async (id: number): Promise<string | null> => {
-    const { error } = await deleteClub({ id });
-    if (error) {
-      console.log(error);
-      return error.message;
-    }
-    return null;
-  };
-
   const requestToJoinClub = async () => {
     const { data, error } = await addRequestedMember({
       userId: userData.me.id,
@@ -98,12 +89,12 @@ const ClubCard: React.FC<Props> = ({ club }) => {
   };
 
   if (!userData) {
-    return <Skeleton height="250px"></Skeleton>;
+    return <Skeleton height='250px'></Skeleton>;
   }
 
   return (
     <Card>
-      <Box display="flex" justifyContent="space-between">
+      <Box display='flex' justifyContent='space-between'>
         <Box>
           <Heading>{club.name}</Heading>
           {club.admins.map((admin) => (
@@ -115,18 +106,15 @@ const ClubCard: React.FC<Props> = ({ club }) => {
         <OptionsButton>
           {isAuthorised(club) ? (
             <>
-              <EditClub club={club} />
-              <DeleteEntity
-                handleDelete={() => handleDelete(club.id)}
-                entityName={"Club"}
-              />
+              <ClubEditButton club={club} />
+              <ClubDeleteButton clubId={club.id} />
             </>
           ) : (
             <MenuItem icon={<WarningIcon />}>Report</MenuItem>
           )}
         </OptionsButton>
       </Box>
-      <FollowClub
+      <ClubFollowButton
         followerList={club.followers}
         clubId={club.id}
         data={userData}
@@ -134,7 +122,7 @@ const ClubCard: React.FC<Props> = ({ club }) => {
         removeFollower={removeFollower}
       />
       <AccordionUsers userType={"Followers"} userList={followers} />
-      <Button colorScheme="orange" mt={2} onClick={requestToJoinClub}>
+      <Button colorScheme='orange' mt={2} onClick={requestToJoinClub}>
         {hasRequestedToJoin ? "Already requested" : "Request to join"}
       </Button>
     </Card>

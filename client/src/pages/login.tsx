@@ -99,13 +99,13 @@ const Login: React.FC<Props> = ({}) => {
                     Register
                   </Button>
                 </NextLink>
-                <FacebookLogin
+                {/* <FacebookLogin
                   appId='1088597931155576'
                   autoLoad={true}
                   fields='name,email,picture'
                   // onClick={componentClicked}
                   callback={responseFacebook}
-                />
+                /> */}
               </VStack>
             </VStack>
           </Form>

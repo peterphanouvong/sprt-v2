@@ -1,60 +1,69 @@
+import { EditIcon } from "@chakra-ui/icons";
 import {
   useDisclosure,
   Heading,
-  Button,
   Modal,
   ModalOverlay,
   ModalContent,
   Box,
   CloseButton,
   Divider,
+  MenuItem,
 } from "@chakra-ui/react";
 import React from "react";
-import { useCreateEventMutation } from "../generated/graphql";
+import { Event, useUpdateEventMutation } from "../generated/graphql";
 import { formatDateForPostgres } from "../utils/parseDate";
 import { EventForm } from "./EventForm";
 
-interface Props {}
+interface Props {
+  event: Event;
+}
 
-const CreateEvent: React.FC<Props> = ({}) => {
+const EventEditButton: React.FC<Props> = ({ event }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [, createEvent] = useCreateEventMutation();
+  const [, updateEvent] = useUpdateEventMutation();
 
   const onSubmit = async (values) => {
-    const { error } = await createEvent({
+    const { error } = await updateEvent({
       input: {
         ...values,
         startTime: formatDateForPostgres(values.startTime),
         endTime: formatDateForPostgres(values.endTime),
         capacity: values.capacity === "" ? null : parseInt(values.capacity),
       },
+      id: event.id,
     });
-
-    if (!error) {
+    if (error) {
+      console.log(error);
+    } else {
       onClose();
     }
   };
 
   return (
     <>
-      <Button onClick={onOpen}>Create event +</Button>
-      <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
+      <MenuItem onClick={onOpen} icon={<EditIcon />}>
+        Edit
+      </MenuItem>
+
+      <Modal size='3xl' isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
+            display='flex'
+            justifyContent='space-between'
+            alignItems='center'
             padding={4}
           >
-            <Heading fontSize="large">Create event</Heading>
+            <Heading fontSize='large'>Edit event</Heading>
             <CloseButton onClick={onClose} />
           </Box>
           <Divider />
           <EventForm
+            event={event}
             onClose={onClose}
             onSubmit={onSubmit}
-            submitMessage="Create"
+            submitMessage='Save'
           />
         </ModalContent>
       </Modal>
@@ -62,4 +71,4 @@ const CreateEvent: React.FC<Props> = ({}) => {
   );
 };
 
-export { CreateEvent };
+export { EventEditButton };

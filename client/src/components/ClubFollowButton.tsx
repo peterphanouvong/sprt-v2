@@ -16,7 +16,7 @@ interface Props {
   removeFollower: () => void;
 }
 
-const FollowClub: React.FC<Props> = ({
+const ClubFollowButton: React.FC<Props> = ({
   followerList,
   clubId,
   data,
@@ -72,7 +72,7 @@ const FollowClub: React.FC<Props> = ({
 
   if (!data) {
     return (
-      <Button isLoading={true} colorScheme="orange">
+      <Button isLoading={true} colorScheme='orange'>
         Follow
       </Button>
     );
@@ -80,8 +80,8 @@ const FollowClub: React.FC<Props> = ({
   return (
     <Button
       leftIcon={isFollowing ? <MinusIcon /> : <AddIcon />}
-      colorScheme="orange"
-      variant="solid"
+      colorScheme='orange'
+      variant='solid'
       onClick={handleButton}
     >
       {isFollowing ? "Unfollow" : "Follow"}
@@ -89,4 +89,4 @@ const FollowClub: React.FC<Props> = ({
   );
 };
 
-export { FollowClub };
+export { ClubFollowButton };

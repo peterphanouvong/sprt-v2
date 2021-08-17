@@ -4,7 +4,7 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 import { Layout } from "../components/Layout";
 import { Event, useEventsQuery, useMeQuery } from "../generated/graphql";
 import { Box, Grid, Spinner, VStack } from "@chakra-ui/react";
-import { CreateEvent } from "../components/CreateEvent";
+import { EventCreateButton } from "../components/EventCreateButton";
 import { EventCard } from "../components/EventCard";
 import { Card } from "../components/Card";
 import { useIsAuth } from "../utils/useIsAuth";
@@ -26,11 +26,11 @@ const Events: React.FC<Props> = ({}) => {
 
   return (
     <Layout>
-      <Grid alignItems="flex-start" templateColumns="5fr 2fr" gap={4}>
+      <Grid alignItems='flex-start' templateColumns='5fr 2fr' gap={4}>
         <Box>
-          {meData?.me && <CreateEvent />}
+          {meData?.me && <EventCreateButton />}
           <Box mt={4} />
-          <VStack spacing={4} align="stretch">
+          <VStack spacing={4} align='stretch'>
             {data?.events
               .sort((a: any, b: any) => b.updatedAt - a.updatedAt)
               //@ts-ignore
