@@ -21,11 +21,11 @@ export type Club = {
   email: Scalars['String'];
   phoneNumber: Scalars['String'];
   description: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
   followers: Array<User>;
   requestedMembers: Array<User>;
   admins: Array<User>;
-  createdAt: Scalars['String'];
-  updatedAt: Scalars['String'];
 };
 
 export type ClubInput = {
@@ -77,17 +77,17 @@ export type Mutation = {
   register: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
-  addAttendee: User;
   createEvent: Event;
   updateEvent?: Maybe<Event>;
   deleteEvent: Scalars['Boolean'];
+  addAttendee: User;
   createClub: Club;
   updateClub?: Maybe<Club>;
+  deleteClub: Scalars['Boolean'];
   followClub: Scalars['Boolean'];
   unfollowClub: Scalars['Boolean'];
   addRequestedMember: Scalars['Boolean'];
   addAdmin: Scalars['Boolean'];
-  deleteClub: Scalars['Boolean'];
 };
 
 
@@ -129,11 +129,6 @@ export type MutationLoginArgs = {
 };
 
 
-export type MutationAddAttendeeArgs = {
-  eventId: Scalars['Int'];
-};
-
-
 export type MutationCreateEventArgs = {
   input: EventInput;
 };
@@ -150,6 +145,11 @@ export type MutationDeleteEventArgs = {
 };
 
 
+export type MutationAddAttendeeArgs = {
+  eventId: Scalars['Int'];
+};
+
+
 export type MutationCreateClubArgs = {
   input: ClubInput;
 };
@@ -158,6 +158,11 @@ export type MutationCreateClubArgs = {
 export type MutationUpdateClubArgs = {
   input: ClubInput;
   clubId: Scalars['Float'];
+};
+
+
+export type MutationDeleteClubArgs = {
+  id: Scalars['Float'];
 };
 
 
@@ -182,11 +187,6 @@ export type MutationAddRequestedMemberArgs = {
 export type MutationAddAdminArgs = {
   adminId: Scalars['Float'];
   clubId: Scalars['Float'];
-};
-
-
-export type MutationDeleteClubArgs = {
-  id: Scalars['Float'];
 };
 
 export type PaginatedPosts = {
@@ -263,7 +263,7 @@ export type UsernamePasswordInput = {
   password: Scalars['String'];
 };
 
-export type RegularClubFragment = { __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string }> };
+export type RegularClubFragment = { __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string }>, requestedMembers: Array<{ __typename?: 'User', id: number, username: string, email: string }> };
 
 export type RegularErrorFragment = { __typename?: 'FieldError', message: string, field: string };
 
@@ -301,7 +301,7 @@ export type CreateClubMutationVariables = Exact<{
 }>;
 
 
-export type CreateClubMutation = { __typename?: 'Mutation', createClub: { __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string }> } };
+export type CreateClubMutation = { __typename?: 'Mutation', createClub: { __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string }>, requestedMembers: Array<{ __typename?: 'User', id: number, username: string, email: string }> } };
 
 export type CreateEventMutationVariables = Exact<{
   input: EventInput;
@@ -387,7 +387,7 @@ export type UpdateClubMutationVariables = Exact<{
 }>;
 
 
-export type UpdateClubMutation = { __typename?: 'Mutation', updateClub?: Maybe<{ __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string }> }> };
+export type UpdateClubMutation = { __typename?: 'Mutation', updateClub?: Maybe<{ __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string }>, requestedMembers: Array<{ __typename?: 'User', id: number, username: string, email: string }> }> };
 
 export type UpdateEventMutationVariables = Exact<{
   input: EventInput;
@@ -400,7 +400,7 @@ export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: Maybe
 export type ClubsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ClubsQuery = { __typename?: 'Query', clubs: Array<{ __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string }> }> };
+export type ClubsQuery = { __typename?: 'Query', clubs: Array<{ __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string }>, requestedMembers: Array<{ __typename?: 'User', id: number, username: string, email: string }> }> };
 
 export type EventsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -447,6 +447,9 @@ export const RegularClubFragmentDoc = gql`
     ...RegularUser
   }
   followers {
+    ...RegularUser
+  }
+  requestedMembers {
     ...RegularUser
   }
 }

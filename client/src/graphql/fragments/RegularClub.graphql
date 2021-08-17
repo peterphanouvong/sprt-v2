@@ -12,4 +12,7 @@ fragment RegularClub on Club {
   followers {
     ...RegularUser
   }
+  requestedMembers {
+    ...RegularUser
+  }
 }

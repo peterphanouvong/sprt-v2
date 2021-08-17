@@ -21,8 +21,6 @@ const EventCreateButton: React.FC<Props> = ({}) => {
   const [, createEvent] = useCreateEventMutation();
 
   const onSubmit = async (values) => {
-    console.log(values);
-
     const { error } = await createEvent({
       input: {
         ...values,
