@@ -19,7 +19,7 @@ interface Props {
   event: Event;
 }
 
-const EditEvent: React.FC<Props> = ({ event }) => {
+const EventEditButton: React.FC<Props> = ({ event }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [, updateEvent] = useUpdateEventMutation();
 
@@ -46,16 +46,16 @@ const EditEvent: React.FC<Props> = ({ event }) => {
         Edit
       </MenuItem>
 
-      <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
+      <Modal size='3xl' isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
+            display='flex'
+            justifyContent='space-between'
+            alignItems='center'
             padding={4}
           >
-            <Heading fontSize="large">Edit event</Heading>
+            <Heading fontSize='large'>Edit event</Heading>
             <CloseButton onClick={onClose} />
           </Box>
           <Divider />
@@ -63,7 +63,7 @@ const EditEvent: React.FC<Props> = ({ event }) => {
             event={event}
             onClose={onClose}
             onSubmit={onSubmit}
-            submitMessage="Save"
+            submitMessage='Save'
           />
         </ModalContent>
       </Modal>
@@ -71,4 +71,4 @@ const EditEvent: React.FC<Props> = ({ event }) => {
   );
 };
 
-export { EditEvent };
+export { EventEditButton };

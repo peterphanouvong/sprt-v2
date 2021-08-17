@@ -18,9 +18,8 @@ interface Props {
   club: Club;
 }
 
-const EditClub: React.FC<Props> = ({ club }) => {
+const ClubEditButton: React.FC<Props> = ({ club }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [, updateClub] = useUpdateClubMutation();
 
   return (
     <>
@@ -48,4 +47,4 @@ const EditClub: React.FC<Props> = ({ club }) => {
   );
 };
 
-export { EditClub };
+export { ClubEditButton };

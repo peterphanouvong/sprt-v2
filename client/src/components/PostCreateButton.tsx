@@ -22,33 +22,33 @@ import { TextareaField } from "./TextareaField";
 
 interface Props {}
 
-const CreatePost: React.FC<Props> = () => {
+const PostCreateButton: React.FC<Props> = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [, createPost] = useCreatePostMutation();
 
   return (
     <>
       <Card>
-        <VStack spacing={4} alignItems="start">
-          <Heading as="h1" fontSize="lg">
+        <VStack spacing={4} alignItems='start'>
+          <Heading as='h1' fontSize='lg'>
             Create post
           </Heading>
-          <Button onClick={onOpen} fontWeight="normal" width="full">
+          <Button onClick={onOpen} fontWeight='normal' width='full'>
             What's on your mind?
           </Button>
         </VStack>
       </Card>
 
-      <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
+      <Modal size='3xl' isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
+            display='flex'
+            justifyContent='space-between'
+            alignItems='center'
             padding={4}
           >
-            <Heading fontSize="large">Create post</Heading>
+            <Heading fontSize='large'>Create post</Heading>
             <CloseButton onClick={onClose} />
           </Box>
           <Divider />
@@ -66,35 +66,35 @@ const CreatePost: React.FC<Props> = () => {
           >
             {(props) => (
               <Form>
-                <VStack align="stretch" spacing={4} padding={4}>
+                <VStack align='stretch' spacing={4} padding={4}>
                   <InputField
-                    name="title"
-                    placeholder="title"
-                    label="Title"
+                    name='title'
+                    placeholder='title'
+                    label='Title'
                     required
                   />
 
                   <TextareaField
-                    name="description"
+                    name='description'
                     placeholder="what's up?"
-                    label="Description"
+                    label='Description'
                     required
                   />
                 </VStack>
 
                 <ModalFooter>
                   <Button
-                    colorScheme="orange"
-                    variant="ghost"
+                    colorScheme='orange'
+                    variant='ghost'
                     mr={3}
                     onClick={onClose}
                   >
                     Close
                   </Button>
                   <Button
-                    colorScheme="orange"
+                    colorScheme='orange'
                     isLoading={props.isSubmitting}
-                    type="submit"
+                    type='submit'
                   >
                     Post
                   </Button>
@@ -108,4 +108,4 @@ const CreatePost: React.FC<Props> = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(CreatePost);
+export default withUrqlClient(createUrqlClient)(PostCreateButton);

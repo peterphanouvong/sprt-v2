@@ -1,12 +1,12 @@
 import React from "react";
 import { useDeleteEventMutation } from "../generated/graphql";
-import { DeleteEntity } from "./DeleteEntity";
+import { EntityDeleteAlert } from "./EntityDeleteAlert";
 
 interface Props {
   eventId: number;
 }
 
-const DeleteEvent: React.FC<Props> = ({ eventId }) => {
+const EventDeleteButton: React.FC<Props> = ({ eventId }) => {
   const [, deleteEvent] = useDeleteEventMutation();
 
   const handleDelete = async () => {
@@ -19,7 +19,7 @@ const DeleteEvent: React.FC<Props> = ({ eventId }) => {
     return null;
   };
 
-  return <DeleteEntity handleDelete={handleDelete} entityName={"Event"} />;
+  return <EntityDeleteAlert handleDelete={handleDelete} entityName={"Event"} />;
 };
 
-export { DeleteEvent };
+export { EventDeleteButton };
