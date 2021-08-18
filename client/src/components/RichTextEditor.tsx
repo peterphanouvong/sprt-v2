@@ -79,7 +79,14 @@ const RichTextEditor: React.FC<Props> = ({
   return (
     <>
       <Box>
-        <Slate editor={editor} value={value} onChange={setValue}>
+        <Slate
+          editor={editor}
+          value={value}
+          onChange={(x) => {
+            setValue(x);
+            setFormValue(x);
+          }}
+        >
           <Toolbar hidden={!active}>
             <MarkButton format="bold" icon={<Icon as={BsTypeBold} />} />
             <MarkButton format="italic" icon={<Icon as={BsTypeItalic} />} />
@@ -151,6 +158,7 @@ const RichTextEditor: React.FC<Props> = ({
           <Button
             onClick={() => {
               setValue(initialValue);
+              setFormValue(initialValue);
               setActive(false);
             }}
             size="sm"

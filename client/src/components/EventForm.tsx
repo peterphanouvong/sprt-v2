@@ -51,7 +51,7 @@ const EventForm: React.FC<Props> = ({
           event
             ? {
                 title: event.title ?? "",
-                description: event.description ?? "",
+                description: parseRichText(event.description ?? ""),
                 location: event.location ?? "",
                 capacity: event.capacity ?? "",
                 startTime: parseDate(event.startTime) ?? "",
@@ -59,7 +59,7 @@ const EventForm: React.FC<Props> = ({
               }
             : {
                 title: "",
-                description: "",
+                description: parseRichText(""),
                 location: "",
                 startTime: "",
                 endTime: "",
@@ -139,7 +139,7 @@ const EventForm: React.FC<Props> = ({
                 setFieldValue={props.setFieldValue}
                 name="description"
                 label="Description"
-                initialValue={parseRichText(props.values.description)}
+                initialValue={props.values.description}
               />
             </VStack>
 

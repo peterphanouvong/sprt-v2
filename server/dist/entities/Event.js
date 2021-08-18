@@ -82,7 +82,7 @@ __decorate([
     __metadata("design:type", Date)
 ], Event.prototype, "updatedAt", void 0);
 __decorate([
-    typeorm_1.OneToMany(() => ClubEvent_1.ClubEvent, (ce) => ce.event),
+    typeorm_1.OneToMany(() => ClubEvent_1.ClubEvent, (ce) => ce.event, { onDelete: "CASCADE" }),
     __metadata("design:type", Array)
 ], Event.prototype, "clubConnection", void 0);
 __decorate([
