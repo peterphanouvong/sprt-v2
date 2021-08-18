@@ -1,12 +1,5 @@
 import { ChevronRightIcon, WarningIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Heading,
-  MenuItem,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Button, Heading, MenuItem, useToast } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Event, useAddAttendeeMutation, User } from "../generated/graphql";
 
@@ -19,7 +12,7 @@ import { EventDeleteButton } from "./EventDeleteButton";
 import { EventEditButton } from "./EventEditButton";
 import { OptionsButton } from "./OptionsButton";
 import { ViewAttendeesModalButton } from "./ViewAttendeesModalButton";
-import parse from "html-react-parser";
+import { DynamicEditor } from "./DynamicEditor";
 
 interface Props {
   event: Event;
@@ -30,6 +23,8 @@ const EventCard: React.FC<Props> = ({ event }) => {
   const [attendees, setAttendees] = useState<User[]>(event.attendees);
   const toast = useToast();
   const [{ data }] = useMeQuery();
+
+  console.log(event);
 
   const joinEvent = async () => {
     const { error, data } = await addAttendee({ eventId: event.id });
@@ -82,7 +77,12 @@ const EventCard: React.FC<Props> = ({ event }) => {
               </Box>
             </Box>
           </Box>
-          <Text mt={4}>{parse(event.description)}</Text>
+
+          <DynamicEditor
+            name="description"
+            initialValue={JSON.parse(event.description)}
+            readOnly={true}
+          />
         </Box>
 
         <Box float="right">

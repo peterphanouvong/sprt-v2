@@ -31,10 +31,6 @@ const EventForm: React.FC<Props> = ({
     event ? (!!event.capacity ? true : false) : true
   );
 
-  const [description, setDescription] = useState(
-    event ? event.description : ""
-  );
-
   const toggleCapacity = (values: any) => {
     if (hasCapacity) {
       values.capacity = "";
@@ -75,7 +71,7 @@ const EventForm: React.FC<Props> = ({
           onSubmit({
             ...values,
             capacity: values.capacity,
-            description: description,
+            description: JSON.stringify(values.description),
           });
         }}
       >
@@ -139,18 +135,11 @@ const EventForm: React.FC<Props> = ({
               </Box>
 
               <DynamicEditor
+                setFieldValue={props.setFieldValue}
                 name="description"
                 label="Description"
-                placeholder="suck my cock"
-                content={description}
-                setContent={setDescription}
+                initialValue={JSON.parse(props.values.description)}
               />
-
-              {/* <TextareaField
-                name="description"
-                placeholder="what's going down?"
-                label="Description"
-              /> */}
             </VStack>
 
             <ModalFooter>

@@ -1,13 +1,7 @@
-import {
-  FormLabel,
-  InputGroup,
-  // InputLeftElement,
-  // Input,
-  // FormErrorMessage,
-} from "@chakra-ui/react";
-import { Field, Form, Formik, useField } from "formik";
+import { Box, FormControl, FormLabel, Input } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
-import React, { useState } from "react";
+import React from "react";
+import { Descendant } from "slate";
 
 const RichTextEditor = dynamic(() => import("../components/RichTextEditor"), {
   ssr: false,
@@ -18,27 +12,43 @@ interface Props {
   label?: string;
   name: string;
   required?: boolean;
-  content: string;
-  setContent: (string) => void;
+  setFieldValue?: (
+    field: string,
+    value: any,
+    shouldValidate?: boolean | undefined
+  ) => void;
+  readOnly?: boolean;
+  initialValue?: Descendant[];
 }
 
 const DynamicEditor: React.FC<Props> = ({
-  content,
-  setContent,
-  label,
+  label = true,
+  readOnly = false,
+  setFieldValue = (_field: string, _value: any) => {},
+  initialValue = [
+    {
+      type: "paragraph",
+      children: [{ text: "" }],
+    },
+  ],
   ...props
 }) => {
+  const setFormValue = (value) => {
+    setFieldValue(props.name, value);
+  };
+
   return (
-    <>
+    <Box>
       {label && <FormLabel htmlFor={props.name}>{label}</FormLabel>}
-      <InputGroup>
-        <RichTextEditor
-          placeholder={props.placeholder}
-          content={content}
-          setContent={setContent}
-        />
-      </InputGroup>
-    </>
+      <FormControl hidden={true}>
+        <Input name={props.name} hidden={true} />
+      </FormControl>
+      <RichTextEditor
+        readOnly={readOnly}
+        setFormValue={setFormValue}
+        initialValue={initialValue}
+      />
+    </Box>
   );
 };
 

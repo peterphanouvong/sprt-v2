@@ -24,7 +24,7 @@ const ClubFollowButton: React.FC<Props> = ({
   removeFollower,
 }) => {
   const [isFollowing, setIsFollowing] = React.useState(
-    followerList.map((user) => user.id).includes(data.me?.id)
+    followerList.map((user) => user.id).includes(data.me!.id)
   );
   const [, followClub] = useFollowClubMutation();
   const [, unfollowClub] = useUnfollowClubMutation();
@@ -41,7 +41,7 @@ const ClubFollowButton: React.FC<Props> = ({
 
   const handleFollow = async (): Promise<void> => {
     const { error } = await followClub({
-      followerId: data.me?.id,
+      followerId: data.me!.id,
       clubId: clubId,
     });
     if (!error) {
@@ -62,7 +62,7 @@ const ClubFollowButton: React.FC<Props> = ({
 
   const handleUnfollow = async (): Promise<void> => {
     const { error } = await unfollowClub({
-      followerId: data.me?.id,
+      followerId: data.me!.id,
       clubId: clubId,
     });
     if (!error) {
@@ -72,7 +72,7 @@ const ClubFollowButton: React.FC<Props> = ({
 
   if (!data) {
     return (
-      <Button isLoading={true} colorScheme='orange'>
+      <Button isLoading={true} colorScheme="orange">
         Follow
       </Button>
     );
@@ -80,8 +80,8 @@ const ClubFollowButton: React.FC<Props> = ({
   return (
     <Button
       leftIcon={isFollowing ? <MinusIcon /> : <AddIcon />}
-      colorScheme='orange'
-      variant='solid'
+      colorScheme="orange"
+      variant="solid"
       onClick={handleButton}
     >
       {isFollowing ? "Unfollow" : "Follow"}
