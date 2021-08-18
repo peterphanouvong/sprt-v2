@@ -78,6 +78,6 @@ export class Event extends BaseEntity {
   @OneToMany(() => ClubEvent, (ce) => ce.event)
   clubConnection: ClubEvent[];
 
-  @OneToMany(() => EventAttendee, (ea) => ea.event)
+  @OneToMany(() => EventAttendee, (ea) => ea.event, { onDelete: "CASCADE" })
   attendeeConnection: EventAttendee[];
 }

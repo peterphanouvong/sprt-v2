@@ -12,7 +12,7 @@ import React from "react";
 import {
   Club,
   useAddRequestedMemberMutation,
-  useDeleteClubMutation,
+  // useDeleteClubMutation,
   useMeQuery,
   User,
 } from "../generated/graphql";
@@ -28,7 +28,7 @@ interface Props {
 }
 
 const ClubCard: React.FC<Props> = ({ club }) => {
-  const [, deleteClub] = useDeleteClubMutation();
+  // const [, deleteClub] = useDeleteClubMutation();
   const [{ data: userData }] = useMeQuery();
   const [, addRequestedMember] = useAddRequestedMemberMutation();
   const toast = useToast();
@@ -43,23 +43,25 @@ const ClubCard: React.FC<Props> = ({ club }) => {
     }
     return club.admins
       .map((admin) => admin.username)
-      .includes(userData.me?.username);
+      .includes(userData.me!.username);
   };
 
   const addFollower = () => {
-    setFollowers([...followers, userData.me as User]);
+    setFollowers([...followers, userData!.me as User]);
   };
 
   const removeFollower = () => {
     console.log(followers);
-    const newFollowers = followers.filter((user) => user.id !== userData.me.id);
+    const newFollowers = followers.filter(
+      (user) => user.id !== userData!.me!.id
+    );
     console.log(newFollowers);
     setFollowers(newFollowers);
   };
 
   const requestToJoinClub = async () => {
     const { data, error } = await addRequestedMember({
-      userId: userData.me.id,
+      userId: userData!.me!.id,
       clubId: club.id,
     });
 
@@ -89,12 +91,12 @@ const ClubCard: React.FC<Props> = ({ club }) => {
   };
 
   if (!userData) {
-    return <Skeleton height='250px'></Skeleton>;
+    return <Skeleton height="250px"></Skeleton>;
   }
 
   return (
     <Card>
-      <Box display='flex' justifyContent='space-between'>
+      <Box display="flex" justifyContent="space-between">
         <Box>
           <Heading>{club.name}</Heading>
           {club.admins.map((admin) => (
@@ -122,7 +124,7 @@ const ClubCard: React.FC<Props> = ({ club }) => {
         removeFollower={removeFollower}
       />
       <AccordionUsers userType={"Followers"} userList={followers} />
-      <Button colorScheme='orange' mt={2} onClick={requestToJoinClub}>
+      <Button colorScheme="orange" mt={2} onClick={requestToJoinClub}>
         {hasRequestedToJoin ? "Already requested" : "Request to join"}
       </Button>
     </Card>

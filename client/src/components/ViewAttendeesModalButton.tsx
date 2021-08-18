@@ -21,7 +21,7 @@ import { User } from "../generated/graphql";
 
 interface Props {
   attendees: User[];
-  capacity: number | undefined;
+  capacity: number | undefined | null;
   joinEvent: () => Promise<void>;
 }
 
@@ -32,8 +32,8 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  let attending = [];
-  let waitlisted = [];
+  let attending: User[] = [];
+  let waitlisted: User[] = [];
   if (capacity) {
     attending = attendees.filter((_, i) => i < capacity);
     waitlisted = attendees.filter((_, i) => i >= capacity);

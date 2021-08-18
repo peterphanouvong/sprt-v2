@@ -56,8 +56,8 @@ const main = async () => {
   });
 
   // await Post.delete({});
-  // await Event.delete({});
-  // await EventAttendee.delete({});
+  await EventAttendee.delete({});
+  await Event.delete({});
   // await ClubRequestedMember.delete({});
   // await ClubFollower.delete({});
   // await ClubAdmin.delete({});

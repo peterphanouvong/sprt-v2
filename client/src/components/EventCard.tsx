@@ -1,12 +1,5 @@
 import { ChevronRightIcon, WarningIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Heading,
-  MenuItem,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Button, Heading, MenuItem, useToast } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Event, useAddAttendeeMutation, User } from "../generated/graphql";
 
@@ -19,6 +12,7 @@ import { EventDeleteButton } from "./EventDeleteButton";
 import { EventEditButton } from "./EventEditButton";
 import { OptionsButton } from "./OptionsButton";
 import { ViewAttendeesModalButton } from "./ViewAttendeesModalButton";
+import { DynamicEditor } from "./DynamicEditor";
 
 interface Props {
   event: Event;
@@ -29,6 +23,8 @@ const EventCard: React.FC<Props> = ({ event }) => {
   const [attendees, setAttendees] = useState<User[]>(event.attendees);
   const toast = useToast();
   const [{ data }] = useMeQuery();
+
+  console.log(event);
 
   const joinEvent = async () => {
     const { error, data } = await addAttendee({ eventId: event.id });
@@ -60,13 +56,13 @@ const EventCard: React.FC<Props> = ({ event }) => {
   if (!data) return <>loading...</>;
   return (
     <Card>
-      <Box display='flex' justifyContent='space-between'>
+      <Box display="flex" justifyContent="space-between">
         <Box>
-          <Box display='flex' alignItems='center'>
+          <Box display="flex" alignItems="center">
             <ClubIcon />
             <Box mr={4}></Box>
             <Box>
-              <Heading fontSize='x-large'>UTS: {event.title}</Heading>
+              <Heading fontSize="x-large">UTS: {event.title}</Heading>
               <MetaDataText>
                 {parseDatePretty(event.startTime)} -{" "}
                 {parseDatePretty(event.endTime)} [
@@ -81,10 +77,15 @@ const EventCard: React.FC<Props> = ({ event }) => {
               </Box>
             </Box>
           </Box>
-          <Text mt={4}>{event.description}</Text>
+
+          <DynamicEditor
+            name="description"
+            initialValue={JSON.parse(event.description)}
+            readOnly={true}
+          />
         </Box>
 
-        <Box float='right'>
+        <Box float="right">
           <OptionsButton>
             {data.me?.id === event.host.id ? (
               <>
@@ -104,7 +105,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
         joinEvent={joinEvent}
       />
 
-      <Button onClick={joinEvent} mt={4} isFullWidth={true} variant='solid'>
+      <Button onClick={joinEvent} mt={4} isFullWidth={true} variant="solid">
         Join
       </Button>
     </Card>
