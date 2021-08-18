@@ -56,8 +56,8 @@ const main = async () => {
   });
 
   // await Post.delete({});
-  await EventAttendee.delete({});
-  await Event.delete({});
+  // await EventAttendee.delete({});
+  // await Event.delete({});
   // await ClubRequestedMember.delete({});
   // await ClubFollower.delete({});
   // await ClubAdmin.delete({});
@@ -94,7 +94,7 @@ const main = async () => {
         httpOnly: true,
         sameSite: "lax", // csrf
         secure: __prod__, // cookie only works in https
-        domain: __prod__ ? ".sprt.fun" : undefined,
+        domain: __prod__ ? ".sprt.rest" : undefined,
       },
       secret: process.env.SESSION_SECRET,
       resave: false,
