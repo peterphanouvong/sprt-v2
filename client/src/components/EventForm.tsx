@@ -7,13 +7,17 @@ import {
   Box,
   Text,
 } from "@chakra-ui/react";
+import { Steps, Step, useSteps } from "chakra-ui-steps";
 import { Formik, Form } from "formik";
 import React, { useState } from "react";
 import { Event } from "../generated/graphql";
 import { parseDate } from "../utils/parseDate";
 import { parseRichText } from "../utils/parseRichText";
 import { DynamicEditor } from "./DynamicEditor";
+import { EventFormBasicDetails } from "./EventFormBasicDetails";
+import { EventFormPickType } from "./EventFormPickType";
 import { InputField } from "./InputField";
+import { PrevNextButtons } from "./StepComponents";
 
 interface Props {
   event?: Event;
@@ -28,8 +32,16 @@ const EventForm: React.FC<Props> = ({
   onSubmit,
   submitMessage,
 }) => {
+  const { nextStep, prevStep, setStep, reset, activeStep } = useSteps({
+    initialStep: 0,
+  });
+
   const [hasCapacity, setHasCapacity] = useState(
-    event ? (!!event.capacity ? true : false) : true
+    event ? (!!event.capacity ? true : false) : false
+  );
+
+  const [hasDescription, setHasDescription] = useState(
+    event ? (!!event.description ? true : false) : false
   );
 
   const toggleCapacity = (values: any) => {
@@ -37,6 +49,13 @@ const EventForm: React.FC<Props> = ({
       values.capacity = "";
     }
     setHasCapacity(!hasCapacity);
+  };
+
+  const toggleDescription = (values: any) => {
+    if (hasDescription) {
+      values.description = parseRichText("");
+    }
+    setHasDescription(!hasDescription);
   };
 
   const matchTimes = (e: any, values: any) => {
@@ -78,72 +97,33 @@ const EventForm: React.FC<Props> = ({
       >
         {(props) => (
           <Form>
-            <VStack align="stretch" spacing={4} padding={4}>
-              <InputField
-                name="title"
-                placeholder="what's it called?"
-                label="Title"
-                required
-              />
-
-              <InputField
-                name="location"
-                placeholder="where's it happening?"
-                label="Location"
-                required
-              />
-              <InputField
-                name="startTime"
-                placeholder="when do I show up?"
-                label="Start time"
-                required
-                type="datetime-local"
-                onBlurCapture={(x) => matchTimes(x, props.values)}
-              />
-
-              <InputField
-                name="endTime"
-                placeholder="when do I leave?"
-                label="End time"
-                type="datetime-local"
-                min={props.values.startTime}
-              />
-              <Box>
-                <FormLabel width="min" htmlFor="email-alerts">
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="flex-start"
-                  >
-                    <Text mr={2}>Capacity</Text>
-                    <Switch
-                      id="email-alerts"
-                      size="sm"
-                      isChecked={hasCapacity}
-                      onChange={() => toggleCapacity(props.values)}
-                      colorScheme="orange"
-                    />
-                  </Box>
-                </FormLabel>
-
-                <InputField
-                  hidden={!hasCapacity}
-                  name="capacity"
-                  placeholder="how many peeps?"
-                  type="number"
-                  min={0}
-                />
-              </Box>
-
-              <DynamicEditor
-                setFieldValue={props.setFieldValue}
-                name="description"
-                label="Description"
-                initialValue={props.values.description}
-              />
-            </VStack>
-
-            <ModalFooter>
+            {/* <EventFormBasicDetails /> */}
+            <Box padding={6}>
+              <Steps mb={6} colorScheme="orange" activeStep={activeStep}>
+                <Step label="Event type">
+                  <EventFormPickType nextStep={nextStep} />
+                </Step>
+                <Step label="Basic details">
+                  <EventFormBasicDetails
+                    matchTimes={matchTimes}
+                    toggleCapacity={toggleCapacity}
+                    hasCapacity={hasCapacity}
+                    toggleDescription={toggleDescription}
+                    hasDescription={hasDescription}
+                    props={props}
+                  />
+                  <PrevNextButtons nextStep={nextStep} prevStep={prevStep} />
+                </Step>
+                <Step label="Confirmation">
+                  <PrevNextButtons
+                    prevStep={prevStep}
+                    nextStep={nextStep}
+                    final={true}
+                  />
+                </Step>
+              </Steps>
+            </Box>
+            {/* <ModalFooter>
               <Button
                 colorScheme="orange"
                 variant="ghost"
@@ -159,7 +139,7 @@ const EventForm: React.FC<Props> = ({
               >
                 {submitMessage}
               </Button>
-            </ModalFooter>
+            </ModalFooter> */}
           </Form>
         )}
       </Formik>

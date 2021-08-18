@@ -38,23 +38,24 @@ const EventCreateButton: React.FC<Props> = ({}) => {
   return (
     <>
       <Button onClick={onOpen}>Create event +</Button>
-      <Modal size='3xl' isOpen={isOpen} onClose={onClose}>
+      <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <Box
-            display='flex'
-            justifyContent='space-between'
-            alignItems='center'
-            padding={4}
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            paddingX={6}
+            paddingY={4}
           >
-            <Heading fontSize='large'>Create event</Heading>
+            <Heading fontSize="large">Create event</Heading>
             <CloseButton onClick={onClose} />
           </Box>
           <Divider />
           <EventForm
             onClose={onClose}
             onSubmit={onSubmit}
-            submitMessage='Create'
+            submitMessage="Create"
           />
         </ModalContent>
       </Modal>

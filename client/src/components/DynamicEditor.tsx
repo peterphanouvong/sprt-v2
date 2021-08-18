@@ -19,6 +19,7 @@ interface Props {
   ) => void;
   readOnly?: boolean;
   initialValue?: Descendant[];
+  hidden?: boolean;
 }
 
 const DynamicEditor: React.FC<Props> = ({
@@ -31,6 +32,7 @@ const DynamicEditor: React.FC<Props> = ({
       children: [{ text: "" }],
     },
   ],
+  hidden = false,
   ...props
 }) => {
   const setFormValue = (value) => {
@@ -38,7 +40,7 @@ const DynamicEditor: React.FC<Props> = ({
   };
 
   return (
-    <Box>
+    <Box hidden={hidden}>
       {label && <FormLabel htmlFor={props.name}>{label}</FormLabel>}
       <FormControl hidden={true}>
         <Input name={props.name} hidden={true} />

@@ -55,11 +55,11 @@ const Navbar: React.FC<Props> = ({}) => {
 
     left = (
       <HStack spacing={8}>
+        <NextLink href="/feed">
+          <Link>feed</Link>
+        </NextLink>
         <NextLink href="/clubs">
           <Link>clubs</Link>
-        </NextLink>
-        <NextLink href="/events">
-          <Link>events</Link>
         </NextLink>
       </HStack>
     );
