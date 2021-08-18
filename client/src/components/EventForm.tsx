@@ -11,6 +11,7 @@ import { Formik, Form } from "formik";
 import React, { useState } from "react";
 import { Event } from "../generated/graphql";
 import { parseDate } from "../utils/parseDate";
+import { parseRichText } from "../utils/parseRichText";
 import { DynamicEditor } from "./DynamicEditor";
 import { InputField } from "./InputField";
 
@@ -138,7 +139,7 @@ const EventForm: React.FC<Props> = ({
                 setFieldValue={props.setFieldValue}
                 name="description"
                 label="Description"
-                initialValue={JSON.parse(props.values.description)}
+                initialValue={parseRichText(props.values.description)}
               />
             </VStack>
 

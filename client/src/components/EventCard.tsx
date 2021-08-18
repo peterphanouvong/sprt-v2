@@ -13,6 +13,7 @@ import { EventEditButton } from "./EventEditButton";
 import { OptionsButton } from "./OptionsButton";
 import { ViewAttendeesModalButton } from "./ViewAttendeesModalButton";
 import { DynamicEditor } from "./DynamicEditor";
+import { parseRichText } from "../utils/parseRichText";
 
 interface Props {
   event: Event;
@@ -80,7 +81,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
 
           <DynamicEditor
             name="description"
-            initialValue={JSON.parse(event.description)}
+            initialValue={parseRichText(event.description)}
             readOnly={true}
           />
         </Box>
