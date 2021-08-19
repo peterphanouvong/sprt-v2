@@ -38,7 +38,7 @@ const EventCreateButton: React.FC<Props> = ({}) => {
   return (
     <>
       <Button onClick={onOpen}>Create event +</Button>
-      <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
+      <Modal size="2xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <Box

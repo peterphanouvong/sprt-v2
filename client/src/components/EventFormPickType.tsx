@@ -1,23 +1,17 @@
-import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import {
   Box,
   Heading,
-  ButtonGroup,
   Text,
   useRadio,
   useRadioGroup,
   HStack,
   UseRadioProps,
-  IconButton,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { PrevNextButtons } from "./StepComponents";
 
-interface Props {
-  nextStep: () => void;
-}
+interface Props {}
 
-const EventFormPickType: React.FC<Props> = ({ nextStep }) => {
+const EventFormPickType: React.FC<Props> = () => {
   const [selected, setSelected] = useState("");
 
   const options = ["public", "club", "custom"];
@@ -30,8 +24,8 @@ const EventFormPickType: React.FC<Props> = ({ nextStep }) => {
 
   return (
     <Box>
-      <Heading fontSize="x-large">Event type</Heading>
-      <Text mb={4}>Pick the type of event you would like to create.</Text>
+      <Heading fontSize="x-large">Who's invited?</Heading>
+      <Text mb={4}>Choose who gets to see this event.</Text>
       <HStack
         justifyContent={{ base: "flex-start", sm: "center", md: "flex-start" }}
         spacing={4}
@@ -57,8 +51,6 @@ const EventFormPickType: React.FC<Props> = ({ nextStep }) => {
           <Text variant="meta">You can choose who gets to see this event.</Text>
         )}
       </Box>
-
-      <PrevNextButtons nextStep={nextStep} />
     </Box>
   );
 };

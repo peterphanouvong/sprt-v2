@@ -1,23 +1,14 @@
-import {
-  VStack,
-  ModalFooter,
-  Button,
-  FormLabel,
-  Switch,
-  Box,
-  Text,
-} from "@chakra-ui/react";
-import { Steps, Step, useSteps } from "chakra-ui-steps";
+import { Button, Box, Text, HStack } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import React, { useState } from "react";
 import { Event } from "../generated/graphql";
 import { parseDate } from "../utils/parseDate";
 import { parseRichText } from "../utils/parseRichText";
-import { DynamicEditor } from "./DynamicEditor";
+import { useSteps } from "../utils/useSteps";
 import { EventFormBasicDetails } from "./EventFormBasicDetails";
+import { EventFormEventDetails } from "./EventFormEventDetails";
 import { EventFormPickType } from "./EventFormPickType";
-import { InputField } from "./InputField";
-import { PrevNextButtons } from "./StepComponents";
+import { Steps } from "./Steps";
 
 interface Props {
   event?: Event;
@@ -26,13 +17,8 @@ interface Props {
   submitMessage: string;
 }
 
-const EventForm: React.FC<Props> = ({
-  event,
-  onClose,
-  onSubmit,
-  submitMessage,
-}) => {
-  const { nextStep, prevStep, setStep, reset, activeStep } = useSteps({
+const EventForm: React.FC<Props> = ({ event, onClose, onSubmit }) => {
+  const { nextStep, prevStep, activeStep } = useSteps({
     initialStep: 0,
   });
 
@@ -99,28 +85,67 @@ const EventForm: React.FC<Props> = ({
           <Form>
             {/* <EventFormBasicDetails /> */}
             <Box padding={6}>
-              <Steps mb={6} colorScheme="orange" activeStep={activeStep}>
-                <Step label="Event type">
-                  <EventFormPickType nextStep={nextStep} />
-                </Step>
-                <Step label="Basic details">
+              <Steps activeStep={activeStep}>
+                <Box mt={6}>
                   <EventFormBasicDetails
-                    matchTimes={matchTimes}
-                    toggleCapacity={toggleCapacity}
-                    hasCapacity={hasCapacity}
                     toggleDescription={toggleDescription}
                     hasDescription={hasDescription}
                     props={props}
                   />
-                  <PrevNextButtons nextStep={nextStep} prevStep={prevStep} />
-                </Step>
-                <Step label="Confirmation">
-                  <PrevNextButtons
-                    prevStep={prevStep}
-                    nextStep={nextStep}
-                    final={true}
+                  <HStack display="flex" justifyContent="flex-end" mt={6}>
+                    <Text variant="meta">Step 1 of 3</Text>
+                    <Button
+                      variant="ghost"
+                      colorScheme="gray"
+                      onClick={onClose}
+                    >
+                      Cancel
+                    </Button>
+                    <Button colorScheme="orange" onClick={nextStep}>
+                      Continue
+                    </Button>
+                  </HStack>
+                </Box>
+
+                <Box mt={6}>
+                  <EventFormEventDetails
+                    props={props}
+                    matchTimes={matchTimes}
+                    toggleCapacity={toggleCapacity}
+                    hasCapacity={hasCapacity}
                   />
-                </Step>
+                  <HStack display="flex" justifyContent="flex-end" mt={6}>
+                    <Text variant="meta">Step 2 of 3</Text>
+                    <Button
+                      variant="ghost"
+                      colorScheme="gray"
+                      onClick={prevStep}
+                    >
+                      Go back
+                    </Button>
+                    <Button colorScheme="orange" onClick={nextStep}>
+                      Continue
+                    </Button>
+                  </HStack>
+                </Box>
+
+                <Box mt={6}>
+                  <EventFormPickType />
+
+                  <HStack display="flex" justifyContent="flex-end" mt={6}>
+                    <Text variant="meta">Step 3 of 3</Text>
+                    <Button
+                      variant="ghost"
+                      colorScheme="gray"
+                      onClick={prevStep}
+                    >
+                      Go back
+                    </Button>
+                    <Button colorScheme="orange" type="submit">
+                      Create event
+                    </Button>
+                  </HStack>
+                </Box>
               </Steps>
             </Box>
             {/* <ModalFooter>

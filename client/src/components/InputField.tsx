@@ -5,6 +5,8 @@ import {
   InputLeftElement,
   FormControl,
   InputGroup,
+  Text,
+  HStack,
 } from "@chakra-ui/react";
 import { useField } from "formik";
 import React, { InputHTMLAttributes, ReactElement } from "react";
@@ -24,8 +26,16 @@ const InputField: React.FC<InputFieldProps> = ({
 }) => {
   const [field, { error }] = useField(props);
   return (
-    <FormControl isInvalid={!!error} isRequired={props.required}>
-      {label && <FormLabel htmlFor={field.name}>{label}</FormLabel>}
+    <FormControl isInvalid={!!error}>
+      {label && (
+        <FormLabel htmlFor={field.name}>
+          <HStack>
+            <Text>{label}</Text>
+
+            {!props.required && <Text variant="meta">(optional)</Text>}
+          </HStack>
+        </FormLabel>
+      )}
       <InputGroup>
         {icon && <InputLeftElement pointerEvents="none" children={icon} />}
         <Input
