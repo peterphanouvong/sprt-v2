@@ -40,7 +40,6 @@ const DynamicEditor: React.FC<Props> = ({
     },
   ],
   hidden = false,
-  required = true,
   ...props
 }) => {
   const setFormValue = (value) => {
@@ -50,11 +49,15 @@ const DynamicEditor: React.FC<Props> = ({
   return (
     <Box hidden={hidden}>
       {label && (
-        <FormLabel hidden={hidden} htmlFor={props.name}>
+        <FormLabel htmlFor={props.name}>
           <HStack>
             <Text>{label}</Text>
 
-            {!required && <Text variant="meta">(optional)</Text>}
+            {!props.required && (
+              <Text hidden={readOnly} variant="meta">
+                (optional)
+              </Text>
+            )}
           </HStack>
         </FormLabel>
       )}

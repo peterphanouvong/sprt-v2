@@ -63,6 +63,10 @@ export class Event extends BaseEntity {
   @Column({ type: "int", default: 0 })
   points!: number;
 
+  @Field(() => Int)
+  @Column()
+  eventTypeId: number;
+
   @Field(() => String)
   @CreateDateColumn()
   createdAt: Date;

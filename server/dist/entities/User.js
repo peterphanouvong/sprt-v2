@@ -19,6 +19,7 @@ const ClubMember_1 = require("./ClubMember");
 const ClubAdmin_1 = require("./ClubAdmin");
 const EventAttendee_1 = require("./EventAttendee");
 const ClubRequestedMember_1 = require("./ClubRequestedMember");
+const Club_1 = require("./Club");
 let User = class User extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -60,6 +61,10 @@ __decorate([
     typeorm_1.UpdateDateColumn(),
     __metadata("design:type", Date)
 ], User.prototype, "updatedAt", void 0);
+__decorate([
+    type_graphql_1.Field(() => [Club_1.Club]),
+    __metadata("design:type", Array)
+], User.prototype, "followingClubs", void 0);
 __decorate([
     typeorm_1.OneToMany(() => ClubFollower_1.ClubFollower, (cf) => cf.follower),
     __metadata("design:type", Array)

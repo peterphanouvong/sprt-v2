@@ -31,6 +31,8 @@ import { ClubMember } from "./entities/ClubMember";
 import { ClubAdmin } from "./entities/ClubAdmin";
 import { EventAttendee } from "./entities/EventAttendee";
 import { ClubRequestedMember } from "./entities/ClubRequestedMember";
+import { EventType } from "./entities/EventType";
+import { createClubLoader } from "./utils/createClubLoader";
 
 const main = async () => {
   const conn = await createConnection({
@@ -43,6 +45,7 @@ const main = async () => {
       User,
       Event,
       EventAttendee,
+      EventType,
       Club,
       ClubEvent,
       ClubFollower,
@@ -56,8 +59,8 @@ const main = async () => {
   });
 
   // await Post.delete({});
-  await EventAttendee.delete({});
-  await Event.delete({});
+  // await EventAttendee.delete({});
+  // await Event.delete({});
   // await ClubRequestedMember.delete({});
   // await ClubFollower.delete({});
   // await ClubAdmin.delete({});
@@ -117,6 +120,7 @@ const main = async () => {
       res,
       redis,
       userLoader: createUserLoader(),
+      clubLoader: createClubLoader(),
     }),
   });
 

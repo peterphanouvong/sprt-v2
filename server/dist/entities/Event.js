@@ -72,6 +72,11 @@ __decorate([
     __metadata("design:type", Number)
 ], Event.prototype, "points", void 0);
 __decorate([
+    type_graphql_1.Field(() => type_graphql_1.Int),
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], Event.prototype, "eventTypeId", void 0);
+__decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.CreateDateColumn(),
     __metadata("design:type", Date)

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Redis } from "ioredis";
+import { createClubLoader } from "./utils/createClubLoader";
 import { createUserLoader } from "./utils/createUserLoader";
 
 declare global {
@@ -20,4 +21,5 @@ export type MyContext = {
   res: Response;
   redis: Redis;
   userLoader: ReturnType<typeof createUserLoader>;
+  clubLoader: ReturnType<typeof createClubLoader>;
 };

@@ -33,6 +33,8 @@ const ClubMember_1 = require("./entities/ClubMember");
 const ClubAdmin_1 = require("./entities/ClubAdmin");
 const EventAttendee_1 = require("./entities/EventAttendee");
 const ClubRequestedMember_1 = require("./entities/ClubRequestedMember");
+const EventType_1 = require("./entities/EventType");
+const createClubLoader_1 = require("./utils/createClubLoader");
 const main = async () => {
     const conn = await typeorm_1.createConnection({
         type: "postgres",
@@ -43,6 +45,7 @@ const main = async () => {
             User_1.User,
             Event_1.Event,
             EventAttendee_1.EventAttendee,
+            EventType_1.EventType,
             Club_1.Club,
             ClubEvent_1.ClubEvent,
             ClubFollower_1.ClubFollower,
@@ -54,8 +57,6 @@ const main = async () => {
         ],
         migrations: [path_1.default.join(__dirname, "./migrations/*")],
     });
-    await EventAttendee_1.EventAttendee.delete({});
-    await Event_1.Event.delete({});
     await conn.runMigrations();
     const app = express_1.default();
     const RedisStore = connect_redis_1.default(express_session_1.default);
@@ -102,6 +103,7 @@ const main = async () => {
             res,
             redis,
             userLoader: createUserLoader_1.createUserLoader(),
+            clubLoader: createClubLoader_1.createClubLoader(),
         }),
     });
     await apolloServer.start();
