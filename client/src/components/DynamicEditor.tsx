@@ -1,4 +1,11 @@
-import { Box, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  HStack,
+  Input,
+  Text,
+} from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import React from "react";
 import { Descendant } from "slate";
@@ -33,6 +40,7 @@ const DynamicEditor: React.FC<Props> = ({
     },
   ],
   hidden = false,
+  required = true,
   ...props
 }) => {
   const setFormValue = (value) => {
@@ -41,7 +49,15 @@ const DynamicEditor: React.FC<Props> = ({
 
   return (
     <Box hidden={hidden}>
-      {label && <FormLabel htmlFor={props.name}>{label}</FormLabel>}
+      {label && (
+        <FormLabel hidden={hidden} htmlFor={props.name}>
+          <HStack>
+            <Text>{label}</Text>
+
+            {!required && <Text variant="meta">(optional)</Text>}
+          </HStack>
+        </FormLabel>
+      )}
       <FormControl hidden={true}>
         <Input name={props.name} hidden={true} />
       </FormControl>

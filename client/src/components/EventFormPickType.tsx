@@ -6,25 +6,29 @@ import {
   useRadioGroup,
   HStack,
   UseRadioProps,
+  Button,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { SelectField } from "./SelectField";
 
-interface Props {}
+interface Props {
+  prevStep: () => void;
+}
 
-const EventFormPickType: React.FC<Props> = () => {
-  const [selected, setSelected] = useState("");
+const EventFormPickType: React.FC<Props> = ({ prevStep }) => {
+  const [selected, setSelected] = useState("public");
 
-  const options = ["public", "club", "custom"];
+  const options = ["public", "private"];
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: "event-type",
-    defaultValue: "public",
+    defaultValue: selected,
     onChange: setSelected,
   });
   const group = getRootProps();
 
   return (
     <Box>
-      <Heading fontSize="x-large">Who's invited?</Heading>
+      <Heading fontSize="x-large">Who's can see this event?</Heading>
       <Text mb={4}>Choose who gets to see this event.</Text>
       <HStack
         justifyContent={{ base: "flex-start", sm: "center", md: "flex-start" }}
@@ -42,15 +46,43 @@ const EventFormPickType: React.FC<Props> = () => {
       </HStack>
       <Box mt={4}>
         {selected === "public" ? (
-          <Text variant="meta">Everyone will be able to see this event.</Text>
-        ) : selected === "club" ? (
           <Text variant="meta">
-            Only the people in your club will be able to see this event.
+            All of your followers will be able to see this event.
           </Text>
+        ) : selected === "private" ? (
+          <>
+            {" "}
+            <Text variant="meta">
+              You can choose who gets to see this event.
+            </Text>
+            <Box mt={6}>
+              <SelectField
+                name="hello"
+                isMulti
+                placeholder=""
+                label="Who's invited?"
+                options={[
+                  { value: "1", label: "Redfox" },
+                  { value: "2", label: "Peter Phanouvong" },
+                  { value: "3", label: "Tom Phanouvong" },
+                  { value: "4", label: "Kevin Chau" },
+                ]}
+              />
+            </Box>
+          </>
         ) : (
-          <Text variant="meta">You can choose who gets to see this event.</Text>
+          <></>
         )}
       </Box>
+      <HStack display="flex" justifyContent="flex-end" mt={6}>
+        <Text variant="meta">Step 3 of 3</Text>
+        <Button variant="ghost" colorScheme="gray" onClick={prevStep}>
+          Go back
+        </Button>
+        <Button colorScheme="orange" type="submit">
+          Create event
+        </Button>
+      </HStack>
     </Box>
   );
 };

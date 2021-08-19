@@ -131,7 +131,7 @@ const RichTextEditor: React.FC<Props> = ({
               // onBlur={() => setActive(false)}
               spellCheck
               autoFocus={true}
-              placeholder={readOnly ? "" : "write a description..."}
+              placeholder={readOnly ? "" : ""}
               onKeyDown={(event) => {
                 for (const hotkey in HOTKEYS) {
                   if (isHotkey(hotkey, event as any)) {
@@ -146,16 +146,6 @@ const RichTextEditor: React.FC<Props> = ({
         </Slate>
         <ButtonGroup hidden={!active} mt={4} spacing={2}>
           <Button
-            size="sm"
-            colorScheme="orange"
-            onClick={() => {
-              setFormValue(value);
-              setActive(false);
-            }}
-          >
-            Save
-          </Button>
-          <Button
             onClick={() => {
               setValue(initialValue);
               setFormValue(initialValue);
@@ -165,6 +155,16 @@ const RichTextEditor: React.FC<Props> = ({
             variant="ghost"
           >
             Cancel
+          </Button>
+          <Button
+            size="sm"
+            colorScheme="orange"
+            onClick={() => {
+              setFormValue(value);
+              setActive(false);
+            }}
+          >
+            Save
           </Button>
         </ButtonGroup>
       </Box>

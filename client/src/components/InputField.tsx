@@ -7,6 +7,11 @@ import {
   InputGroup,
   Text,
   HStack,
+  NumberInputStepper,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
 } from "@chakra-ui/react";
 import { useField } from "formik";
 import React, { InputHTMLAttributes, ReactElement } from "react";
@@ -38,12 +43,27 @@ const InputField: React.FC<InputFieldProps> = ({
       )}
       <InputGroup>
         {icon && <InputLeftElement pointerEvents="none" children={icon} />}
-        <Input
-          {...field}
-          {...props}
-          id={field.name}
-          placeholder={props.placeholder}
-        />
+        {props.type === "number" ? (
+          <NumberInput>
+            <NumberInputField
+              {...field}
+              {...props}
+              id={field.name}
+              placeholder={props.placeholder}
+            />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        ) : (
+          <Input
+            {...field}
+            {...props}
+            id={field.name}
+            placeholder={props.placeholder}
+          />
+        )}
       </InputGroup>
       <FormErrorMessage>{error}</FormErrorMessage>
     </FormControl>

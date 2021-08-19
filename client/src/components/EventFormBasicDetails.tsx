@@ -1,11 +1,4 @@
-import {
-  VStack,
-  Box,
-  FormLabel,
-  Switch,
-  Text,
-  Heading,
-} from "@chakra-ui/react";
+import { VStack, Text, Heading, Button, HStack } from "@chakra-ui/react";
 import { FormikProps } from "formik";
 import React from "react";
 import { DynamicEditor } from "./DynamicEditor";
@@ -20,14 +13,14 @@ interface Props {
     startTime: string;
     endTime: string;
   }>;
-  toggleDescription: (values: any) => void;
-  hasDescription: boolean;
+  onClose: () => void;
+  nextStep: () => void;
 }
 
 const EventFormBasicDetails: React.FC<Props> = ({
   props,
-  toggleDescription,
-  hasDescription,
+  onClose,
+  nextStep,
 }) => {
   return (
     <>
@@ -36,28 +29,25 @@ const EventFormBasicDetails: React.FC<Props> = ({
         Let's get started building your event!
       </Text>
 
-      <VStack align="stretch" spacing={6}>
+      <VStack align="stretch" spacing={4}>
         <InputField name="title" label="Title" width="sm" required />
 
-        <Box>
-          <FormLabel width="min" htmlFor="description">
-            <Box display="flex" alignItems="center" justifyContent="flex-start">
-              <Text mr={2}>Description</Text>
-              <Switch
-                size="sm"
-                isChecked={hasDescription}
-                onChange={() => toggleDescription(props.values)}
-                colorScheme="orange"
-              />
-            </Box>
-          </FormLabel>
-          <DynamicEditor
-            hidden={!hasDescription}
-            setFieldValue={props.setFieldValue}
-            name="description"
-            initialValue={props.values.description}
-          />
-        </Box>
+        <DynamicEditor
+          label="Description"
+          setFieldValue={props.setFieldValue}
+          name="description"
+          initialValue={props.values.description}
+        />
+
+        <HStack display="flex" justifyContent="flex-end" mt={6}>
+          <Text variant="meta">Step 1 of 3</Text>
+          <Button variant="ghost" colorScheme="gray" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button colorScheme="orange" onClick={nextStep}>
+            Continue
+          </Button>
+        </HStack>
       </VStack>
     </>
   );
