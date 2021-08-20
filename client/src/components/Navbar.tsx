@@ -36,7 +36,7 @@ const Navbar: React.FC<Props> = ({}) => {
   } else {
     body = (
       <HStack spacing={8}>
-        <NextLink href="/">
+        <NextLink href={`/${data.me.username}`}>
           <Link>{data.me.username}</Link>
         </NextLink>
         <Button
