@@ -27,7 +27,7 @@ const EventCreateButton: React.FC<Props> = ({}) => {
   const [{ data, fetching }] = useMeQuery();
 
   const [creator, setCreator] = useState<string | undefined>("");
-  const [isClubEvent, setIsClubEvent] = useState(false);
+  const [clubId, setClubId] = useState<number | null>(null);
 
   const onSubmit = async (values) => {
     const { error } = await createEvent({
@@ -62,7 +62,7 @@ const EventCreateButton: React.FC<Props> = ({}) => {
             <MenuItem
               onClick={() => {
                 setCreator(data.me?.username);
-                setIsClubEvent(false);
+                setClubId(null);
                 onOpen();
               }}
             >
@@ -74,7 +74,7 @@ const EventCreateButton: React.FC<Props> = ({}) => {
                   key={i}
                   onClick={() => {
                     setCreator(club.name);
-                    setIsClubEvent(true);
+                    setClubId(club.id);
                     onOpen();
                   }}
                 >
@@ -109,11 +109,7 @@ const EventCreateButton: React.FC<Props> = ({}) => {
             <CloseButton onClick={onClose} />
           </Box>
           <Divider />
-          <EventForm
-            onClose={onClose}
-            onSubmit={onSubmit}
-            isClubEvent={isClubEvent}
-          />
+          <EventForm onClose={onClose} onSubmit={onSubmit} clubId={clubId} />
         </ModalContent>
       </Modal>
     </>

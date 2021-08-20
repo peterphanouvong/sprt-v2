@@ -43,6 +43,9 @@ class EventInput {
 
   @Field({ defaultValue: 1 })
   publicityTypeId: number;
+
+  @Field(() => Int, { nullable: true })
+  clubId: number;
 }
 
 @Resolver(Event)

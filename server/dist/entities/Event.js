@@ -58,6 +58,11 @@ __decorate([
     __metadata("design:type", Number)
 ], Event.prototype, "hostId", void 0);
 __decorate([
+    type_graphql_1.Field(() => type_graphql_1.Int, { nullable: true }),
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", Number)
+], Event.prototype, "clubId", void 0);
+__decorate([
     type_graphql_1.Field(() => User_1.User),
     typeorm_1.ManyToOne(() => User_1.User, (user) => user.events),
     __metadata("design:type", User_1.User)

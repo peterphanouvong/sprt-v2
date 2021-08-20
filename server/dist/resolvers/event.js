@@ -53,6 +53,10 @@ __decorate([
     type_graphql_1.Field({ defaultValue: 1 }),
     __metadata("design:type", Number)
 ], EventInput.prototype, "publicityTypeId", void 0);
+__decorate([
+    type_graphql_1.Field(() => type_graphql_1.Int, { nullable: true }),
+    __metadata("design:type", Number)
+], EventInput.prototype, "clubId", void 0);
 EventInput = __decorate([
     type_graphql_1.InputType()
 ], EventInput);

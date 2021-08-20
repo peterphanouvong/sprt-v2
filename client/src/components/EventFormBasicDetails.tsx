@@ -14,6 +14,7 @@ interface Props {
     endTime: string;
     creatorTypeId: number;
     publicityTypeId: number;
+    clubId: number | null;
   }>;
   onClose: () => void;
   nextStep: () => void;

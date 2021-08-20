@@ -24,6 +24,7 @@ interface Props {
     endTime: string;
     creatorTypeId: number;
     publicityTypeId: number;
+    clubId: number | null;
   }>;
   prevStep: () => void;
   setValues: (

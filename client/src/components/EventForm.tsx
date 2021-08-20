@@ -14,15 +14,10 @@ interface Props {
   event?: Event;
   onClose: () => void;
   onSubmit: (values: any) => Promise<void>;
-  isClubEvent: boolean;
+  clubId: number | null;
 }
 
-const EventForm: React.FC<Props> = ({
-  event,
-  onClose,
-  onSubmit,
-  isClubEvent,
-}) => {
+const EventForm: React.FC<Props> = ({ event, onClose, onSubmit, clubId }) => {
   const { nextStep, prevStep, activeStep } = useSteps({
     initialStep: 0,
   });
@@ -44,8 +39,9 @@ const EventForm: React.FC<Props> = ({
                 capacity: event.capacity ?? "",
                 startTime: parseDate(event.startTime) ?? "",
                 endTime: parseDate(event.endTime) ?? "",
-                creatorTypeId: isClubEvent ? 2 : 1,
+                creatorTypeId: !!clubId ? 2 : 1,
                 publicityTypeId: 1,
+                clubId: clubId,
               }
             : {
                 title: "",
@@ -54,8 +50,9 @@ const EventForm: React.FC<Props> = ({
                 startTime: "",
                 endTime: "",
                 capacity: "",
-                creatorTypeId: isClubEvent ? 2 : 1,
+                creatorTypeId: !!clubId ? 2 : 1,
                 publicityTypeId: 1,
+                clubId: clubId,
               }
         }
         onSubmit={(values) => {

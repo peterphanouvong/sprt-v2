@@ -52,6 +52,10 @@ export class Event extends BaseEntity {
   @Column()
   hostId: number;
 
+  @Field(() => Int, { nullable: true })
+  @Column({ nullable: true })
+  clubId: number;
+
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.events)
   host: User;
