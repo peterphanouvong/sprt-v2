@@ -53,6 +53,15 @@ UserResponse = __decorate([
     type_graphql_1.ObjectType()
 ], UserResponse);
 let UserResolver = class UserResolver {
+    async adminClubs(user, { clubLoader }) {
+        var _a;
+        const clubIds = await typeorm_1.getConnection().query(`
+       select array_agg("clubId")
+       from "club_admin"
+       where "adminId" = ${user.id};
+     `);
+        return clubLoader.loadMany((_a = clubIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
+    }
     async followingClubs(user, { clubLoader }) {
         var _a;
         const clubIds = await typeorm_1.getConnection().query(`
@@ -204,6 +213,14 @@ let UserResolver = class UserResolver {
         return await User_1.User.findOne({ username });
     }
 };
+__decorate([
+    type_graphql_1.FieldResolver(() => [Club_1.Club]),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [User_1.User, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "adminClubs", null);
 __decorate([
     type_graphql_1.FieldResolver(() => [Club_1.Club]),
     __param(0, type_graphql_1.Root()),

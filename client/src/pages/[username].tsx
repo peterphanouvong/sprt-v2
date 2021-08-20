@@ -5,8 +5,7 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 
 import { Code } from "@chakra-ui/react";
 import { Layout } from "../components/Layout";
-import { useMeQuery, useUserByUsernameQuery } from "../generated/graphql";
-import { Card } from "../components/Card";
+import { useUserByUsernameQuery } from "../generated/graphql";
 import { useRouter } from "next/router";
 
 const Profile = () => {

@@ -45,6 +45,16 @@ export class UserResolver {
    */
 
   @FieldResolver(() => [Club])
+  async adminClubs(@Root() user: User, @Ctx() { clubLoader }: MyContext) {
+    const clubIds = await getConnection().query(`
+       select array_agg("clubId")
+       from "club_admin"
+       where "adminId" = ${user.id};
+     `);
+    return clubLoader.loadMany(clubIds[0].array_agg ?? []);
+  }
+
+  @FieldResolver(() => [Club])
   async followingClubs(@Root() user: User, @Ctx() { clubLoader }: MyContext) {
     const clubIds = await getConnection().query(`
       select array_agg("clubId")
@@ -269,11 +279,13 @@ export class UserResolver {
   }
 
   // @Query(() => [Club])
-  // async feed(@Ctx() { req }: MyContext) {
+  // async myFeed(@Ctx() { req }: MyContext) {
   //   const eventIds = await getConnection().query(`
   //   select array_agg("eventId")
   //   from ""
   //   where "followerId";
   // `);
+
+  //   // aim: show me events posted by the clubs that i follow
   // }
 }

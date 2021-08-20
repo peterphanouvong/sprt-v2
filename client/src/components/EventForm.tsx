@@ -1,6 +1,6 @@
-import { Button, Box, Text, HStack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
-import React, { useState } from "react";
+import React from "react";
 import { Event } from "../generated/graphql";
 import { parseDate } from "../utils/parseDate";
 import { parseRichText } from "../utils/parseRichText";
@@ -14,10 +14,15 @@ interface Props {
   event?: Event;
   onClose: () => void;
   onSubmit: (values: any) => Promise<void>;
-  submitMessage: string;
+  isClubEvent: boolean;
 }
 
-const EventForm: React.FC<Props> = ({ event, onClose, onSubmit }) => {
+const EventForm: React.FC<Props> = ({
+  event,
+  onClose,
+  onSubmit,
+  isClubEvent,
+}) => {
   const { nextStep, prevStep, activeStep } = useSteps({
     initialStep: 0,
   });
@@ -39,6 +44,7 @@ const EventForm: React.FC<Props> = ({ event, onClose, onSubmit }) => {
                 capacity: event.capacity ?? "",
                 startTime: parseDate(event.startTime) ?? "",
                 endTime: parseDate(event.endTime) ?? "",
+                isClubEvent: isClubEvent,
               }
             : {
                 title: "",
@@ -47,6 +53,7 @@ const EventForm: React.FC<Props> = ({ event, onClose, onSubmit }) => {
                 startTime: "",
                 endTime: "",
                 capacity: "",
+                isClubEvent: isClubEvent,
               }
         }
         onSubmit={(values) => {

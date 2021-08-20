@@ -66,6 +66,10 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "followingClubs", void 0);
 __decorate([
+    type_graphql_1.Field(() => [Club_1.Club], { nullable: true }),
+    __metadata("design:type", Array)
+], User.prototype, "adminClubs", void 0);
+__decorate([
     typeorm_1.OneToMany(() => ClubFollower_1.ClubFollower, (cf) => cf.follower),
     __metadata("design:type", Array)
 ], User.prototype, "clubFollowerConnection", void 0);

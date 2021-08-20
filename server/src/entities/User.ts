@@ -60,6 +60,9 @@ export class User extends BaseEntity {
   @Field(() => [Club], { nullable: true })
   followingClubs: Club[];
 
+  @Field(() => [Club], { nullable: true })
+  adminClubs: Club[];
+
   /**
    * Connections
    */

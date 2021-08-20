@@ -12,5 +12,10 @@ query userByUsername($username: String!) {
       name
       email
     }
+    adminClubs {
+      id
+      name
+      email
+    }
   }
 }

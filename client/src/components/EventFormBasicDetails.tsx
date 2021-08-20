@@ -12,6 +12,7 @@ interface Props {
     capacity: string | number;
     startTime: string;
     endTime: string;
+    isClubEvent: boolean;
   }>;
   onClose: () => void;
   nextStep: () => void;

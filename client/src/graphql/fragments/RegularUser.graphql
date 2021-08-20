@@ -2,7 +2,16 @@ fragment RegularUser on User {
   id
   username
   email
+  events {
+    id
+    title
+  }
   followingClubs {
+    id
+    name
+    email
+  }
+  adminClubs {
     id
     name
     email
