@@ -45,7 +45,7 @@ export class User extends BaseEntity {
   posts: Post[];
 
   // hosting events
-  @Field(() => Event)
+  @Field(() => [Event], { nullable: true })
   @OneToMany(() => Event, (event) => event.host)
   events: Event[];
 
@@ -57,7 +57,7 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Field(() => [Club])
+  @Field(() => [Club], { nullable: true })
   followingClubs: Club[];
 
   /**

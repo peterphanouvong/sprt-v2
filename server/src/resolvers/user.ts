@@ -256,6 +256,18 @@ export class UserResolver {
     return User.findOne(req.session.userId);
   }
 
+  @Query(() => User, { nullable: true })
+  async user(@Arg("id") id: number): Promise<User | undefined> {
+    return await User.findOne(id);
+  }
+
+  @Query(() => User, { nullable: true })
+  async userByUsername(
+    @Arg("username") username: string
+  ): Promise<User | undefined> {
+    return await User.findOne({ username });
+  }
+
   // @Query(() => [Club])
   // async feed(@Ctx() { req }: MyContext) {
   //   const eventIds = await getConnection().query(`

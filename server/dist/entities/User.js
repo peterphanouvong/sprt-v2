@@ -47,7 +47,7 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "posts", void 0);
 __decorate([
-    type_graphql_1.Field(() => Event_1.Event),
+    type_graphql_1.Field(() => [Event_1.Event], { nullable: true }),
     typeorm_1.OneToMany(() => Event_1.Event, (event) => event.host),
     __metadata("design:type", Array)
 ], User.prototype, "events", void 0);
@@ -62,7 +62,7 @@ __decorate([
     __metadata("design:type", Date)
 ], User.prototype, "updatedAt", void 0);
 __decorate([
-    type_graphql_1.Field(() => [Club_1.Club]),
+    type_graphql_1.Field(() => [Club_1.Club], { nullable: true }),
     __metadata("design:type", Array)
 ], User.prototype, "followingClubs", void 0);
 __decorate([

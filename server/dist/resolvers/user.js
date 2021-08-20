@@ -197,6 +197,12 @@ let UserResolver = class UserResolver {
         }
         return User_1.User.findOne(req.session.userId);
     }
+    async user(id) {
+        return await User_1.User.findOne(id);
+    }
+    async userByUsername(username) {
+        return await User_1.User.findOne({ username });
+    }
 };
 __decorate([
     type_graphql_1.FieldResolver(() => [Club_1.Club]),
@@ -262,6 +268,20 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UserResolver.prototype, "me", null);
+__decorate([
+    type_graphql_1.Query(() => User_1.User, { nullable: true }),
+    __param(0, type_graphql_1.Arg("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "user", null);
+__decorate([
+    type_graphql_1.Query(() => User_1.User, { nullable: true }),
+    __param(0, type_graphql_1.Arg("username")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "userByUsername", null);
 UserResolver = __decorate([
     type_graphql_1.Resolver(User_1.User)
 ], UserResolver);

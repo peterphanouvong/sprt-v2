@@ -48,6 +48,7 @@ export type Event = {
   host: User;
   attendees: Array<User>;
   points: Scalars['Float'];
+  eventTypeId: Scalars['Int'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
 };
@@ -72,11 +73,11 @@ export type Mutation = {
   createPost: Post;
   updatePost?: Maybe<Post>;
   deletePost: Scalars['Boolean'];
-  changePassword: UserResponse;
-  forgotPassword: Scalars['Boolean'];
   register: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
+  changePassword: UserResponse;
+  forgotPassword: Scalars['Boolean'];
   createEvent: Event;
   updateEvent?: Maybe<Event>;
   deleteEvent: Scalars['Boolean'];
@@ -107,17 +108,6 @@ export type MutationDeletePostArgs = {
 };
 
 
-export type MutationChangePasswordArgs = {
-  newPassword: Scalars['String'];
-  token: Scalars['String'];
-};
-
-
-export type MutationForgotPasswordArgs = {
-  email: Scalars['String'];
-};
-
-
 export type MutationRegisterArgs = {
   options: UsernamePasswordInput;
 };
@@ -126,6 +116,17 @@ export type MutationRegisterArgs = {
 export type MutationLoginArgs = {
   password: Scalars['String'];
   usernameOrEmail: Scalars['String'];
+};
+
+
+export type MutationChangePasswordArgs = {
+  newPassword: Scalars['String'];
+  token: Scalars['String'];
+};
+
+
+export type MutationForgotPasswordArgs = {
+  email: Scalars['String'];
 };
 
 
@@ -219,6 +220,8 @@ export type Query = {
   posts: PaginatedPosts;
   post?: Maybe<Post>;
   me?: Maybe<User>;
+  user?: Maybe<User>;
+  userByUsername?: Maybe<User>;
   events: Array<Event>;
   event?: Maybe<Event>;
   clubs: Array<Club>;
@@ -236,6 +239,16 @@ export type QueryPostArgs = {
 };
 
 
+export type QueryUserArgs = {
+  id: Scalars['Float'];
+};
+
+
+export type QueryUserByUsernameArgs = {
+  username: Scalars['String'];
+};
+
+
 export type QueryEventArgs = {
   id: Scalars['Int'];
 };
@@ -246,9 +259,10 @@ export type User = {
   username: Scalars['String'];
   email: Scalars['String'];
   posts: Post;
-  events: Event;
+  events?: Maybe<Array<Event>>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
+  followingClubs?: Maybe<Array<Club>>;
 };
 
 export type UserResponse = {
@@ -263,22 +277,22 @@ export type UsernamePasswordInput = {
   password: Scalars['String'];
 };
 
-export type RegularClubFragment = { __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string }>, requestedMembers: Array<{ __typename?: 'User', id: number, username: string, email: string }> };
+export type RegularClubFragment = { __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, requestedMembers: Array<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> };
 
 export type RegularErrorFragment = { __typename?: 'FieldError', message: string, field: string };
 
-export type RegularEventFragment = { __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string }> };
+export type RegularEventFragment = { __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> };
 
-export type RegularUserFragment = { __typename?: 'User', id: number, username: string, email: string };
+export type RegularUserFragment = { __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> };
 
-export type RegularUserResponseFragment = { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string, email: string }> };
+export type RegularUserResponseFragment = { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> };
 
 export type AddAttendeeMutationVariables = Exact<{
   eventId: Scalars['Int'];
 }>;
 
 
-export type AddAttendeeMutation = { __typename?: 'Mutation', addAttendee: { __typename?: 'User', id: number, username: string, email: string } };
+export type AddAttendeeMutation = { __typename?: 'Mutation', addAttendee: { __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> } };
 
 export type AddRequestedMemberMutationVariables = Exact<{
   userId: Scalars['Float'];
@@ -294,21 +308,21 @@ export type ChangePasswordMutationVariables = Exact<{
 }>;
 
 
-export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string, email: string }> } };
+export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> } };
 
 export type CreateClubMutationVariables = Exact<{
   input: ClubInput;
 }>;
 
 
-export type CreateClubMutation = { __typename?: 'Mutation', createClub: { __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string }>, requestedMembers: Array<{ __typename?: 'User', id: number, username: string, email: string }> } };
+export type CreateClubMutation = { __typename?: 'Mutation', createClub: { __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, requestedMembers: Array<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> } };
 
 export type CreateEventMutationVariables = Exact<{
   input: EventInput;
 }>;
 
 
-export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string }> } };
+export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> } };
 
 export type CreatePostMutationVariables = Exact<{
   input: PostInput;
@@ -359,7 +373,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string, email: string }> } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -371,7 +385,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string, email: string }> } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> } };
 
 export type UnfollowClubMutationVariables = Exact<{
   followerId: Scalars['Float'];
@@ -387,7 +401,7 @@ export type UpdateClubMutationVariables = Exact<{
 }>;
 
 
-export type UpdateClubMutation = { __typename?: 'Mutation', updateClub?: Maybe<{ __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string }>, requestedMembers: Array<{ __typename?: 'User', id: number, username: string, email: string }> }> };
+export type UpdateClubMutation = { __typename?: 'Mutation', updateClub?: Maybe<{ __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, requestedMembers: Array<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> }> };
 
 export type UpdateEventMutationVariables = Exact<{
   input: EventInput;
@@ -395,17 +409,17 @@ export type UpdateEventMutationVariables = Exact<{
 }>;
 
 
-export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: Maybe<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string }> }> };
+export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: Maybe<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> }> };
 
 export type ClubsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ClubsQuery = { __typename?: 'Query', clubs: Array<{ __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string }>, requestedMembers: Array<{ __typename?: 'User', id: number, username: string, email: string }> }> };
+export type ClubsQuery = { __typename?: 'Query', clubs: Array<{ __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, requestedMembers: Array<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> }> };
 
 export type EventsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type EventsQuery = { __typename?: 'Query', events: Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string }> }> };
+export type EventsQuery = { __typename?: 'Query', events: Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -427,11 +441,23 @@ export type PostsQueryVariables = Exact<{
 
 export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: number, description: string, title: string, creatorId: number, createdAt: string, points: number, updatedAt: string, descriptionSnippet: string, creator: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string } }> } };
 
+export type UserByUsernameQueryVariables = Exact<{
+  username: Scalars['String'];
+}>;
+
+
+export type UserByUsernameQuery = { __typename?: 'Query', userByUsername?: Maybe<{ __typename?: 'User', id: number, username: string, email: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> };
+
 export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
   id
   username
   email
+  followingClubs {
+    id
+    name
+    email
+  }
 }
     `;
 export const RegularClubFragmentDoc = gql`
@@ -768,4 +794,26 @@ export const PostsDocument = gql`
 
 export function usePostsQuery(options: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<PostsQuery>({ query: PostsDocument, ...options });
+};
+export const UserByUsernameDocument = gql`
+    query userByUsername($username: String!) {
+  userByUsername(username: $username) {
+    id
+    username
+    email
+    events {
+      id
+      title
+    }
+    followingClubs {
+      id
+      name
+      email
+    }
+  }
+}
+    `;
+
+export function useUserByUsernameQuery(options: Omit<Urql.UseQueryArgs<UserByUsernameQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<UserByUsernameQuery>({ query: UserByUsernameDocument, ...options });
 };

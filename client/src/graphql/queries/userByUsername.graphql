@@ -1,0 +1,16 @@
+query userByUsername($username: String!) {
+  userByUsername(username: $username) {
+    id
+    username
+    email
+    events {
+      id
+      title
+    }
+    followingClubs {
+      id
+      name
+      email
+    }
+  }
+}
