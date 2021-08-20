@@ -16,6 +16,7 @@ const type_graphql_1 = require("type-graphql");
 const path_1 = __importDefault(require("path"));
 const constants_1 = require("./constants");
 const createUserLoader_1 = require("./utils/createUserLoader");
+const createClubLoader_1 = require("./utils/createClubLoader");
 const hello_1 = require("./resolvers/hello");
 const post_1 = require("./resolvers/post");
 const user_1 = require("./resolvers/user");
@@ -33,8 +34,9 @@ const ClubMember_1 = require("./entities/ClubMember");
 const ClubAdmin_1 = require("./entities/ClubAdmin");
 const EventAttendee_1 = require("./entities/EventAttendee");
 const ClubRequestedMember_1 = require("./entities/ClubRequestedMember");
-const EventType_1 = require("./entities/EventType");
-const createClubLoader_1 = require("./utils/createClubLoader");
+const PublicityType_1 = require("./entities/PublicityType");
+const CreatorType_1 = require("./entities/CreatorType");
+const publicityType_1 = require("./resolvers/publicityType");
 const main = async () => {
     const conn = await typeorm_1.createConnection({
         type: "postgres",
@@ -42,10 +44,11 @@ const main = async () => {
         logging: true,
         entities: [
             Post_1.Post,
+            CreatorType_1.CreatorType,
             User_1.User,
             Event_1.Event,
             EventAttendee_1.EventAttendee,
-            EventType_1.EventType,
+            PublicityType_1.PublicityType,
             Club_1.Club,
             ClubEvent_1.ClubEvent,
             ClubFollower_1.ClubFollower,
@@ -95,6 +98,7 @@ const main = async () => {
                 user_1.UserResolver,
                 event_1.EventResolver,
                 club_1.ClubResolver,
+                publicityType_1.PublicityTypeResolver,
             ],
             validate: false,
         }),

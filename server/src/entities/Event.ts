@@ -65,7 +65,11 @@ export class Event extends BaseEntity {
 
   @Field(() => Int)
   @Column()
-  eventTypeId: number;
+  creatorTypeId: number;
+
+  @Field(() => Int)
+  @Column()
+  publicityTypeId: number;
 
   @Field(() => String)
   @CreateDateColumn()

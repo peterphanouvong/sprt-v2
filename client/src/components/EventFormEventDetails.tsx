@@ -12,7 +12,8 @@ interface Props {
     capacity: string | number;
     startTime: string;
     endTime: string;
-    isClubEvent: boolean;
+    creatorTypeId: number;
+    publicityTypeId: number;
   }>;
   prevStep: () => void;
   nextStep: () => void;

@@ -3,7 +3,7 @@ import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @ObjectType()
 @Entity()
-export class EventType extends BaseEntity {
+export class PublicityType extends BaseEntity {
   /**
    * Fields
    */

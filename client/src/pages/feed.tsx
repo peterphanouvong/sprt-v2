@@ -6,7 +6,7 @@ import { useIsAuth } from "../utils/useIsAuth";
 import { EventList } from "../components/EventList";
 import { EventCreateButton } from "../components/EventCreateButton";
 import { useEventsQuery, useMeQuery, Event } from "../generated/graphql";
-import { Center, Spinner } from "@chakra-ui/react";
+import { Spinner } from "@chakra-ui/react";
 
 interface Props {}
 

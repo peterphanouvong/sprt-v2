@@ -29,4 +29,4 @@ PublicityType = __decorate([
     typeorm_1.Entity()
 ], PublicityType);
 exports.PublicityType = PublicityType;
-//# sourceMappingURL=EventType.js.map
+//# sourceMappingURL=PublicityType.js.map

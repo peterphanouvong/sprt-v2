@@ -2,56 +2,82 @@ import {
   Box,
   Heading,
   Text,
-  useRadio,
-  useRadioGroup,
   HStack,
-  UseRadioProps,
   Button,
+  Spinner,
+  Radio,
+  RadioGroup,
+  Stack,
 } from "@chakra-ui/react";
+import { FormikProps } from "formik";
 import React, { useState } from "react";
+import { usePublicityTypesQuery } from "../generated/graphql";
 import { SelectField } from "./SelectField";
 
 interface Props {
+  props: FormikProps<{
+    title: string;
+    description: any;
+    location: string;
+    capacity: string | number;
+    startTime: string;
+    endTime: string;
+    creatorTypeId: number;
+    publicityTypeId: number;
+  }>;
   prevStep: () => void;
+  setValues: (
+    field: string,
+    value: any,
+    shouldValidate?: boolean | undefined
+  ) => void;
 }
 
-const EventFormPickType: React.FC<Props> = ({ prevStep }) => {
-  const [selected, setSelected] = useState("public");
+const EventFormPickType: React.FC<Props> = ({ prevStep, setValues, props }) => {
+  const [{ data, fetching }] = usePublicityTypesQuery();
+  const [selected, setSelected] = useState(
+    props.values.publicityTypeId.toString()
+  );
 
-  const options = ["public", "private"];
-  const { getRootProps, getRadioProps } = useRadioGroup({
-    name: "event-type",
-    defaultValue: selected,
-    onChange: setSelected,
-  });
-  const group = getRootProps();
+  if (!data) return <Spinner />;
+  if (!data && !fetching) return <>sumting wong</>;
 
   return (
     <Box>
       <Heading fontSize="x-large">Who's can see this event?</Heading>
       <Text mb={4}>Choose who gets to see this event.</Text>
-      <HStack
-        justifyContent={{ base: "flex-start", sm: "center", md: "flex-start" }}
-        spacing={4}
-        {...group}
+
+      <RadioGroup
+        name="publicityTypeId"
+        onChange={(value) => {
+          setSelected(value.toString());
+          setValues("publicityTypeId", parseInt(value));
+        }}
+        value={selected}
       >
-        {options.map((value) => {
-          const radio = getRadioProps({ value });
-          return (
-            <RadioCard key={value} {...radio}>
-              {value}
-            </RadioCard>
-          );
-        })}
-      </HStack>
+        <Stack>
+          {data.publicityTypes.map((value) => {
+            return (
+              <Radio
+                colorScheme="orange"
+                value={value.id.toString()}
+                key={value.id}
+              >
+                {value.name}
+              </Radio>
+            );
+          })}
+        </Stack>
+      </RadioGroup>
       <Box mt={4}>
-        {selected === "public" ? (
+        {selected ===
+        data.publicityTypes.find((x) => x.id === 1)!.id.toString() ? (
           <Text variant="meta">
             All of your followers will be able to see this event.
           </Text>
-        ) : selected === "private" ? (
+        ) : selected ===
+          data.publicityTypes.find((x) => x.id === 2)!.id.toString() ? (
           <>
-            {" "}
             <Text variant="meta">
               You can choose who gets to see this event.
             </Text>
@@ -83,39 +109,6 @@ const EventFormPickType: React.FC<Props> = ({ prevStep }) => {
           Create event
         </Button>
       </HStack>
-    </Box>
-  );
-};
-
-const RadioCard: React.FC<UseRadioProps> = (props) => {
-  const { getInputProps, getCheckboxProps } = useRadio(props);
-
-  const input = getInputProps();
-  const checkbox = getCheckboxProps();
-
-  return (
-    <Box as="label">
-      <input {...input} />
-      <Box
-        {...checkbox}
-        cursor="pointer"
-        borderWidth="1px"
-        borderRadius="lg"
-        boxShadow="sm"
-        _checked={{
-          bg: "orange.500",
-          color: "white",
-          borderColor: "orange.500",
-        }}
-        _focus={{
-          boxShadow: "outline",
-        }}
-        px={4}
-        py={2}
-        marginTop={2}
-      >
-        {props.children}
-      </Box>
     </Box>
   );
 };

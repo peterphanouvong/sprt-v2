@@ -37,6 +37,12 @@ class EventInput {
 
   @Field({ nullable: true })
   capacity: number;
+
+  @Field({ defaultValue: 1 })
+  creatorTypeId: number;
+
+  @Field({ defaultValue: 1 })
+  publicityTypeId: number;
 }
 
 @Resolver(Event)

@@ -18,6 +18,8 @@ fragment RegularEvent on Event {
     ...RegularUser
   }
   points
+  creatorTypeId
+  publicityTypeId
   createdAt
   updatedAt
 }

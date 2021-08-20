@@ -48,7 +48,8 @@ export type Event = {
   host: User;
   attendees: Array<User>;
   points: Scalars['Float'];
-  eventTypeId: Scalars['Int'];
+  creatorTypeId: Scalars['Int'];
+  publicityTypeId: Scalars['Int'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
 };
@@ -60,6 +61,8 @@ export type EventInput = {
   startTime: Scalars['String'];
   endTime: Scalars['String'];
   capacity?: Maybe<Scalars['Float']>;
+  creatorTypeId?: Maybe<Scalars['Float']>;
+  publicityTypeId?: Maybe<Scalars['Float']>;
 };
 
 export type FieldError = {
@@ -214,6 +217,12 @@ export type PostInput = {
   description: Scalars['String'];
 };
 
+export type PublicityType = {
+  __typename?: 'PublicityType';
+  id: Scalars['Int'];
+  name: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
@@ -225,6 +234,7 @@ export type Query = {
   events: Array<Event>;
   event?: Maybe<Event>;
   clubs: Array<Club>;
+  publicityTypes: Array<PublicityType>;
 };
 
 
@@ -282,7 +292,7 @@ export type RegularClubFragment = { __typename?: 'Club', id: number, name: strin
 
 export type RegularErrorFragment = { __typename?: 'FieldError', message: string, field: string };
 
-export type RegularEventFragment = { __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> };
+export type RegularEventFragment = { __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, creatorTypeId: number, publicityTypeId: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> };
 
 export type RegularUserFragment = { __typename?: 'User', id: number, username: string, email: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> };
 
@@ -323,7 +333,7 @@ export type CreateEventMutationVariables = Exact<{
 }>;
 
 
-export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> } };
+export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, creatorTypeId: number, publicityTypeId: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> } };
 
 export type CreatePostMutationVariables = Exact<{
   input: PostInput;
@@ -410,7 +420,7 @@ export type UpdateEventMutationVariables = Exact<{
 }>;
 
 
-export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: Maybe<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> }> };
+export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: Maybe<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, creatorTypeId: number, publicityTypeId: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> }> };
 
 export type ClubsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -420,7 +430,7 @@ export type ClubsQuery = { __typename?: 'Query', clubs: Array<{ __typename?: 'Cl
 export type EventsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type EventsQuery = { __typename?: 'Query', events: Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> }> };
+export type EventsQuery = { __typename?: 'Query', events: Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, creatorTypeId: number, publicityTypeId: number, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -441,6 +451,11 @@ export type PostsQueryVariables = Exact<{
 
 
 export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: number, description: string, title: string, creatorId: number, createdAt: string, points: number, updatedAt: string, descriptionSnippet: string, creator: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string } }> } };
+
+export type PublicityTypesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PublicityTypesQuery = { __typename?: 'Query', publicityTypes: Array<{ __typename?: 'PublicityType', id: number, name: string }> };
 
 export type UserByUsernameQueryVariables = Exact<{
   username: Scalars['String'];
@@ -511,6 +526,8 @@ export const RegularEventFragmentDoc = gql`
     ...RegularUser
   }
   points
+  creatorTypeId
+  publicityTypeId
   createdAt
   updatedAt
 }
@@ -802,6 +819,18 @@ export const PostsDocument = gql`
 
 export function usePostsQuery(options: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<PostsQuery>({ query: PostsDocument, ...options });
+};
+export const PublicityTypesDocument = gql`
+    query PublicityTypes {
+  publicityTypes {
+    id
+    name
+  }
+}
+    `;
+
+export function usePublicityTypesQuery(options: Omit<Urql.UseQueryArgs<PublicityTypesQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<PublicityTypesQuery>({ query: PublicityTypesDocument, ...options });
 };
 export const UserByUsernameDocument = gql`
     query userByUsername($username: String!) {

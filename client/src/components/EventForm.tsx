@@ -44,7 +44,8 @@ const EventForm: React.FC<Props> = ({
                 capacity: event.capacity ?? "",
                 startTime: parseDate(event.startTime) ?? "",
                 endTime: parseDate(event.endTime) ?? "",
-                isClubEvent: isClubEvent,
+                creatorTypeId: isClubEvent ? 2 : 1,
+                publicityTypeId: 1,
               }
             : {
                 title: "",
@@ -53,7 +54,8 @@ const EventForm: React.FC<Props> = ({
                 startTime: "",
                 endTime: "",
                 capacity: "",
-                isClubEvent: isClubEvent,
+                creatorTypeId: isClubEvent ? 2 : 1,
+                publicityTypeId: 1,
               }
         }
         onSubmit={(values) => {
@@ -88,7 +90,11 @@ const EventForm: React.FC<Props> = ({
                 </Box>
 
                 <Box mt={6}>
-                  <EventFormPickType prevStep={prevStep} />
+                  <EventFormPickType
+                    props={props}
+                    prevStep={prevStep}
+                    setValues={props.setFieldValue}
+                  />
                 </Box>
               </Steps>
             </Box>

@@ -39,6 +39,8 @@ const EventCreateButton: React.FC<Props> = ({}) => {
       },
     });
 
+    console.log(error);
+
     if (!error) {
       onClose();
     }
@@ -60,6 +62,7 @@ const EventCreateButton: React.FC<Props> = ({}) => {
             <MenuItem
               onClick={() => {
                 setCreator(data.me?.username);
+                setIsClubEvent(false);
                 onOpen();
               }}
             >

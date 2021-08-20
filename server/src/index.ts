@@ -12,6 +12,7 @@ import path from "path";
 
 import { COOKIE_NAME, __prod__ } from "./constants";
 import { createUserLoader } from "./utils/createUserLoader";
+import { createClubLoader } from "./utils/createClubLoader";
 
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
@@ -31,8 +32,9 @@ import { ClubMember } from "./entities/ClubMember";
 import { ClubAdmin } from "./entities/ClubAdmin";
 import { EventAttendee } from "./entities/EventAttendee";
 import { ClubRequestedMember } from "./entities/ClubRequestedMember";
-import { EventType } from "./entities/EventType";
-import { createClubLoader } from "./utils/createClubLoader";
+import { PublicityType } from "./entities/PublicityType";
+import { CreatorType } from "./entities/CreatorType";
+import { PublicityTypeResolver } from "./resolvers/publicityType";
 
 const main = async () => {
   const conn = await createConnection({
@@ -42,10 +44,11 @@ const main = async () => {
     // synchronize: true,
     entities: [
       Post,
+      CreatorType,
       User,
       Event,
       EventAttendee,
-      EventType,
+      PublicityType,
       Club,
       ClubEvent,
       ClubFollower,
@@ -112,6 +115,7 @@ const main = async () => {
         UserResolver,
         EventResolver,
         ClubResolver,
+        PublicityTypeResolver,
       ],
       validate: false,
     }),

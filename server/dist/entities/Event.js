@@ -75,7 +75,12 @@ __decorate([
     type_graphql_1.Field(() => type_graphql_1.Int),
     typeorm_1.Column(),
     __metadata("design:type", Number)
-], Event.prototype, "eventTypeId", void 0);
+], Event.prototype, "creatorTypeId", void 0);
+__decorate([
+    type_graphql_1.Field(() => type_graphql_1.Int),
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], Event.prototype, "publicityTypeId", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.CreateDateColumn(),

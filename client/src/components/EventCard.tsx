@@ -14,6 +14,7 @@ import { OptionsButton } from "./OptionsButton";
 import { ViewAttendeesModalButton } from "./ViewAttendeesModalButton";
 import { DynamicEditor } from "./DynamicEditor";
 import { parseRichText } from "../utils/parseRichText";
+import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
 
 interface Props {
   event: Event;
@@ -84,6 +85,9 @@ const EventCard: React.FC<Props> = ({ event }) => {
             initialValue={parseRichText(event.description)}
             readOnly={true}
           />
+          <Box border={"1px solid orange"}>
+            <RenderPrettyJSON object={event} />
+          </Box>
         </Box>
 
         <Box float="right">

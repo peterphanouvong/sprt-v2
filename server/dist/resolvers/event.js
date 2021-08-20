@@ -45,6 +45,14 @@ __decorate([
     type_graphql_1.Field({ nullable: true }),
     __metadata("design:type", Number)
 ], EventInput.prototype, "capacity", void 0);
+__decorate([
+    type_graphql_1.Field({ defaultValue: 1 }),
+    __metadata("design:type", Number)
+], EventInput.prototype, "creatorTypeId", void 0);
+__decorate([
+    type_graphql_1.Field({ defaultValue: 1 }),
+    __metadata("design:type", Number)
+], EventInput.prototype, "publicityTypeId", void 0);
 EventInput = __decorate([
     type_graphql_1.InputType()
 ], EventInput);
