@@ -37,7 +37,7 @@ const Register: React.FC<Props> = ({}) => {
           console.log(res);
           if (res.data?.register.errors) {
             setErrors(toErrorMap(res.data.register.errors));
-          } else if (res.data.register.user) {
+          } else if (res.data?.register.user) {
             router.push("/home");
           }
         }}

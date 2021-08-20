@@ -18,20 +18,20 @@ import { toErrorMap } from "../utils/toErrorMap";
 import { useLoginMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import NextLink from "next/link";
-import FacebookLogin from "react-facebook-login";
+// import FacebookLogin from "react-facebook-login";
 
 interface Props {}
 
 const Login: React.FC<Props> = ({}) => {
   const [{}, login] = useLoginMutation();
-  const responseFacebook = (response) => {
-    console.log(response);
-  };
+  // const responseFacebook = (response) => {
+  //   console.log(response);
+  // };
 
   const router = useRouter();
   return (
-    <Wrapper variant='small'>
-      <Heading as='h1' fontSize='x-large' mb={4}>
+    <Wrapper variant="small">
+      <Heading as="h1" fontSize="x-large" mb={4}>
         Log in
       </Heading>
       <Formik
@@ -43,8 +43,8 @@ const Login: React.FC<Props> = ({}) => {
           });
           if (res.data?.login.errors) {
             setErrors(toErrorMap(res.data.login.errors));
-          } else if (res.data.login.user) {
-            console.log(res.data.login.user);
+          } else if (res.data?.login.user) {
+            console.log(res.data?.login.user);
             if (typeof router.query.next === "string") {
               router.push(router.query.next);
             } else {
@@ -55,47 +55,47 @@ const Login: React.FC<Props> = ({}) => {
       >
         {(props) => (
           <Form>
-            <VStack spacing={4} align='stretch'>
+            <VStack spacing={4} align="stretch">
               <InputField
-                name='usernameOrEmail'
-                label='Username or Email'
-                placeholder='username or email'
+                name="usernameOrEmail"
+                label="Username or Email"
+                placeholder="username or email"
               />
-              <VStack spacing={1} alignItems='start'>
+              <VStack spacing={1} alignItems="start">
                 <InputField
-                  name='password'
-                  label='Password'
-                  type='password'
-                  placeholder='password'
+                  name="password"
+                  label="Password"
+                  type="password"
+                  placeholder="password"
                 />
 
-                <NextLink href='/forgot-password'>
-                  <Link fontSize='sm' colorScheme='orange'>
+                <NextLink href="/forgot-password">
+                  <Link fontSize="sm" colorScheme="orange">
                     Forgot password?
                   </Link>
                 </NextLink>
               </VStack>
 
-              <VStack align='stretch'>
+              <VStack align="stretch">
                 <Button
-                  colorScheme='orange'
+                  colorScheme="orange"
                   isLoading={props.isSubmitting}
-                  type='submit'
-                  width=''
+                  type="submit"
+                  width=""
                 >
                   Log in
                 </Button>
                 <HStack
-                  display='flex'
-                  justifyContent='space-between'
-                  alignItems='center'
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
                 >
-                  <Divider orientation='horizontal' />
-                  <Text color='gray.400'>or</Text>
-                  <Divider orientation='horizontal' />
+                  <Divider orientation="horizontal" />
+                  <Text color="gray.400">or</Text>
+                  <Divider orientation="horizontal" />
                 </HStack>
-                <NextLink href='/register'>
-                  <Button colorScheme='orange' variant='outline'>
+                <NextLink href="/register">
+                  <Button colorScheme="orange" variant="outline">
                     Register
                   </Button>
                 </NextLink>

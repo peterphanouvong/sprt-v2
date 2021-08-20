@@ -20,7 +20,7 @@ interface Props {}
 const SettingsDrawer: React.FC<Props> = ({}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
-  const btnRef = React.useRef();
+  const btnRef = React.useRef() as React.MutableRefObject<HTMLButtonElement>;
 
   return (
     <>
