@@ -9,6 +9,7 @@ import {
   ManyToOne,
   OneToMany,
 } from "typeorm";
+import { Club } from "./Club";
 import { ClubEvent } from "./ClubEvent";
 import { EventAttendee } from "./EventAttendee";
 import { User } from "./User";
@@ -59,6 +60,10 @@ export class Event extends BaseEntity {
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.events)
   host: User;
+
+  @Field(() => Club)
+  @ManyToOne(() => Club, (club) => club.events)
+  club: Club;
 
   @Field(() => [User])
   attendees: User[];

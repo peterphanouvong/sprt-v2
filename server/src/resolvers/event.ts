@@ -17,6 +17,7 @@ import { Event } from "../entities/Event";
 import { User } from "../entities/User";
 import { EventAttendee } from "../entities/EventAttendee";
 import { getConnection } from "typeorm";
+import { Club } from "../entities/Club";
 
 @InputType()
 class EventInput {
@@ -69,6 +70,11 @@ export class EventResolver {
   @FieldResolver(() => User)
   host(@Root() event: Event, @Ctx() { userLoader }: MyContext) {
     return userLoader.load(event.hostId);
+  }
+
+  @FieldResolver(() => Club)
+  club(@Root() event: Event, @Ctx() { clubLoader }: MyContext) {
+    return clubLoader.load(event.clubId);
   }
 
   /**
@@ -162,5 +168,20 @@ export class EventResolver {
       }
     }
     return await User.findOne(req.session.userId);
+  }
+
+  @Query(() => [Event])
+  @UseMiddleware(isAuth)
+  async feed(@Arg("id") id: number, @Ctx() { eventLoader }: MyContext) {
+    const eventIds = await getConnection().query(`
+    select array_agg(e.id)
+    from "event" e
+    inner join "club_follower" cf on cf."clubId" = e."clubId"
+    where cf."followerId" = ${id};
+  `);
+
+    return eventLoader.loadMany(eventIds[0].array_agg ?? []);
+
+    // aim: show me events posted by the clubs that i follow
   }
 }

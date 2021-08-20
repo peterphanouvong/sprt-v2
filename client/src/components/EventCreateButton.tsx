@@ -53,7 +53,7 @@ const EventCreateButton: React.FC<Props> = ({}) => {
 
   return (
     <>
-      {data.me!.adminClubs!.length > 0 ? (
+      {!!data.me?.adminClubs?.length ? (
         <Menu>
           <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
             Create event

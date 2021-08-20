@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Event = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
+const Club_1 = require("./Club");
 const ClubEvent_1 = require("./ClubEvent");
 const EventAttendee_1 = require("./EventAttendee");
 const User_1 = require("./User");
@@ -67,6 +68,11 @@ __decorate([
     typeorm_1.ManyToOne(() => User_1.User, (user) => user.events),
     __metadata("design:type", User_1.User)
 ], Event.prototype, "host", void 0);
+__decorate([
+    type_graphql_1.Field(() => Club_1.Club),
+    typeorm_1.ManyToOne(() => Club_1.Club, (club) => club.events),
+    __metadata("design:type", Club_1.Club)
+], Event.prototype, "club", void 0);
 __decorate([
     type_graphql_1.Field(() => [User_1.User]),
     __metadata("design:type", Array)

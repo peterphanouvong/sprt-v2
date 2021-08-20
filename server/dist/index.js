@@ -17,6 +17,7 @@ const path_1 = __importDefault(require("path"));
 const constants_1 = require("./constants");
 const createUserLoader_1 = require("./utils/createUserLoader");
 const createClubLoader_1 = require("./utils/createClubLoader");
+const createEventLoader_1 = require("./utils/createEventLoader");
 const hello_1 = require("./resolvers/hello");
 const post_1 = require("./resolvers/post");
 const user_1 = require("./resolvers/user");
@@ -108,6 +109,7 @@ const main = async () => {
             redis,
             userLoader: createUserLoader_1.createUserLoader(),
             clubLoader: createClubLoader_1.createClubLoader(),
+            eventLoader: createEventLoader_1.createEventLoader(),
         }),
     });
     await apolloServer.start();

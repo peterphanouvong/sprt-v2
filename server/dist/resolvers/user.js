@@ -26,6 +26,8 @@ const sendEmail_1 = require("../utils/sendEmail");
 const uuid_1 = require("uuid");
 const typeorm_1 = require("typeorm");
 const Club_1 = require("../entities/Club");
+const Event_1 = require("../entities/Event");
+const isAuth_1 = require("../middleware/isAuth");
 let FieldError = class FieldError {
 };
 __decorate([
@@ -212,6 +214,16 @@ let UserResolver = class UserResolver {
     async userByUsername(username) {
         return await User_1.User.findOne({ username });
     }
+    async myFeed({ req, eventLoader }) {
+        var _a;
+        const eventIds = await typeorm_1.getConnection().query(`
+    select array_agg(e.id)
+    from "event" e
+    inner join "club_follower" cf on cf."clubId" = e."clubId"
+    where cf."followerId" = ${req.session.userId};
+  `);
+        return eventLoader.loadMany((_a = eventIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
+    }
 };
 __decorate([
     type_graphql_1.FieldResolver(() => [Club_1.Club]),
@@ -299,6 +311,14 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "userByUsername", null);
+__decorate([
+    type_graphql_1.Query(() => [Event_1.Event]),
+    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
+    __param(0, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "myFeed", null);
 UserResolver = __decorate([
     type_graphql_1.Resolver(User_1.User)
 ], UserResolver);

@@ -14,6 +14,7 @@ import {
   DeletePostMutationVariables,
   EventsDocument,
   LoginMutation,
+  LoginMutationVariables,
   LogoutMutation,
   MeDocument,
   MeQuery,

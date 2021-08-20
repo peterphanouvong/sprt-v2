@@ -26,6 +26,7 @@ export type Club = {
   followers: Array<User>;
   requestedMembers: Array<User>;
   admins: Array<User>;
+  events?: Maybe<Array<Event>>;
 };
 
 export type ClubInput = {
@@ -47,6 +48,7 @@ export type Event = {
   hostId: Scalars['Float'];
   clubId?: Maybe<Scalars['Int']>;
   host: User;
+  club: Club;
   attendees: Array<User>;
   points: Scalars['Float'];
   creatorTypeId: Scalars['Int'];
@@ -233,8 +235,10 @@ export type Query = {
   me?: Maybe<User>;
   user?: Maybe<User>;
   userByUsername?: Maybe<User>;
+  myFeed: Array<Event>;
   events: Array<Event>;
   event?: Maybe<Event>;
+  feed: Array<Event>;
   clubs: Array<Club>;
   publicityTypes: Array<PublicityType>;
 };
@@ -263,6 +267,11 @@ export type QueryUserByUsernameArgs = {
 
 export type QueryEventArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryFeedArgs = {
+  id: Scalars['Float'];
 };
 
 export type User = {
@@ -434,10 +443,22 @@ export type EventsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type EventsQuery = { __typename?: 'Query', events: Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, creatorTypeId: number, publicityTypeId: number, clubId?: Maybe<number>, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> }> };
 
+export type FeedQueryVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type FeedQuery = { __typename?: 'Query', feed: Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, creatorTypeId: number, publicityTypeId: number, clubId?: Maybe<number>, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> }> };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, username: string, email: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> };
+
+export type MyFeedQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyFeedQuery = { __typename?: 'Query', myFeed: Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, creatorTypeId: number, publicityTypeId: number, clubId?: Maybe<number>, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> }> };
 
 export type PostQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -759,6 +780,17 @@ export const EventsDocument = gql`
 export function useEventsQuery(options: Omit<Urql.UseQueryArgs<EventsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<EventsQuery>({ query: EventsDocument, ...options });
 };
+export const FeedDocument = gql`
+    query Feed($id: Float!) {
+  feed(id: $id) {
+    ...RegularEvent
+  }
+}
+    ${RegularEventFragmentDoc}`;
+
+export function useFeedQuery(options: Omit<Urql.UseQueryArgs<FeedQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<FeedQuery>({ query: FeedDocument, ...options });
+};
 export const MeDocument = gql`
     query Me {
   me {
@@ -769,6 +801,17 @@ export const MeDocument = gql`
 
 export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
+};
+export const MyFeedDocument = gql`
+    query MyFeed {
+  myFeed {
+    ...RegularEvent
+  }
+}
+    ${RegularEventFragmentDoc}`;
+
+export function useMyFeedQuery(options: Omit<Urql.UseQueryArgs<MyFeedQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<MyFeedQuery>({ query: MyFeedDocument, ...options });
 };
 export const PostDocument = gql`
     query Post($id: Int!) {

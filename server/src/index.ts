@@ -13,6 +13,7 @@ import path from "path";
 import { COOKIE_NAME, __prod__ } from "./constants";
 import { createUserLoader } from "./utils/createUserLoader";
 import { createClubLoader } from "./utils/createClubLoader";
+import { createEventLoader } from "./utils/createEventLoader";
 
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
@@ -125,6 +126,7 @@ const main = async () => {
       redis,
       userLoader: createUserLoader(),
       clubLoader: createClubLoader(),
+      eventLoader: createEventLoader(),
     }),
   });
 

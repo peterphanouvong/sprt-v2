@@ -4,22 +4,17 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 import { Layout } from "../components/Layout";
 import { useIsAuth } from "../utils/useIsAuth";
 import { EventList } from "../components/EventList";
-
-import { Event, useMeQuery, useMyFeedQuery } from "../generated/graphql";
+import { EventCreateButton } from "../components/EventCreateButton";
+import { useEventsQuery, useMeQuery, Event } from "../generated/graphql";
 import { Spinner } from "@chakra-ui/react";
-import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
-import { useRouter } from "next/router";
-import { PublicFeed } from "../components/PublicFeed";
 
 interface Props {}
 
-const Feed: React.FC<Props> = ({}) => {
+const Events: React.FC<Props> = ({}) => {
   useIsAuth();
-  // const router = useRouter();
-  const [{ data, fetching }] = useMeQuery();
-  // const [{ data, fetching }] = useMyFeedQuery();
+  const [{ data: meData }] = useMeQuery();
+  const [{ data, fetching }] = useEventsQuery();
 
-  // // console.log("fn", fn);
   if (!fetching && !data) {
     return <div>No data...</div>;
   }
@@ -39,15 +34,12 @@ const Feed: React.FC<Props> = ({}) => {
     );
   }
 
-  // if()
-
   return (
     <Layout>
-      {/* <RenderPrettyJSON object={data} /> */}
-      <PublicFeed userId={data.me?.id as number} />
-      {/* <EventList events={data.myFeed as Event[]} /> */}
+      {meData?.me && <EventCreateButton />}
+      <EventList events={data.events as Event[]} />
     </Layout>
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: false })(Feed);
+export default withUrqlClient(createUrqlClient)(Events);

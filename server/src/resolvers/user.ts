@@ -11,6 +11,7 @@ import {
   Query,
   Resolver,
   Root,
+  UseMiddleware,
 } from "type-graphql";
 import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
 import { UsernamePasswordInput } from "./UsernamePasswordInput";
@@ -19,6 +20,8 @@ import { sendEmail } from "../utils/sendEmail";
 import { v4 as uuid } from "uuid";
 import { getConnection } from "typeorm";
 import { Club } from "../entities/Club";
+import { Event } from "../entities/Event";
+import { isAuth } from "../middleware/isAuth";
 
 @ObjectType()
 class FieldError {
@@ -278,14 +281,18 @@ export class UserResolver {
     return await User.findOne({ username });
   }
 
-  // @Query(() => [Club])
-  // async myFeed(@Ctx() { req }: MyContext) {
-  //   const eventIds = await getConnection().query(`
-  //   select array_agg("eventId")
-  //   from ""
-  //   where "followerId";
-  // `);
+  @Query(() => [Event])
+  @UseMiddleware(isAuth)
+  async myFeed(@Ctx() { req, eventLoader }: MyContext) {
+    const eventIds = await getConnection().query(`
+    select array_agg(e.id)
+    from "event" e
+    inner join "club_follower" cf on cf."clubId" = e."clubId"
+    where cf."followerId" = ${req.session.userId};
+  `);
 
-  //   // aim: show me events posted by the clubs that i follow
-  // }
+    return eventLoader.loadMany(eventIds[0].array_agg ?? []);
+
+    // aim: show me events posted by the clubs that i follow
+  }
 }

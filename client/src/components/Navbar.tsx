@@ -5,6 +5,7 @@ import { Box, Button, HStack, Link, useColorMode } from "@chakra-ui/react";
 import Logo from "./Logo";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import SettingsDrawer from "./SettingsDrawer";
+import { EventCreateButton } from "./EventCreateButton";
 
 interface Props {}
 
@@ -60,7 +61,11 @@ const Navbar: React.FC<Props> = ({}) => {
         </NextLink>
         <NextLink href="/clubs">
           <Link>clubs</Link>
+        </NextLink>{" "}
+        <NextLink href="/events">
+          <Link>events</Link>
         </NextLink>
+        <EventCreateButton />
       </HStack>
     );
   }
