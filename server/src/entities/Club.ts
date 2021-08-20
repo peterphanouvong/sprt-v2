@@ -14,6 +14,7 @@ import { ClubFollower } from "./ClubFollower";
 import { ClubMember } from "./ClubMember";
 import { ClubRequestedMember } from "./ClubRequestedMember";
 import { User } from "./User";
+import { Event } from "./Event";
 
 @ObjectType()
 @Entity()
@@ -58,6 +59,11 @@ export class Club extends BaseEntity {
 
   @Field(() => [User])
   admins: User[];
+
+  // hosting events
+  @Field(() => [Event], { nullable: true })
+  @OneToMany(() => Event, (event) => event.club)
+  events: Event[];
 
   /**
    * Connections

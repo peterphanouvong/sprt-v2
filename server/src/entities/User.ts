@@ -15,6 +15,7 @@ import { ClubMember } from "./ClubMember";
 import { ClubAdmin } from "./ClubAdmin";
 import { EventAttendee } from "./EventAttendee";
 import { ClubRequestedMember } from "./ClubRequestedMember";
+import { Club } from "./Club";
 
 @ObjectType()
 @Entity()
@@ -44,7 +45,7 @@ export class User extends BaseEntity {
   posts: Post[];
 
   // hosting events
-  @Field(() => Event)
+  @Field(() => [Event], { nullable: true })
   @OneToMany(() => Event, (event) => event.host)
   events: Event[];
 
@@ -55,6 +56,12 @@ export class User extends BaseEntity {
   @Field(() => String)
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Field(() => [Club], { nullable: true })
+  followingClubs: Club[];
+
+  @Field(() => [Club], { nullable: true })
+  adminClubs: Club[];
 
   /**
    * Connections

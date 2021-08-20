@@ -46,7 +46,7 @@ const ChangePassword: NextPage<{ token: string }> = () => {
               setTokenError(errorMap.token);
             }
             setErrors(errorMap);
-          } else if (res.data.changePassword.user) {
+          } else if (res.data?.changePassword.user) {
             router.push("/");
           }
         }}

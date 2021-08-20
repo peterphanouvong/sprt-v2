@@ -9,6 +9,17 @@ const config: ThemeConfig = {
 // 3. extend the theme
 const theme = extendTheme({
   config,
+  components: {
+    Text: {
+      variants: {
+        meta: {
+          color: "gray.500",
+          fontSize: "sm",
+          fontWeight: "normal",
+        },
+      },
+    },
+  },
   colors: {
     brand: {
       100: "#f7fafc",

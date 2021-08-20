@@ -1,43 +1,26 @@
-import {
-  VStack,
-  ModalFooter,
-  Button,
-  FormLabel,
-  Switch,
-  Box,
-  Text,
-} from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
-import React, { useState } from "react";
+import React from "react";
 import { Event } from "../generated/graphql";
 import { parseDate } from "../utils/parseDate";
 import { parseRichText } from "../utils/parseRichText";
-import { DynamicEditor } from "./DynamicEditor";
-import { InputField } from "./InputField";
+import { useSteps } from "../utils/useSteps";
+import { EventFormBasicDetails } from "./EventFormBasicDetails";
+import { EventFormEventDetails } from "./EventFormEventDetails";
+import { EventFormPickType } from "./EventFormPickType";
+import { Steps } from "./Steps";
 
 interface Props {
   event?: Event;
   onClose: () => void;
   onSubmit: (values: any) => Promise<void>;
-  submitMessage: string;
+  clubId: number | null;
 }
 
-const EventForm: React.FC<Props> = ({
-  event,
-  onClose,
-  onSubmit,
-  submitMessage,
-}) => {
-  const [hasCapacity, setHasCapacity] = useState(
-    event ? (!!event.capacity ? true : false) : true
-  );
-
-  const toggleCapacity = (values: any) => {
-    if (hasCapacity) {
-      values.capacity = "";
-    }
-    setHasCapacity(!hasCapacity);
-  };
+const EventForm: React.FC<Props> = ({ event, onClose, onSubmit, clubId }) => {
+  const { nextStep, prevStep, activeStep } = useSteps({
+    initialStep: 0,
+  });
 
   const matchTimes = (e: any, values: any) => {
     console.log(e.target.value);
@@ -56,6 +39,9 @@ const EventForm: React.FC<Props> = ({
                 capacity: event.capacity ?? "",
                 startTime: parseDate(event.startTime) ?? "",
                 endTime: parseDate(event.endTime) ?? "",
+                creatorTypeId: !!clubId ? 2 : 1,
+                publicityTypeId: 1,
+                clubId: clubId,
               }
             : {
                 title: "",
@@ -64,6 +50,9 @@ const EventForm: React.FC<Props> = ({
                 startTime: "",
                 endTime: "",
                 capacity: "",
+                creatorTypeId: !!clubId ? 2 : 1,
+                publicityTypeId: 1,
+                clubId: clubId,
               }
         }
         onSubmit={(values) => {
@@ -78,88 +67,34 @@ const EventForm: React.FC<Props> = ({
       >
         {(props) => (
           <Form>
-            <VStack align="stretch" spacing={4} padding={4}>
-              <InputField
-                name="title"
-                placeholder="what's it called?"
-                label="Title"
-                required
-              />
+            <Box padding={6}>
+              <Steps activeStep={activeStep}>
+                <Box mt={6}>
+                  <EventFormBasicDetails
+                    props={props}
+                    onClose={onClose}
+                    nextStep={nextStep}
+                  />
+                </Box>
 
-              <InputField
-                name="location"
-                placeholder="where's it happening?"
-                label="Location"
-                required
-              />
-              <InputField
-                name="startTime"
-                placeholder="when do I show up?"
-                label="Start time"
-                required
-                type="datetime-local"
-                onBlurCapture={(x) => matchTimes(x, props.values)}
-              />
+                <Box mt={6}>
+                  <EventFormEventDetails
+                    props={props}
+                    matchTimes={matchTimes}
+                    prevStep={prevStep}
+                    nextStep={nextStep}
+                  />
+                </Box>
 
-              <InputField
-                name="endTime"
-                placeholder="when do I leave?"
-                label="End time"
-                type="datetime-local"
-                min={props.values.startTime}
-              />
-              <Box>
-                <FormLabel width="min" htmlFor="email-alerts">
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="flex-start"
-                  >
-                    <Text mr={2}>Capacity</Text>
-                    <Switch
-                      id="email-alerts"
-                      size="sm"
-                      isChecked={hasCapacity}
-                      onChange={() => toggleCapacity(props.values)}
-                      colorScheme="orange"
-                    />
-                  </Box>
-                </FormLabel>
-
-                <InputField
-                  hidden={!hasCapacity}
-                  name="capacity"
-                  placeholder="how many peeps?"
-                  type="number"
-                  min={0}
-                />
-              </Box>
-
-              <DynamicEditor
-                setFieldValue={props.setFieldValue}
-                name="description"
-                label="Description"
-                initialValue={props.values.description}
-              />
-            </VStack>
-
-            <ModalFooter>
-              <Button
-                colorScheme="orange"
-                variant="ghost"
-                mr={3}
-                onClick={onClose}
-              >
-                Cancel
-              </Button>
-              <Button
-                colorScheme="orange"
-                isLoading={props.isSubmitting}
-                type="submit"
-              >
-                {submitMessage}
-              </Button>
-            </ModalFooter>
+                <Box mt={6}>
+                  <EventFormPickType
+                    props={props}
+                    prevStep={prevStep}
+                    setValues={props.setFieldValue}
+                  />
+                </Box>
+              </Steps>
+            </Box>
           </Form>
         )}
       </Formik>

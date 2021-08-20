@@ -26,7 +26,7 @@ const EntityDeleteAlert: React.FC<Props> = ({ handleDelete, entityName }) => {
 
   const [deleteError, setDeleteError] = React.useState<string | null>(null);
   const onClose = () => setIsOpen(false);
-  const cancelRef = React.useRef();
+  const cancelRef = React.useRef() as React.MutableRefObject<HTMLInputElement>;
 
   return (
     <>
@@ -68,6 +68,7 @@ const EntityDeleteAlert: React.FC<Props> = ({ handleDelete, entityName }) => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
+              {/*@ts-ignore*/}
               <Button ref={cancelRef} onClick={onClose}>
                 Cancel
               </Button>

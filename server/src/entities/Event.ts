@@ -9,6 +9,7 @@ import {
   ManyToOne,
   OneToMany,
 } from "typeorm";
+import { Club } from "./Club";
 import { ClubEvent } from "./ClubEvent";
 import { EventAttendee } from "./EventAttendee";
 import { User } from "./User";
@@ -52,9 +53,17 @@ export class Event extends BaseEntity {
   @Column()
   hostId: number;
 
+  @Field(() => Int, { nullable: true })
+  @Column({ nullable: true })
+  clubId: number;
+
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.events)
   host: User;
+
+  @Field(() => Club)
+  @ManyToOne(() => Club, (club) => club.events)
+  club: Club;
 
   @Field(() => [User])
   attendees: User[];
@@ -62,6 +71,14 @@ export class Event extends BaseEntity {
   @Field()
   @Column({ type: "int", default: 0 })
   points!: number;
+
+  @Field(() => Int)
+  @Column()
+  creatorTypeId: number;
+
+  @Field(() => Int)
+  @Column()
+  publicityTypeId: number;
 
   @Field(() => String)
   @CreateDateColumn()

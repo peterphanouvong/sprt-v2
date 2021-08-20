@@ -5,6 +5,7 @@ import { Box, Button, HStack, Link, useColorMode } from "@chakra-ui/react";
 import Logo from "./Logo";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import SettingsDrawer from "./SettingsDrawer";
+import { EventCreateButton } from "./EventCreateButton";
 
 interface Props {}
 
@@ -36,7 +37,7 @@ const Navbar: React.FC<Props> = ({}) => {
   } else {
     body = (
       <HStack spacing={8}>
-        <NextLink href="/">
+        <NextLink href={`/${data.me.username}`}>
           <Link>{data.me.username}</Link>
         </NextLink>
         <Button
@@ -55,12 +56,16 @@ const Navbar: React.FC<Props> = ({}) => {
 
     left = (
       <HStack spacing={8}>
+        <NextLink href="/feed">
+          <Link>feed</Link>
+        </NextLink>
         <NextLink href="/clubs">
           <Link>clubs</Link>
-        </NextLink>
+        </NextLink>{" "}
         <NextLink href="/events">
           <Link>events</Link>
         </NextLink>
+        <EventCreateButton />
       </HStack>
     );
   }

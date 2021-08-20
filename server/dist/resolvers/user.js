@@ -25,6 +25,9 @@ const validateRegister_1 = require("../utils/validateRegister");
 const sendEmail_1 = require("../utils/sendEmail");
 const uuid_1 = require("uuid");
 const typeorm_1 = require("typeorm");
+const Club_1 = require("../entities/Club");
+const Event_1 = require("../entities/Event");
+const isAuth_1 = require("../middleware/isAuth");
 let FieldError = class FieldError {
 };
 __decorate([
@@ -52,6 +55,24 @@ UserResponse = __decorate([
     type_graphql_1.ObjectType()
 ], UserResponse);
 let UserResolver = class UserResolver {
+    async adminClubs(user, { clubLoader }) {
+        var _a;
+        const clubIds = await typeorm_1.getConnection().query(`
+       select array_agg("clubId")
+       from "club_admin"
+       where "adminId" = ${user.id};
+     `);
+        return clubLoader.loadMany((_a = clubIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
+    }
+    async followingClubs(user, { clubLoader }) {
+        var _a;
+        const clubIds = await typeorm_1.getConnection().query(`
+      select array_agg("clubId")
+      from "club_follower"
+      where "followerId" = ${user.id};
+    `);
+        return clubLoader.loadMany((_a = clubIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
+    }
     email(user, { req }) {
         if (req.session.userId === user.id) {
             return user.email;
@@ -59,62 +80,6 @@ let UserResolver = class UserResolver {
         else {
             return "";
         }
-    }
-    async changePassword(token, newPassword, { redis, req }) {
-        if (newPassword.length <= 2) {
-            return {
-                errors: [
-                    {
-                        field: "newPassword",
-                        message: "length must be greater than 2",
-                    },
-                ],
-            };
-        }
-        const id = await redis.get(constants_1.FORGET_PASSWORD_PREFIX + token);
-        if (!id) {
-            return {
-                errors: [
-                    {
-                        field: "token",
-                        message: "token expired",
-                    },
-                ],
-            };
-        }
-        const userId = parseInt(id);
-        const user = await User_1.User.findOne(userId);
-        if (!user) {
-            return {
-                errors: [
-                    {
-                        field: "token",
-                        message: "token expired",
-                    },
-                ],
-            };
-        }
-        User_1.User.update({ id: userId }, { password: await bcrypt_1.default.hash(newPassword, 10) });
-        req.session.userId = user.id;
-        return { user };
-    }
-    async forgotPassword(email, { redis }) {
-        const user = await User_1.User.findOne({ where: { email } });
-        if (!user) {
-            return true;
-        }
-        const token = uuid_1.v4();
-        await redis.set(constants_1.FORGET_PASSWORD_PREFIX + token, user.id, "ex", 1000 * 60 * 60 * 24 * 3);
-        sendEmail_1.sendEmail(email, `<a href="http://localhost:3000/change-password/${token}">reset password</a>`);
-        return true;
-    }
-    me({ req }) {
-        console.log(req.session);
-        console.log(req.sessionID);
-        if (!req.session.userId) {
-            return null;
-        }
-        return User_1.User.findOne(req.session.userId);
     }
     async register(options, { req }) {
         const errors = validateRegister_1.validateRegister(options);
@@ -187,7 +152,95 @@ let UserResolver = class UserResolver {
             resolve(true);
         }));
     }
+    async changePassword(token, newPassword, { redis, req }) {
+        if (newPassword.length <= 2) {
+            return {
+                errors: [
+                    {
+                        field: "newPassword",
+                        message: "length must be greater than 2",
+                    },
+                ],
+            };
+        }
+        const id = await redis.get(constants_1.FORGET_PASSWORD_PREFIX + token);
+        if (!id) {
+            return {
+                errors: [
+                    {
+                        field: "token",
+                        message: "token expired",
+                    },
+                ],
+            };
+        }
+        const userId = parseInt(id);
+        const user = await User_1.User.findOne(userId);
+        if (!user) {
+            return {
+                errors: [
+                    {
+                        field: "token",
+                        message: "token expired",
+                    },
+                ],
+            };
+        }
+        User_1.User.update({ id: userId }, { password: await bcrypt_1.default.hash(newPassword, 10) });
+        req.session.userId = user.id;
+        return { user };
+    }
+    async forgotPassword(email, { redis }) {
+        const user = await User_1.User.findOne({ where: { email } });
+        if (!user) {
+            return true;
+        }
+        const token = uuid_1.v4();
+        await redis.set(constants_1.FORGET_PASSWORD_PREFIX + token, user.id, "ex", 1000 * 60 * 60 * 24 * 3);
+        sendEmail_1.sendEmail(email, `<a href="http://localhost:3000/change-password/${token}">reset password</a>`);
+        return true;
+    }
+    me({ req }) {
+        console.log(req.session);
+        console.log(req.sessionID);
+        if (!req.session.userId) {
+            return null;
+        }
+        return User_1.User.findOne(req.session.userId);
+    }
+    async user(id) {
+        return await User_1.User.findOne(id);
+    }
+    async userByUsername(username) {
+        return await User_1.User.findOne({ username });
+    }
+    async myFeed({ req, eventLoader }) {
+        var _a;
+        const eventIds = await typeorm_1.getConnection().query(`
+    select array_agg(e.id)
+    from "event" e
+    inner join "club_follower" cf on cf."clubId" = e."clubId"
+    where cf."followerId" = ${req.session.userId};
+  `);
+        return eventLoader.loadMany((_a = eventIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
+    }
 };
+__decorate([
+    type_graphql_1.FieldResolver(() => [Club_1.Club]),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [User_1.User, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "adminClubs", null);
+__decorate([
+    type_graphql_1.FieldResolver(() => [Club_1.Club]),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [User_1.User, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "followingClubs", null);
 __decorate([
     type_graphql_1.FieldResolver(() => String),
     __param(0, type_graphql_1.Root()),
@@ -196,6 +249,30 @@ __decorate([
     __metadata("design:paramtypes", [User_1.User, Object]),
     __metadata("design:returntype", String)
 ], UserResolver.prototype, "email", null);
+__decorate([
+    type_graphql_1.Mutation(() => UserResponse),
+    __param(0, type_graphql_1.Arg("options", () => UsernamePasswordInput_1.UsernamePasswordInput)),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [UsernamePasswordInput_1.UsernamePasswordInput, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "register", null);
+__decorate([
+    type_graphql_1.Mutation(() => UserResponse),
+    __param(0, type_graphql_1.Arg("usernameOrEmail")),
+    __param(1, type_graphql_1.Arg("password")),
+    __param(2, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "login", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], UserResolver.prototype, "logout", null);
 __decorate([
     type_graphql_1.Mutation(() => UserResponse),
     __param(0, type_graphql_1.Arg("token")),
@@ -221,29 +298,27 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UserResolver.prototype, "me", null);
 __decorate([
-    type_graphql_1.Mutation(() => UserResponse),
-    __param(0, type_graphql_1.Arg("options", () => UsernamePasswordInput_1.UsernamePasswordInput)),
-    __param(1, type_graphql_1.Ctx()),
+    type_graphql_1.Query(() => User_1.User, { nullable: true }),
+    __param(0, type_graphql_1.Arg("id")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [UsernamePasswordInput_1.UsernamePasswordInput, Object]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
-], UserResolver.prototype, "register", null);
+], UserResolver.prototype, "user", null);
 __decorate([
-    type_graphql_1.Mutation(() => UserResponse),
-    __param(0, type_graphql_1.Arg("usernameOrEmail")),
-    __param(1, type_graphql_1.Arg("password")),
-    __param(2, type_graphql_1.Ctx()),
+    type_graphql_1.Query(() => User_1.User, { nullable: true }),
+    __param(0, type_graphql_1.Arg("username")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], UserResolver.prototype, "login", null);
+], UserResolver.prototype, "userByUsername", null);
 __decorate([
-    type_graphql_1.Mutation(() => Boolean),
+    type_graphql_1.Query(() => [Event_1.Event]),
+    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
     __param(0, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], UserResolver.prototype, "logout", null);
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "myFeed", null);
 UserResolver = __decorate([
     type_graphql_1.Resolver(User_1.User)
 ], UserResolver);

@@ -12,6 +12,8 @@ import path from "path";
 
 import { COOKIE_NAME, __prod__ } from "./constants";
 import { createUserLoader } from "./utils/createUserLoader";
+import { createClubLoader } from "./utils/createClubLoader";
+import { createEventLoader } from "./utils/createEventLoader";
 
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
@@ -31,6 +33,9 @@ import { ClubMember } from "./entities/ClubMember";
 import { ClubAdmin } from "./entities/ClubAdmin";
 import { EventAttendee } from "./entities/EventAttendee";
 import { ClubRequestedMember } from "./entities/ClubRequestedMember";
+import { PublicityType } from "./entities/PublicityType";
+import { CreatorType } from "./entities/CreatorType";
+import { PublicityTypeResolver } from "./resolvers/publicityType";
 
 const main = async () => {
   const conn = await createConnection({
@@ -40,9 +45,11 @@ const main = async () => {
     // synchronize: true,
     entities: [
       Post,
+      CreatorType,
       User,
       Event,
       EventAttendee,
+      PublicityType,
       Club,
       ClubEvent,
       ClubFollower,
@@ -56,8 +63,8 @@ const main = async () => {
   });
 
   // await Post.delete({});
-  await EventAttendee.delete({});
-  await Event.delete({});
+  // await EventAttendee.delete({});
+  // await Event.delete({});
   // await ClubRequestedMember.delete({});
   // await ClubFollower.delete({});
   // await ClubAdmin.delete({});
@@ -109,6 +116,7 @@ const main = async () => {
         UserResolver,
         EventResolver,
         ClubResolver,
+        PublicityTypeResolver,
       ],
       validate: false,
     }),
@@ -117,6 +125,8 @@ const main = async () => {
       res,
       redis,
       userLoader: createUserLoader(),
+      clubLoader: createClubLoader(),
+      eventLoader: createEventLoader(),
     }),
   });
 

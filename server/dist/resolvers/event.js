@@ -19,6 +19,7 @@ const Event_1 = require("../entities/Event");
 const User_1 = require("../entities/User");
 const EventAttendee_1 = require("../entities/EventAttendee");
 const typeorm_1 = require("typeorm");
+const Club_1 = require("../entities/Club");
 let EventInput = class EventInput {
 };
 __decorate([
@@ -45,6 +46,18 @@ __decorate([
     type_graphql_1.Field({ nullable: true }),
     __metadata("design:type", Number)
 ], EventInput.prototype, "capacity", void 0);
+__decorate([
+    type_graphql_1.Field({ defaultValue: 1 }),
+    __metadata("design:type", Number)
+], EventInput.prototype, "creatorTypeId", void 0);
+__decorate([
+    type_graphql_1.Field({ defaultValue: 1 }),
+    __metadata("design:type", Number)
+], EventInput.prototype, "publicityTypeId", void 0);
+__decorate([
+    type_graphql_1.Field(() => type_graphql_1.Int, { nullable: true }),
+    __metadata("design:type", Number)
+], EventInput.prototype, "clubId", void 0);
 EventInput = __decorate([
     type_graphql_1.InputType()
 ], EventInput);
@@ -59,6 +72,9 @@ let EventResolver = class EventResolver {
     }
     host(event, { userLoader }) {
         return userLoader.load(event.hostId);
+    }
+    club(event, { clubLoader }) {
+        return clubLoader.load(event.clubId);
     }
     async createEvent({ req }, input) {
         const event = await Event_1.Event.create(Object.assign(Object.assign({}, input), { hostId: req.session.userId })).save();
@@ -108,6 +124,16 @@ let EventResolver = class EventResolver {
         }
         return await User_1.User.findOne(req.session.userId);
     }
+    async feed(id, { eventLoader }) {
+        var _a;
+        const eventIds = await typeorm_1.getConnection().query(`
+    select array_agg(e.id)
+    from "event" e
+    inner join "club_follower" cf on cf."clubId" = e."clubId"
+    where cf."followerId" = ${id};
+  `);
+        return eventLoader.loadMany((_a = eventIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
+    }
 };
 __decorate([
     type_graphql_1.FieldResolver(() => [User_1.User]),
@@ -125,6 +151,14 @@ __decorate([
     __metadata("design:paramtypes", [Event_1.Event, Object]),
     __metadata("design:returntype", void 0)
 ], EventResolver.prototype, "host", null);
+__decorate([
+    type_graphql_1.FieldResolver(() => Club_1.Club),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Event_1.Event, Object]),
+    __metadata("design:returntype", void 0)
+], EventResolver.prototype, "club", null);
 __decorate([
     type_graphql_1.Mutation(() => Event_1.Event),
     type_graphql_1.UseMiddleware(isAuth_1.isAuth),
@@ -174,6 +208,15 @@ __decorate([
     __metadata("design:paramtypes", [Object, Number]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "addAttendee", null);
+__decorate([
+    type_graphql_1.Query(() => [Event_1.Event]),
+    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
+    __param(0, type_graphql_1.Arg("id")),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "feed", null);
 EventResolver = __decorate([
     type_graphql_1.Resolver(Event_1.Event)
 ], EventResolver);

@@ -1,4 +1,11 @@
-import { Box, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  HStack,
+  Input,
+  Text,
+} from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import React from "react";
 import { Descendant } from "slate";
@@ -19,6 +26,7 @@ interface Props {
   ) => void;
   readOnly?: boolean;
   initialValue?: Descendant[];
+  hidden?: boolean;
 }
 
 const DynamicEditor: React.FC<Props> = ({
@@ -31,6 +39,7 @@ const DynamicEditor: React.FC<Props> = ({
       children: [{ text: "" }],
     },
   ],
+  hidden = false,
   ...props
 }) => {
   const setFormValue = (value) => {
@@ -38,8 +47,20 @@ const DynamicEditor: React.FC<Props> = ({
   };
 
   return (
-    <Box>
-      {label && <FormLabel htmlFor={props.name}>{label}</FormLabel>}
+    <Box hidden={hidden}>
+      {label && (
+        <FormLabel htmlFor={props.name}>
+          <HStack>
+            <Text>{label}</Text>
+
+            {!props.required && (
+              <Text hidden={readOnly} variant="meta">
+                (optional)
+              </Text>
+            )}
+          </HStack>
+        </FormLabel>
+      )}
       <FormControl hidden={true}>
         <Input name={props.name} hidden={true} />
       </FormControl>

@@ -18,6 +18,12 @@ fragment RegularEvent on Event {
     ...RegularUser
   }
   points
+  creatorTypeId
+  publicityTypeId
+  clubId
+  # club {
+  #   ...RegularClub
+  # }
   createdAt
   updatedAt
 }
