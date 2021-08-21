@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   ButtonGroup,
   Code,
   Heading,
@@ -109,11 +108,11 @@ const RichTextEditor: React.FC<Props> = ({
             overflow="hidden"
             mt={2}
             padding={2}
+            paddingX={4}
             transition="0.2s ease"
             _hover={
               !active && !readOnly
                 ? {
-                    // bgColor: "gray.100",
                     borderColor: "gray.300",
                     cursor: "pointer",
                     transition: "0.2s ease",
@@ -128,7 +127,10 @@ const RichTextEditor: React.FC<Props> = ({
               readOnly={!active || readOnly}
               renderElement={renderElement}
               renderLeaf={renderLeaf}
-              // onBlur={() => setActive(false)}
+              onBlur={() => setActive(false)}
+              onFocusCapture={() => {
+                if (!readOnly) setActive(true);
+              }}
               spellCheck
               autoFocus={true}
               placeholder={readOnly ? "" : ""}
@@ -144,29 +146,6 @@ const RichTextEditor: React.FC<Props> = ({
             />
           </Box>
         </Slate>
-        <ButtonGroup hidden={!active} mt={4} spacing={2}>
-          <Button
-            onClick={() => {
-              setValue(initialValue);
-              setFormValue(initialValue);
-              setActive(false);
-            }}
-            size="sm"
-            variant="ghost"
-          >
-            Cancel
-          </Button>
-          <Button
-            size="sm"
-            colorScheme="orange"
-            onClick={() => {
-              setFormValue(value);
-              setActive(false);
-            }}
-          >
-            Save
-          </Button>
-        </ButtonGroup>
       </Box>
     </>
   );

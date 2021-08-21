@@ -32,7 +32,13 @@ const EventFormEventDetails: React.FC<Props> = ({
       <Text mb={4}>Pick the type of event you would like to create.</Text>
 
       <VStack align="stretch" spacing={4}>
-        <InputField name="location" label="Location" width="md" required />
+        <InputField
+          name="location"
+          label="Location"
+          width="md"
+          touched={props.touched.location as boolean}
+          required
+        />
         <InputField
           name="startTime"
           label="Start time"
@@ -40,6 +46,7 @@ const EventFormEventDetails: React.FC<Props> = ({
           type="datetime-local"
           width="x-small"
           onBlurCapture={(x) => matchTimes(x, props.values)}
+          touched={props.touched.startTime as boolean}
         />
         <InputField
           name="endTime"
@@ -47,6 +54,7 @@ const EventFormEventDetails: React.FC<Props> = ({
           width="x-small"
           type="datetime-local"
           min={props.values.startTime}
+          touched={props.touched.endTime as boolean}
         />
 
         <InputField
@@ -55,6 +63,7 @@ const EventFormEventDetails: React.FC<Props> = ({
           type="number"
           min={0}
           width={20}
+          touched={props.touched.capacity as boolean}
         />
 
         <HStack display="flex" justifyContent="flex-end" mt={6}>
@@ -62,7 +71,16 @@ const EventFormEventDetails: React.FC<Props> = ({
           <Button variant="ghost" colorScheme="gray" onClick={prevStep}>
             Go back
           </Button>
-          <Button colorScheme="orange" onClick={nextStep}>
+          <Button
+            colorScheme="orange"
+            disabled={
+              !!props.errors.location ||
+              !!props.errors.startTime ||
+              !!props.errors.endTime ||
+              !!props.errors.capacity
+            }
+            onClick={nextStep}
+          >
             Continue
           </Button>
         </HStack>
