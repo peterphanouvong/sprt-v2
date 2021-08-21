@@ -60,7 +60,12 @@ const ForgotPassword: React.FC<Props> = ({}) => {
           ) : (
             <Form>
               <VStack spacing={4} align="stretch">
-                <InputField name="email" label="Email" placeholder="email" />
+                <InputField
+                  name="email"
+                  label="Email"
+                  placeholder="email"
+                  touched={props.touched.email as boolean}
+                />
 
                 <Button
                   colorScheme="orange"

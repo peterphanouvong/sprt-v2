@@ -59,12 +59,14 @@ const ChangePassword: NextPage<{ token: string }> = () => {
                 label="New password"
                 placeholder="new password"
                 type="password"
+                touched={props.touched.newPassword as boolean}
               />
               <InputField
                 name="confirmPassword"
                 label="Confirm new password"
                 placeholder="new password"
                 type="password"
+                touched={props.touched.confirmPassword as boolean}
               />
               <Button
                 colorScheme="orange"
