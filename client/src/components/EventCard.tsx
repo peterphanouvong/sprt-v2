@@ -96,7 +96,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
             readOnly={true}
           />
           <Box border={"1px solid orange"}>
-            <RenderPrettyJSON object={event} />
+            {/* <RenderPrettyJSON object={event} /> */}
           </Box>
         </Box>
 
