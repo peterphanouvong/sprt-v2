@@ -7,6 +7,8 @@ import { Layout } from "../../components/Layout";
 import { useEventQuery } from "../../generated/graphql";
 import { Card } from "../../components/Card";
 import { RenderPrettyJSON } from "../../utils/renderPrettyJSON";
+import { CSVLink } from "react-csv";
+import { Box, Button } from "@chakra-ui/react";
 
 const Event = () => {
   const router = useRouter();
@@ -30,6 +32,15 @@ const Event = () => {
     <Layout>
       <Card>
         <RenderPrettyJSON object={data} />
+        <Box mt={6} />
+        <CSVLink
+          data={data.event.attendees.map((x) => ({
+            Username: x.username,
+          }))}
+          filename={`${data.event.title}-attendees.csv`}
+        >
+          <Button>Download a list of attendees!</Button>
+        </CSVLink>
       </Card>
     </Layout>
   );
