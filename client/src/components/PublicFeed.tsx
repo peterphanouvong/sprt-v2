@@ -1,7 +1,7 @@
 import { Spinner } from "@chakra-ui/react";
 import React from "react";
 import { Event, useFeedQuery } from "../generated/graphql";
-import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
+// import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
 import { EventList } from "./EventList";
 
 interface Props {
@@ -18,7 +18,7 @@ const PublicFeed: React.FC<Props> = ({ userId }) => {
   if (!data) return <Spinner />;
   return (
     <>
-      <RenderPrettyJSON object={data} />
+      {/* <RenderPrettyJSON object={data} /> */}
       <EventList events={data.feed as Event[]} />
     </>
   );

@@ -21,9 +21,7 @@ fragment RegularEvent on Event {
   creatorTypeId
   publicityTypeId
   clubId
-  # club {
-  #   ...RegularClub
-  # }
+
   createdAt
   updatedAt
 }
