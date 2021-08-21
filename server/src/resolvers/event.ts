@@ -72,9 +72,15 @@ export class EventResolver {
     return userLoader.load(event.hostId);
   }
 
-  @FieldResolver(() => Club)
-  club(@Root() event: Event, @Ctx() { clubLoader }: MyContext) {
-    return clubLoader.load(event.clubId);
+  @FieldResolver(() => Club, { nullable: true })
+  async club(
+    @Root() event: Event,
+    @Ctx() { clubLoader }: MyContext
+  ): Promise<Club | null> {
+    if (event.clubId !== null) {
+      return clubLoader.load(event.clubId);
+    }
+    return null;
   }
 
   /**

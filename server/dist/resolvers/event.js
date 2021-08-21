@@ -73,8 +73,11 @@ let EventResolver = class EventResolver {
     host(event, { userLoader }) {
         return userLoader.load(event.hostId);
     }
-    club(event, { clubLoader }) {
-        return clubLoader.load(event.clubId);
+    async club(event, { clubLoader }) {
+        if (event.clubId !== null) {
+            return clubLoader.load(event.clubId);
+        }
+        return null;
     }
     async createEvent({ req }, input) {
         const event = await Event_1.Event.create(Object.assign(Object.assign({}, input), { hostId: req.session.userId })).save();
@@ -152,12 +155,12 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], EventResolver.prototype, "host", null);
 __decorate([
-    type_graphql_1.FieldResolver(() => Club_1.Club),
+    type_graphql_1.FieldResolver(() => Club_1.Club, { nullable: true }),
     __param(0, type_graphql_1.Root()),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Event_1.Event, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "club", null);
 __decorate([
     type_graphql_1.Mutation(() => Event_1.Event),
