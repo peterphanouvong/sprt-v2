@@ -60,6 +60,7 @@ const Login: React.FC<Props> = ({}) => {
                 name="usernameOrEmail"
                 label="Username or Email"
                 placeholder="username or email"
+                touched={props.touched.usernameOrEmail as boolean}
               />
               <VStack spacing={1} alignItems="start">
                 <InputField
@@ -67,6 +68,7 @@ const Login: React.FC<Props> = ({}) => {
                   label="Password"
                   type="password"
                   placeholder="password"
+                  touched={props.touched.password as boolean}
                 />
 
                 <NextLink href="/forgot-password">

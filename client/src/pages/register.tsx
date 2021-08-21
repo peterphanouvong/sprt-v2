@@ -49,18 +49,21 @@ const Register: React.FC<Props> = ({}) => {
                 name="username"
                 label="Username"
                 placeholder="username"
+                touched={props.touched.username as boolean}
               />
               <InputField
                 name="email"
                 label="Email"
                 placeholder="email"
                 type="email"
+                touched={props.touched.email as boolean}
               />
               <InputField
                 name="password"
                 label="Password"
                 type="password"
                 placeholder="password"
+                touched={props.touched.password as boolean}
               />
               <VStack align="stretch">
                 <Button

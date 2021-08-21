@@ -21,17 +21,19 @@ type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
   icon?: ReactElement<any, any>;
   isNumberInput?: boolean;
+  touched: boolean;
 };
 
 const InputField: React.FC<InputFieldProps> = ({
   label,
   size: _,
   icon,
+  touched,
   ...props
 }) => {
   const [field, { error }] = useField(props);
   return (
-    <FormControl isInvalid={!!error}>
+    <FormControl isInvalid={!!error && touched}>
       {label && (
         <FormLabel htmlFor={field.name}>
           <HStack>
@@ -65,7 +67,7 @@ const InputField: React.FC<InputFieldProps> = ({
           />
         )}
       </InputGroup>
-      <FormErrorMessage>{error}</FormErrorMessage>
+      {touched && <FormErrorMessage>{error}</FormErrorMessage>}
     </FormControl>
   );
 };

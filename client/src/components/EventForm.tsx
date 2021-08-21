@@ -9,6 +9,13 @@ import { EventFormBasicDetails } from "./EventFormBasicDetails";
 import { EventFormEventDetails } from "./EventFormEventDetails";
 import { EventFormPickType } from "./EventFormPickType";
 import { Steps } from "./Steps";
+import * as Yup from "yup";
+
+const EventSchema = Yup.object().shape({
+  title: Yup.string().required("Required"),
+  location: Yup.string().required("Required"),
+  startTime: Yup.string().required("Required"),
+});
 
 interface Props {
   event?: Event;
@@ -30,6 +37,7 @@ const EventForm: React.FC<Props> = ({ event, onClose, onSubmit, clubId }) => {
   return (
     <>
       <Formik
+        validationSchema={EventSchema}
         initialValues={
           event
             ? {

@@ -33,7 +33,13 @@ const EventFormBasicDetails: React.FC<Props> = ({
       </Text>
 
       <VStack align="stretch" spacing={4}>
-        <InputField name="title" label="Title" width="sm" required />
+        <InputField
+          name="title"
+          label="Title"
+          width="sm"
+          required
+          touched={props.touched.title as boolean}
+        />
 
         <DynamicEditor
           label="Description"
@@ -47,7 +53,11 @@ const EventFormBasicDetails: React.FC<Props> = ({
           <Button variant="ghost" colorScheme="gray" onClick={onClose}>
             Cancel
           </Button>
-          <Button colorScheme="orange" onClick={nextStep}>
+          <Button
+            colorScheme="orange"
+            disabled={props.values.title === ""}
+            onClick={nextStep}
+          >
             Continue
           </Button>
         </HStack>
