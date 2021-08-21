@@ -69,7 +69,7 @@ __decorate([
     __metadata("design:type", User_1.User)
 ], Event.prototype, "host", void 0);
 __decorate([
-    type_graphql_1.Field(() => Club_1.Club),
+    type_graphql_1.Field(() => Club_1.Club, { nullable: true }),
     typeorm_1.ManyToOne(() => Club_1.Club, (club) => club.events),
     __metadata("design:type", Club_1.Club)
 ], Event.prototype, "club", void 0);

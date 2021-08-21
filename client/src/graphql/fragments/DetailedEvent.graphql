@@ -1,0 +1,25 @@
+fragment DetailedEvent on Event {
+  id
+  title
+  description
+  location
+  startTime
+  capacity
+  endTime
+  hostId
+  clubId
+  points
+  creatorTypeId
+  publicityTypeId
+  createdAt
+  updatedAt
+  club {
+    ...RegularClub
+  }
+  host {
+    ...RegularUser
+  }
+  attendees {
+    ...RegularUser
+  }
+}

@@ -1,5 +1,12 @@
 import { ChevronRightIcon, WarningIcon } from "@chakra-ui/icons";
-import { Box, Button, Heading, MenuItem, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  Link,
+  MenuItem,
+  useToast,
+} from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Event, useAddAttendeeMutation, User } from "../generated/graphql";
 
@@ -15,6 +22,7 @@ import { ViewAttendeesModalButton } from "./ViewAttendeesModalButton";
 import { DynamicEditor } from "./DynamicEditor";
 import { parseRichText } from "../utils/parseRichText";
 import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
+import NextLink from "next/link";
 
 interface Props {
   event: Event;
@@ -64,7 +72,11 @@ const EventCard: React.FC<Props> = ({ event }) => {
             <ClubIcon />
             <Box mr={4}></Box>
             <Box>
-              <Heading fontSize="x-large">UTS: {event.title}</Heading>
+              <Heading fontSize="x-large">
+                <NextLink href={`/event/${event.id}`}>
+                  <Link>{event.title}</Link>
+                </NextLink>
+              </Heading>
               <MetaDataText>
                 {parseDatePretty(event.startTime)} -{" "}
                 {parseDatePretty(event.endTime)} [

@@ -61,7 +61,7 @@ export class Event extends BaseEntity {
   @ManyToOne(() => User, (user) => user.events)
   host: User;
 
-  @Field(() => Club)
+  @Field(() => Club, { nullable: true })
   @ManyToOne(() => Club, (club) => club.events)
   club: Club;
 
