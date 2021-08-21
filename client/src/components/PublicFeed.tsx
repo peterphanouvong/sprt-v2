@@ -3,47 +3,45 @@ import React, { useState } from "react";
 import {
   Club,
   Event,
+  MeQuery,
   PublicityType,
+  PublicityTypesQuery,
   useFeedQuery,
-  useMeQuery,
-  usePublicityTypesQuery,
 } from "../generated/graphql";
 // import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
 import { EventList } from "./EventList";
 import { EventListFilter } from "./EventListFilter";
 
 interface Props {
-  userId: number;
+  meData: MeQuery;
+  publicityTypesData: PublicityTypesQuery;
 }
 
-const PublicFeed: React.FC<Props> = ({ userId }) => {
+const PublicFeed: React.FC<Props> = ({ meData, publicityTypesData }) => {
   const [{ data, fetching }] = useFeedQuery({
     variables: {
-      id: userId,
+      id: meData.me?.id as number,
     },
   });
-  const [{ data: meData }] = useMeQuery();
-  const [{ data: publicityTypesData }] = usePublicityTypesQuery();
 
   const [selectedClubs, setSelectedClubs] = useState<Record<number, boolean>>(
-    meData?.me?.followingClubs?.reduce((map, obj) => {
+    meData.me?.followingClubs?.reduce((map, obj) => {
       map[obj.id] = true;
       return map;
-    }, {})!
+    }, {}) ?? {}
   );
 
   const [selectedPublicityTypes, setSelectedPublicityTypes] = useState<
     Record<number, boolean>
   >(
-    publicityTypesData?.publicityTypes.reduce((map, obj) => {
+    publicityTypesData.publicityTypes.reduce((map, obj) => {
       map[obj.id] = true;
       return map;
-    }, {})!
+    }, {}) ?? {}
   );
 
   if (!data && !fetching) return <>ya fucked it</>;
-  if (!data) return <Spinner />;
-
+  if (!data || !meData || !publicityTypesData) return <Spinner />;
   return (
     <>
       <EventListFilter

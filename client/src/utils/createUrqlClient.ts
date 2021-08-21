@@ -119,6 +119,10 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               cache.updateQuery({ query: EventsDocument }, (data) => {
                 console.log("result", result);
                 console.log("data", data);
+
+                if (data === null) {
+                  return data;
+                }
                 //@ts-ignore
                 data.events.push(result.createEvent);
                 return data;

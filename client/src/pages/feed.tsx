@@ -4,7 +4,7 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 import { Layout } from "../components/Layout";
 import { useIsAuth } from "../utils/useIsAuth";
 
-import { useMeQuery } from "../generated/graphql";
+import { useMeQuery, usePublicityTypesQuery } from "../generated/graphql";
 import { Spinner } from "@chakra-ui/react";
 import { PublicFeed } from "../components/PublicFeed";
 
@@ -13,12 +13,13 @@ interface Props {}
 const Feed: React.FC<Props> = ({}) => {
   useIsAuth();
   const [{ data, fetching }] = useMeQuery();
+  const [{ data: publicityTypesData }] = usePublicityTypesQuery();
 
   if (!fetching && !data) {
     return <div>No data...</div>;
   }
 
-  if (!data) {
+  if (!data || !publicityTypesData) {
     return (
       <Spinner
         position="absolute"
@@ -35,7 +36,7 @@ const Feed: React.FC<Props> = ({}) => {
 
   return (
     <Layout>
-      <PublicFeed userId={data.me?.id as number} />
+      <PublicFeed meData={data} publicityTypesData={publicityTypesData} />
     </Layout>
   );
 };
