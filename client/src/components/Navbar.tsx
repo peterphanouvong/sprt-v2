@@ -1,6 +1,13 @@
 import React from "react";
 import NextLink from "next/link";
-import { Box, Button, HStack, Link, useColorMode } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  HStack,
+  Link,
+  useBreakpointValue,
+  useColorMode,
+} from "@chakra-ui/react";
 
 import Logo from "./Logo";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
@@ -13,6 +20,8 @@ const Navbar: React.FC<Props> = ({}) => {
   const { colorMode } = useColorMode();
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
   const [{ data, fetching }] = useMeQuery({});
+
+  const hidden = useBreakpointValue({ base: true, sm: true, md: false });
 
   let body: any = null;
   let left: any = null;
@@ -84,6 +93,7 @@ const Navbar: React.FC<Props> = ({}) => {
       top={0}
       zIndex="10"
       bg={colorMode === "dark" ? "gray.800" : `white`}
+      hidden={hidden}
     >
       <Box display="flex" alignItems="center">
         <NextLink href="/home">

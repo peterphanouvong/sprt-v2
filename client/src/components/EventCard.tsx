@@ -34,8 +34,6 @@ const EventCard: React.FC<Props> = ({ event }) => {
   const toast = useToast();
   const [{ data }] = useMeQuery();
 
-  console.log(event);
-
   const joinEvent = async () => {
     const { error, data } = await addAttendee({ eventId: event.id });
 
