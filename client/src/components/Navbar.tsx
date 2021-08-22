@@ -85,9 +85,9 @@ const Navbar: React.FC<Props> = ({}) => {
       display="flex"
       justifyContent="space-between"
       alignItems="center"
-      borderBottomColor="gray.200"
-      boxShadow="sm"
-      borderBottomWidth="1px"
+      // borderBottomColor  ="gray.200"
+      // boxShadow="sm"
+      // borderBottomWidth="1px"
       mb={8}
       position="sticky"
       top={0}
