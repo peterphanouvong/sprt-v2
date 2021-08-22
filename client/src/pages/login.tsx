@@ -2,105 +2,109 @@ import React from "react";
 import { useRouter } from "next/router";
 import { Formik, Form } from "formik";
 import {
+  Box,
   Button,
+  Center,
   Divider,
   Heading,
   HStack,
   Link,
+  Stack,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 
-import { Wrapper } from "../components/Wrapper";
 import { InputField } from "../components/InputField";
 import { toErrorMap } from "../utils/toErrorMap";
 import { useLoginMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import NextLink from "next/link";
+import { BackButton } from "../components/BackButton";
+import Logo from "../components/Logo";
 // import FacebookLogin from "react-facebook-login";
 
 interface Props {}
 
 const Login: React.FC<Props> = ({}) => {
   const [{}, login] = useLoginMutation();
-  // const responseFacebook = (response) => {
-  //   console.log(response);
-  // };
 
   const router = useRouter();
   return (
-    <Wrapper variant="small">
-      <Heading as="h1" fontSize="x-large" mb={4}>
-        Log in
-      </Heading>
-      <Formik
-        initialValues={{ usernameOrEmail: "", password: "" }}
-        onSubmit={async (values, { setErrors }) => {
-          const res = await login({
-            password: values.password,
-            usernameOrEmail: values.usernameOrEmail,
-          });
-          if (res.data?.login.errors) {
-            setErrors(toErrorMap(res.data.login.errors));
-          } else if (res.data?.login.user) {
-            console.log(res.data?.login.user);
-            if (typeof router.query.next === "string") {
-              router.push(router.query.next);
-            } else {
-              router.push("/home");
+    <Box margin="auto">
+      <Stack maxW={"800px"} padding={4}>
+        <Box>
+          <BackButton />
+          <Box mt={6} />
+          <Logo />
+        </Box>
+        <Heading variant="h1">Welcome back</Heading>
+        <Text paddingBottom={6} variant="body-2">
+          Let's get you signed in.
+        </Text>
+        <Formik
+          initialValues={{ usernameOrEmail: "", password: "" }}
+          onSubmit={async (values, { setErrors }) => {
+            const res = await login({
+              password: values.password,
+              usernameOrEmail: values.usernameOrEmail,
+            });
+            if (res.data?.login.errors) {
+              setErrors(toErrorMap(res.data.login.errors));
+            } else if (res.data?.login.user) {
+              console.log(res.data?.login.user);
+              if (typeof router.query.next === "string") {
+                router.push(router.query.next);
+              } else {
+                router.push("/home");
+              }
             }
-          }
-        }}
-      >
-        {(props) => (
-          <Form>
-            <VStack spacing={4} align="stretch">
-              <InputField
-                name="usernameOrEmail"
-                label="Username or Email"
-                placeholder="username or email"
-                touched={props.touched.usernameOrEmail as boolean}
-              />
-              <VStack spacing={1} alignItems="start">
+          }}
+        >
+          {(props) => (
+            <Form>
+              <VStack spacing={4} align="stretch">
                 <InputField
-                  name="password"
-                  label="Password"
-                  type="password"
-                  placeholder="password"
-                  touched={props.touched.password as boolean}
+                  name="usernameOrEmail"
+                  label="Username or Email"
+                  placeholder="username or email"
+                  touched={props.touched.usernameOrEmail as boolean}
+                  required
                 />
-
-                <NextLink href="/forgot-password">
-                  <Link fontSize="sm" colorScheme="orange">
-                    Forgot password?
-                  </Link>
-                </NextLink>
-              </VStack>
-
-              <VStack align="stretch">
+                <VStack spacing={1} alignItems="start">
+                  <InputField
+                    name="password"
+                    label="Password"
+                    type="password"
+                    placeholder="password"
+                    touched={props.touched.password as boolean}
+                    required
+                  />
+                  <NextLink href="/forgot-password">
+                    <Link fontSize="sm" colorScheme="orange">
+                      <Text variant="body-3">Forgot password?</Text>
+                    </Link>
+                  </NextLink>
+                </VStack>
                 <Button
                   colorScheme="orange"
                   isLoading={props.isSubmitting}
                   type="submit"
-                  width=""
                 >
                   Log in
                 </Button>
-                <HStack
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Divider orientation="horizontal" />
-                  <Text color="gray.400">or</Text>
-                  <Divider orientation="horizontal" />
-                </HStack>
-                <NextLink href="/register">
-                  <Button colorScheme="orange" variant="outline">
-                    Register
-                  </Button>
-                </NextLink>
+
+                <Box>
+                  <Text display="inline" variant="body-3">
+                    Don't have an account yet?{" "}
+                  </Text>
+                  <NextLink href="/register">
+                    <Text display="inline" color="orange" variant="body-3">
+                      Sign up.
+                    </Text>
+                  </NextLink>
+                </Box>
+
                 {/* <FacebookLogin
                   appId='1088597931155576'
                   autoLoad={true}
@@ -109,11 +113,11 @@ const Login: React.FC<Props> = ({}) => {
                   callback={responseFacebook}
                 /> */}
               </VStack>
-            </VStack>
-          </Form>
-        )}
-      </Formik>
-    </Wrapper>
+            </Form>
+          )}
+        </Formik>
+      </Stack>
+    </Box>
   );
 };
 

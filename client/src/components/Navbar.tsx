@@ -93,7 +93,7 @@ const Navbar: React.FC<Props> = ({}) => {
       top={0}
       zIndex="10"
       bg={colorMode === "dark" ? "gray.800" : `white`}
-      hidden={hidden}
+      // hidden={hidden}
     >
       <Box display="flex" alignItems="center">
         <NextLink href="/home">

@@ -2,12 +2,65 @@ import React from "react";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { Layout } from "../components/Layout";
-import { Heading } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  Heading,
+  ResponsiveValue,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react";
+import NextLink from "next/link";
 
 const Index = () => {
+  const headingSize = useBreakpointValue({
+    base: "2xl",
+    sm: "2xl",
+    md: "3xl",
+    lg: "4xl",
+  });
+  const textSize = useBreakpointValue({
+    base: "lg",
+    sm: "xl",
+    md: "xl",
+    lg: "2xl",
+  });
+  const buttonSize = useBreakpointValue({
+    base: "md",
+    sm: "md",
+    md: "md",
+    lg: "lg",
+  });
+  const textAlignment = useBreakpointValue({
+    base: "left",
+    sm: "center",
+    md: "center",
+  });
   return (
     <Layout>
-      <Heading variant="display-1">Hey there</Heading>
+      <Center mt={"15%"}>
+        <Box
+          maxW="64rem"
+          display="flex"
+          flexDirection="column"
+          alignItems={textAlignment}
+          // @ts-ignore
+          textAlign={textAlignment}
+        >
+          <Heading size={headingSize}>
+            Organising sporting events made a whole lot easier
+          </Heading>
+          <Text maxW={"48rem"} mt={8} fontSize={textSize}>
+            Take the hassle out of creating events and managing your attendees.
+          </Text>
+          <NextLink href="/register">
+            <Button mt={8} colorScheme="orange" size={buttonSize}>
+              Get started for free
+            </Button>
+          </NextLink>
+        </Box>
+      </Center>
     </Layout>
   );
 };
