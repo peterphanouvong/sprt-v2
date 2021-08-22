@@ -16,6 +16,14 @@ let UsernamePasswordInput = class UsernamePasswordInput {
 __decorate([
     type_graphql_1.Field(() => String),
     __metadata("design:type", String)
+], UsernamePasswordInput.prototype, "firstname", void 0);
+__decorate([
+    type_graphql_1.Field(() => String),
+    __metadata("design:type", String)
+], UsernamePasswordInput.prototype, "lastname", void 0);
+__decorate([
+    type_graphql_1.Field(() => String),
+    __metadata("design:type", String)
 ], UsernamePasswordInput.prototype, "email", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
