@@ -32,7 +32,7 @@ const Register: React.FC<Props> = ({}) => {
   const router = useRouter();
   return (
     <Box margin="auto">
-      <Stack maxW={"800px"} padding={4}>
+      <Stack margin="auto" maxW={"500px"} padding={4}>
         <Box>
           <BackButton />
           <Box mt={6} />
@@ -122,9 +122,11 @@ const Register: React.FC<Props> = ({}) => {
                     Already have an account?{" "}
                   </Text>
                   <NextLink href="/login">
-                    <Text display="inline" color="orange" variant="body-3">
-                      Login.
-                    </Text>
+                    <Link color="orange">
+                      <Text display="inline" color="orange" variant="body-3">
+                        Login.
+                      </Text>
+                    </Link>
                   </NextLink>
                 </Box>
               </VStack>

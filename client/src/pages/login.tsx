@@ -31,8 +31,8 @@ const Login: React.FC<Props> = ({}) => {
 
   const router = useRouter();
   return (
-    <Box margin="auto">
-      <Stack maxW={"800px"} padding={4}>
+    <Box>
+      <Stack margin="auto" maxW={"500px"} padding={4}>
         <Box>
           <BackButton />
           <Box mt={6} />
@@ -99,9 +99,11 @@ const Login: React.FC<Props> = ({}) => {
                     Don't have an account yet?{" "}
                   </Text>
                   <NextLink href="/register">
-                    <Text display="inline" color="orange" variant="body-3">
-                      Sign up.
-                    </Text>
+                    <Link color="orange">
+                      <Text display="inline" color="orange" variant="body-3">
+                        Sign up.
+                      </Text>
+                    </Link>
                   </NextLink>
                 </Box>
 
