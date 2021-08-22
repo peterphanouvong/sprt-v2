@@ -1,6 +1,8 @@
 // theme.ts
 // 1. import `extendTheme` function
 import { extendTheme, ThemeConfig } from "@chakra-ui/react";
+import { Heading } from "./theme/Heading";
+import { Text } from "./theme/Text";
 // 2. Add your color mode config
 const config: ThemeConfig = {
   initialColorMode: "light",
@@ -10,15 +12,8 @@ const config: ThemeConfig = {
 const theme = extendTheme({
   config,
   components: {
-    Text: {
-      variants: {
-        meta: {
-          color: "gray.500",
-          fontSize: "sm",
-          fontWeight: "normal",
-        },
-      },
-    },
+    Text: Text,
+    Heading: Heading,
   },
   colors: {
     brand: {
