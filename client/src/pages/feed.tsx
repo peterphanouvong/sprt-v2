@@ -15,7 +15,7 @@ const Feed: React.FC<Props> = ({}) => {
   const [{ data, fetching }] = useMeQuery();
   const [{ data: publicityTypesData }] = usePublicityTypesQuery();
 
-  if (!fetching && !data) {
+  if (!fetching && !data?.me) {
     return <div>No data...</div>;
   }
 

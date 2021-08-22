@@ -1,5 +1,11 @@
 export const Heading = {
   variants: {
+    "display-1": {
+      fontSize: "3.583rem",
+    },
+    "display-2": {
+      fontSize: "2.986rem",
+    },
     h1: {
       fontSize: "2.488rem",
     },

@@ -7,6 +7,13 @@ const Theme: React.FC<Props> = ({}) => {
   return (
     <Box p={8}>
       <VStack alignItems="left">
+        <TextBox title={"Display 01"}>
+          <HeadingContent name="Display 01" variant="display-1" />
+        </TextBox>
+        <TextBox title={"Display 02"}>
+          <HeadingContent name="Display 02" variant="display-2" />
+        </TextBox>
+
         <TextBox title={"Heading 01"}>
           <HeadingContent name="Heading 01" variant="h1" />
         </TextBox>

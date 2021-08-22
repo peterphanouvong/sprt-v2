@@ -85,15 +85,15 @@ const Navbar: React.FC<Props> = ({}) => {
       display="flex"
       justifyContent="space-between"
       alignItems="center"
-      borderBottomColor="gray.200"
-      boxShadow="sm"
-      borderBottomWidth="1px"
+      // borderBottomColor  ="gray.200"
+      // boxShadow="sm"
+      // borderBottomWidth="1px"
       mb={8}
       position="sticky"
       top={0}
       zIndex="10"
       bg={colorMode === "dark" ? "gray.800" : `white`}
-      hidden={hidden}
+      // hidden={hidden}
     >
       <Box display="flex" alignItems="center">
         <NextLink href="/home">
