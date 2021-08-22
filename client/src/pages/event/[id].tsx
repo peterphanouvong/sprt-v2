@@ -35,7 +35,10 @@ const Event = () => {
         <Box mt={6} />
         <CSVLink
           data={data.event.attendees.map((x) => ({
+            id: x.id,
             Username: x.username,
+            Firtname: x.firstname,
+            Lastname: x.lastname,
           }))}
           filename={`${data.event.title}-attendees.csv`}
         >

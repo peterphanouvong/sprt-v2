@@ -4,9 +4,7 @@ import { Formik, Form } from "formik";
 import {
   Box,
   Button,
-  Center,
   Checkbox,
-  Divider,
   Heading,
   HStack,
   Link,
@@ -43,7 +41,13 @@ const Register: React.FC<Props> = ({}) => {
           Yep, it's totally free! Let's get started.
         </Text>
         <Formik
-          initialValues={{ username: "", password: "", email: "" }}
+          initialValues={{
+            firstname: "",
+            lastname: "",
+            username: "",
+            password: "",
+            email: "",
+          }}
           onSubmit={async (values, { setErrors }) => {
             console.log(values);
             const res = await register({ options: values });
@@ -51,7 +55,7 @@ const Register: React.FC<Props> = ({}) => {
             if (res.data?.register.errors) {
               setErrors(toErrorMap(res.data.register.errors));
             } else if (res.data?.register.user) {
-              router.push("/home");
+              router.push("/feed");
             }
           }}
         >

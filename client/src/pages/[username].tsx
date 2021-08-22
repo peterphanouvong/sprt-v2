@@ -7,8 +7,10 @@ import { Code } from "@chakra-ui/react";
 import { Layout } from "../components/Layout";
 import { useUserByUsernameQuery } from "../generated/graphql";
 import { useRouter } from "next/router";
+import { useIsAuth } from "../utils/useIsAuth";
 
 const Profile = () => {
+  useIsAuth();
   const router = useRouter();
   const username = router.query.username;
   const [{ data, fetching, error }] = useUserByUsernameQuery({
