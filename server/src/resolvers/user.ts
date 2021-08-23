@@ -97,6 +97,8 @@ export class UserResolver {
         .insert()
         .into(User)
         .values({
+          firstname: options.firstname,
+          lastname: options.lastname,
           username: options.username,
           email: options.email,
           password: hashedPassword,

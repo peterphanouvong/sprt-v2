@@ -2,6 +2,8 @@ fragment RegularUser on User {
   id
   username
   email
+  firstname
+  lastname
   events {
     id
     title

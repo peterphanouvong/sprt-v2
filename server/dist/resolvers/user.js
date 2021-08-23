@@ -94,6 +94,8 @@ let UserResolver = class UserResolver {
                 .insert()
                 .into(User_1.User)
                 .values({
+                firstname: options.firstname,
+                lastname: options.lastname,
                 username: options.username,
                 email: options.email,
                 password: hashedPassword,
