@@ -32,6 +32,8 @@ const Post = () => {
         <Heading mb={4}> {data.post.title}</Heading>
         <Text>{data.post.description}</Text>
       </Card>
+
+      <Card></Card>
     </Layout>
   );
 };

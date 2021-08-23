@@ -47,6 +47,16 @@ export class UserResolver {
    * Field Resolvers
    */
 
+  @FieldResolver(() => [Event])
+  async events(@Root() user: User, @Ctx() { eventLoader }: MyContext) {
+    const clubIds = await getConnection().query(`
+        select array_agg("id")
+        from "event"
+        where "hostId" = ${user.id};
+      `);
+    return eventLoader.loadMany(clubIds[0].array_agg ?? []);
+  }
+
   @FieldResolver(() => [Club])
   async adminClubs(@Root() user: User, @Ctx() { clubLoader }: MyContext) {
     const clubIds = await getConnection().query(`

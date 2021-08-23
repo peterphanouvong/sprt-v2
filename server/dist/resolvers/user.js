@@ -55,6 +55,15 @@ UserResponse = __decorate([
     type_graphql_1.ObjectType()
 ], UserResponse);
 let UserResolver = class UserResolver {
+    async events(user, { eventLoader }) {
+        var _a;
+        const clubIds = await typeorm_1.getConnection().query(`
+        select array_agg("id")
+        from "event"
+        where "hostId" = ${user.id};
+      `);
+        return eventLoader.loadMany((_a = clubIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
+    }
     async adminClubs(user, { clubLoader }) {
         var _a;
         const clubIds = await typeorm_1.getConnection().query(`
@@ -227,6 +236,14 @@ let UserResolver = class UserResolver {
         return eventLoader.loadMany((_a = eventIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
     }
 };
+__decorate([
+    type_graphql_1.FieldResolver(() => [Event_1.Event]),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [User_1.User, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "events", null);
 __decorate([
     type_graphql_1.FieldResolver(() => [Club_1.Club]),
     __param(0, type_graphql_1.Root()),
