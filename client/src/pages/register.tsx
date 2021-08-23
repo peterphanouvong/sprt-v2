@@ -21,6 +21,25 @@ import { useRegisterMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import Logo from "../components/Logo";
 import { BackButton } from "../components/BackButton";
+import * as Yup from "yup";
+
+const RegisterSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Email is invalid")
+    .required("This field is required"),
+  username: Yup.string()
+    .trim("The username cannot include leading and trailing spaces")
+    .strict()
+    .required("This field is required"),
+  firstname: Yup.string()
+    .trim("The first name cannot include leading and trailing spaces")
+    .strict()
+    .required("This field is required"),
+  lastname: Yup.string()
+    .trim("The last name cannot include leading and trailing spaces")
+    .strict()
+    .required("This field is required"),
+});
 
 interface Props {}
 
@@ -41,6 +60,7 @@ const Register: React.FC<Props> = ({}) => {
           Yep, it's totally free! Let's get started.
         </Text>
         <Formik
+          validationSchema={RegisterSchema}
           initialValues={{
             firstname: "",
             lastname: "",
@@ -67,14 +87,14 @@ const Register: React.FC<Props> = ({}) => {
                     name="firstname"
                     label="First name"
                     placeholder="Matt"
-                    touched={props.touched.username as boolean}
+                    touched={props.touched.firstname as boolean}
                     required
                   />
                   <InputField
                     name="lastname"
                     label="Last name"
                     placeholder="Anderson"
-                    touched={props.touched.username as boolean}
+                    touched={props.touched.lastname as boolean}
                     required
                   />
                 </HStack>

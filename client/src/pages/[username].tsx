@@ -3,11 +3,12 @@ import React from "react";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 
-import { Code } from "@chakra-ui/react";
+import { Code, Heading, Text } from "@chakra-ui/react";
 import { Layout } from "../components/Layout";
 import { useUserByUsernameQuery } from "../generated/graphql";
 import { useRouter } from "next/router";
 import { useIsAuth } from "../utils/useIsAuth";
+import { Card } from "../components/Card";
 
 const Profile = () => {
   useIsAuth();
@@ -29,6 +30,25 @@ const Profile = () => {
       <Code>
         <pre id="json">{JSON.stringify(data.userByUsername, null, 2)}</pre>
       </Code>
+
+      <Card>
+        <Heading variant="h1">
+          {data.userByUsername.firstname} {data.userByUsername.lastname}
+        </Heading>
+        <Text variant="body-2">
+          {data.userByUsername.adminClubs?.map((club) => {
+            return <Text>club: {club.name}</Text>;
+          })}
+        </Text>
+        <Text variant="caption">boobies</Text>
+      </Card>
+      <Card>
+        <Heading variant="h1"> Events </Heading>
+
+        {data.userByUsername.events?.map((DEEZ) => {
+          return <Text>{DEEZ.title}</Text>;
+        })}
+      </Card>
     </Layout>
   );
 };
