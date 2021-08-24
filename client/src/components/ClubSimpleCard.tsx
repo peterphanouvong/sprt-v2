@@ -6,6 +6,7 @@ import {
   Icon,
   useDisclosure,
   Text,
+  Link,
 } from "@chakra-ui/react";
 import React from "react";
 import { useRouter } from "next/router";
@@ -18,24 +19,19 @@ import { ClubJoinButton } from "./ClubJoinButton";
 
 interface Props {
   club: Club;
+  modalOpen?: () => void;
+  modalClose?: () => void;
+  hasLink?: boolean;
 }
 
-const ClubSimpleCard: React.FC<Props> = ({ club }) => {
+const ClubSimpleCard: React.FC<Props> = ({ club, modalOpen, hasLink }) => {
   const [{ data: userData }] = useMeQuery();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const router = useRouter();
 
-  const intId =
-    typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
-  const [{ data, fetching, error }] = useClubQuery({
-    pause: intId === -1,
-    variables: { clubId: intId },
-  });
   const [followers, setFollowers] = React.useState<User[]>(
-    data?.club.followers as User[]
+    club.followers as User[]
   );
   const [members, setMembers] = React.useState<User[]>(
-    data?.club.members as unknown as User[]
+    club.members as unknown as User[]
   );
 
   const addFollower = () => {
@@ -53,7 +49,16 @@ const ClubSimpleCard: React.FC<Props> = ({ club }) => {
 
   return (
     <Card>
-      <Heading mb={4}>{club.name}</Heading>
+      <Heading mb={4}>
+        {hasLink ? (
+          <a href={`/club/${club.id}`}>
+            <Link>{club.name}</Link>
+          </a>
+        ) : (
+          club.name
+        )}
+        {/* {club.name} */}
+      </Heading>
       <HStack>
         <ClubFollowButton
           followerList={club.followers as User[]}
@@ -83,14 +88,14 @@ const ClubSimpleCard: React.FC<Props> = ({ club }) => {
       <Text variant={"body-2"} marginY={4}>
         {club.description}
       </Text>
-      {/* <Box onClick={onOpen} display={"inline"}>
+      <Box onClick={modalOpen} display={"inline"}>
         <Text variant={"body-3"} display={"inline"}>
           <b>{followers.length}</b> {pluralize(followers.length, "Follower")},{" "}
         </Text>
         <Text variant={"body-3"} display={"inline"}>
           <b>{members.length}</b> {pluralize(members.length, "Member")}
         </Text>
-      </Box> */}
+      </Box>
     </Card>
   );
 };

@@ -48,7 +48,7 @@ import { ClubJoinButton } from "../../components/ClubJoinButton";
 import { ClubSimpleCard } from "../../components/ClubSimpleCard";
 
 const Club = () => {
-  const [{ data: userData }] = useMeQuery();
+  // const [{ data: userData }] = useMeQuery();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -68,18 +68,18 @@ const Club = () => {
     data?.club.members as unknown as User[]
   );
 
-  const addFollower = () => {
-    setFollowers([...followers, userData!.me as User]);
-  };
+  // const addFollower = () => {
+  //   setFollowers([...followers, userData!.me as User]);
+  // };
 
-  const removeFollower = () => {
-    console.log(followers);
-    const newFollowers = followers.filter(
-      (user) => user.id !== userData!.me!.id
-    );
-    console.log(newFollowers);
-    setFollowers(newFollowers);
-  };
+  // const removeFollower = () => {
+  //   console.log(followers);
+  //   const newFollowers = followers.filter(
+  //     (user) => user.id !== userData!.me!.id
+  //   );
+  //   console.log(newFollowers);
+  //   setFollowers(newFollowers);
+  // };
   console.log(data.club);
   if (fetching) return <>loading..</>;
   if (error) return <Layout>{error.message}</Layout>;
@@ -87,47 +87,11 @@ const Club = () => {
 
   return (
     <Layout>
-      {/* <Card>
-        <Heading mb={4}>{data.club.name}</Heading>
-        <HStack>
-          <ClubFollowButton
-            followerList={data.club.followers as User[]}
-            data={userData}
-            clubId={data.club.id}
-            addFollower={addFollower}
-            removeFollower={removeFollower}
-          />
-          <ClubJoinButton club={data.club as ClubType} />
-        </HStack>
-
-        <Box mt={4}>
-          <Text variant={"label"} mb={1}>
-            <Icon as={BsPersonFill} w={3} h={3} mr={1} />
-            {data.club.admins[0].firstname + " " + data.club.admins[0].lastname}
-          </Text>
-          <Text variant={"label"} mb={1}>
-            <PhoneIcon w={3} h={3} mr={1} />
-            {data.club.phoneNumber}
-          </Text>
-          <Text variant={"label"}>
-            <EmailIcon w={3} h={3} mr={1} />
-            {data.club.email}
-          </Text>
-        </Box>
-
-        <Text variant={"body-2"} marginY={4}>
-          {data.club.description}
-        </Text>
-        <Box onClick={onOpen} display={"inline"}>
-          <Text variant={"body-3"} display={"inline"}>
-            <b>{followers.length}</b> {pluralize(followers.length, "Follower")},{" "}
-          </Text>
-          <Text variant={"body-3"} display={"inline"}>
-            <b>{members.length}</b> {pluralize(members.length, "Member")}
-          </Text>
-        </Box>
-      </Card> */}
-      <ClubSimpleCard club={data.club as ClubType} />
+      <ClubSimpleCard
+        club={data.club as ClubType}
+        modalOpen={onOpen}
+        modalClose={onClose}
+      />
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
