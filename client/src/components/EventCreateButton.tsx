@@ -95,7 +95,12 @@ const EventCreateButton: React.FC<Props> = ({}) => {
         </Button>
       )}
 
-      <Modal size="2xl" isOpen={isOpen} onClose={onClose}>
+      <Modal
+        closeOnOverlayClick={false}
+        size="2xl"
+        isOpen={isOpen}
+        onClose={onClose}
+      >
         <ModalOverlay />
         <ModalContent>
           <Box

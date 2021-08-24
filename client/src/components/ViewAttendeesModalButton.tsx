@@ -4,16 +4,19 @@ import {
   CloseButton,
   Divider,
   Heading,
+  HStack,
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalOverlay,
+  Stat,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
+  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
@@ -41,14 +44,29 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
     attending = attendees;
   }
 
+  const buttonSize = useBreakpointValue({ base: "sm", md: "md" });
+
   return (
     <>
-      <Button mt={2} size="sm" variant="outline" onClick={onOpen}>
-        Attendees ({attending.length}
-        {capacity ? "/" + capacity : ""}){` & waitlist (${waitlisted.length})`}
-      </Button>
+      <Box onClick={onOpen} _hover={{ cursor: "pointer" }} textAlign="right">
+        {capacity ? (
+          <>
+            <Text variant="body-3">Joined</Text>
+            <Heading variant="h4">
+              {attendees.length}/{capacity}
+            </Heading>
+            <Text variant="label">See attendees</Text>
+          </>
+        ) : (
+          <>
+            <Text variant="body-3">Already joined</Text>
+            <Heading variant="h4">{attendees.length}</Heading>
+            <Text variant="label">See who's going</Text>
+          </>
+        )}
+      </Box>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <Box
@@ -57,22 +75,28 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
             alignItems="center"
             padding={4}
           >
-            <Heading fontSize="large">Event attendees</Heading>
+            <Heading variant="h5" as="h5">
+              Event attendees
+            </Heading>
             <CloseButton onClick={onClose} />
           </Box>
           <Divider />
 
-          <ModalBody p={2}>
-            <Tabs isFitted>
+          <ModalBody paddingX={4}>
+            <Tabs isFitted colorScheme="orange">
               <TabList>
                 <Tab>
-                  Attending ({attending.length}
-                  {capacity ? "/" + capacity : ""})
+                  <Text variant="body-3">
+                    Attending ({attending.length}
+                    {capacity ? "/" + capacity : ""})
+                  </Text>
                 </Tab>
-                <Tab>Waitlist ({waitlisted.length})</Tab>
+                <Tab>
+                  <Text variant="body-3">Waitlist ({waitlisted.length})</Text>
+                </Tab>
               </TabList>
               <TabPanels>
-                <TabPanel paddingY={0} paddingX={2} maxH="sm" overflowY="auto">
+                <TabPanel paddingY={0} paddingX={0} maxH="sm" overflowY="auto">
                   {attending.map((attendee) => (
                     <Box
                       key={attendee.id}
@@ -80,7 +104,9 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
                       paddingY={2}
                       borderColor="gray.100"
                     >
-                      {attendee.username}
+                      <Text variant="body-2">
+                        {attendee.firstname} {attendee.lastname}
+                      </Text>
                     </Box>
                   ))}
                 </TabPanel>
@@ -100,8 +126,9 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
             </Tabs>
           </ModalBody>
 
-          <ModalFooter>
+          <HStack padding={4} spacing={4} justifyContent="flex-end">
             <Button
+              size={buttonSize}
               colorScheme="orange"
               variant="ghost"
               mr={3}
@@ -109,10 +136,10 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
             >
               Cancel
             </Button>
-            <Button colorScheme="orange" onClick={joinEvent}>
+            <Button size={buttonSize} colorScheme="orange" onClick={joinEvent}>
               Join
             </Button>
-          </ModalFooter>
+          </HStack>
         </ModalContent>
       </Modal>
     </>

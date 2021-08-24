@@ -46,7 +46,12 @@ const EventEditButton: React.FC<Props> = ({ event }) => {
         Edit
       </MenuItem>
 
-      <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
+      <Modal
+        closeOnOverlayClick={false}
+        size="3xl"
+        isOpen={isOpen}
+        onClose={onClose}
+      >
         <ModalOverlay />
         <ModalContent>
           <Box

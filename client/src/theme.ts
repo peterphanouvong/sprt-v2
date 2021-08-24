@@ -1,6 +1,7 @@
 // theme.ts
 // 1. import `extendTheme` function
 import { extendTheme, ThemeConfig } from "@chakra-ui/react";
+import { Button } from "./theme/Button";
 import { Heading } from "./theme/Heading";
 import { Text } from "./theme/Text";
 // 2. Add your color mode config
@@ -14,6 +15,17 @@ const theme = extendTheme({
   components: {
     Text: Text,
     Heading: Heading,
+    Button: Button,
+    Modal: {
+      defaultProps: {
+        closeOnOverlayClick: false,
+      },
+    },
+    Th: {
+      baseStyle: {
+        padding: 0,
+      },
+    },
   },
   colors: {
     brand: {

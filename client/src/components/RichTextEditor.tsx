@@ -7,6 +7,7 @@ import {
   IconButton,
   ListItem,
   OrderedList,
+  Text,
   UnorderedList,
 } from "@chakra-ui/react";
 import {
@@ -107,8 +108,8 @@ const RichTextEditor: React.FC<Props> = ({
             boxShadow={active ? "0 0 0 1px #3182ce" : ""}
             overflow="hidden"
             mt={2}
-            padding={2}
-            paddingX={4}
+            padding={readOnly ? 0 : 2}
+            paddingX={readOnly ? 0 : 4}
             transition="0.2s ease"
             _hover={
               !active && !readOnly
@@ -205,16 +206,29 @@ const Element = ({ attributes, children, element }) => {
   switch (element.type) {
     case "block-quote":
       return (
-        <Heading fontSize="lg" color="gray.500" {...attributes}>
+        <Heading
+          variant="h5"
+          fontWeight="medium"
+          color="gray.600"
+          {...attributes}
+        >
           {children}
         </Heading>
       );
     case "bulleted-list":
       return <UnorderedList {...attributes}>{children}</UnorderedList>;
     case "heading-one":
-      return <Heading {...attributes}>{children}</Heading>;
+      return (
+        <Heading variant="h3" {...attributes}>
+          {children}
+        </Heading>
+      );
     case "heading-two":
-      return <Heading {...attributes}>{children}</Heading>;
+      return (
+        <Heading variant="h4" {...attributes}>
+          {children}
+        </Heading>
+      );
     case "list-item":
       return <ListItem {...attributes}>{children}</ListItem>;
     case "numbered-list":
@@ -227,9 +241,9 @@ const Element = ({ attributes, children, element }) => {
 const Leaf = ({ attributes, children, leaf }) => {
   if (leaf.bold) {
     children = (
-      <Box display="inline-block" fontWeight="bold">
+      <Text display="inline-block" fontWeight="bold">
         {children}
-      </Box>
+      </Text>
     );
   }
 
@@ -239,9 +253,9 @@ const Leaf = ({ attributes, children, leaf }) => {
 
   if (leaf.italic) {
     children = (
-      <Box display="inline-block" fontStyle="italic">
+      <Text display="inline-block" fontStyle="italic">
         {children}
-      </Box>
+      </Text>
     );
   }
 
