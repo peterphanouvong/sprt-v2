@@ -27,7 +27,12 @@ const ClubEditButton: React.FC<Props> = ({ club }) => {
         Edit
       </MenuItem>
 
-      <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
+      <Modal
+        closeOnOverlayClick={false}
+        size="3xl"
+        isOpen={isOpen}
+        onClose={onClose}
+      >
         <ModalOverlay />
         <ModalContent>
           <Box

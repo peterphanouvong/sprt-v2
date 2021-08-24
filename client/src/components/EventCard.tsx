@@ -1,10 +1,12 @@
-import { ChevronRightIcon, WarningIcon } from "@chakra-ui/icons";
+import { WarningIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   Heading,
+  HStack,
   Link,
   MenuItem,
+  Text,
   useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
@@ -12,16 +14,13 @@ import { Event, useAddAttendeeMutation, User } from "../generated/graphql";
 
 import { useMeQuery } from "../generated/graphql";
 import { parseDatePretty } from "../utils/parseDate";
-import { MetaDataText } from "./ MetaDataText";
 import { Card } from "./Card";
 import { ClubIcon } from "./ClubIcon";
 import { EventDeleteButton } from "./EventDeleteButton";
 import { EventEditButton } from "./EventEditButton";
 import { OptionsButton } from "./OptionsButton";
 import { ViewAttendeesModalButton } from "./ViewAttendeesModalButton";
-import { DynamicEditor } from "./DynamicEditor";
-import { parseRichText } from "../utils/parseRichText";
-import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
+// import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
 import NextLink from "next/link";
 
 interface Props {
@@ -64,43 +63,39 @@ const EventCard: React.FC<Props> = ({ event }) => {
   if (!data) return <>loading...</>;
   return (
     <Card>
-      <Box display="flex" justifyContent="space-between">
+      <Box
+        mb={4}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="flex-end"
+      >
         <Box>
-          <Box display="flex" alignItems="center">
-            <ClubIcon />
-            <Box mr={4}></Box>
-            <Box>
-              <Heading fontSize="x-large">
-                <NextLink href={`/event/${event.id}`}>
-                  <Link>{event.title}</Link>
-                </NextLink>
-              </Heading>
-              <MetaDataText>
-                {parseDatePretty(event.startTime)} -{" "}
-                {parseDatePretty(event.endTime)} [
-                {Intl.DateTimeFormat().resolvedOptions().timeZone}]
-              </MetaDataText>
-              <Box mt={-1}>
-                <MetaDataText>Hosted by </MetaDataText>
-                <MetaDataText>{event.host.username}</MetaDataText>{" "}
-                <MetaDataText>
-                  <ChevronRightIcon /> {event.location}
-                </MetaDataText>
+          <Box>
+            <HStack mb={2}>
+              <ClubIcon />
+              <Box>
+                <Text variant="label" fontWeight="semibold">
+                  {event.host.username}
+                  <Text fontWeight="normal" display="inline">
+                    {" "}
+                    is hosting
+                  </Text>
+                </Text>
               </Box>
-            </Box>
-          </Box>
+            </HStack>
 
-          <DynamicEditor
-            name="description"
-            initialValue={parseRichText(event.description)}
-            readOnly={true}
-          />
-          <Box border={"1px solid orange"}>
-            {/* <RenderPrettyJSON object={event} /> */}
+            <Heading variant="h3" as="h3">
+              <NextLink href={`/event/${event.id}`}>
+                <Link>{event.title}</Link>
+              </NextLink>
+            </Heading>
+            <Text variant="label">
+              {parseDatePretty(event.startTime)} [{event.location}]
+            </Text>
           </Box>
         </Box>
 
-        <Box float="right">
+        <Box textAlign="right">
           <OptionsButton>
             {data.me?.id === event.host.id ? (
               <>
@@ -111,16 +106,15 @@ const EventCard: React.FC<Props> = ({ event }) => {
               <MenuItem icon={<WarningIcon />}>Report</MenuItem>
             )}
           </OptionsButton>
+          <ViewAttendeesModalButton
+            capacity={event.capacity}
+            attendees={attendees}
+            joinEvent={joinEvent}
+          />
         </Box>
       </Box>
 
-      <ViewAttendeesModalButton
-        capacity={event.capacity}
-        attendees={attendees}
-        joinEvent={joinEvent}
-      />
-
-      <Button onClick={joinEvent} mt={4} isFullWidth={true} variant="solid">
+      <Button onClick={joinEvent} mt={4} isFullWidth={true}>
         Join
       </Button>
     </Card>

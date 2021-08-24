@@ -8,7 +8,9 @@ const Layout: React.FC<Props> = ({ children }) => {
   return (
     <>
       <Navbar />
-      <Container maxW="container.xl">{children}</Container>
+      <Container paddingX={4} maxW="container.xl">
+        {children}
+      </Container>
     </>
   );
 };

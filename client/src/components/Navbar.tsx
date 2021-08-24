@@ -2,14 +2,10 @@ import React from "react";
 import NextLink from "next/link";
 import {
   Box,
-  Button,
   Drawer,
   DrawerBody,
   DrawerContent,
-  DrawerHeader,
   DrawerOverlay,
-  Flex,
-  HStack,
   IconButton,
   Link,
   Stack,
@@ -21,7 +17,7 @@ import {
 import Logo from "./Logo";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import SettingsDrawer from "./SettingsDrawer";
-import { EventCreateButton } from "./EventCreateButton";
+
 import { HamburgerIcon } from "@chakra-ui/icons";
 
 interface Props {}
@@ -139,15 +135,11 @@ const Navbar: React.FC<Props> = ({}) => {
         justifyContent="space-between"
         alignItems={{ base: "left", md: "center" }}
         flexDirection={{ base: "column", md: "row" }}
-        // borderBottomColor  ="gray.200"
-        // boxShadow="md"
-        // borderBottomWidth="1px"
         mb={8}
         position="sticky"
         top={0}
         zIndex="10"
         bg={colorMode === "dark" ? "gray.800" : `white`}
-        // hidden={hidden}
       >
         <Box
           display="flex"
