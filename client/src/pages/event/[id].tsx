@@ -11,16 +11,12 @@ import {
   useMeQuery,
   User,
 } from "../../generated/graphql";
-// import { Card } from "../../components/Card";
-// import { RenderPrettyJSON } from "../../utils/renderPrettyJSON";
-// import { CSVLink } from "react-csv";
 import {
   Box,
   Button,
   Divider,
   Heading,
   HStack,
-  // Link,
   MenuItem,
   Text,
   useBreakpointValue,
@@ -33,10 +29,8 @@ import { EventEditButton } from "../../components/EventEditButton";
 import { OptionsButton } from "../../components/OptionsButton";
 import { ViewAttendeesModalButton } from "../../components/ViewAttendeesModalButton";
 import { parseDatePretty } from "../../utils/parseDate";
-// import NextLink from "next/link";
 import { DynamicEditor } from "../../components/DynamicEditor";
 import { parseRichText } from "../../utils/parseRichText";
-// import { RenderPrettyJSON } from "../../utils/renderPrettyJSON";
 
 const Event = () => {
   const router = useRouter();
@@ -179,4 +173,4 @@ const Event = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Event);
+export default withUrqlClient(createUrqlClient, { ssr: false })(Event);
