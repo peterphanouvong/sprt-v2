@@ -60,6 +60,9 @@ export class Club extends BaseEntity {
   @Field(() => [User])
   admins: User[];
 
+  @Field(() => [User])
+  members: User[];
+
   // hosting events
   @Field(() => [Event], { nullable: true })
   @OneToMany(() => Event, (event) => event.club)

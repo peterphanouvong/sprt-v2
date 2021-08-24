@@ -29,7 +29,7 @@ const Post = () => {
   return (
     <Layout>
       <Card>
-        <Heading mb={4}> {data.post.title}</Heading>
+        <Heading mb={4}>{data.post.title}</Heading>
         <Text>{data.post.description}</Text>
       </Card>
 

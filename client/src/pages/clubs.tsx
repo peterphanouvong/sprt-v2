@@ -8,6 +8,7 @@ import { Spinner, VStack } from "@chakra-ui/react";
 import { CreateClub } from "../components/ClubCreateButton";
 import { ClubCard } from "../components/ClubCard";
 import { useIsAuth } from "../utils/useIsAuth";
+import { ClubSimpleCard } from "../components/ClubSimpleCard";
 
 interface Props {}
 
@@ -25,14 +26,14 @@ const Clubs: React.FC<Props> = ({}) => {
 
   return (
     <Layout>
-      <VStack spacing={4} align="stretch">
+      <VStack spacing={4} align='stretch'>
         <CreateClub />
         {data.clubs
           .sort((clubA, clubB) => clubA.id - clubB.id)
           //@ts-ignore
           .map((club: Club) => {
             console.log(club);
-            return <ClubCard key={club.id} club={club} />;
+            return <ClubSimpleCard key={club.id} club={club} hasLink />;
           })}
       </VStack>
     </Layout>

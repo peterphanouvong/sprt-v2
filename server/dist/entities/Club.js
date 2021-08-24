@@ -69,6 +69,10 @@ __decorate([
     __metadata("design:type", Array)
 ], Club.prototype, "admins", void 0);
 __decorate([
+    type_graphql_1.Field(() => [User_1.User]),
+    __metadata("design:type", Array)
+], Club.prototype, "members", void 0);
+__decorate([
     type_graphql_1.Field(() => [Event_1.Event], { nullable: true }),
     typeorm_1.OneToMany(() => Event_1.Event, (event) => event.club),
     __metadata("design:type", Array)
