@@ -11,18 +11,19 @@ import {
   useMeQuery,
   User,
 } from "../../generated/graphql";
-import { Card } from "../../components/Card";
+// import { Card } from "../../components/Card";
 // import { RenderPrettyJSON } from "../../utils/renderPrettyJSON";
-import { CSVLink } from "react-csv";
+// import { CSVLink } from "react-csv";
 import {
   Box,
   Button,
   Divider,
   Heading,
   HStack,
-  Link,
+  // Link,
   MenuItem,
   Text,
+  useBreakpointValue,
   useToast,
 } from "@chakra-ui/react";
 import { DownloadIcon, WarningIcon } from "@chakra-ui/icons";
@@ -35,7 +36,7 @@ import { parseDatePretty } from "../../utils/parseDate";
 // import NextLink from "next/link";
 import { DynamicEditor } from "../../components/DynamicEditor";
 import { parseRichText } from "../../utils/parseRichText";
-import { RenderPrettyJSON } from "../../utils/renderPrettyJSON";
+// import { RenderPrettyJSON } from "../../utils/renderPrettyJSON";
 
 const Event = () => {
   const router = useRouter();
@@ -53,6 +54,8 @@ const Event = () => {
   });
 
   const [{ data: meData }] = useMeQuery();
+
+  const smallScreen = useBreakpointValue({ base: true, md: false });
 
   if (fetching) return <>loading..</>;
   if (error) return <Layout>{error.message}</Layout>;
@@ -99,13 +102,9 @@ const Event = () => {
           <Box>
             <HStack mb={2}>
               <ClubIcon />
-              <Box>
-                <Text variant="label" fontWeight="semibold">
-                  {data.event.host.username}
-                  <Text fontWeight="normal" display="inline">
-                    {" "}
-                    is hosting
-                  </Text>
+              <Box display="flex" alignItems="center">
+                <Text display="inline" variant="label" fontWeight="normal">
+                  <b>{data.event.host.username}</b> is hosting
                 </Text>
               </Box>
             </HStack>
@@ -114,7 +113,14 @@ const Event = () => {
               <Heading variant="h2" as="h2">
                 {data.event.title}
               </Heading>
-              <Button ml={6} colorScheme="orange" variant="outline">
+              <Button
+                ml={6}
+                mb={0}
+                colorScheme="orange"
+                variant="outline"
+                onClick={joinEvent}
+                hidden={smallScreen}
+              >
                 Join
               </Button>
             </Box>
@@ -130,18 +136,11 @@ const Event = () => {
               <>
                 <EventEditButton event={data.event as EventType} />
                 <EventDeleteButton eventId={data.event.id} />
-                <MenuItem icon={<DownloadIcon />}>
-                  <CSVLink
-                    data={data.event.attendees.map((x) => ({
-                      id: x.id,
-                      Username: x.username,
-                      Firtname: x.firstname,
-                      Lastname: x.lastname,
-                    }))}
-                    filename={`${data.event.title}-attendees.csv`}
-                  >
-                    Export attendees
-                  </CSVLink>
+                <MenuItem
+                  onClick={() => router.push(`/event-info/${data.event?.id}`)}
+                  icon={<DownloadIcon />}
+                >
+                  Export attendees
                 </MenuItem>
               </>
             ) : (
@@ -155,7 +154,17 @@ const Event = () => {
           />
         </Box>
       </Box>
-
+      <Button
+        // ml={6}
+        mb={2}
+        colorScheme="orange"
+        variant="outline"
+        width="full"
+        onClick={joinEvent}
+        hidden={!smallScreen}
+      >
+        Join
+      </Button>
       <Divider mb={2} />
 
       <DynamicEditor
@@ -165,7 +174,7 @@ const Event = () => {
       />
 
       <Divider mb={2} />
-      <RenderPrettyJSON object={data} />
+      {/* <RenderPrettyJSON object={data} /> */}
     </Layout>
   );
 };
