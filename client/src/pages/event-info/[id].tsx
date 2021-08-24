@@ -40,7 +40,7 @@ const EventInfo: React.FC<Props> = ({}) => {
   const [{ data, fetching, error }] = useEventQuery({
     pause: intId === -1,
     variables: {
-      id: 4,
+      id: intId,
     },
   });
 
