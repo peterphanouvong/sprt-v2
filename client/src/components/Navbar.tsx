@@ -46,10 +46,10 @@ const Navbar: React.FC<Props> = ({}) => {
         direction={{ base: "column", md: "row" }}
         spacing={8}
       >
-        <NextLink href="/login">
+        <NextLink href='/login'>
           <Link>login</Link>
         </NextLink>
-        <NextLink href="/register">
+        <NextLink href='/register'>
           <Link>register</Link>
         </NextLink>
         <SettingsDrawer />
@@ -71,9 +71,9 @@ const Navbar: React.FC<Props> = ({}) => {
           onClick={() => {
             logout();
           }}
-          isLoading={logoutFetching}
-          variant="link"
-          fontWeight="normal"
+          // isloading={logoutFetching}
+          variant='link'
+          fontWeight='normal'
         >
           logout
         </Link>
@@ -87,13 +87,13 @@ const Navbar: React.FC<Props> = ({}) => {
         direction={{ base: "column", md: "row" }}
         spacing={8}
       >
-        <NextLink href="/feed">
+        <NextLink href='/feed'>
           <Link>feed</Link>
         </NextLink>
-        <NextLink href="/clubs">
+        <NextLink href='/clubs'>
           <Link>clubs</Link>
         </NextLink>{" "}
-        <NextLink href="/events">
+        <NextLink href='/events'>
           <Link>events</Link>
         </NextLink>
         {/* <EventCreateButton /> */}
@@ -107,17 +107,17 @@ const Navbar: React.FC<Props> = ({}) => {
         <IconButton
           icon={<HamburgerIcon />}
           onClick={onOpen}
-          variant="ghost"
-          aria-label="menu"
+          variant='ghost'
+          aria-label='menu'
           my={2}
           mx={2}
         />
 
-        <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
+        <Drawer placement='left' onClose={onClose} isOpen={isOpen}>
           <DrawerOverlay />
           <DrawerContent>
             <DrawerBody>
-              <NextLink href="/home">
+              <NextLink href='/home'>
                 <a style={{ paddingTop: "6px" }}>
                   <Logo color={colorMode === "dark" ? "white" : "black"} />
                 </a>
@@ -135,26 +135,26 @@ const Navbar: React.FC<Props> = ({}) => {
     <>
       <Box
         paddingX={16}
-        display="flex"
-        justifyContent="space-between"
+        display='flex'
+        justifyContent='space-between'
         alignItems={{ base: "left", md: "center" }}
         flexDirection={{ base: "column", md: "row" }}
         // borderBottomColor  ="gray.200"
         // boxShadow="md"
         // borderBottomWidth="1px"
         mb={8}
-        position="sticky"
+        position='sticky'
         top={0}
-        zIndex="10"
+        zIndex='10'
         bg={colorMode === "dark" ? "gray.800" : `white`}
         // hidden={hidden}
       >
         <Box
-          display="flex"
+          display='flex'
           flexDirection={{ base: "column", md: "row" }}
           alignItems={{ base: "left", md: "center" }}
         >
-          <NextLink href="/home">
+          <NextLink href='/home'>
             <a style={{ paddingTop: "6px" }}>
               <Logo color={colorMode === "dark" ? "white" : "black"} />
             </a>

@@ -71,6 +71,15 @@ let ClubResolver = class ClubResolver {
      `);
         return userLoader.loadMany((_a = requestedMemberIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
     }
+    async members(club, { userLoader }) {
+        var _a;
+        const memberIds = await typeorm_1.getConnection().query(`
+       select array_agg("memberId")
+       from "club_member"
+       where "clubId" = ${club.id};
+     `);
+        return userLoader.loadMany((_a = memberIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
+    }
     async createClub(input, { req }) {
         let club;
         try {
@@ -97,6 +106,9 @@ let ClubResolver = class ClubResolver {
     }
     async clubs() {
         return Club_1.Club.find({});
+    }
+    async club(clubId) {
+        return Club_1.Club.findOne(clubId);
     }
     async updateClub({ req }, clubId, input) {
         const admins = await ClubAdmin_1.ClubAdmin.find({ clubId });
@@ -225,6 +237,14 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ClubResolver.prototype, "requestedMembers", null);
 __decorate([
+    type_graphql_1.FieldResolver(() => User_1.User),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Club_1.Club, Object]),
+    __metadata("design:returntype", Promise)
+], ClubResolver.prototype, "members", null);
+__decorate([
     type_graphql_1.Mutation(() => Club_1.Club),
     type_graphql_1.UseMiddleware(isAuth_1.isAuth),
     __param(0, type_graphql_1.Arg("input")),
@@ -239,6 +259,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], ClubResolver.prototype, "clubs", null);
+__decorate([
+    type_graphql_1.Query(() => Club_1.Club),
+    __param(0, type_graphql_1.Arg("clubId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], ClubResolver.prototype, "club", null);
 __decorate([
     type_graphql_1.Mutation(() => Club_1.Club, { nullable: true }),
     __param(0, type_graphql_1.Ctx()),

@@ -14,7 +14,7 @@ import { User } from "../generated/graphql";
 
 interface Props {
   userType: string;
-  userList: Array<User>;
+  userList: User[];
   numHighlighted?: number;
 }
 
@@ -32,8 +32,8 @@ const AccordionUsers: React.FC<Props> = ({
               backgroundColor: "gray.50",
             }}
           >
-            <Box flex="1" textAlign="left">
-              <Text fontWeight="medium">{userType}</Text>
+            <Box flex='1' textAlign='left'>
+              <Text fontWeight='medium'>{userType}</Text>
             </Box>
             <AccordionIcon />
           </AccordionButton>
@@ -44,7 +44,7 @@ const AccordionUsers: React.FC<Props> = ({
                 <ListItem
                   paddingY={1}
                   paddingX={4}
-                  listStyleType="none"
+                  listStyleType='none'
                   key={attendee.id}
                   background={isHighlighted ? "green.50" : "yellow.50"}
                   _hover={{
@@ -52,15 +52,15 @@ const AccordionUsers: React.FC<Props> = ({
                   }}
                 >
                   <Box
-                    fontSize="sm"
+                    fontSize='sm'
                     color={isHighlighted ? "green.900" : "yellow.900"}
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
+                    display='flex'
+                    justifyContent='space-between'
+                    alignItems='center'
                   >
                     {attendee.username}
                     {isHighlighted ? (
-                      <CheckIcon color="green" />
+                      <CheckIcon color='green' />
                     ) : (
                       <Text>(waitlist)</Text>
                     )}

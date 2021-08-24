@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Heading,
+  Link,
   MenuItem,
   Skeleton,
   Text,
@@ -22,6 +23,7 @@ import { ClubEditButton } from "./ClubEditButton";
 import { ClubFollowButton } from "./ClubFollowButton";
 import { OptionsButton } from "./OptionsButton";
 import { ClubDeleteButton } from "./ClubDeleteButton";
+import NextLink from "next/link";
 
 interface Props {
   club: Club;
@@ -91,14 +93,18 @@ const ClubCard: React.FC<Props> = ({ club }) => {
   };
 
   if (!userData) {
-    return <Skeleton height="250px"></Skeleton>;
+    return <Skeleton height='250px'></Skeleton>;
   }
 
   return (
     <Card>
-      <Box display="flex" justifyContent="space-between">
+      <Box display='flex' justifyContent='space-between'>
         <Box>
-          <Heading>{club.name}</Heading>
+          <Heading>
+            <a href={`/club/${club.id}`}>
+              <Link>{club.name}</Link>
+            </a>
+          </Heading>
           {club.admins.map((admin) => (
             <Text key={admin.username}>Owner: {admin.username}</Text>
           ))}
@@ -124,7 +130,7 @@ const ClubCard: React.FC<Props> = ({ club }) => {
         removeFollower={removeFollower}
       />
       <AccordionUsers userType={"Followers"} userList={followers} />
-      <Button colorScheme="orange" mt={2} onClick={requestToJoinClub}>
+      <Button colorScheme='orange' mt={2} onClick={requestToJoinClub}>
         {hasRequestedToJoin ? "Already requested" : "Request to join"}
       </Button>
     </Card>
