@@ -5,10 +5,8 @@ import {
   Button,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
-  ModalHeader,
   ModalOverlay,
   useDisclosure,
   Tab,
@@ -16,13 +14,8 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  ListItem,
-  UnorderedList,
   CloseButton,
   Divider,
-  Spacer,
-  HStack,
-  Icon,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { withUrqlClient } from "next-urql";
@@ -30,26 +23,11 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Card } from "../../components/Card";
 import { Layout } from "../../components/Layout";
-import {
-  useClubQuery,
-  useMeQuery,
-  User,
-  Club as ClubType,
-} from "../../generated/graphql";
+import { useClubQuery, User, Club as ClubType } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
-import { BsPersonFill } from "react-icons/bs";
-
-import stockBanner from "../../images/stock_banner.jpeg";
-import { ClubFollowButton } from "../../components/ClubFollowButton";
-import { AccordionUsers } from "../../components/AccordionUsers";
-import { pluralize } from "../../utils/pluralize";
-import { EmailIcon, PhoneIcon } from "@chakra-ui/icons";
-import { ClubJoinButton } from "../../components/ClubJoinButton";
 import { ClubSimpleCard } from "../../components/ClubSimpleCard";
 
 const Club = () => {
-  // const [{ data: userData }] = useMeQuery();
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const router = useRouter();
@@ -68,18 +46,6 @@ const Club = () => {
     data?.club.members as unknown as User[]
   );
 
-  // const addFollower = () => {
-  //   setFollowers([...followers, userData!.me as User]);
-  // };
-
-  // const removeFollower = () => {
-  //   console.log(followers);
-  //   const newFollowers = followers.filter(
-  //     (user) => user.id !== userData!.me!.id
-  //   );
-  //   console.log(newFollowers);
-  //   setFollowers(newFollowers);
-  // };
   console.log(data.club);
   if (fetching) return <>loading..</>;
   if (error) return <Layout>{error.message}</Layout>;
