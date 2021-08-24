@@ -79,9 +79,11 @@ const ClubFollowButton: React.FC<Props> = ({
   }
   return (
     <Button
-      leftIcon={isFollowing ? <MinusIcon /> : <AddIcon />}
+      leftIcon={
+        isFollowing ? <MinusIcon w={2} h={2} /> : <AddIcon w={2} h={2} />
+      }
       colorScheme='orange'
-      variant='solid'
+      variant={isFollowing ? "outline" : "solid"}
       onClick={handleButton}
       size='xs'
     >

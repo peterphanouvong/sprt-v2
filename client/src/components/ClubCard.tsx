@@ -1,8 +1,9 @@
-import { WarningIcon } from "@chakra-ui/icons";
+import { EmailIcon, PhoneIcon, WarningIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   Heading,
+  HStack,
   Link,
   MenuItem,
   Skeleton,
@@ -24,6 +25,8 @@ import { ClubFollowButton } from "./ClubFollowButton";
 import { OptionsButton } from "./OptionsButton";
 import { ClubDeleteButton } from "./ClubDeleteButton";
 import NextLink from "next/link";
+import { pluralize } from "../utils/pluralize";
+import { ClubJoinButton } from "./ClubJoinButton";
 
 interface Props {
   club: Club;
@@ -100,6 +103,61 @@ const ClubCard: React.FC<Props> = ({ club }) => {
     <Card>
       <Box display='flex' justifyContent='space-between'>
         <Box>
+          <Heading mb={4}>
+            <a href={`/club/${club.id}`}>
+              <Link>{club.name}</Link>
+            </a>
+          </Heading>
+        </Box>
+        <OptionsButton>
+          {isAuthorised(club) ? (
+            <>
+              <ClubEditButton club={club} />
+              <ClubDeleteButton clubId={club.id} />
+            </>
+          ) : (
+            <MenuItem icon={<WarningIcon />}>Report</MenuItem>
+          )}
+        </OptionsButton>
+      </Box>
+      <HStack>
+        <ClubFollowButton
+          followerList={club.followers as User[]}
+          data={userData}
+          clubId={club.id}
+          addFollower={addFollower}
+          removeFollower={removeFollower}
+        />
+        <ClubJoinButton club={club as Club} />
+      </HStack>
+
+      <Box mt={4}>
+        <Text variant={"label"} mb={1}>
+          <PhoneIcon w={3} h={3} mr={1} />
+          {club.phoneNumber}
+        </Text>
+        <Text variant={"label"}>
+          <EmailIcon w={3} h={3} mr={1} />
+          {club.email}
+        </Text>
+      </Box>
+
+      <Text variant={"body-2"} marginY={4}>
+        {club.description}
+      </Text>
+      {/* <Box onClick={onOpen} display={"inline"}>
+        <Text variant={"body-3"} display={"inline"}>
+          <b>{followers.length}</b> {pluralize(followers.length, "Follower")},{" "}
+        </Text>
+        <Text variant={"body-3"} display={"inline"}>
+          <b>{members.length}</b> {pluralize(members.length, "Member")}
+        </Text>
+      </Box> */}
+    </Card>
+    /* 
+    <Card>
+      <Box display='flex' justifyContent='space-between'>
+        <Box>
           <Heading>
             <a href={`/club/${club.id}`}>
               <Link>{club.name}</Link>
@@ -129,11 +187,8 @@ const ClubCard: React.FC<Props> = ({ club }) => {
         addFollower={addFollower}
         removeFollower={removeFollower}
       />
-      <AccordionUsers userType={"Followers"} userList={followers} />
-      <Button colorScheme='orange' mt={2} onClick={requestToJoinClub}>
-        {hasRequestedToJoin ? "Already requested" : "Request to join"}
-      </Button>
     </Card>
+    */
   );
 };
 

@@ -9,6 +9,7 @@ import {
   CloseButton,
   Divider,
   useDisclosure,
+  Text,
 } from "@chakra-ui/react";
 import React from "react";
 import { Club } from "../generated/graphql";
@@ -24,19 +25,19 @@ const ClubEditButton: React.FC<Props> = ({ club }) => {
   return (
     <>
       <MenuItem onClick={onOpen} icon={<EditIcon />}>
-        Edit
+        <Text>Edit</Text>
       </MenuItem>
 
-      <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
+      <Modal size='3xl' isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
+            display='flex'
+            justifyContent='space-between'
+            alignItems='center'
             padding={4}
           >
-            <Heading fontSize="large">Edit Club</Heading>
+            <Heading fontSize='large'>Edit Club</Heading>
             <CloseButton onClick={onClose} />
           </Box>
           <Divider />

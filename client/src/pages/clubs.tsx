@@ -25,7 +25,7 @@ const Clubs: React.FC<Props> = ({}) => {
 
   return (
     <Layout>
-      <VStack spacing={4} align="stretch">
+      <VStack spacing={4} align='stretch'>
         <CreateClub />
         {data.clubs
           .sort((clubA, clubB) => clubA.id - clubB.id)
