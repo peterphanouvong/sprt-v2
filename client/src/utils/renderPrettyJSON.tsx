@@ -7,7 +7,7 @@ interface Props {
 
 const RenderPrettyJSON: React.FC<Props> = ({ object }) => {
   return (
-    <Code>
+    <Code maxW="400px" overflowX="scroll">
       <pre id="json">{JSON.stringify(object, null, 2)}</pre>
     </Code>
   );

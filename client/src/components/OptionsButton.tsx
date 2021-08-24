@@ -1,6 +1,6 @@
 import { Menu, MenuButton, IconButton, MenuList } from "@chakra-ui/react";
 import React from "react";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { BsThreeDots } from "react-icons/bs";
 
 const OptionsButton = ({ children }) => {
   return (
@@ -8,7 +8,7 @@ const OptionsButton = ({ children }) => {
       <MenuButton
         as={IconButton}
         aria-label="Options"
-        icon={<BsThreeDotsVertical />}
+        icon={<BsThreeDots />}
         variant="ghost"
       />
       <MenuList>{children}</MenuList>

@@ -41,4 +41,4 @@ const Feed: React.FC<Props> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: false })(Feed);
+export default withUrqlClient(createUrqlClient, { ssr: true })(Feed);
