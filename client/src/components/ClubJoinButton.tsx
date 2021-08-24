@@ -5,6 +5,7 @@ import {
   useMeQuery,
   useAddRequestedMemberMutation,
 } from "../generated/graphql";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 
 interface Props {
   club: Club;
@@ -15,6 +16,7 @@ const ClubJoinButton: React.FC<Props> = ({ club }) => {
   const [hasRequestedToJoin, setHasRequestedToJoin] = React.useState(false);
   const [, addRequestedMember] = useAddRequestedMemberMutation();
   const toast = useToast();
+  const isMobile = useIsMobileScreen();
 
   const requestToJoinClub = async () => {
     const { data, error } = await addRequestedMember({
@@ -51,7 +53,7 @@ const ClubJoinButton: React.FC<Props> = ({ club }) => {
       variant={"outline"}
       colorScheme='orange'
       onClick={requestToJoinClub}
-      size='xs'
+      size={isMobile ? "xs" : "sm"}
     >
       {hasRequestedToJoin ? "Requested" : "Request to join"}
     </Button>

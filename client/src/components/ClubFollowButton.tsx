@@ -7,6 +7,7 @@ import {
   User,
   useUnfollowClubMutation,
 } from "../generated/graphql";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 
 interface Props {
   followerList: Array<User>;
@@ -29,6 +30,7 @@ const ClubFollowButton: React.FC<Props> = ({
   const [, followClub] = useFollowClubMutation();
   const [, unfollowClub] = useUnfollowClubMutation();
   const toast = useToast();
+  const isMobile = useIsMobileScreen();
 
   const handleButton = async (): Promise<void> => {
     if (!isFollowing) {
@@ -85,7 +87,7 @@ const ClubFollowButton: React.FC<Props> = ({
       colorScheme='orange'
       variant={isFollowing ? "outline" : "solid"}
       onClick={handleButton}
-      size='xs'
+      size={isMobile ? "xs" : "sm"}
     >
       {isFollowing ? "Unfollow" : "Follow"}
     </Button>

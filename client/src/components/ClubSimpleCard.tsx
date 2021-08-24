@@ -7,7 +7,9 @@ import {
   useDisclosure,
   Text,
   Link,
+  useBreakpointValue,
 } from "@chakra-ui/react";
+import { createBreakpoints } from "@chakra-ui/theme-tools";
 import React from "react";
 import { useRouter } from "next/router";
 import { BsPersonFill } from "react-icons/bs";
@@ -16,7 +18,7 @@ import { pluralize } from "../utils/pluralize";
 import { Card } from "./Card";
 import { ClubFollowButton } from "./ClubFollowButton";
 import { ClubJoinButton } from "./ClubJoinButton";
-
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 interface Props {
   club: Club;
   modalOpen?: () => void;
