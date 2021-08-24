@@ -21,6 +21,11 @@ const theme = extendTheme({
         closeOnOverlayClick: false,
       },
     },
+    Th: {
+      baseStyle: {
+        padding: 0,
+      },
+    },
   },
   colors: {
     brand: {
