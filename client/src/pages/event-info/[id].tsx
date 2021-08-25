@@ -17,6 +17,7 @@ import {
   Td,
   Th,
   Thead,
+  Tooltip,
   Tr,
   useBreakpointValue,
 } from "@chakra-ui/react";
@@ -86,12 +87,14 @@ const EventInfo: React.FC<Props> = ({}) => {
               }),
             ]}
           >
-            <IconButton
-              icon={<DownloadIcon />}
-              variant="ghost"
-              aria-label="download-list"
-              size={isSmallScreen ? "sm" : "md"}
-            />
+            <Tooltip label="download">
+              <IconButton
+                icon={<DownloadIcon />}
+                variant="ghost"
+                aria-label="download-list"
+                size={isSmallScreen ? "sm" : "md"}
+              />
+            </Tooltip>
           </CSVLink>
         </Box>
 
@@ -165,10 +168,12 @@ const EventInfo: React.FC<Props> = ({}) => {
               .map((x) => x.label),
             ...data.event.attendees.map((x) => {
               let userInfo = [];
-              Object.keys(selectedAttendeeFields).forEach((field) => {
-                //@ts-ignore
-                userInfo.push(x[field]);
-              });
+              attendeeFieldOptions
+                .filter((x) => selectedAttendeeFields[x.value])
+                .forEach((field) => {
+                  //@ts-ignore
+                  userInfo.push(x[field.value]);
+                });
               return userInfo;
             }),
           ]}
