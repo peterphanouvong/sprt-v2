@@ -52,7 +52,7 @@ const ClubSimpleCard: React.FC<Props> = ({ club, modalOpen, hasLink }) => {
     <Card>
       <Box display='flex' justifyContent='space-between'>
         <Box>
-          <Heading mb={4}>
+          <Heading>
             {hasLink ? (
               <Link href={`/club/${club.id}`}>{club.name}</Link>
             ) : (
@@ -71,7 +71,19 @@ const ClubSimpleCard: React.FC<Props> = ({ club, modalOpen, hasLink }) => {
           )}
         </OptionsButton>
       </Box>
-      <HStack>
+
+      <Box onClick={modalOpen} display={"inline"}>
+        <Text variant={"body-3"} display={"inline"}>
+          <b>{club.followers.length}</b>{" "}
+          {pluralize(club.followers.length, "Follower")},{" "}
+        </Text>
+        <Text variant={"body-3"} display={"inline"}>
+          <b>{club.members.length}</b>{" "}
+          {pluralize(club.members.length, "Member")}
+        </Text>
+      </Box>
+
+      <HStack mt={4}>
         <ClubFollowButton
           followerList={club.followers as User[]}
           data={userData}
@@ -100,16 +112,6 @@ const ClubSimpleCard: React.FC<Props> = ({ club, modalOpen, hasLink }) => {
       <Text variant={"body-2"} marginY={4}>
         {club.description}
       </Text>
-      <Box onClick={modalOpen} display={"inline"}>
-        <Text variant={"body-3"} display={"inline"}>
-          <b>{club.followers.length}</b>{" "}
-          {pluralize(club.followers.length, "Follower")},{" "}
-        </Text>
-        <Text variant={"body-3"} display={"inline"}>
-          <b>{club.members.length}</b>{" "}
-          {pluralize(club.members.length, "Member")}
-        </Text>
-      </Box>
     </Card>
   );
 };

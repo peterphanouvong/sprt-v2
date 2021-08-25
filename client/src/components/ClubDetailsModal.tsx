@@ -81,16 +81,16 @@ const ClubDetailsModal: React.FC<Props> = ({
                 ))}
               </TabPanel>
               <TabPanel paddingY={0} paddingX={2} maxH='sm' overflowY='auto'>
-                {/* {members.map((attendee) => (
-                <Box
-                  key={attendee.id}
-                  borderBottom='1px solid'
-                  paddingY={2}
-                  borderColor='gray.100'
-                >
-                  <Text variant={"body-2"}>{attendee.username}</Text>
-                </Box>
-              ))} */}
+                {data.club.members.map((user) => (
+                  <Box
+                    key={user.id}
+                    borderBottom='1px solid'
+                    paddingY={2}
+                    borderColor='gray.100'
+                  >
+                    <Text variant={"body-2"}>{user.username}</Text>
+                  </Box>
+                ))}
               </TabPanel>
             </TabPanels>
           </Tabs>

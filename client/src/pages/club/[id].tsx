@@ -1,21 +1,13 @@
 import {
-  Heading,
-  Text,
-  Box,
-  Button,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalOverlay,
   useDisclosure,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  CloseButton,
-  Divider,
+  Text,
+  Heading,
+  Box,
+  HStack,
+  Flex,
+  Spacer,
+  Icon,
+  Center,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import { withUrqlClient } from "next-urql";
@@ -25,13 +17,18 @@ import { Card } from "../../components/Card";
 import { Layout } from "../../components/Layout";
 import {
   useClubQuery,
-  User,
   Club as ClubType,
   useMeQuery,
+  useEventsQuery,
+  Event,
 } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { ClubSimpleCard } from "../../components/ClubSimpleCard";
 import { ClubDetailsModal } from "../../components/ClubDetailsModal";
+import { EventList } from "../../components/EventList";
+import { EventCreateButton } from "../../components/EventCreateButton";
+import { useIsAuthorised } from "../../utils/useIsAuthorised";
+import { FaVolleyballBall } from "react-icons/fa";
 
 const Club = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -46,29 +43,18 @@ const Club = () => {
     variables: { clubId: intId },
   });
 
-  // const [numFollowers, setNumFollowers] = React.useState<number>(
-  //   data.club.followers.length
-  // );
+  const [{ data: eventData, fetching: eventFetching }] = useEventsQuery();
+  const isAuthorised = useIsAuthorised(data?.club as ClubType);
 
-  // const updateNumFollowers = (num: number) => {
-  //   setNumFollowers(numFollowers + num);
-  // };
-
-  // const [followers, setFollowers] = React.useState<User[]>(
-  //   data?.club.followers as User[]
-  // );
-  // const [members, setMembers] = React.useState<User[]>(
-  //   data?.club.members as unknown as User[]
-  // );
-
-  if (fetching || userFetching) return <>loading..</>;
+  if (fetching || userFetching || eventFetching) return <>loading..</>;
   if (error) return <Layout>{error.message}</Layout>;
   if (!data) return <Layout>couldn't find the club</Layout>;
   if (!data?.club) return <Layout>couldn't find the club</Layout>;
 
-  console.log(userData);
+  console.log(
+    eventData.events.filter((event) => event.clubId === data.club.id)
+  );
 
-  console.log(data.club);
   return (
     <Layout>
       <ClubSimpleCard
@@ -76,7 +62,6 @@ const Club = () => {
         modalOpen={onOpen}
         modalClose={onClose}
         userData={userData}
-        // updateNumFollowers={(num: number) => updateNumFollowers(num)}
       />
       <ClubDetailsModal
         isOpen={isOpen}
@@ -85,77 +70,34 @@ const Club = () => {
         clubId={intId}
         userData={userData}
       />
-      {/* <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent width={"28rem"} maxWidth='80%'>
-          <Box
-            display='flex'
-            justifyContent='space-between'
-            alignItems='center'
-            padding={4}
-          >
-            <Heading variant={"h5"}>What Header Should Go Here?</Heading>
-            <CloseButton onClick={onClose} />
-          </Box>
-          <Divider />
-          <ModalBody p={2}>
-            <Tabs isFitted colorScheme='orange'>
-              <TabList>
-                <Tab>
-                  <Text variant='body-3'>
-                    Followers ({data.club.followers.length})
-                  </Text>
-                </Tab>
-                <Tab>
-                  <Text variant='body-3'>
-                    Members ({data.club.members.length})
-                  </Text>
-                </Tab>
-              </TabList>
-              <TabPanels>
-                <TabPanel paddingY={0} paddingX={2} maxH='sm' overflowY='auto'>
-                  {data.club.followers.map((attendee) => (
-                    <Box
-                      key={attendee.id}
-                      borderBottom='1px solid'
-                      paddingY={2}
-                      borderColor='gray.100'
-                    >
-                      <Text variant={"body-2"}>{attendee.username}</Text>
-                    </Box>
-                  ))}
-                </TabPanel>
-                <TabPanel paddingY={0} paddingX={2} maxH='sm' overflowY='auto'>
-                  {members.map((attendee) => (
-                    <Box
-                      key={attendee.id}
-                      borderBottom='1px solid'
-                      paddingY={2}
-                      borderColor='gray.100'
-                    >
-                      <Text variant={"body-2"}>{attendee.username}</Text>
-                    </Box>
-                  ))}
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
-          </ModalBody>
 
-          <ModalFooter>
-            <Button
-              colorScheme='orange'
-              mr={3}
-              onClick={onClose}
-              size='sm'
-              variant='ghost'
-            >
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal> */}
-
-      <Card></Card>
+      <Box mt={4}>
+        <Flex>
+          <Heading variant='h3' mt={1}>
+            Events
+          </Heading>
+          <Spacer />
+          {isAuthorised && <EventCreateButton />}
+        </Flex>
+      </Box>
+      {eventData.events.filter((event) => event.clubId === data.club.id)
+        .length > 0 ? (
+        <EventList
+          events={
+            eventData.events.filter(
+              (event) => event.clubId === data.club.id
+            ) as Event[]
+          }
+        />
+      ) : (
+        <Box marginY={4} textAlign='center'>
+          <Card>
+            <Icon as={FaVolleyballBall} boxSize={10} mb={2} />
+            <Text>Uh oh looking a little empty...</Text>
+            <Text>Message the club owner to get some events started!</Text>
+          </Card>
+        </Box>
+      )}
     </Layout>
   );
 };
