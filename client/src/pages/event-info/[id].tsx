@@ -123,14 +123,14 @@ const EventInfo: React.FC<Props> = ({}) => {
         </OptionsButton>
       </Box>
 
-      <Box>
+      <Box overflowX="auto">
         <Table size="sm">
           <Thead>
             <Tr>
               {attendeeFieldOptions
                 .filter((x) => selectedAttendeeFields[x.value])
                 .map((x) => (
-                  <Th key={x.value} px={0}>
+                  <Th whiteSpace="nowrap" key={x.value} pl={0} pr={10}>
                     {x.label}
                   </Th>
                 ))}
@@ -145,12 +145,12 @@ const EventInfo: React.FC<Props> = ({}) => {
                     .filter((x) => selectedAttendeeFields[x.value])
                     .map((field) => {
                       return (
-                        <Td key={field.value} px={0}>
+                        <Td key={field.value} pl={0} pr={4}>
                           <Text variant="body-2">{x[field.value]}</Text>
                         </Td>
                       );
                     })}
-                  <Td px={0} width={0}>
+                  <Td pl={0} width={0}>
                     <Checkbox />
                   </Td>
                 </Tr>

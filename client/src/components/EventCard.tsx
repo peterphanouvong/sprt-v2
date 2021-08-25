@@ -6,11 +6,13 @@ import {
   HStack,
   Link,
   MenuItem,
+  Skeleton,
   Text,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
 import React from "react";
-import { Event, useAddAttendeeMutation } from "../generated/graphql";
+import { Event, useAddAttendeeMutation, User } from "../generated/graphql";
 
 import { useMeQuery } from "../generated/graphql";
 import { parseDatePretty } from "../utils/parseDate";
@@ -119,9 +121,19 @@ const EventCard: React.FC<Props> = ({ event }) => {
         </Box>
       </Box>
 
-      <Button onClick={joinEvent} mt={4} isFullWidth={true}>
-        Join
-      </Button>
+      <VStack alignItems="stretch">
+        <Button onClick={joinEvent} mt={4}>
+          Join
+        </Button>
+
+        <ViewAttendeesModalButton
+          as="button"
+          capacity={event.capacity}
+          attendees={event.attendees as User[]}
+          eventId={event?.id}
+          eventTitle={event?.title}
+        />
+      </VStack>
     </Card>
   );
 };
