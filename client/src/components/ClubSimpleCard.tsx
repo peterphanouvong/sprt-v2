@@ -71,13 +71,10 @@ const ClubSimpleCard: React.FC<Props> = ({ club, modalOpen, hasLink }) => {
         <Box>
           <Heading mb={4}>
             {hasLink ? (
-              <a href={`/club/${club.id}`}>
-                <Link>{club.name}</Link>
-              </a>
+              <Link href={`/club/${club.id}`}>{club.name}</Link>
             ) : (
               club.name
             )}
-            {/* {club.name} */}
           </Heading>
         </Box>
         <OptionsButton>
