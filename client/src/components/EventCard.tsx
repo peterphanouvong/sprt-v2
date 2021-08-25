@@ -9,8 +9,8 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
-import { Event, useAddAttendeeMutation, User } from "../generated/graphql";
+import React from "react";
+import { Event, useAddAttendeeMutation } from "../generated/graphql";
 
 import { useMeQuery } from "../generated/graphql";
 import { parseDatePretty } from "../utils/parseDate";
@@ -29,16 +29,18 @@ interface Props {
 
 const EventCard: React.FC<Props> = ({ event }) => {
   const [, addAttendee] = useAddAttendeeMutation();
-  const [attendees, setAttendees] = useState<User[]>(event.attendees);
   const toast = useToast();
   const [{ data }] = useMeQuery();
+
+  // const [hasJoined, setHasJoined] = useState(event.attendees.map())
+  // const [attendees, setAttendees] = useState<User[]>(event.attendees);
 
   const joinEvent = async () => {
     const { error, data } = await addAttendee({ eventId: event.id });
 
     if (data && !error) {
       // @ts-ignore
-      setAttendees([...attendees, data.addAttendee]);
+      // setAttendees([...attendees, data.addAttendee]);
       toast({
         title: "Joined event",
         variant: "subtle",
@@ -46,6 +48,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
         status: "success",
         duration: 5000,
         isClosable: true,
+        position: "top",
       });
     } else if (error) {
       toast({
@@ -108,8 +111,10 @@ const EventCard: React.FC<Props> = ({ event }) => {
           </OptionsButton>
           <ViewAttendeesModalButton
             capacity={event.capacity}
-            attendees={attendees}
-            joinEvent={joinEvent}
+            attendees={event.attendees}
+            eventTitle={event.title}
+            eventId={event.id}
+            // joinEvent={joinEvent}
           />
         </Box>
       </Box>
