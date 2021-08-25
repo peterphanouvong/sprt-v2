@@ -13,17 +13,9 @@ interface Props {
   followerList: Array<User>;
   clubId: number;
   data: MeQuery;
-  addFollower?: () => void;
-  removeFollower?: () => void;
 }
 
-const ClubFollowButton: React.FC<Props> = ({
-  followerList,
-  clubId,
-  data,
-  addFollower,
-  removeFollower,
-}) => {
+const ClubFollowButton: React.FC<Props> = ({ followerList, clubId, data }) => {
   const [isFollowing, setIsFollowing] = React.useState(
     followerList.map((user) => user.id).includes(data.me!.id)
   );
@@ -42,15 +34,11 @@ const ClubFollowButton: React.FC<Props> = ({
   };
 
   const handleFollow = async (): Promise<void> => {
-    // return person that followed and add that person into following list of club object
-    // update cache that way
     const { error } = await followClub({
       followerId: data.me!.id,
       clubId: clubId,
     });
-    if (!error) {
-      // addFollower();
-    } else {
+    if (error) {
       console.log(error);
       toast({
         title: "Error",
@@ -69,9 +57,6 @@ const ClubFollowButton: React.FC<Props> = ({
       followerId: data.me!.id,
       clubId: clubId,
     });
-    if (!error) {
-      removeFollower();
-    }
   };
 
   if (!data) {

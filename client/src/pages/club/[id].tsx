@@ -23,12 +23,19 @@ import { useRouter } from "next/router";
 import React from "react";
 import { Card } from "../../components/Card";
 import { Layout } from "../../components/Layout";
-import { useClubQuery, User, Club as ClubType } from "../../generated/graphql";
+import {
+  useClubQuery,
+  User,
+  Club as ClubType,
+  useMeQuery,
+} from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { ClubSimpleCard } from "../../components/ClubSimpleCard";
+import { ClubDetailsModal } from "../../components/ClubDetailsModal";
 
 const Club = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [{ data: userData, fetching: userFetching }] = useMeQuery();
 
   const router = useRouter();
   const intId =
@@ -39,17 +46,27 @@ const Club = () => {
     variables: { clubId: intId },
   });
 
-  const [followers, setFollowers] = React.useState<User[]>(
-    data?.club.followers as User[]
-  );
-  const [members, setMembers] = React.useState<User[]>(
-    data?.club.members as unknown as User[]
-  );
+  // const [numFollowers, setNumFollowers] = React.useState<number>(
+  //   data.club.followers.length
+  // );
 
-  if (fetching) return <>loading..</>;
+  // const updateNumFollowers = (num: number) => {
+  //   setNumFollowers(numFollowers + num);
+  // };
+
+  // const [followers, setFollowers] = React.useState<User[]>(
+  //   data?.club.followers as User[]
+  // );
+  // const [members, setMembers] = React.useState<User[]>(
+  //   data?.club.members as unknown as User[]
+  // );
+
+  if (fetching || userFetching) return <>loading..</>;
   if (error) return <Layout>{error.message}</Layout>;
   if (!data) return <Layout>couldn't find the club</Layout>;
   if (!data?.club) return <Layout>couldn't find the club</Layout>;
+
+  console.log(userData);
 
   console.log(data.club);
   return (
@@ -58,9 +75,17 @@ const Club = () => {
         club={data.club as ClubType}
         modalOpen={onOpen}
         modalClose={onClose}
+        userData={userData}
+        // updateNumFollowers={(num: number) => updateNumFollowers(num)}
       />
-
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <ClubDetailsModal
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+        clubId={intId}
+        userData={userData}
+      />
+      {/* <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent width={"28rem"} maxWidth='80%'>
           <Box
@@ -101,7 +126,7 @@ const Club = () => {
                   ))}
                 </TabPanel>
                 <TabPanel paddingY={0} paddingX={2} maxH='sm' overflowY='auto'>
-                  {/* {members.map((attendee) => (
+                  {members.map((attendee) => (
                     <Box
                       key={attendee.id}
                       borderBottom='1px solid'
@@ -110,7 +135,7 @@ const Club = () => {
                     >
                       <Text variant={"body-2"}>{attendee.username}</Text>
                     </Box>
-                  ))} */}
+                  ))}
                 </TabPanel>
               </TabPanels>
             </Tabs>
@@ -128,7 +153,7 @@ const Club = () => {
             </Button>
           </ModalFooter>
         </ModalContent>
-      </Modal>
+      </Modal> */}
 
       <Card></Card>
     </Layout>

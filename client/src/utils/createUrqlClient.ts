@@ -13,6 +13,7 @@ import {
   DeleteEventMutationVariables,
   DeletePostMutationVariables,
   EventsDocument,
+  FollowClubMutationVariables,
   LoginMutation,
   LogoutMutation,
   MeDocument,
@@ -104,12 +105,18 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
-            // followClub: (result, _args, cache, _info) => {
-            //   cache.invalidate({
-            //     __typename: "Event",
-            //     id: (_args as DeleteEventMutationVariables).id,
-            //   });
-            // },
+            followClub: (result, _args, cache, _info) => {
+              cache.invalidate({
+                __typename: "Club",
+                id: (_args as FollowClubMutationVariables).clubId,
+              });
+            },
+            unfollowClub: (result, _args, cache, _info) => {
+              cache.invalidate({
+                __typename: "Club",
+                id: (_args as FollowClubMutationVariables).clubId,
+              });
+            },
             createClub: (result, _args, cache, _info) => {
               cache.updateQuery({ query: ClubsDocument }, (data) => {
                 //@ts-ignore

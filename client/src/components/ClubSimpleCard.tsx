@@ -15,7 +15,13 @@ import { createBreakpoints } from "@chakra-ui/theme-tools";
 import React from "react";
 import { useRouter } from "next/router";
 import { BsPersonFill } from "react-icons/bs";
-import { Club, useClubQuery, useMeQuery, User } from "../generated/graphql";
+import {
+  Club,
+  MeQuery,
+  useClubQuery,
+  useMeQuery,
+  User,
+} from "../generated/graphql";
 import { pluralize } from "../utils/pluralize";
 import { Card } from "./Card";
 import { ClubFollowButton } from "./ClubFollowButton";
@@ -24,47 +30,24 @@ import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { ClubDeleteButton } from "./ClubDeleteButton";
 import { ClubEditButton } from "./ClubEditButton";
 import { OptionsButton } from "./OptionsButton";
+import { useIsAuthorised } from "../utils/useIsAuthorised";
 interface Props {
   club: Club;
   modalOpen?: () => void;
   modalClose?: () => void;
   hasLink?: boolean;
+  userData: MeQuery;
+  // updateNumFollowers?: (number) => void;
 }
 
 const ClubSimpleCard: React.FC<Props> = ({ club, modalOpen, hasLink }) => {
   const [{ data: userData }] = useMeQuery();
+  const isAuthorised = useIsAuthorised(club);
 
-  const [followers, setFollowers] = React.useState<User[]>(
-    club.followers as User[]
-  );
-  const [members, setMembers] = React.useState<User[]>(
-    club.members as unknown as User[]
-  );
-
-  const isAuthorised = (club: Club) => {
-    if (!userData) {
-      return false;
-    }
-    return club.admins
-      .map((admin) => admin.username)
-      .includes(userData.me!.username);
-  };
-
-  const addFollower = () => {
-    setFollowers([...followers, userData!.me as User]);
-  };
-
-  const removeFollower = () => {
-    console.log(followers);
-    const newFollowers = followers.filter(
-      (user) => user.id !== userData!.me!.id
-    );
-    console.log(newFollowers);
-    setFollowers(newFollowers);
-  };
   if (!userData) {
     return <Spinner></Spinner>;
   }
+
   return (
     <Card>
       <Box display='flex' justifyContent='space-between'>
@@ -78,7 +61,7 @@ const ClubSimpleCard: React.FC<Props> = ({ club, modalOpen, hasLink }) => {
           </Heading>
         </Box>
         <OptionsButton>
-          {isAuthorised(club) ? (
+          {isAuthorised ? (
             <>
               <ClubEditButton club={club} />
               <ClubDeleteButton clubId={club.id} />
@@ -93,8 +76,6 @@ const ClubSimpleCard: React.FC<Props> = ({ club, modalOpen, hasLink }) => {
           followerList={club.followers as User[]}
           data={userData}
           clubId={club.id}
-          addFollower={addFollower}
-          removeFollower={removeFollower}
         />
         <ClubJoinButton club={club as Club} />
       </HStack>
@@ -121,10 +102,12 @@ const ClubSimpleCard: React.FC<Props> = ({ club, modalOpen, hasLink }) => {
       </Text>
       <Box onClick={modalOpen} display={"inline"}>
         <Text variant={"body-3"} display={"inline"}>
-          <b>{followers.length}</b> {pluralize(followers.length, "Follower")},{" "}
+          <b>{club.followers.length}</b>{" "}
+          {pluralize(club.followers.length, "Follower")},{" "}
         </Text>
         <Text variant={"body-3"} display={"inline"}>
-          <b>{members.length}</b> {pluralize(members.length, "Member")}
+          <b>{club.members.length}</b>{" "}
+          {pluralize(club.members.length, "Member")}
         </Text>
       </Box>
     </Card>
