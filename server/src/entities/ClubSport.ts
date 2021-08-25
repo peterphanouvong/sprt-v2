@@ -20,7 +20,9 @@ export class ClubSport extends BaseEntity {
    * Connections
    */
 
-  @ManyToOne(() => Club, (club) => club.eventConnection)
+  @ManyToOne(() => Club, (club) => club.eventConnection, {
+    onDelete: "CASCADE",
+  })
   club: Club;
 
   @ManyToOne(() => Sport, (s) => s.clubSportConnection, {

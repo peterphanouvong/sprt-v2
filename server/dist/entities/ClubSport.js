@@ -25,7 +25,9 @@ __decorate([
     __metadata("design:type", Number)
 ], ClubSport.prototype, "sportId", void 0);
 __decorate([
-    typeorm_1.ManyToOne(() => Club_1.Club, (club) => club.eventConnection),
+    typeorm_1.ManyToOne(() => Club_1.Club, (club) => club.eventConnection, {
+        onDelete: "CASCADE",
+    }),
     __metadata("design:type", Club_1.Club)
 ], ClubSport.prototype, "club", void 0);
 __decorate([

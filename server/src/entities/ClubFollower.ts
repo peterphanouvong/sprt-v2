@@ -20,9 +20,11 @@ export class ClubFollower extends BaseEntity {
    * Connections
    */
 
-  @ManyToOne(() => Club, (club) => club.followers)
+  @ManyToOne(() => Club, (club) => club.followers, { onDelete: "CASCADE" })
   club: Club;
 
-  @ManyToOne(() => User, (u) => u.clubFollowerConnection)
+  @ManyToOne(() => User, (u) => u.clubFollowerConnection, {
+    onDelete: "CASCADE",
+  })
   follower: User;
 }

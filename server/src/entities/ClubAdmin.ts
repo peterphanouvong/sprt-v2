@@ -20,9 +20,11 @@ export class ClubAdmin extends BaseEntity {
    * Connections
    */
 
-  @ManyToOne(() => Club, (club) => club.adminConnection)
+  @ManyToOne(() => Club, (club) => club.adminConnection, {
+    onDelete: "CASCADE",
+  })
   club: Club;
 
-  @ManyToOne(() => User, (u) => u.clubAdminConnection)
+  @ManyToOne(() => User, (u) => u.clubAdminConnection, { onDelete: "CASCADE" })
   admin: User;
 }
