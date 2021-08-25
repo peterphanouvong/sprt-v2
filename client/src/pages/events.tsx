@@ -7,6 +7,7 @@ import { EventList } from "../components/EventList";
 import { EventCreateButton } from "../components/EventCreateButton";
 import { useEventsQuery, useMeQuery, Event } from "../generated/graphql";
 import { Spinner } from "@chakra-ui/react";
+import Head from "next/head";
 
 interface Props {}
 
@@ -36,6 +37,9 @@ const Events: React.FC<Props> = ({}) => {
 
   return (
     <Layout>
+      <Head>
+        <title>Events | sprt</title>
+      </Head>
       {meData?.me && <EventCreateButton />}
       <EventList events={data.events as Event[]} />
     </Layout>

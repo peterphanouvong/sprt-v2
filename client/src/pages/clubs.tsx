@@ -6,9 +6,9 @@ import { Club, useClubsQuery } from "../generated/graphql";
 
 import { Spinner, VStack } from "@chakra-ui/react";
 import { CreateClub } from "../components/ClubCreateButton";
-import { ClubCard } from "../components/ClubCard";
 import { useIsAuth } from "../utils/useIsAuth";
 import { ClubSimpleCard } from "../components/ClubSimpleCard";
+import Head from "next/head";
 
 interface Props {}
 
@@ -26,7 +26,10 @@ const Clubs: React.FC<Props> = ({}) => {
 
   return (
     <Layout>
-      <VStack spacing={4} align='stretch'>
+      <Head>
+        <title>Clubs | sprt</title>
+      </Head>
+      <VStack spacing={4} align="stretch">
         <CreateClub />
         {data.clubs
           .sort((clubA, clubB) => clubA.id - clubB.id)
