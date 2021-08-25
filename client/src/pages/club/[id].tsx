@@ -46,11 +46,12 @@ const Club = () => {
     data?.club.members as unknown as User[]
   );
 
-  console.log(data.club);
   if (fetching) return <>loading..</>;
   if (error) return <Layout>{error.message}</Layout>;
+  if (!data) return <Layout>couldn't find the club</Layout>;
   if (!data?.club) return <Layout>couldn't find the club</Layout>;
 
+  console.log(data.club);
   return (
     <Layout>
       <ClubSimpleCard
@@ -76,15 +77,19 @@ const Club = () => {
             <Tabs isFitted colorScheme='orange'>
               <TabList>
                 <Tab>
-                  <Text variant='body-3'>Followers ({followers.length})</Text>
+                  <Text variant='body-3'>
+                    Followers ({data.club.followers.length})
+                  </Text>
                 </Tab>
                 <Tab>
-                  <Text variant='body-3'>Members ({members.length})</Text>
+                  <Text variant='body-3'>
+                    Members ({data.club.members.length})
+                  </Text>
                 </Tab>
               </TabList>
               <TabPanels>
                 <TabPanel paddingY={0} paddingX={2} maxH='sm' overflowY='auto'>
-                  {followers.map((attendee) => (
+                  {data.club.followers.map((attendee) => (
                     <Box
                       key={attendee.id}
                       borderBottom='1px solid'
@@ -96,7 +101,7 @@ const Club = () => {
                   ))}
                 </TabPanel>
                 <TabPanel paddingY={0} paddingX={2} maxH='sm' overflowY='auto'>
-                  {members.map((attendee) => (
+                  {/* {members.map((attendee) => (
                     <Box
                       key={attendee.id}
                       borderBottom='1px solid'
@@ -105,7 +110,7 @@ const Club = () => {
                     >
                       <Text variant={"body-2"}>{attendee.username}</Text>
                     </Box>
-                  ))}
+                  ))} */}
                 </TabPanel>
               </TabPanels>
             </Tabs>
@@ -130,4 +135,4 @@ const Club = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Club);
+export default withUrqlClient(createUrqlClient)(Club);

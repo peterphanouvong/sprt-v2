@@ -13,8 +13,8 @@ interface Props {
   followerList: Array<User>;
   clubId: number;
   data: MeQuery;
-  addFollower: () => void;
-  removeFollower: () => void;
+  addFollower?: () => void;
+  removeFollower?: () => void;
 }
 
 const ClubFollowButton: React.FC<Props> = ({
@@ -42,12 +42,14 @@ const ClubFollowButton: React.FC<Props> = ({
   };
 
   const handleFollow = async (): Promise<void> => {
+    // return person that followed and add that person into following list of club object
+    // update cache that way
     const { error } = await followClub({
       followerId: data.me!.id,
       clubId: clubId,
     });
     if (!error) {
-      addFollower();
+      // addFollower();
     } else {
       console.log(error);
       toast({

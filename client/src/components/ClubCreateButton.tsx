@@ -16,30 +16,30 @@ interface Props {
   // addClub: (data: Club) => void;
 }
 
-const CreateClub: React.FC<Props> = ({}) => {
+const ClubCreateButton: React.FC<Props> = ({}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
-      <Button onClick={onOpen} fontWeight="normal" width="full">
+      <Button onClick={onOpen} fontWeight='normal' width='full'>
         Create a New Club!
       </Button>
 
       <Modal
         closeOnOverlayClick={false}
-        size="3xl"
+        size='3xl'
         isOpen={isOpen}
         onClose={onClose}
       >
         <ModalOverlay />
         <ModalContent>
           <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
+            display='flex'
+            justifyContent='space-between'
+            alignItems='center'
             padding={4}
           >
-            <Heading fontSize="large">Create Club</Heading>
+            <Heading fontSize='large'>Create Club</Heading>
             <CloseButton onClick={onClose} />
           </Box>
           <Divider />
@@ -51,4 +51,4 @@ const CreateClub: React.FC<Props> = ({}) => {
   );
 };
 
-export { CreateClub };
+export { ClubCreateButton };
