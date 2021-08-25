@@ -8,6 +8,7 @@ import {
 } from "urql";
 import { pipe, tap } from "wonka";
 import {
+  AddAttendeeMutationVariables,
   ClubsDocument,
   DeleteClubMutationVariables,
   DeleteEventMutationVariables,
@@ -102,6 +103,12 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
+            addAttendee: (_result, args, cache, _info) => {
+              cache.invalidate({
+                __typename: "Event",
+                id: (args as AddAttendeeMutationVariables).eventId,
+              });
+            },
             createClub: (result, _args, cache, _info) => {
               cache.updateQuery({ query: ClubsDocument }, (data) => {
                 //@ts-ignore
