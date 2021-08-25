@@ -9,7 +9,6 @@ import {
   ModalBody,
   ModalContent,
   ModalOverlay,
-  Stat,
   Tab,
   TabList,
   TabPanel,
@@ -18,22 +17,53 @@ import {
   Text,
   useBreakpointValue,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import React from "react";
-import { User } from "../generated/graphql";
+import { useAddAttendeeMutation, User } from "../generated/graphql";
 
 interface Props {
   attendees: User[];
   capacity: number | undefined | null;
-  joinEvent: () => Promise<void>;
+  eventId: number;
+  eventTitle: string;
 }
 
 const ViewAttendeesModalButton: React.FC<Props> = ({
   attendees,
   capacity,
-  joinEvent,
+  eventId,
+  eventTitle,
 }) => {
+  const [, addAttendee] = useAddAttendeeMutation();
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const joinEvent = async () => {
+    const { error } = await addAttendee({ eventId: eventId });
+    if (!error) {
+      // router.reload();
+      toast({
+        title: "Joined event",
+        variant: "subtle",
+        description: `We've added you as an attendee to "${eventTitle}"`,
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+      // router.reload();
+    } else if (error) {
+      toast({
+        title: "Error",
+        variant: "subtle",
+        position: "top",
+        description: `${error.message}`,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
 
   let attending: User[] = [];
   let waitlisted: User[] = [];
