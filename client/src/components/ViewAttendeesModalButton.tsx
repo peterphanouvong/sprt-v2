@@ -30,6 +30,7 @@ interface Props {
   eventId: number;
   eventTitle: string;
   as?: "button" | "stat";
+  buttonSize?: string;
 }
 
 const ViewAttendeesModalButton: React.FC<Props> = ({
@@ -38,6 +39,7 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
   eventId,
   eventTitle,
   as = "stat",
+  buttonSize = "md",
 }) => {
   const [, addAttendee] = useAddAttendeeMutation();
   const toast = useToast();
@@ -80,16 +82,10 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
     attending = attendees;
   }
 
-  const buttonSize = useBreakpointValue({ base: "sm", md: "md" });
-
   return (
     <>
       {as === "button" ? (
-        <Button
-          size={isMobile ? "sm" : "md"}
-          variant="outline"
-          onClick={onOpen}
-        >
+        <Button size={buttonSize} variant="outline" onClick={onOpen}>
           View attendees
         </Button>
       ) : (
@@ -162,7 +158,7 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
 
           <HStack padding={4} spacing={4} justifyContent="flex-end">
             <Button
-              size={buttonSize}
+              size={isMobile ? "sm" : "md"}
               colorScheme="orange"
               variant="ghost"
               mr={3}
@@ -170,7 +166,11 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
             >
               Cancel
             </Button>
-            <Button size={buttonSize} colorScheme="orange" onClick={joinEvent}>
+            <Button
+              size={isMobile ? "sm" : "md"}
+              colorScheme="orange"
+              onClick={joinEvent}
+            >
               Join
             </Button>
           </HStack>

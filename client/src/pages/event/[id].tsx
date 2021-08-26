@@ -7,9 +7,7 @@ import { Layout } from "../../components/Layout";
 import { useEventQuery, User } from "../../generated/graphql";
 import {
   Box,
-  Button,
   Divider,
-  Flex,
   HStack,
   IconButton,
   Skeleton,
@@ -24,6 +22,7 @@ import { EventHeader } from "../../components/EventHeader";
 import NextLink from "next/link";
 import { DownloadIcon } from "@chakra-ui/icons";
 import { useIsMobileScreen } from "../../utils/useIsMobileScreen";
+import { EventJoinedStat } from "../../components/EventJoinedStat";
 
 const Event = () => {
   const router = useRouter();
@@ -41,7 +40,7 @@ const Event = () => {
   if (error) return <Layout>{error.message}</Layout>;
 
   return (
-    <Layout>
+    <Layout title={data?.event?.title}>
       <Box
         mb={4}
         display="flex"
@@ -52,7 +51,9 @@ const Event = () => {
         <Box textAlign="right">
           <EventOptionsButton eventId={intId} />
           {!data?.event ? (
-            <Skeleton height="70px" width="100px" />
+            <Skeleton>
+              <EventJoinedStat capacity={10} attendees={[]} onOpen={() => {}} />
+            </Skeleton>
           ) : (
             <Skeleton isLoaded={!!data?.event}>
               <ViewAttendeesModalButton
@@ -84,6 +85,7 @@ const Event = () => {
           <Skeleton isLoaded={!!data?.event}>
             <ViewAttendeesModalButton
               as="button"
+              buttonSize={isMobile ? "sm" : "md"}
               capacity={data.event.capacity}
               attendees={data.event.attendees as User[]}
               eventId={data?.event?.id}

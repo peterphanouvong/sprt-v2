@@ -5,13 +5,41 @@ import logoWhite from "../images/sprt-white.svg";
 
 interface Props {
   color?: "white" | "black";
+  size?: "sm" | "md" | "lg";
 }
 
-const Logo: React.FC<Props> = ({ color = "black" }) => {
+const Logo: React.FC<Props> = ({ color = "black", size = "md" }) => {
+  const width = 100;
+  const height = 60;
+
+  let sizeMultiplier: number;
+  switch (size) {
+    case "sm":
+      sizeMultiplier = 0.65;
+      break;
+    case "md":
+      sizeMultiplier = 1;
+      break;
+    case "lg":
+      sizeMultiplier = 1.2;
+      break;
+    default:
+      sizeMultiplier = 1;
+      break;
+  }
+
   return color === "black" ? (
-    <Image width={100} height={60} src={logo} />
+    <Image
+      width={width * sizeMultiplier}
+      height={height * sizeMultiplier}
+      src={logo}
+    />
   ) : (
-    <Image width={100} height={60} src={logoWhite} />
+    <Image
+      width={width * sizeMultiplier}
+      height={height * sizeMultiplier}
+      src={logoWhite}
+    />
   );
 };
 

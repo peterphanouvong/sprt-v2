@@ -1,13 +1,14 @@
-import React from "react";
+import { Skeleton } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../utils/createUrqlClient";
-import { Layout } from "../components/Layout";
-import { useIsAuth } from "../utils/useIsAuth";
-import { EventList } from "../components/EventList";
-import { EventCreateButton } from "../components/EventCreateButton";
-import { useEventsQuery, useMeQuery, Event } from "../generated/graphql";
-import { Spinner } from "@chakra-ui/react";
 import Head from "next/head";
+import React from "react";
+import { EventCreateButton } from "../components/EventCreateButton";
+import { EventList } from "../components/EventList";
+import { EventListSkeleton } from "../components/EventListSkeleton";
+import { Layout } from "../components/Layout";
+import { Event, useEventsQuery, useMeQuery } from "../generated/graphql";
+import { createUrqlClient } from "../utils/createUrqlClient";
+import { useIsAuth } from "../utils/useIsAuth";
 
 interface Props {}
 
@@ -20,28 +21,21 @@ const Events: React.FC<Props> = ({}) => {
     return <div>No data...</div>;
   }
 
-  if (!data) {
-    return (
-      <Spinner
-        position="absolute"
-        left="50%"
-        top="45vh"
-        thickness="2px"
-        speed="0.5s"
-        emptyColor="gray.100"
-        color="orange.500"
-        size="lg"
-      />
-    );
-  }
-
   return (
     <Layout>
       <Head>
         <title>Events | sprt</title>
       </Head>
-      {meData?.me && <EventCreateButton />}
-      <EventList events={data.events as Event[]} />
+      {meData?.me ? (
+        <EventCreateButton />
+      ) : (
+        <Skeleton height="40px" width="152.5px" borderRadius="md" />
+      )}
+      {!data ? (
+        <EventListSkeleton />
+      ) : (
+        <EventList events={data.events as Event[]} />
+      )}
     </Layout>
   );
 };
