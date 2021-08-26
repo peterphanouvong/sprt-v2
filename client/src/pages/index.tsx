@@ -7,11 +7,11 @@ import {
   Button,
   Center,
   Heading,
-  ResponsiveValue,
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import Head from "next/head";
 
 const Index = () => {
   const headingSize = useBreakpointValue({
@@ -38,30 +38,36 @@ const Index = () => {
     md: "center",
   });
   return (
-    <Layout>
-      <Center mt={"15%"}>
-        <Box
-          maxW="64rem"
-          display="flex"
-          flexDirection="column"
-          alignItems={textAlignment}
-          // @ts-ignore
-          textAlign={textAlignment}
-        >
-          <Heading size={headingSize}>
-            Organising sporting events made a whole lot easier
-          </Heading>
-          <Text maxW={"48rem"} mt={8} fontSize={textSize}>
-            Take the hassle out of creating events and managing your attendees.
-          </Text>
-          <NextLink href="/register">
-            <Button mt={8} colorScheme="orange" size={buttonSize}>
-              Get started for free
-            </Button>
-          </NextLink>
-        </Box>
-      </Center>
-    </Layout>
+    <>
+      <Head>
+        <title>sprt | Organise Sporting Events</title>
+      </Head>
+      <Layout>
+        <Center mt={"15%"}>
+          <Box
+            maxW="64rem"
+            display="flex"
+            flexDirection="column"
+            alignItems={textAlignment}
+            // @ts-ignore
+            textAlign={textAlignment}
+          >
+            <Heading size={headingSize}>
+              Organising sporting events made a whole lot easier
+            </Heading>
+            <Text maxW={"48rem"} mt={8} fontSize={textSize}>
+              Take the hassle out of creating events and managing your
+              attendees.
+            </Text>
+            <NextLink href="/register">
+              <Button mt={8} colorScheme="orange" size={buttonSize}>
+                Get started for free
+              </Button>
+            </NextLink>
+          </Box>
+        </Center>
+      </Layout>
+    </>
   );
 };
 

@@ -9,7 +9,6 @@ import {
   ModalBody,
   ModalContent,
   ModalOverlay,
-  Stat,
   Tab,
   TabList,
   TabPanel,
@@ -18,22 +17,61 @@ import {
   Text,
   useBreakpointValue,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import React from "react";
-import { User } from "../generated/graphql";
+import { useAddAttendeeMutation, User } from "../generated/graphql";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
+import { EventJoinedStat } from "./EventJoinedStat";
 
 interface Props {
   attendees: User[];
   capacity: number | undefined | null;
-  joinEvent: () => Promise<void>;
+  eventId: number;
+  eventTitle: string;
+  as?: "button" | "stat";
+  buttonSize?: string;
 }
 
 const ViewAttendeesModalButton: React.FC<Props> = ({
   attendees,
   capacity,
-  joinEvent,
+  eventId,
+  eventTitle,
+  as = "stat",
+  buttonSize = "md",
 }) => {
+  const [, addAttendee] = useAddAttendeeMutation();
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const joinEvent = async () => {
+    const { error } = await addAttendee({ eventId: eventId });
+    if (!error) {
+      // router.reload();
+      toast({
+        title: "Joined event",
+        variant: "subtle",
+        description: `We've added you as an attendee to "${eventTitle}"`,
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+      // router.reload();
+    } else if (error) {
+      toast({
+        title: "Error",
+        variant: "subtle",
+        position: "top",
+        description: `${error.message}`,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const isMobile = useIsMobileScreen();
 
   let attending: User[] = [];
   let waitlisted: User[] = [];
@@ -44,27 +82,19 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
     attending = attendees;
   }
 
-  const buttonSize = useBreakpointValue({ base: "sm", md: "md" });
-
   return (
     <>
-      <Box onClick={onOpen} _hover={{ cursor: "pointer" }} textAlign="right">
-        {capacity ? (
-          <>
-            <Text variant="body-3">Joined</Text>
-            <Heading variant="h4">
-              {attendees.length}/{capacity}
-            </Heading>
-            <Text variant="label">See attendees</Text>
-          </>
-        ) : (
-          <>
-            <Text variant="body-3">Already joined</Text>
-            <Heading variant="h4">{attendees.length}</Heading>
-            <Text variant="label">See who's going</Text>
-          </>
-        )}
-      </Box>
+      {as === "button" ? (
+        <Button size={buttonSize} variant="outline" onClick={onOpen}>
+          View attendees
+        </Button>
+      ) : (
+        <EventJoinedStat
+          capacity={capacity}
+          attendees={attendees}
+          onOpen={onOpen}
+        />
+      )}
 
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -128,7 +158,7 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
 
           <HStack padding={4} spacing={4} justifyContent="flex-end">
             <Button
-              size={buttonSize}
+              size={isMobile ? "sm" : "md"}
               colorScheme="orange"
               variant="ghost"
               mr={3}
@@ -136,7 +166,11 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
             >
               Cancel
             </Button>
-            <Button size={buttonSize} colorScheme="orange" onClick={joinEvent}>
+            <Button
+              size={isMobile ? "sm" : "md"}
+              colorScheme="orange"
+              onClick={joinEvent}
+            >
               Join
             </Button>
           </HStack>

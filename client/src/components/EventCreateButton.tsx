@@ -18,6 +18,7 @@ import React, { useState } from "react";
 import { useCreateEventMutation, useMeQuery } from "../generated/graphql";
 import { formatDateForPostgres } from "../utils/parseDate";
 import { EventForm } from "./EventForm";
+import { MotionBox } from "./MotionBox";
 
 interface Props {}
 
@@ -52,7 +53,11 @@ const EventCreateButton: React.FC<Props> = ({}) => {
   console.log(data);
 
   return (
-    <>
+    <MotionBox
+      transformOrigin="center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
       {!!data.me?.adminClubs?.length ? (
         <Menu>
           <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
@@ -117,7 +122,7 @@ const EventCreateButton: React.FC<Props> = ({}) => {
           <EventForm onClose={onClose} onSubmit={onSubmit} clubId={clubId} />
         </ModalContent>
       </Modal>
-    </>
+    </MotionBox>
   );
 };
 

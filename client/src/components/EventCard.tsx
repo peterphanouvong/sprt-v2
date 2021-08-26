@@ -6,22 +6,28 @@ import {
   HStack,
   Link,
   MenuItem,
+  Spinner,
   Text,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
-import { Event, useAddAttendeeMutation, User } from "../generated/graphql";
-
-import { useMeQuery } from "../generated/graphql";
+// import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
+import NextLink from "next/link";
+import React from "react";
+import {
+  Event,
+  useAddAttendeeMutation,
+  useMeQuery,
+  User,
+} from "../generated/graphql";
 import { parseDatePretty } from "../utils/parseDate";
 import { Card } from "./Card";
 import { ClubIcon } from "./ClubIcon";
 import { EventDeleteButton } from "./EventDeleteButton";
 import { EventEditButton } from "./EventEditButton";
+import { MotionBox } from "./MotionBox";
 import { OptionsButton } from "./OptionsButton";
 import { ViewAttendeesModalButton } from "./ViewAttendeesModalButton";
-// import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
-import NextLink from "next/link";
 
 interface Props {
   event: Event;
@@ -29,16 +35,18 @@ interface Props {
 
 const EventCard: React.FC<Props> = ({ event }) => {
   const [, addAttendee] = useAddAttendeeMutation();
-  const [attendees, setAttendees] = useState<User[]>(event.attendees);
   const toast = useToast();
   const [{ data }] = useMeQuery();
+
+  // const [hasJoined, setHasJoined] = useState(event.attendees.map())
+  // const [attendees, setAttendees] = useState<User[]>(event.attendees);
 
   const joinEvent = async () => {
     const { error, data } = await addAttendee({ eventId: event.id });
 
     if (data && !error) {
       // @ts-ignore
-      setAttendees([...attendees, data.addAttendee]);
+      // setAttendees([...attendees, data.addAttendee]);
       toast({
         title: "Joined event",
         variant: "subtle",
@@ -46,6 +54,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
         status: "success",
         duration: 5000,
         isClosable: true,
+        position: "top",
       });
     } else if (error) {
       toast({
@@ -60,7 +69,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
     }
   };
 
-  if (!data) return <>loading...</>;
+  // if (!data) return <>loading...</>;
   return (
     <Card>
       <Box
@@ -97,26 +106,45 @@ const EventCard: React.FC<Props> = ({ event }) => {
 
         <Box textAlign="right">
           <OptionsButton>
-            {data.me?.id === event.host.id ? (
-              <>
-                <EventEditButton event={event} />
-                <EventDeleteButton eventId={event.id} />
-              </>
+            {data ? (
+              data.me?.id === event.host.id ? (
+                <>
+                  <EventEditButton event={event} />
+                  <EventDeleteButton eventId={event.id} />
+                </>
+              ) : (
+                <MenuItem icon={<WarningIcon />}>Report</MenuItem>
+              )
             ) : (
-              <MenuItem icon={<WarningIcon />}>Report</MenuItem>
+              <MenuItem>
+                <Spinner />
+              </MenuItem>
             )}
           </OptionsButton>
           <ViewAttendeesModalButton
             capacity={event.capacity}
-            attendees={attendees}
-            joinEvent={joinEvent}
+            attendees={event.attendees}
+            eventTitle={event.title}
+            eventId={event.id}
+            // joinEvent={joinEvent}
           />
         </Box>
       </Box>
 
-      <Button onClick={joinEvent} mt={4} isFullWidth={true}>
-        Join
-      </Button>
+      <VStack alignItems="stretch">
+        <Button onClick={joinEvent} mt={4}>
+          Join
+        </Button>
+
+        <ViewAttendeesModalButton
+          as="button"
+          buttonSize="md"
+          capacity={event.capacity}
+          attendees={event.attendees as User[]}
+          eventId={event?.id}
+          eventTitle={event?.title}
+        />
+      </VStack>
     </Card>
   );
 };

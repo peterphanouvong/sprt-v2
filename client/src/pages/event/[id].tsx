@@ -4,45 +4,30 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useRouter } from "next/router";
 import { Layout } from "../../components/Layout";
-import {
-  Event as EventType,
-  useAddAttendeeMutation,
-  useEventQuery,
-  useMeQuery,
-  User,
-} from "../../generated/graphql";
-// import { Card } from "../../components/Card";
-// import { RenderPrettyJSON } from "../../utils/renderPrettyJSON";
-// import { CSVLink } from "react-csv";
+import { useEventQuery, User } from "../../generated/graphql";
 import {
   Box,
-  Button,
   Divider,
-  Heading,
   HStack,
-  // Link,
-  MenuItem,
-  Text,
-  useBreakpointValue,
-  useToast,
+  IconButton,
+  Skeleton,
+  SkeletonText,
 } from "@chakra-ui/react";
-import { DownloadIcon, WarningIcon } from "@chakra-ui/icons";
-import { ClubIcon } from "../../components/ClubIcon";
-import { EventDeleteButton } from "../../components/EventDeleteButton";
-import { EventEditButton } from "../../components/EventEditButton";
-import { OptionsButton } from "../../components/OptionsButton";
 import { ViewAttendeesModalButton } from "../../components/ViewAttendeesModalButton";
-import { parseDatePretty } from "../../utils/parseDate";
-// import NextLink from "next/link";
 import { DynamicEditor } from "../../components/DynamicEditor";
 import { parseRichText } from "../../utils/parseRichText";
-// import { RenderPrettyJSON } from "../../utils/renderPrettyJSON";
+import { EventOptionsButton } from "../../components/EventOptionsButton";
+import { EventJoinButton } from "../../components/EventJoinButton";
+import { EventHeader } from "../../components/EventHeader";
+import NextLink from "next/link";
+import { DownloadIcon } from "@chakra-ui/icons";
+import { useIsMobileScreen } from "../../utils/useIsMobileScreen";
+import { EventJoinedStat } from "../../components/EventJoinedStat";
+import { CSVLink } from "react-csv";
 
 const Event = () => {
   const router = useRouter();
-  const toast = useToast();
-  const [, addAttendee] = useAddAttendeeMutation();
-
+  const isMobile = useIsMobileScreen();
   const intId =
     typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
 
@@ -53,125 +38,96 @@ const Event = () => {
     },
   });
 
-  const [{ data: meData }] = useMeQuery();
-
-  const smallScreen = useBreakpointValue({ base: true, md: false });
-
-  if (fetching) return <>loading..</>;
   if (error) return <Layout>{error.message}</Layout>;
-  if (!data?.event || !meData?.me)
-    return <Layout>couldn't find the event</Layout>;
-
-  const joinEvent = async () => {
-    const { error } = await addAttendee({ eventId: data.event!.id });
-
-    if (!error) {
-      // router.reload();
-      toast({
-        title: "Joined event",
-        variant: "subtle",
-        description: `We've added you as an attendee to "${data.event?.title}"`,
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "top",
-      });
-      // router.reload();
-    } else if (error) {
-      toast({
-        title: "Error",
-        variant: "subtle",
-        position: "top",
-        description: `${error.message}`,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
 
   return (
-    <Layout>
+    <Layout title={data?.event?.title}>
       <Box
         mb={4}
         display="flex"
         justifyContent="space-between"
         alignItems="flex-end"
       >
-        <Box>
-          <Box>
-            <HStack mb={2}>
-              <ClubIcon />
-              <Box display="flex" alignItems="center">
-                <Text display="inline" variant="label" fontWeight="normal">
-                  <b>{data.event.host.username}</b> is hosting
-                </Text>
-              </Box>
-            </HStack>
-
-            <Box display="flex">
-              <Heading variant="h2" as="h2">
-                {data.event.title}
-              </Heading>
-              <Button
-                ml={6}
-                mb={0}
-                colorScheme="orange"
-                variant="outline"
-                onClick={joinEvent}
-                hidden={smallScreen}
-              >
-                Join
-              </Button>
-            </Box>
-
-            <Text variant="label">
-              {parseDatePretty(data.event.startTime)} [{data.event.location}]
-            </Text>
-          </Box>
-        </Box>
+        <EventHeader eventId={intId} />
         <Box textAlign="right">
-          <OptionsButton>
-            {meData.me?.id === data.event.host.id ? (
-              <>
-                <EventEditButton event={data.event as EventType} />
-                <EventDeleteButton eventId={data.event.id} />
-                <MenuItem
-                  onClick={() => router.push(`/event-info/${data.event?.id}`)}
-                  icon={<DownloadIcon />}
-                >
-                  Export attendees
-                </MenuItem>
-              </>
-            ) : (
-              <MenuItem icon={<WarningIcon />}>Report</MenuItem>
-            )}
-          </OptionsButton>
-          <ViewAttendeesModalButton
-            capacity={data.event.capacity}
-            attendees={data.event.attendees as User[]}
-            joinEvent={joinEvent}
-          />
+          <EventOptionsButton eventId={intId} />
+          {!data?.event ? (
+            <Skeleton>
+              <EventJoinedStat capacity={10} attendees={[]} onOpen={() => {}} />
+            </Skeleton>
+          ) : (
+            <Skeleton isLoaded={!!data?.event}>
+              <ViewAttendeesModalButton
+                capacity={data.event.capacity}
+                attendees={data.event.attendees as User[]}
+                eventId={data?.event?.id}
+                eventTitle={data?.event?.title}
+              />
+            </Skeleton>
+          )}
         </Box>
       </Box>
-      <Button
-        // ml={6}
-        mb={2}
-        colorScheme="orange"
-        variant="outline"
-        width="full"
-        onClick={joinEvent}
-        hidden={!smallScreen}
-      >
-        Join
-      </Button>
-      <Divider mb={2} />
 
-      <DynamicEditor
-        name="description"
-        initialValue={parseRichText(data.event.description)}
-        readOnly={true}
-      />
+      <HStack mb={4}>
+        {!data?.event ? (
+          <Skeleton width="111px" height="40px"></Skeleton>
+        ) : (
+          <Skeleton isLoaded={!fetching}>
+            <EventJoinButton
+              eventId={data.event.id}
+              eventTitle={data.event.title}
+            />
+          </Skeleton>
+        )}
+
+        {!data?.event ? (
+          <Skeleton width="111px" height="40px" />
+        ) : (
+          <Skeleton isLoaded={!!data?.event}>
+            <ViewAttendeesModalButton
+              as="button"
+              buttonSize={isMobile ? "sm" : "md"}
+              capacity={data.event.capacity}
+              attendees={data.event.attendees as User[]}
+              eventId={data?.event?.id}
+              eventTitle={data?.event?.title}
+            />
+          </Skeleton>
+        )}
+
+        {!data?.event ? (
+          <Skeleton width="111px" height="40px"></Skeleton>
+        ) : (
+          <Skeleton isLoaded={!fetching}>
+            <CSVLink
+              data={data.event.attendees.map((x) => ({
+                "First name": x.firstname,
+                "Last name": x.lastname,
+              }))}
+            >
+              <IconButton
+                size={isMobile ? "sm" : "md"}
+                aria-label="export attendees"
+                variant="outline"
+                icon={<DownloadIcon />}
+              />
+            </CSVLink>
+          </Skeleton>
+        )}
+      </HStack>
+
+      <Divider mb={2} />
+      {!data?.event ? (
+        <SkeletonText my="4" noOfLines={4} spacing="4" />
+      ) : (
+        <Skeleton isLoaded={!fetching}>
+          <DynamicEditor
+            name="description"
+            initialValue={parseRichText(data.event.description)}
+            readOnly={true}
+          />
+        </Skeleton>
+      )}
 
       <Divider mb={2} />
       {/* <RenderPrettyJSON object={data} /> */}
@@ -179,4 +135,4 @@ const Event = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Event);
+export default withUrqlClient(createUrqlClient, { ssr: false })(Event);

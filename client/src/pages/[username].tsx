@@ -9,6 +9,7 @@ import { useUserByUsernameQuery } from "../generated/graphql";
 import { useRouter } from "next/router";
 import { useIsAuth } from "../utils/useIsAuth";
 import { Card } from "../components/Card";
+import Head from "next/head";
 
 const Profile = () => {
   useIsAuth();
@@ -27,6 +28,9 @@ const Profile = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>{data.userByUsername.username} | sprt</title>
+      </Head>
       <Code>
         <pre id="json">{JSON.stringify(data.userByUsername, null, 2)}</pre>
       </Code>

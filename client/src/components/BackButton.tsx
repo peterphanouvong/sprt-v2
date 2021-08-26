@@ -1,11 +1,11 @@
 import { ChevronLeftIcon } from "@chakra-ui/icons";
-import { IconButton } from "@chakra-ui/react";
+import { ButtonProps, IconButton } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 
-interface Props {}
+type Props = ButtonProps;
 
-const BackButton: React.FC<Props> = ({}) => {
+const BackButton: React.FC<Props> = ({ ...props }) => {
   const router = useRouter();
   return (
     <IconButton
@@ -13,6 +13,7 @@ const BackButton: React.FC<Props> = ({}) => {
       aria-label="back-button"
       icon={<ChevronLeftIcon />}
       onClick={() => router.back()}
+      {...props}
     />
   );
 };

@@ -7,6 +7,7 @@ import { useIsAuth } from "../utils/useIsAuth";
 import { useMeQuery, usePublicityTypesQuery } from "../generated/graphql";
 import { Spinner } from "@chakra-ui/react";
 import { PublicFeed } from "../components/PublicFeed";
+import Head from "next/head";
 
 interface Props {}
 
@@ -36,6 +37,9 @@ const Feed: React.FC<Props> = ({}) => {
 
   return (
     <Layout>
+      <Head>
+        <title>Feed | sprt</title>
+      </Head>
       <PublicFeed meData={data} publicityTypesData={publicityTypesData} />
     </Layout>
   );

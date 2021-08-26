@@ -1,14 +1,34 @@
 import { Container } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
+import { MobileNavbar } from "./MobileNavbar";
 import { Navbar } from "./Navbar";
+import { TopMobileNavbar } from "./TopMobileNavbar";
 
-interface Props {}
+const homePages = ["/feed", "/events", "/clubs", "/[username]"];
 
-const Layout: React.FC<Props> = ({ children }) => {
+interface Props {
+  title?: string;
+}
+
+const Layout: React.FC<Props> = ({ children, title }) => {
+  const router = useRouter();
+  const isMobile = useIsMobileScreen();
   return (
     <>
-      <Navbar />
-      <Container paddingX={4} maxW="container.xl">
+      {isMobile ? (
+        <>
+          <TopMobileNavbar
+            variant={homePages.includes(router.pathname) ? "home" : "page"}
+            title={title}
+          />
+          <MobileNavbar />
+        </>
+      ) : (
+        <Navbar />
+      )}
+      <Container paddingX={4} maxW="container.xl" paddingY={isMobile ? 16 : 0}>
         {children}
       </Container>
     </>

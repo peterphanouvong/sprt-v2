@@ -1,51 +1,32 @@
 import React from "react";
 import NextLink from "next/link";
-import {
-  Box,
-  Drawer,
-  DrawerBody,
-  DrawerContent,
-  DrawerOverlay,
-  IconButton,
-  Link,
-  Stack,
-  useBreakpointValue,
-  useColorMode,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Box, Link, Stack, useColorMode } from "@chakra-ui/react";
 
 import Logo from "./Logo";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import SettingsDrawer from "./SettingsDrawer";
 
-import { HamburgerIcon } from "@chakra-ui/icons";
-
+import { useRouter } from "next/router";
 interface Props {}
 
 const Navbar: React.FC<Props> = ({}) => {
   const { colorMode } = useColorMode();
-  const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
+  const [, logout] = useLogoutMutation();
   const [{ data, fetching }] = useMeQuery({});
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const hidden = useBreakpointValue({ base: true, md: false });
+  const router = useRouter();
+  console.log(router.pathname);
 
   let body: any = null;
   let left: any = null;
 
-  //data loading d
   if (fetching) {
-    // user not logged in
   } else if (!data?.me) {
     body = (
-      <Stack
-        alignItems={{ base: "left", md: "center" }}
-        direction={{ base: "column", md: "row" }}
-        spacing={8}
-      >
-        <NextLink href='/login'>
+      <Stack alignItems={"center"} direction={"row"} spacing={8}>
+        <NextLink href="/login">
           <Link>login</Link>
         </NextLink>
-        <NextLink href='/register'>
+        <NextLink href="/register">
           <Link>register</Link>
         </NextLink>
         <SettingsDrawer />
@@ -55,11 +36,7 @@ const Navbar: React.FC<Props> = ({}) => {
     // user logged in
   } else {
     body = (
-      <Stack
-        alignItems={{ base: "left", md: "center" }}
-        direction={{ base: "column", md: "row" }}
-        spacing={8}
-      >
+      <Stack alignItems={"center"} direction={"row"} spacing={8}>
         <NextLink href={`/${data.me.username}`}>
           <Link>{data.me.username}</Link>
         </NextLink>
@@ -68,8 +45,8 @@ const Navbar: React.FC<Props> = ({}) => {
             logout();
           }}
           // isloading={logoutFetching}
-          variant='link'
-          fontWeight='normal'
+          variant="link"
+          fontWeight="normal"
         >
           logout
         </Link>
@@ -80,73 +57,46 @@ const Navbar: React.FC<Props> = ({}) => {
     left = (
       <Stack
         alignItems={{ base: "left", md: "center" }}
-        direction={{ base: "column", md: "row" }}
+        direction={"row"}
         spacing={8}
       >
-        <NextLink href='/feed'>
+        <NextLink href="/feed">
           <Link>feed</Link>
         </NextLink>
-        <NextLink href='/clubs'>
+        <NextLink href="/clubs">
           <Link>clubs</Link>
         </NextLink>{" "}
-        <NextLink href='/events'>
-          <Link>events</Link>
+        <NextLink href="/events">
+          <Link
+            px={2}
+            py={1}
+            borderBottom={
+              router.pathname === "/events" ? "2px solid orange" : ""
+            }
+          >
+            events
+          </Link>
         </NextLink>
-        {/* <EventCreateButton /> */}
       </Stack>
     );
   }
 
-  if (hidden)
-    return (
-      <>
-        <IconButton
-          icon={<HamburgerIcon />}
-          onClick={onOpen}
-          variant='ghost'
-          aria-label='menu'
-          my={2}
-          mx={2}
-        />
-
-        <Drawer placement='left' onClose={onClose} isOpen={isOpen}>
-          <DrawerOverlay />
-          <DrawerContent>
-            <DrawerBody>
-              <NextLink href='/home'>
-                <a style={{ paddingTop: "6px" }}>
-                  <Logo color={colorMode === "dark" ? "white" : "black"} />
-                </a>
-              </NextLink>
-              <Box mb={4} />
-              {left}
-              <Box mb={8} />
-              {body}
-            </DrawerBody>
-          </DrawerContent>
-        </Drawer>
-      </>
-    );
   return (
     <>
       <Box
         paddingX={16}
-        display='flex'
-        justifyContent='space-between'
-        alignItems={{ base: "left", md: "center" }}
-        flexDirection={{ base: "column", md: "row" }}
+        display="flex"
+        justifyContent="space-between"
+        alignItems={"center"}
+        flexDirection={"row"}
         mb={8}
-        position='sticky'
+        position="sticky"
         top={0}
-        zIndex='10'
+        zIndex="10"
         bg={colorMode === "dark" ? "gray.800" : `white`}
       >
-        <Box
-          display='flex'
-          flexDirection={{ base: "column", md: "row" }}
-          alignItems={{ base: "left", md: "center" }}
-        >
-          <NextLink href='/home'>
+        <Box display="flex" flexDirection={"row"} alignItems={"center"}>
+          <NextLink href="/home">
             <a style={{ paddingTop: "6px" }}>
               <Logo color={colorMode === "dark" ? "white" : "black"} />
             </a>
