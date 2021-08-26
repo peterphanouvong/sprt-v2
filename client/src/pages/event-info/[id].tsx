@@ -59,9 +59,8 @@ const EventInfo: React.FC<Props> = ({}) => {
   if (!data?.event) return <Layout>couldn't find the event</Layout>;
 
   return (
-    <Layout>
+    <Layout title={data.event.title}>
       <HStack spacing={4} mb={6}>
-        <BackButton />
         <Heading as="h3" variant="h3">
           {data.event.title}
         </Heading>

@@ -1,36 +1,24 @@
-import { DownloadIcon, WarningIcon } from "@chakra-ui/icons";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   ButtonGroup,
   Divider,
+  Flex,
   Heading,
-  HStack,
   IconButton,
   Link,
-  MenuItem,
-  Spinner,
   Text,
-  useToast,
-  VStack,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import React from "react";
-import {
-  Event,
-  useAddAttendeeMutation,
-  useMeQuery,
-  User,
-} from "../generated/graphql";
+import { Event } from "../generated/graphql";
 import { parseDatePretty } from "../utils/parseDate";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { Card } from "./Card";
-import { ClubIcon } from "./ClubIcon";
 import { EventDeleteButton } from "./EventDeleteButton";
 import { EventEditButton } from "./EventEditButton";
-import { OptionsButton } from "./OptionsButton";
 import { ViewAttendeesModalButton } from "./ViewAttendeesModalButton";
-import { CSVLink } from "react-csv";
 
 interface Props {
   event: Event;
@@ -44,11 +32,21 @@ const MyEventCard: React.FC<Props> = ({ event }) => {
       <Box display="flex" justifyContent="space-between" alignItems="flex-end">
         <Box>
           <Box>
-            <Heading variant="h3" as="h3">
+            <Flex alignItems="center">
+              <Heading variant="h3" as="h3">
+                <NextLink href={`/event/${event.id}`}>
+                  <Link>{event.title}</Link>
+                </NextLink>
+              </Heading>
               <NextLink href={`/event/${event.id}`}>
-                <Link>{event.title}</Link>
+                <IconButton
+                  variant="ghost"
+                  size={isMobile ? "sm" : "md"}
+                  aria-label="view event"
+                  icon={<ExternalLinkIcon />}
+                />
               </NextLink>
-            </Heading>
+            </Flex>
             <Text variant="label">
               {parseDatePretty(event.startTime)} [{event.location}]
             </Text>

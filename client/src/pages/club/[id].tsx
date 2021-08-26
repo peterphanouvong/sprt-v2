@@ -2,14 +2,11 @@ import {
   Divider,
   Heading,
   HStack,
-  Link,
   Skeleton,
   SkeletonText,
-  Spinner,
   Text,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { ClubEvents } from "../../components/ClubEvents";
@@ -26,7 +23,6 @@ import {
   User,
 } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
-import { RenderPrettyJSON } from "../../utils/renderPrettyJSON";
 
 const Club = () => {
   const router = useRouter();

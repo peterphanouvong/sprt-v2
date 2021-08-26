@@ -33,8 +33,8 @@ const EventOptionsButton: React.FC<Props> = ({ eventId }) => {
       <OptionsButton gutter={0}>
         {data?.me?.id === eventData?.event?.hostId ? (
           <>
-            <EventEditButton event={eventData.event as Event} />
-            <EventDeleteButton eventId={eventId} />
+            <EventEditButton as="modalItem" event={eventData.event as Event} />
+            <EventDeleteButton as="modalItem" eventId={eventId} />
             <MenuItem
               onClick={() => router.push(`/event-info/${eventData?.event?.id}`)}
               icon={<DownloadIcon />}
