@@ -1,7 +1,5 @@
-import { AddIcon } from "@chakra-ui/icons";
 import {
   Box,
-  Button,
   Divider,
   Heading,
   HStack,
@@ -37,16 +35,16 @@ const MyClub = () => {
     },
   });
 
-  console.log(error);
-
   if (error?.message === "[GraphQL] Cannot read property 'clubId' of undefined")
     return (
       <Layout>
         <VStack paddingX={20} paddingY={5}>
           <Image src={nothingHere} />
-          <Text textAlign="center">Looks like you don't have a club yet</Text>
           <Box pt={4}></Box>
-          {/* <Button>Create a club</Button> */}
+          <Text variant="body-1" textAlign="center">
+            Looks like you don't have a club yet
+          </Text>
+          <Box pt={4}></Box>
           <ClubCreateButton />
         </VStack>
       </Layout>

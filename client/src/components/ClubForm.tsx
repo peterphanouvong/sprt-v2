@@ -30,7 +30,6 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
   const [, updateClub] = useUpdateClubMutation();
 
   const router = useRouter();
-  const toast = useToast();
 
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
@@ -88,7 +87,7 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
       }
       validationSchema={CreateClubSchema}
       onSubmit={
-        formType === "Post"
+        formType === "Create club"
           ? (values, { setErrors }) => onCreate(values, setErrors)
           : (values, { setErrors }) => onEdit(values, setErrors)
       }
@@ -99,7 +98,7 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
             <VStack align="stretch" spacing={4} padding={4}>
               <InputField
                 name="name"
-                placeholder="What's your club name?"
+                placeholder="the Lakers"
                 label="Name"
                 touched={props.touched.name as boolean}
                 required
@@ -107,7 +106,7 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
 
               <InputField
                 name="email"
-                placeholder="example@email.com"
+                placeholder="example@example.com"
                 label="Email"
                 icon={<EmailIcon color="gray.300" />}
                 touched={props.touched.email as boolean}
@@ -116,7 +115,8 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
 
               <InputField
                 name="phoneNumber"
-                placeholder="04XXXXXXXX"
+                placeholder="0000000000"
+                type="tel"
                 label="Phone Number"
                 icon={<PhoneIcon color="gray.300" />}
                 touched={props.touched.phoneNumber as boolean}
@@ -125,7 +125,7 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
 
               <TextareaField
                 name="description"
-                placeholder="What's up?"
+                placeholder="you can thank us for Kobe & Shaq"
                 label="Description"
               />
             </VStack>

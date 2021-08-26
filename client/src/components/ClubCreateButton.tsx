@@ -48,7 +48,7 @@ const ClubCreateButton: React.FC<Props> = ({ ...props }) => {
           </Box>
           <Divider />
 
-          <ClubForm onClose={onClose} formType={"Post"} />
+          <ClubForm onClose={onClose} formType={"Create club"} />
         </ModalContent>
       </Modal>
     </>
