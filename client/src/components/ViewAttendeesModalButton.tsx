@@ -21,12 +21,16 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useAddAttendeeMutation, User } from "../generated/graphql";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
+import { EventJoinedStat } from "./EventJoinedStat";
 
 interface Props {
   attendees: User[];
   capacity: number | undefined | null;
   eventId: number;
   eventTitle: string;
+  as?: "button" | "stat";
+  buttonSize?: string;
 }
 
 const ViewAttendeesModalButton: React.FC<Props> = ({
@@ -34,6 +38,8 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
   capacity,
   eventId,
   eventTitle,
+  as = "stat",
+  buttonSize = "md",
 }) => {
   const [, addAttendee] = useAddAttendeeMutation();
   const toast = useToast();
@@ -65,6 +71,8 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
     }
   };
 
+  const isMobile = useIsMobileScreen();
+
   let attending: User[] = [];
   let waitlisted: User[] = [];
   if (capacity) {
@@ -74,27 +82,19 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
     attending = attendees;
   }
 
-  const buttonSize = useBreakpointValue({ base: "sm", md: "md" });
-
   return (
     <>
-      <Box onClick={onOpen} _hover={{ cursor: "pointer" }} textAlign="right">
-        {capacity ? (
-          <>
-            <Text variant="body-3">Joined</Text>
-            <Heading variant="h4">
-              {attendees.length}/{capacity}
-            </Heading>
-            <Text variant="label">See attendees</Text>
-          </>
-        ) : (
-          <>
-            <Text variant="body-3">Already joined</Text>
-            <Heading variant="h4">{attendees.length}</Heading>
-            <Text variant="label">See who's going</Text>
-          </>
-        )}
-      </Box>
+      {as === "button" ? (
+        <Button size={buttonSize} variant="outline" onClick={onOpen}>
+          View attendees
+        </Button>
+      ) : (
+        <EventJoinedStat
+          capacity={capacity}
+          attendees={attendees}
+          onOpen={onOpen}
+        />
+      )}
 
       <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -158,7 +158,7 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
 
           <HStack padding={4} spacing={4} justifyContent="flex-end">
             <Button
-              size={buttonSize}
+              size={isMobile ? "sm" : "md"}
               colorScheme="orange"
               variant="ghost"
               mr={3}
@@ -166,7 +166,11 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
             >
               Cancel
             </Button>
-            <Button size={buttonSize} colorScheme="orange" onClick={joinEvent}>
+            <Button
+              size={isMobile ? "sm" : "md"}
+              colorScheme="orange"
+              onClick={joinEvent}
+            >
               Join
             </Button>
           </HStack>

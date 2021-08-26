@@ -6,22 +6,28 @@ import {
   HStack,
   Link,
   MenuItem,
+  Spinner,
   Text,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
+// import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
+import NextLink from "next/link";
 import React from "react";
-import { Event, useAddAttendeeMutation } from "../generated/graphql";
-
-import { useMeQuery } from "../generated/graphql";
+import {
+  Event,
+  useAddAttendeeMutation,
+  useMeQuery,
+  User,
+} from "../generated/graphql";
 import { parseDatePretty } from "../utils/parseDate";
 import { Card } from "./Card";
 import { ClubIcon } from "./ClubIcon";
 import { EventDeleteButton } from "./EventDeleteButton";
 import { EventEditButton } from "./EventEditButton";
+import { MotionBox } from "./MotionBox";
 import { OptionsButton } from "./OptionsButton";
 import { ViewAttendeesModalButton } from "./ViewAttendeesModalButton";
-// import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
-import NextLink from "next/link";
 
 interface Props {
   event: Event;
@@ -63,7 +69,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
     }
   };
 
-  if (!data) return <>loading...</>;
+  // if (!data) return <>loading...</>;
   return (
     <Card>
       <Box
@@ -100,13 +106,19 @@ const EventCard: React.FC<Props> = ({ event }) => {
 
         <Box textAlign="right">
           <OptionsButton>
-            {data.me?.id === event.host.id ? (
-              <>
-                <EventEditButton event={event} />
-                <EventDeleteButton eventId={event.id} />
-              </>
+            {data ? (
+              data.me?.id === event.host.id ? (
+                <>
+                  <EventEditButton event={event} />
+                  <EventDeleteButton eventId={event.id} />
+                </>
+              ) : (
+                <MenuItem icon={<WarningIcon />}>Report</MenuItem>
+              )
             ) : (
-              <MenuItem icon={<WarningIcon />}>Report</MenuItem>
+              <MenuItem>
+                <Spinner />
+              </MenuItem>
             )}
           </OptionsButton>
           <ViewAttendeesModalButton
@@ -119,9 +131,20 @@ const EventCard: React.FC<Props> = ({ event }) => {
         </Box>
       </Box>
 
-      <Button onClick={joinEvent} mt={4} isFullWidth={true}>
-        Join
-      </Button>
+      <VStack alignItems="stretch">
+        <Button onClick={joinEvent} mt={4}>
+          Join
+        </Button>
+
+        <ViewAttendeesModalButton
+          as="button"
+          buttonSize="md"
+          capacity={event.capacity}
+          attendees={event.attendees as User[]}
+          eventId={event?.id}
+          eventTitle={event?.title}
+        />
+      </VStack>
     </Card>
   );
 };

@@ -22,7 +22,7 @@ const EventOptionsButton: React.FC<Props> = ({ eventId }) => {
 
   if (!eventData) {
     return (
-      <Skeleton width="30px" mb={1}>
+      <Skeleton p={0} mb={1}>
         <DownloadIcon />
       </Skeleton>
     );
@@ -30,7 +30,7 @@ const EventOptionsButton: React.FC<Props> = ({ eventId }) => {
 
   return (
     <Skeleton isLoaded={!fetching && !fetchingEvent && !!eventData}>
-      <OptionsButton>
+      <OptionsButton gutter={0}>
         {data?.me?.id === eventData?.event?.hostId ? (
           <>
             <EventEditButton event={eventData.event as Event} />
