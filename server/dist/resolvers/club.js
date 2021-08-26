@@ -154,7 +154,6 @@ let ClubResolver = class ClubResolver {
             .includes(req.session.userId)) {
             throw Error("User is not authorised to delete this club");
         }
-        this.removeAllAdminsFromClub(id);
         await Club_1.Club.delete({ id });
         return true;
     }

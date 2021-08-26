@@ -18,9 +18,13 @@ export class EventAttendee extends BaseEntity {
   /**
    * Connections
    */
-  @ManyToOne(() => Event, (event) => event.attendeeConnection)
+  @ManyToOne(() => Event, (event) => event.attendeeConnection, {
+    onDelete: "CASCADE",
+  })
   event: Event;
 
-  @ManyToOne(() => User, (user) => user.eventAttendeeConnection)
+  @ManyToOne(() => User, (user) => user.eventAttendeeConnection, {
+    onDelete: "CASCADE",
+  })
   attendee: User;
 }

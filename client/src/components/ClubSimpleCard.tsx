@@ -1,4 +1,4 @@
-import { PhoneIcon, EmailIcon } from "@chakra-ui/icons";
+import { PhoneIcon, EmailIcon, WarningIcon } from "@chakra-ui/icons";
 import {
   Heading,
   HStack,
@@ -8,97 +8,89 @@ import {
   Text,
   Link,
   useBreakpointValue,
+  MenuItem,
+  Spinner,
+  Divider,
 } from "@chakra-ui/react";
 import { createBreakpoints } from "@chakra-ui/theme-tools";
 import React from "react";
 import { useRouter } from "next/router";
 import { BsPersonFill } from "react-icons/bs";
-import { Club, useClubQuery, useMeQuery, User } from "../generated/graphql";
+import {
+  Club,
+  MeQuery,
+  useClubQuery,
+  useMeQuery,
+  User,
+} from "../generated/graphql";
 import { pluralize } from "../utils/pluralize";
 import { Card } from "./Card";
 import { ClubFollowButton } from "./ClubFollowButton";
 import { ClubJoinButton } from "./ClubJoinButton";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
+import { ClubDeleteButton } from "./ClubDeleteButton";
+import { ClubEditButton } from "./ClubEditButton";
+import { OptionsButton } from "./OptionsButton";
+import { useIsAuthorised } from "../utils/useIsAuthorised";
+import { ClubDetailsModal } from "./ClubDetailsModal";
+import { ClubDetailsHeader } from "./ClubDetailsHeader";
 interface Props {
   club: Club;
-  modalOpen?: () => void;
-  modalClose?: () => void;
   hasLink?: boolean;
+  isClubPage?: boolean;
+  userData: MeQuery;
 }
 
-const ClubSimpleCard: React.FC<Props> = ({ club, modalOpen, hasLink }) => {
-  const [{ data: userData }] = useMeQuery();
+const ClubSimpleCard: React.FC<Props> = ({
+  club,
+  hasLink,
+  userData,
+  isClubPage,
+}) => {
+  const isAuthorised = useIsAuthorised(club);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [followers, setFollowers] = React.useState<User[]>(
-    club.followers as User[]
-  );
-  const [members, setMembers] = React.useState<User[]>(
-    club.members as unknown as User[]
-  );
-
-  const addFollower = () => {
-    setFollowers([...followers, userData!.me as User]);
-  };
-
-  const removeFollower = () => {
-    console.log(followers);
-    const newFollowers = followers.filter(
-      (user) => user.id !== userData!.me!.id
-    );
-    console.log(newFollowers);
-    setFollowers(newFollowers);
-  };
+  if (!userData) {
+    return <Spinner></Spinner>;
+  }
 
   return (
-    <Card>
-      <Heading mb={4}>
-        {hasLink ? (
-          <a href={`/club/${club.id}`}>
-            <Link>{club.name}</Link>
-          </a>
-        ) : (
-          club.name
-        )}
-        {/* {club.name} */}
-      </Heading>
-      <HStack>
-        <ClubFollowButton
-          followerList={club.followers as User[]}
-          data={userData}
-          clubId={club.id}
-          addFollower={addFollower}
-          removeFollower={removeFollower}
+    <>
+      {isClubPage && (
+        <>
+          <ClubDetailsHeader
+            club={club}
+            hasLink={hasLink}
+            userData={userData}
+            onOpen={onOpen}
+          />
+          <Divider mt={2} />
+        </>
+      )}
+
+      {/* <Card> */}
+      {!isClubPage && (
+        <ClubDetailsHeader
+          club={club}
+          hasLink={hasLink}
+          userData={userData}
+          onOpen={onOpen}
         />
-        <ClubJoinButton club={club as Club} />
-      </HStack>
+      )}
 
-      <Box mt={4}>
-        <Text variant={"label"} mb={1}>
-          <Icon as={BsPersonFill} w={3} h={3} mr={1} />
-          {club.admins[0].firstname + " " + club.admins[0].lastname}
-        </Text>
-        <Text variant={"label"} mb={1}>
-          <PhoneIcon w={3} h={3} mr={1} />
-          {club.phoneNumber}
-        </Text>
-        <Text variant={"label"}>
-          <EmailIcon w={3} h={3} mr={1} />
-          {club.email}
-        </Text>
-      </Box>
-
-      <Text variant={"body-2"} marginY={4}>
+      <Text variant={"body-3"} marginY={2}>
         {club.description}
       </Text>
-      <Box onClick={modalOpen} display={"inline"}>
-        <Text variant={"body-3"} display={"inline"}>
-          <b>{followers.length}</b> {pluralize(followers.length, "Follower")},{" "}
-        </Text>
-        <Text variant={"body-3"} display={"inline"}>
-          <b>{members.length}</b> {pluralize(members.length, "Member")}
-        </Text>
-      </Box>
-    </Card>
+
+      <ClubDetailsModal
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+        clubId={club.id}
+        userData={userData}
+      />
+      {/* </Card> */}
+    </>
   );
 };
 

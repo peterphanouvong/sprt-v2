@@ -1,5 +1,5 @@
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
-import { Button, useToast } from "@chakra-ui/react";
+import { Button, ButtonProps, useToast } from "@chakra-ui/react";
 import React from "react";
 import {
   MeQuery,
@@ -9,20 +9,18 @@ import {
 } from "../generated/graphql";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 
-interface Props {
+// Passing chakra props into custom component
+type Props = ButtonProps & {
   followerList: Array<User>;
   clubId: number;
   data: MeQuery;
-  addFollower: () => void;
-  removeFollower: () => void;
-}
+};
 
 const ClubFollowButton: React.FC<Props> = ({
   followerList,
   clubId,
   data,
-  addFollower,
-  removeFollower,
+  ...props
 }) => {
   const [isFollowing, setIsFollowing] = React.useState(
     followerList.map((user) => user.id).includes(data.me!.id)
@@ -46,9 +44,7 @@ const ClubFollowButton: React.FC<Props> = ({
       followerId: data.me!.id,
       clubId: clubId,
     });
-    if (!error) {
-      addFollower();
-    } else {
+    if (error) {
       console.log(error);
       toast({
         title: "Error",
@@ -67,9 +63,6 @@ const ClubFollowButton: React.FC<Props> = ({
       followerId: data.me!.id,
       clubId: clubId,
     });
-    if (!error) {
-      removeFollower();
-    }
   };
 
   if (!data) {
@@ -88,6 +81,7 @@ const ClubFollowButton: React.FC<Props> = ({
       variant={isFollowing ? "outline" : "solid"}
       onClick={handleButton}
       size={isMobile ? "xs" : "sm"}
+      {...props}
     >
       {isFollowing ? "Unfollow" : "Follow"}
     </Button>

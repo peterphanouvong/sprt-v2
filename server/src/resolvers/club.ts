@@ -191,7 +191,7 @@ export class ClubResolver {
     ) {
       throw Error("User is not authorised to delete this club");
     }
-    this.removeAllAdminsFromClub(id);
+    // this.removeAllAdminsFromClub(id);
 
     await Club.delete({ id });
     return true;

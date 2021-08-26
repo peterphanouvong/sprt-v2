@@ -14,6 +14,7 @@ import {
   DeleteEventMutationVariables,
   DeletePostMutationVariables,
   EventsDocument,
+  FollowClubMutationVariables,
   LoginMutation,
   LogoutMutation,
   MeDocument,
@@ -23,16 +24,18 @@ import {
 import { betterUpdateQuery } from "./betterUpdateQuery";
 import { isServer } from "./isServer";
 
-const errorExchange: Exchange = ({ forward }) => (ops$) => {
-  return pipe(
-    forward(ops$),
-    tap(({ error }) => {
-      if (error?.message.includes("not authenticated")) {
-        router.replace("/login");
-      }
-    })
-  );
-};
+const errorExchange: Exchange =
+  ({ forward }) =>
+  (ops$) => {
+    return pipe(
+      forward(ops$),
+      tap(({ error }) => {
+        if (error?.message.includes("not authenticated")) {
+          router.replace("/login");
+        }
+      })
+    );
+  };
 
 export const cursorPagination = (): Resolver => {
   return (_parent, fieldArgs, cache, info) => {
@@ -103,6 +106,18 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
+            followClub: (result, _args, cache, _info) => {
+              cache.invalidate({
+                __typename: "Club",
+                id: (_args as FollowClubMutationVariables).clubId,
+              });
+            },
+            unfollowClub: (result, _args, cache, _info) => {
+              cache.invalidate({
+                __typename: "Club",
+                id: (_args as FollowClubMutationVariables).clubId,
+              });
+            },
             addAttendee: (_result, args, cache, _info) => {
               cache.invalidate({
                 __typename: "Event",

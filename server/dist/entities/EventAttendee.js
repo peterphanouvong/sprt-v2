@@ -25,11 +25,15 @@ __decorate([
     __metadata("design:type", Number)
 ], EventAttendee.prototype, "attendeeId", void 0);
 __decorate([
-    typeorm_1.ManyToOne(() => Event_1.Event, (event) => event.attendeeConnection),
+    typeorm_1.ManyToOne(() => Event_1.Event, (event) => event.attendeeConnection, {
+        onDelete: "CASCADE",
+    }),
     __metadata("design:type", Event_1.Event)
 ], EventAttendee.prototype, "event", void 0);
 __decorate([
-    typeorm_1.ManyToOne(() => User_1.User, (user) => user.eventAttendeeConnection),
+    typeorm_1.ManyToOne(() => User_1.User, (user) => user.eventAttendeeConnection, {
+        onDelete: "CASCADE",
+    }),
     __metadata("design:type", User_1.User)
 ], EventAttendee.prototype, "attendee", void 0);
 EventAttendee = __decorate([

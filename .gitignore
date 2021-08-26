@@ -2,3 +2,4 @@ dump.rdb
 scripts/
 .env
 node_modules
+server/ormconfig.json

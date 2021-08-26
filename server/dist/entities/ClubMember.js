@@ -25,11 +25,11 @@ __decorate([
     __metadata("design:type", Number)
 ], ClubMember.prototype, "memberId", void 0);
 __decorate([
-    typeorm_1.ManyToOne(() => Club_1.Club, (club) => club.followers),
+    typeorm_1.ManyToOne(() => Club_1.Club, (club) => club.followers, { onDelete: "CASCADE" }),
     __metadata("design:type", Club_1.Club)
 ], ClubMember.prototype, "club", void 0);
 __decorate([
-    typeorm_1.ManyToOne(() => User_1.User, (u) => u.clubMemberConnection),
+    typeorm_1.ManyToOne(() => User_1.User, (u) => u.clubMemberConnection, { onDelete: "CASCADE" }),
     __metadata("design:type", User_1.User)
 ], ClubMember.prototype, "member", void 0);
 ClubMember = __decorate([

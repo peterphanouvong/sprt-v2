@@ -103,11 +103,11 @@ __decorate([
     __metadata("design:type", Date)
 ], Event.prototype, "updatedAt", void 0);
 __decorate([
-    typeorm_1.OneToMany(() => ClubEvent_1.ClubEvent, (ce) => ce.event, { onDelete: "CASCADE" }),
+    typeorm_1.OneToMany(() => ClubEvent_1.ClubEvent, (ce) => ce.event),
     __metadata("design:type", Array)
 ], Event.prototype, "clubConnection", void 0);
 __decorate([
-    typeorm_1.OneToMany(() => EventAttendee_1.EventAttendee, (ea) => ea.event, { onDelete: "CASCADE" }),
+    typeorm_1.OneToMany(() => EventAttendee_1.EventAttendee, (ea) => ea.event),
     __metadata("design:type", Array)
 ], Event.prototype, "attendeeConnection", void 0);
 Event = __decorate([

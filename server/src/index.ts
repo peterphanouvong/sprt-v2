@@ -68,6 +68,8 @@ const main = async () => {
   // await ClubRequestedMember.delete({});
   // await ClubFollower.delete({});
   // await ClubAdmin.delete({});
+  // await ClubMember.delete({});
+  // await ClubEvent.delete({});
   // await Club.delete({});
   // await User.delete({});
 
