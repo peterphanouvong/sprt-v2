@@ -81,6 +81,16 @@ export class ClubResolver {
     return userLoader.loadMany(memberIds[0].array_agg ?? []);
   }
 
+  @FieldResolver(() => Event)
+  async events(@Root() club: Club, @Ctx() { eventLoader }: MyContext) {
+    const eventIds = await getConnection().query(`
+       select array_agg("eventId")
+       from "club_event"
+       where "clubId" = ${club.id};
+     `);
+    return eventLoader.loadMany(eventIds[0].array_agg ?? []);
+  }
+
   /**
    * CRUD
    */

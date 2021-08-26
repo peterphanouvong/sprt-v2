@@ -18,6 +18,7 @@ import { User } from "../entities/User";
 import { EventAttendee } from "../entities/EventAttendee";
 import { getConnection } from "typeorm";
 import { Club } from "../entities/Club";
+import { ClubEvent } from "../entities/ClubEvent";
 
 @InputType()
 class EventInput {
@@ -98,7 +99,28 @@ export class EventResolver {
       ...input,
       hostId: req.session.userId,
     }).save();
+    if (input.clubId) {
+      this.addClubEvent(input.clubId, event.id);
+    }
     return Event.findOne(event.id);
+  }
+
+  @Mutation(() => Boolean)
+  async addClubEvent(
+    @Arg("clubId") clubId: number,
+    @Arg("eventId") eventId: number
+  ): Promise<boolean> {
+    try {
+      await ClubEvent.insert({
+        clubId: clubId,
+        eventId: eventId,
+      });
+    } catch (error) {
+      if (error.detail.includes("already exists")) {
+        throw Error(`That club already has an event with the given eventId`);
+      }
+    }
+    return true;
   }
 
   // Read
