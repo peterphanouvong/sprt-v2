@@ -58,14 +58,8 @@ const Club = () => {
         // modalOpen={onOpen}
         // modalClose={onClose}
         userData={userData}
+        isClubPage
       />
-      {/* <ClubDetailsModal
-        // isOpen={isOpen}
-        // onOpen={onOpen}
-        // onClose={onClose}
-        clubId={intId}
-        userData={userData}
-      /> */}
 
       <Box mt={4}>
         <Flex>

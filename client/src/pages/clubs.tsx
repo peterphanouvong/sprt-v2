@@ -9,6 +9,7 @@ import { ClubCreateButton } from "../components/ClubCreateButton";
 import { ClubCard } from "../components/ClubCard";
 import { useIsAuth } from "../utils/useIsAuth";
 import { ClubSimpleCard } from "../components/ClubSimpleCard";
+import { Card } from "../components/Card";
 
 interface Props {}
 
@@ -34,12 +35,14 @@ const Clubs: React.FC<Props> = ({}) => {
           .map((club: Club) => {
             console.log(club);
             return (
-              <ClubSimpleCard
-                key={club.id}
-                club={club}
-                userData={userData}
-                hasLink
-              />
+              <Card>
+                <ClubSimpleCard
+                  key={club.id}
+                  club={club}
+                  userData={userData}
+                  hasLink
+                />
+              </Card>
             );
           })}
       </VStack>
