@@ -20,6 +20,7 @@ const User_1 = require("../entities/User");
 const EventAttendee_1 = require("../entities/EventAttendee");
 const typeorm_1 = require("typeorm");
 const Club_1 = require("../entities/Club");
+const ClubEvent_1 = require("../entities/ClubEvent");
 let EventInput = class EventInput {
 };
 __decorate([
@@ -81,6 +82,9 @@ let EventResolver = class EventResolver {
     }
     async createEvent({ req }, input) {
         const event = await Event_1.Event.create(Object.assign(Object.assign({}, input), { hostId: req.session.userId })).save();
+        if (input.clubId) {
+            this.addClubEvent(input.clubId, event.id);
+        }
         return Event_1.Event.findOne(event.id);
     }
     async events() {
@@ -101,6 +105,20 @@ let EventResolver = class EventResolver {
             .returning("*")
             .execute();
         return raw[0];
+    }
+    async addClubEvent(clubId, eventId) {
+        try {
+            await ClubEvent_1.ClubEvent.insert({
+                clubId: clubId,
+                eventId: eventId,
+            });
+        }
+        catch (error) {
+            if (error.detail.includes("already exists")) {
+                throw Error(`That club already has an event with the given eventId`);
+            }
+        }
+        return true;
     }
     async deleteEvent(id, { req }) {
         const event = await Event_1.Event.findOne(id);
@@ -193,6 +211,14 @@ __decorate([
     __metadata("design:paramtypes", [Object, Number, EventInput]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "updateEvent", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg("clubId")),
+    __param(1, type_graphql_1.Arg("eventId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "addClubEvent", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
     type_graphql_1.UseMiddleware(isAuth_1.isAuth),

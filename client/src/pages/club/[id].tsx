@@ -5,12 +5,14 @@ import {
   Link,
   Skeleton,
   SkeletonText,
+  Spinner,
   Text,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { ClubEvents } from "../../components/ClubEvents";
 import { ClubFollowButton } from "../../components/ClubFollowButton";
 import { ClubFollowingTagline } from "../../components/ClubFollowingTagline";
 import { ClubJoinButton } from "../../components/ClubJoinButton";
@@ -18,11 +20,13 @@ import { ClubMetaInfo } from "../../components/ClubMetaInfo";
 import { Layout } from "../../components/Layout";
 import {
   Club as Clubtype,
+  Event,
   useClubQuery,
   useMeQuery,
   User,
 } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
+import { RenderPrettyJSON } from "../../utils/renderPrettyJSON";
 
 const Club = () => {
   const router = useRouter();
@@ -40,7 +44,7 @@ const Club = () => {
     <Layout>
       <NextLink href={`/club/${data?.club.id}`}>
         <Link>
-          <Heading as="h3" variant="h3">
+          <Heading as="h2" variant="h2">
             {data?.club.name || (
               <Skeleton height="30px" width="100px">
                 Club name
@@ -92,6 +96,8 @@ const Club = () => {
       <Text variant="body-3">
         {data?.club.description || <SkeletonText noOfLines={5} />}
       </Text>
+
+      <ClubEvents events={data.club.events as Event[]} />
     </Layout>
   );
 };
