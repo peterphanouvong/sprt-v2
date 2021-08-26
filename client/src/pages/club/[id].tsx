@@ -1,15 +1,16 @@
 import {
-  useDisclosure,
   Text,
   Heading,
   Box,
-  HStack,
   Flex,
   Spacer,
   Icon,
-  Center,
+  Link,
+  Skeleton,
+  HStack,
+  Divider,
+  SkeletonText,
 } from "@chakra-ui/react";
-import Image from "next/image";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
@@ -17,79 +18,83 @@ import { Card } from "../../components/Card";
 import { Layout } from "../../components/Layout";
 import {
   useClubQuery,
-  Club as ClubType,
-  useMeQuery,
-  useEventsQuery,
   Event,
+  User,
+  useMeQuery,
+  Club as Clubtype,
 } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
-import { ClubSimpleCard } from "../../components/ClubSimpleCard";
-import { ClubDetailsModal } from "../../components/ClubDetailsModal";
 import { EventList } from "../../components/EventList";
 import { EventCreateButton } from "../../components/EventCreateButton";
-import { useIsAuthorised } from "../../utils/useIsAuthorised";
 import { FaVolleyballBall } from "react-icons/fa";
+import { EventListSkeleton } from "../../components/EventListSkeleton";
+import NextLink from "next/link";
+import { ClubFollowingTagline } from "../../components/ClubFollowingTagline";
+import { ClubFollowButton } from "../../components/ClubFollowButton";
+import { ClubJoinButton } from "../../components/ClubJoinButton";
 
 const Club = () => {
-  // const { isOpen, onOpen, onClose } = useDisclosure();
-  const [{ data: userData, fetching: userFetching }] = useMeQuery();
-
   const router = useRouter();
   const intId =
     typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
 
-  const [{ data, fetching, error }] = useClubQuery({
+  const [{ data }] = useClubQuery({
     pause: intId === -1,
     variables: { clubId: intId },
   });
 
-  const [{ data: eventData, fetching: eventFetching }] = useEventsQuery();
-  const isAuthorised = useIsAuthorised(data?.club as ClubType);
-
-  if (fetching || userFetching || eventFetching) return <>loading..</>;
-  if (error) return <Layout>{error.message}</Layout>;
-  if (!data) return <Layout>couldn't find the club</Layout>;
-  if (!data?.club) return <Layout>couldn't find the club</Layout>;
+  const [{ data: userData }] = useMeQuery();
 
   return (
     <Layout>
-      <ClubSimpleCard
-        club={data.club as ClubType}
-        // modalOpen={onOpen}
-        // modalClose={onClose}
-        userData={userData}
-        isClubPage
-      />
-
-      <Box mt={4}>
-        <Flex>
-          <Heading variant='h3' mt={1}>
-            Events
+      <NextLink href={`/club/${data?.club.id}`}>
+        <Link>
+          <Heading as="h3" variant="h3">
+            {data?.club.name || (
+              <Skeleton height="30px" width="100px">
+                Club name
+              </Skeleton>
+            )}
           </Heading>
-          <Spacer />
-          {isAuthorised && <EventCreateButton />}
-        </Flex>
-      </Box>
-      {eventData.events.filter((event) => event.clubId === data.club.id)
-        .length > 0 ? (
-        <EventList
-          events={
-            eventData.events.filter(
-              (event) => event.clubId === data.club.id
-            ) as Event[]
-          }
+        </Link>
+      </NextLink>
+
+      {data ? (
+        <ClubFollowingTagline
+          followerCount={data.club.followers.length}
+          memberCount={data.club.members.length}
+          clubId={data.club.id}
         />
       ) : (
-        <Box marginY={4} textAlign='center'>
-          <Card>
-            <Icon as={FaVolleyballBall} boxSize={10} mb={2} />
-            <Text>Uh oh looking a little empty...</Text>
-            <Text>Message the club owner to get some events started!</Text>
-          </Card>
-        </Box>
+        <Skeleton width="150px" height="15px" mt={1}>
+          <Text>X Follower, X Members</Text>
+        </Skeleton>
       )}
+
+      <HStack mt={2}>
+        {userData && data ? (
+          <ClubFollowButton
+            followerList={data?.club.followers as User[]}
+            data={userData}
+            clubId={data?.club.id}
+          />
+        ) : (
+          <Skeleton width="100px" height="24px" />
+        )}
+        {data ? (
+          <ClubJoinButton club={data?.club as Clubtype} />
+        ) : (
+          <Skeleton width="100px" height="24px" />
+        )}
+      </HStack>
+
+      <Divider my={4} />
+
+      <Text variant="body-3">
+        {data?.club.description || <SkeletonText noOfLines={5} />}
+      </Text>
     </Layout>
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Club);
+export default withUrqlClient(createUrqlClient, { ssr: true })(Club);

@@ -25,20 +25,20 @@ interface Props {
 const EventList: React.FC<Props> = ({ events }) => {
   return (
     <>
-      <VStack spacing={4} align="stretch">
+      <Box align="stretch">
         <MotionBox variants={container} initial="hidden" animate="show">
           {events
             .sort((a: any, b: any) => b.updatedAt - a.updatedAt)
             //@ts-ignore
             .map((e: Event) => {
               return (
-                <MotionBox variants={item} mt={4}>
-                  <EventCard event={e} key={e.id} />
+                <MotionBox key={e.id} variants={item} mt={4}>
+                  <EventCard event={e} />
                 </MotionBox>
               );
             })}
         </MotionBox>
-      </VStack>
+      </Box>
     </>
   );
 };
