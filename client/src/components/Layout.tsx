@@ -6,7 +6,7 @@ import { MobileNavbar } from "./MobileNavbar";
 import { Navbar } from "./Navbar";
 import { TopMobileNavbar } from "./TopMobileNavbar";
 
-const homePages = ["/feed", "/events", "/clubs", "/[username]"];
+const homePages = ["/feed", "/explore", "/events", "/clubs", "/[username]"];
 
 interface Props {
   title?: string;

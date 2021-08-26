@@ -41,7 +41,7 @@ const Club = () => {
   const [{ data: userData }] = useMeQuery();
 
   return (
-    <Layout>
+    <Layout title={data.club.name}>
       <NextLink href={`/club/${data?.club.id}`}>
         <Link>
           <Heading as="h2" variant="h2">
