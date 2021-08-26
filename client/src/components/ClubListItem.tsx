@@ -44,7 +44,7 @@ const ClubListItem: React.FC<Props> = ({ club }) => {
       </HStack>
 
       <ClubMetaInfo
-        name={club.admins[0].firstname + club.admins[0].lastname}
+        name={club.admins[0].firstname + " " + club.admins[0].lastname}
         phone={club.phoneNumber}
         email={club.email}
       />

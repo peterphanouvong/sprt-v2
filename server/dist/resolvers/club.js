@@ -80,6 +80,15 @@ let ClubResolver = class ClubResolver {
      `);
         return userLoader.loadMany((_a = memberIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
     }
+    async events(club, { eventLoader }) {
+        var _a;
+        const eventIds = await typeorm_1.getConnection().query(`
+       select array_agg("eventId")
+       from "club_event"
+       where "clubId" = ${club.id};
+     `);
+        return eventLoader.loadMany((_a = eventIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
+    }
     async createClub(input, { req }) {
         let club;
         try {
@@ -109,6 +118,15 @@ let ClubResolver = class ClubResolver {
     }
     async club(clubId) {
         return Club_1.Club.findOne(clubId);
+    }
+    async clubByAdminId(adminId) {
+        const clubId = await typeorm_1.getConnection().query(`
+    select "clubId" 
+    from "club_admin"
+    where "adminId" = ${adminId};
+  `);
+        console.log("HEYELEOEHEYUEEI ========", clubId);
+        return Club_1.Club.findOne(clubId[0].clubId);
     }
     async updateClub({ req }, clubId, input) {
         const admins = await ClubAdmin_1.ClubAdmin.find({ clubId });
@@ -244,6 +262,14 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ClubResolver.prototype, "members", null);
 __decorate([
+    type_graphql_1.FieldResolver(() => Event),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Club_1.Club, Object]),
+    __metadata("design:returntype", Promise)
+], ClubResolver.prototype, "events", null);
+__decorate([
     type_graphql_1.Mutation(() => Club_1.Club),
     type_graphql_1.UseMiddleware(isAuth_1.isAuth),
     __param(0, type_graphql_1.Arg("input")),
@@ -265,6 +291,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], ClubResolver.prototype, "club", null);
+__decorate([
+    type_graphql_1.Query(() => Club_1.Club),
+    __param(0, type_graphql_1.Arg("adminId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], ClubResolver.prototype, "clubByAdminId", null);
 __decorate([
     type_graphql_1.Mutation(() => Club_1.Club, { nullable: true }),
     __param(0, type_graphql_1.Ctx()),

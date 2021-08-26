@@ -36,9 +36,9 @@ const Feed: React.FC<Props> = ({}) => {
   }
 
   return (
-    <Layout>
+    <Layout title="Home">
       <Head>
-        <title>Feed | sprt</title>
+        <title>Home | sprt</title>
       </Head>
       <PublicFeed meData={data} publicityTypesData={publicityTypesData} />
     </Layout>

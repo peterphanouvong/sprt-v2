@@ -1,9 +1,9 @@
-import { Button, toast, useToast } from "@chakra-ui/react";
+import { Button, useToast } from "@chakra-ui/react";
 import React from "react";
 import {
   Club,
-  useMeQuery,
   useAddRequestedMemberMutation,
+  useMeQuery,
 } from "../generated/graphql";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 
@@ -51,7 +51,7 @@ const ClubJoinButton: React.FC<Props> = ({ club }) => {
   return (
     <Button
       variant={"outline"}
-      colorScheme='orange'
+      colorScheme="orange"
       onClick={requestToJoinClub}
       size={isMobile ? "xs" : "sm"}
     >

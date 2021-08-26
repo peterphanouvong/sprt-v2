@@ -1,17 +1,17 @@
-import { Box, Flex, Text, VStack } from "@chakra-ui/react";
+import { Box, Grid, Text, VStack } from "@chakra-ui/react";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import {
   BsAward,
   BsAwardFill,
-  BsHeart,
-  BsHeartFill,
   BsHouseDoor,
   BsHouseDoorFill,
+  BsPeople,
+  BsPeopleFill,
   BsPerson,
   BsPersonFill,
 } from "react-icons/bs";
-import NextLink from "next/link";
-import { useRouter } from "next/router";
 import { useMeQuery } from "../generated/graphql";
 // import Logo from "./Logo";
 
@@ -39,7 +39,7 @@ const MobileNavbar: React.FC<Props> = ({}) => {
         borderTop="1px solid"
         borderColor="blackAlpha.300"
       >
-        <Flex justifyContent="space-around">
+        <Grid gridTemplateColumns={"1fr 1fr 1fr 1fr"}>
           <NextLink href="/feed">
             <VStack as="a" spacing={1} textAlign="center">
               {router.pathname === "/feed" ? (
@@ -51,17 +51,21 @@ const MobileNavbar: React.FC<Props> = ({}) => {
             </VStack>
           </NextLink>
 
-          <NextLink href="/events">
+          <NextLink href="/explore">
             <VStack spacing={1} textAlign="center">
-              {router.pathname === "/events" ? <BsAwardFill /> : <BsAward />}
+              {router.pathname === "/explore" ? <BsAwardFill /> : <BsAward />}
               <Text variant="label">Explore</Text>
             </VStack>
           </NextLink>
 
-          <NextLink href="/clubs">
+          <NextLink href={`/my-club/${data.me?.id}`}>
             <VStack spacing={1} textAlign="center">
-              {router.pathname === "/clubs" ? <BsHeartFill /> : <BsHeart />}
-              <Text variant="label">Activity</Text>
+              {router.pathname === "/my-club/[id]" ? (
+                <BsPeopleFill />
+              ) : (
+                <BsPeople />
+              )}
+              <Text variant="label">My Club</Text>
             </VStack>
           </NextLink>
 
@@ -75,7 +79,7 @@ const MobileNavbar: React.FC<Props> = ({}) => {
               <Text variant="label">Profile</Text>
             </VStack>
           </NextLink>
-        </Flex>
+        </Grid>
       </Box>
     </>
   );

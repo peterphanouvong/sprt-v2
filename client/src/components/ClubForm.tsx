@@ -1,16 +1,17 @@
 import { EmailIcon, PhoneIcon } from "@chakra-ui/icons";
-import { VStack, ModalFooter, Button } from "@chakra-ui/react";
+import { Button, ModalFooter, VStack } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
+import { useRouter } from "next/router";
 import React from "react";
-import { errorMessageToObject } from "../utils/errorMessageToObject";
-import { InputField } from "./InputField";
-import { TextareaField } from "./TextareaField";
 import * as Yup from "yup";
 import {
   Club,
   useCreateClubMutation,
   useUpdateClubMutation,
 } from "../generated/graphql";
+import { errorMessageToObject } from "../utils/errorMessageToObject";
+import { InputField } from "./InputField";
+import { TextareaField } from "./TextareaField";
 
 interface Props {
   club?: Club;
@@ -21,6 +22,8 @@ interface Props {
 const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
   const [, createClub] = useCreateClubMutation();
   const [, updateClub] = useUpdateClubMutation();
+
+  const router = useRouter();
 
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
@@ -38,28 +41,22 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
   });
 
   const onCreate = async (values, setErrors) => {
-    console.log(values);
-    const { data, error } = await createClub({ input: values });
-    console.log(data);
-    console.log(error);
+    const { error } = await createClub({ input: values });
     if (!error) {
       onClose();
-      // addClub(data.createClub);
+      router.reload();
     } else {
       setErrors(errorMessageToObject(error.message));
     }
   };
 
   const onEdit = async (values, setErrors) => {
-    console.log(values);
-    const { data, error } = await updateClub({
+    const { error } = await updateClub({
       input: { ...values },
       clubId: club!.id,
     });
-    console.log(data);
     if (!error) {
       onClose();
-      // addClub(data.createClub);
     } else {
       setErrors(errorMessageToObject(error.message));
     }
@@ -84,7 +81,7 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
       }
       validationSchema={CreateClubSchema}
       onSubmit={
-        formType === "Post"
+        formType === "Create club"
           ? (values, { setErrors }) => onCreate(values, setErrors)
           : (values, { setErrors }) => onEdit(values, setErrors)
       }
@@ -95,30 +92,34 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
             <VStack align="stretch" spacing={4} padding={4}>
               <InputField
                 name="name"
-                placeholder="What's your club name?"
+                placeholder="the Lakers"
                 label="Name"
                 touched={props.touched.name as boolean}
+                required
               />
 
               <InputField
                 name="email"
-                placeholder="example@email.com"
+                placeholder="example@example.com"
                 label="Email"
                 icon={<EmailIcon color="gray.300" />}
                 touched={props.touched.email as boolean}
+                required
               />
 
               <InputField
                 name="phoneNumber"
-                placeholder="04XXXXXXXX"
+                placeholder="0000000000"
+                type="tel"
                 label="Phone Number"
                 icon={<PhoneIcon color="gray.300" />}
                 touched={props.touched.phoneNumber as boolean}
+                required
               />
 
               <TextareaField
                 name="description"
-                placeholder="What's up?"
+                placeholder="you can thank us for Kobe & Shaq"
                 label="Description"
               />
             </VStack>

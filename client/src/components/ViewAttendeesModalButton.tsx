@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   CloseButton,
   Divider,
   Heading,
@@ -15,7 +16,6 @@ import {
   TabPanels,
   Tabs,
   Text,
-  useBreakpointValue,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -156,23 +156,24 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
             </Tabs>
           </ModalBody>
 
-          <HStack padding={4} spacing={4} justifyContent="flex-end">
-            <Button
-              size={isMobile ? "sm" : "md"}
-              colorScheme="orange"
-              variant="ghost"
-              mr={3}
-              onClick={onClose}
-            >
-              Cancel
-            </Button>
-            <Button
-              size={isMobile ? "sm" : "md"}
-              colorScheme="orange"
-              onClick={joinEvent}
-            >
-              Join
-            </Button>
+          <HStack padding={4} justifyContent="flex-end">
+            <ButtonGroup>
+              <Button
+                size={isMobile ? "sm" : "md"}
+                colorScheme="orange"
+                variant="ghost"
+                onClick={onClose}
+              >
+                Cancel
+              </Button>
+              <Button
+                size={isMobile ? "sm" : "md"}
+                colorScheme="orange"
+                onClick={joinEvent}
+              >
+                Join
+              </Button>
+            </ButtonGroup>
           </HStack>
         </ModalContent>
       </Modal>

@@ -1,4 +1,4 @@
-import { Spinner } from "@chakra-ui/react";
+import { Center, Spinner } from "@chakra-ui/react";
 import React, { useState } from "react";
 import {
   Club,
@@ -8,9 +8,11 @@ import {
   PublicityTypesQuery,
   useFeedQuery,
 } from "../generated/graphql";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 // import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
 import { EventList } from "./EventList";
 import { EventListFilter } from "./EventListFilter";
+import { Layout } from "./Layout";
 
 interface Props {
   meData: MeQuery;
@@ -23,6 +25,8 @@ const PublicFeed: React.FC<Props> = ({ meData, publicityTypesData }) => {
       id: meData.me?.id as number,
     },
   });
+
+  const isMobile = useIsMobileScreen();
 
   const [selectedClubs, setSelectedClubs] = useState<Record<number, boolean>>(
     meData.me?.followingClubs?.reduce((map, obj) => {
@@ -41,10 +45,18 @@ const PublicFeed: React.FC<Props> = ({ meData, publicityTypesData }) => {
   );
 
   if (!data && !fetching) return <>ya fucked it</>;
-  if (!data || !meData || !publicityTypesData) return <Spinner />;
+  if (!data || !meData || !publicityTypesData)
+    return (
+      <Layout>
+        <Center>
+          <Spinner />
+        </Center>
+      </Layout>
+    );
   return (
     <>
       <EventListFilter
+        size={isMobile ? "sm" : "md"}
         clubs={meData?.me?.followingClubs as Club[]}
         selectedClubs={selectedClubs}
         setSelectedClubs={setSelectedClubs}
@@ -52,8 +64,9 @@ const PublicFeed: React.FC<Props> = ({ meData, publicityTypesData }) => {
         selectedPublicityTypes={selectedPublicityTypes}
         setSelectedPublicityTypes={setSelectedPublicityTypes}
       />
-      {/* <RenderPrettyJSON object={selectedClubs} /> */}
       <EventList
+        sorryText={`Looks like there aren't any events.
+        Check out the "Explore" page to follow some clubs.`}
         events={
           data.feed.filter((x) => {
             return x.clubId

@@ -107,8 +107,8 @@ const EventCard: React.FC<Props> = ({ event }) => {
             {data ? (
               data.me?.id === event.host.id ? (
                 <>
-                  <EventEditButton event={event} />
-                  <EventDeleteButton eventId={event.id} />
+                  <EventEditButton as="modalItem" event={event} />
+                  <EventDeleteButton as="button" eventId={event.id} />
                 </>
               ) : (
                 <MenuItem icon={<WarningIcon />}>Report</MenuItem>

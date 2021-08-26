@@ -1,4 +1,4 @@
-import { Club, useClubQuery, useMeQuery } from "../generated/graphql";
+import { useClubQuery, useMeQuery } from "../generated/graphql";
 
 export const useIsAuthorised = (clubId: number) => {
   const [{ data: userData }] = useMeQuery();

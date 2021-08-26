@@ -4,9 +4,10 @@ import { EntityDeleteAlert } from "./EntityDeleteAlert";
 
 interface Props {
   eventId: number;
+  as: "modalItem" | "button";
 }
 
-const EventDeleteButton: React.FC<Props> = ({ eventId }) => {
+const EventDeleteButton: React.FC<Props> = ({ eventId, as }) => {
   const [, deleteEvent] = useDeleteEventMutation();
 
   const handleDelete = async () => {
@@ -19,7 +20,13 @@ const EventDeleteButton: React.FC<Props> = ({ eventId }) => {
     return null;
   };
 
-  return <EntityDeleteAlert handleDelete={handleDelete} entityName={"Event"} />;
+  return (
+    <EntityDeleteAlert
+      as={as}
+      handleDelete={handleDelete}
+      entityName={"Event"}
+    />
+  );
 };
 
 export { EventDeleteButton };

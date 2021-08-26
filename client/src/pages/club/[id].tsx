@@ -1,37 +1,28 @@
 import {
-  Text,
-  Heading,
-  Box,
-  Flex,
-  Spacer,
-  Icon,
-  Link,
-  Skeleton,
-  HStack,
   Divider,
+  Heading,
+  HStack,
+  Skeleton,
   SkeletonText,
+  Text,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
-import { Card } from "../../components/Card";
+import { ClubEvents } from "../../components/ClubEvents";
+import { ClubFollowButton } from "../../components/ClubFollowButton";
+import { ClubFollowingTagline } from "../../components/ClubFollowingTagline";
+import { ClubJoinButton } from "../../components/ClubJoinButton";
+import { ClubMetaInfo } from "../../components/ClubMetaInfo";
 import { Layout } from "../../components/Layout";
 import {
-  useClubQuery,
-  Event,
-  User,
-  useMeQuery,
   Club as Clubtype,
+  Event,
+  useClubQuery,
+  useMeQuery,
+  User,
 } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
-import { EventList } from "../../components/EventList";
-import { EventCreateButton } from "../../components/EventCreateButton";
-import { FaVolleyballBall } from "react-icons/fa";
-import { EventListSkeleton } from "../../components/EventListSkeleton";
-import NextLink from "next/link";
-import { ClubFollowingTagline } from "../../components/ClubFollowingTagline";
-import { ClubFollowButton } from "../../components/ClubFollowButton";
-import { ClubJoinButton } from "../../components/ClubJoinButton";
 
 const Club = () => {
   const router = useRouter();
@@ -46,18 +37,14 @@ const Club = () => {
   const [{ data: userData }] = useMeQuery();
 
   return (
-    <Layout>
-      <NextLink href={`/club/${data?.club.id}`}>
-        <Link>
-          <Heading as="h3" variant="h3">
-            {data?.club.name || (
-              <Skeleton height="30px" width="100px">
-                Club name
-              </Skeleton>
-            )}
-          </Heading>
-        </Link>
-      </NextLink>
+    <Layout title={data?.club.name}>
+      <Heading as="h2" variant="h2">
+        {data?.club.name || (
+          <Skeleton height="30px" width="100px">
+            Club name
+          </Skeleton>
+        )}
+      </Heading>
 
       {data ? (
         <ClubFollowingTagline
@@ -88,11 +75,21 @@ const Club = () => {
         )}
       </HStack>
 
+      <ClubMetaInfo
+        name={
+          data?.club.admins[0].firstname + " " + data?.club.admins[0].lastname
+        }
+        phone={data?.club.phoneNumber}
+        email={data?.club.email}
+      />
+
       <Divider my={4} />
 
       <Text variant="body-3">
         {data?.club.description || <SkeletonText noOfLines={5} />}
       </Text>
+
+      {data && <ClubEvents events={data.club.events as Event[]} />}
     </Layout>
   );
 };

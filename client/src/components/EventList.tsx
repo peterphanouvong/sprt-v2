@@ -1,8 +1,11 @@
-import { Box, VStack } from "@chakra-ui/react";
+import { Box, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 import { Event } from "../generated/graphql";
 import { EventCard } from "./EventCard";
 import { MotionBox } from "./MotionBox";
+import Image from "next/image";
+import waiting from "../images/waiting.svg";
+import { MyEventCard } from "./MyEventCard";
 
 const container = {
   hidden: { opacity: 0 },
@@ -20,10 +23,21 @@ const item = {
 };
 interface Props {
   events: Event[];
+  sorryText?: string;
+  mine?: boolean;
 }
 
-const EventList: React.FC<Props> = ({ events }) => {
-  return (
+const EventList: React.FC<Props> = ({ events, sorryText, mine = false }) => {
+  return events.length === 0 ? (
+    <VStack>
+      <Box paddingX={16} paddingY={5}>
+        <Image src={waiting} />
+      </Box>
+      <Text variant="body-2" textAlign="center">
+        {sorryText || "Looks like there aren't any events..."}
+      </Text>
+    </VStack>
+  ) : (
     <>
       <Box align="stretch">
         <MotionBox variants={container} initial="hidden" animate="show">
@@ -32,8 +46,13 @@ const EventList: React.FC<Props> = ({ events }) => {
             //@ts-ignore
             .map((e: Event) => {
               return (
-                <MotionBox key={e.id} variants={item} mt={4}>
-                  <EventCard event={e} />
+                <MotionBox
+                  key={e.id}
+                  variants={item}
+                  exit={{ opacity: 0, x: -40 }}
+                  mt={4}
+                >
+                  {mine ? <MyEventCard event={e} /> : <EventCard event={e} />}
                 </MotionBox>
               );
             })}

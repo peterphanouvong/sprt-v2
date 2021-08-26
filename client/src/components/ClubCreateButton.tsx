@@ -1,13 +1,13 @@
 import {
-  Heading,
-  Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
   Box,
+  Button,
+  ButtonProps,
   CloseButton,
   Divider,
-  ButtonProps,
+  Heading,
+  Modal,
+  ModalContent,
+  ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
@@ -20,8 +20,8 @@ const ClubCreateButton: React.FC<Props> = ({ ...props }) => {
 
   return (
     <>
-      <Button {...props} onClick={onOpen} fontWeight="normal" width="full">
-        Create a New Club!
+      <Button {...props} onClick={onOpen} width="full">
+        Create a club
       </Button>
 
       <Modal
@@ -39,11 +39,15 @@ const ClubCreateButton: React.FC<Props> = ({ ...props }) => {
             padding={4}
           >
             <Heading fontSize="large">Create Club</Heading>
-            <CloseButton onClick={onClose} />
+            <CloseButton
+              onClick={() => {
+                onClose();
+              }}
+            />
           </Box>
           <Divider />
 
-          <ClubForm onClose={onClose} formType={"Post"} />
+          <ClubForm onClose={onClose} formType={"Create club"} />
         </ModalContent>
       </Modal>
     </>

@@ -81,6 +81,16 @@ export class ClubResolver {
     return userLoader.loadMany(memberIds[0].array_agg ?? []);
   }
 
+  @FieldResolver(() => Event)
+  async events(@Root() club: Club, @Ctx() { eventLoader }: MyContext) {
+    const eventIds = await getConnection().query(`
+       select array_agg("eventId")
+       from "club_event"
+       where "clubId" = ${club.id};
+     `);
+    return eventLoader.loadMany(eventIds[0].array_agg ?? []);
+  }
+
   /**
    * CRUD
    */
@@ -128,6 +138,21 @@ export class ClubResolver {
   @Query(() => Club)
   async club(@Arg("clubId") clubId: number): Promise<Club | undefined> {
     return Club.findOne(clubId);
+  }
+
+  @Query(() => Club)
+  async clubByAdminId(
+    @Arg("adminId") adminId: number
+  ): Promise<Club | undefined> {
+    const clubId = await getConnection().query(`
+    select "clubId" 
+    from "club_admin"
+    where "adminId" = ${adminId};
+  `);
+
+    console.log("HEYELEOEHEYUEEI ========", clubId);
+
+    return Club.findOne(clubId[0].clubId);
   }
 
   // Update

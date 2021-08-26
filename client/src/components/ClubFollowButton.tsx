@@ -63,6 +63,8 @@ const ClubFollowButton: React.FC<Props> = ({
       followerId: data.me!.id,
       clubId: clubId,
     });
+
+    console.log(error);
   };
 
   if (!data) {

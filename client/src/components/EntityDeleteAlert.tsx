@@ -15,29 +15,48 @@ import {
   CloseButton,
 } from "@chakra-ui/react";
 import React from "react";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 
 interface Props {
+  as: "button" | "modalItem";
   handleDelete: () => Promise<string | null>;
   entityName: string;
 }
 
-const EntityDeleteAlert: React.FC<Props> = ({ handleDelete, entityName }) => {
+const EntityDeleteAlert: React.FC<Props> = ({
+  handleDelete,
+  entityName,
+  as = "button",
+}) => {
   const [isOpen, setIsOpen] = React.useState(false);
-
+  const isMobile = useIsMobileScreen();
   const [deleteError, setDeleteError] = React.useState<string | null>(null);
   const onClose = () => setIsOpen(false);
   const cancelRef = React.useRef() as React.MutableRefObject<HTMLInputElement>;
 
   return (
     <>
-      <MenuItem
-        onClick={() => {
-          setIsOpen(true);
-        }}
-        icon={<DeleteIcon />}
-      >
-        Delete
-      </MenuItem>
+      {as === "button" ? (
+        <Button
+          colorScheme="orange"
+          size={isMobile ? "xs" : "sm"}
+          variant="outline"
+          onClick={() => {
+            setIsOpen(true);
+          }}
+        >
+          Delete
+        </Button>
+      ) : (
+        <MenuItem
+          onClick={() => {
+            setIsOpen(true);
+          }}
+          icon={<DeleteIcon />}
+        >
+          Delete
+        </MenuItem>
+      )}
 
       <AlertDialog
         isOpen={isOpen}
