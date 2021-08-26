@@ -1,4 +1,6 @@
 import { Box, Grid, Text, VStack } from "@chakra-ui/react";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import {
   BsAward,
@@ -10,8 +12,6 @@ import {
   BsPerson,
   BsPersonFill,
 } from "react-icons/bs";
-import NextLink from "next/link";
-import { useRouter } from "next/router";
 import { useMeQuery } from "../generated/graphql";
 // import Logo from "./Logo";
 

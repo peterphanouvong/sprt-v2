@@ -9,11 +9,6 @@ import {
 import { pipe, tap } from "wonka";
 import {
   AddAttendeeMutationVariables,
-  ClubByAdminIdDocument,
-  ClubByAdminIdQuery,
-  ClubQuery,
-  ClubsDocument,
-  CreateClubMutation,
   DeleteClubMutationVariables,
   DeleteEventMutationVariables,
   DeletePostMutationVariables,
@@ -108,13 +103,13 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
-            followClub: (result, _args, cache, _info) => {
+            followClub: (_result, _args, cache, _info) => {
               cache.invalidate({
                 __typename: "Club",
                 id: (_args as FollowClubMutationVariables).clubId,
               });
             },
-            unfollowClub: (result, _args, cache, _info) => {
+            unfollowClub: (_result, _args, cache, _info) => {
               cache.invalidate({
                 __typename: "Club",
                 id: (_args as FollowClubMutationVariables).clubId,

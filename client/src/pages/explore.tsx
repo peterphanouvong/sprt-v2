@@ -22,7 +22,7 @@ import {
   useEventsQuery,
 } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
-import { useIsAuth } from "../utils/useIsAuth";
+// import { useIsAuth } from "../utils/useIsAuth";
 
 interface Props {}
 

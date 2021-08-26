@@ -1,9 +1,9 @@
-import { Box, Flex, Grid, Heading, IconButton, Link } from "@chakra-ui/react";
-import React from "react";
-import Logo from "./Logo";
-import NextLink from "next/link";
-import { BackButton } from "./BackButton";
 import { HamburgerIcon } from "@chakra-ui/icons";
+import { Box, Grid, Heading, IconButton, Link } from "@chakra-ui/react";
+import NextLink from "next/link";
+import React from "react";
+import { BackButton } from "./BackButton";
+import Logo from "./Logo";
 
 interface Props {
   variant?: "page" | "home";

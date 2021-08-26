@@ -1,23 +1,17 @@
 import { EmailIcon, PhoneIcon } from "@chakra-ui/icons";
-import {
-  VStack,
-  ModalFooter,
-  Button,
-  useTimeout,
-  useToast,
-} from "@chakra-ui/react";
+import { Button, ModalFooter, VStack } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
+import { useRouter } from "next/router";
 import React from "react";
-import { errorMessageToObject } from "../utils/errorMessageToObject";
-import { InputField } from "./InputField";
-import { TextareaField } from "./TextareaField";
 import * as Yup from "yup";
 import {
   Club,
   useCreateClubMutation,
   useUpdateClubMutation,
 } from "../generated/graphql";
-import { useRouter } from "next/router";
+import { errorMessageToObject } from "../utils/errorMessageToObject";
+import { InputField } from "./InputField";
+import { TextareaField } from "./TextareaField";
 
 interface Props {
   club?: Club;

@@ -82,7 +82,7 @@ const EventListFilter: React.FC<Props> = ({
                     <Checkbox
                       key={pt.id}
                       colorScheme="orange"
-                      onChange={(e) => {
+                      onChange={() => {
                         // e.preventDefault();
                         setSelectedPublicityTypes({
                           ...selectedPublicityTypes,
@@ -107,7 +107,7 @@ const EventListFilter: React.FC<Props> = ({
                       <Checkbox
                         key={club.id}
                         colorScheme="orange"
-                        onChange={(e) => {
+                        onChange={() => {
                           // e.preventDefault();
                           setSelectedClubs({
                             ...selectedClubs,

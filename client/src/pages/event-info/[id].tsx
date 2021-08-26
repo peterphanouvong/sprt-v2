@@ -1,10 +1,4 @@
-import React, { useState } from "react";
-import { useRouter } from "next/router";
-import { useEventQuery } from "../../generated/graphql";
-import { Layout } from "../../components/Layout";
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../../utils/createUrqlClient";
-import { BackButton } from "../../components/BackButton";
+import { DownloadIcon } from "@chakra-ui/icons";
 import { Box, Heading, HStack, Text } from "@chakra-ui/layout";
 import {
   Button,
@@ -21,9 +15,14 @@ import {
   Tr,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { OptionsButton } from "../../components/OptionsButton";
+import { withUrqlClient } from "next-urql";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 import { CSVLink } from "react-csv";
-import { DownloadIcon } from "@chakra-ui/icons";
+import { Layout } from "../../components/Layout";
+import { OptionsButton } from "../../components/OptionsButton";
+import { useEventQuery } from "../../generated/graphql";
+import { createUrqlClient } from "../../utils/createUrqlClient";
 
 const attendeeFieldOptions = [
   { label: "First name", value: "firstname" },

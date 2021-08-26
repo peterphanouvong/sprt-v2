@@ -16,7 +16,6 @@ import {
   TabPanels,
   Tabs,
   Text,
-  useBreakpointValue,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";

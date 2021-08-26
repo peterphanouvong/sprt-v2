@@ -1,16 +1,15 @@
 import {
-  Heading,
-  Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
   Box,
+  Button,
+  ButtonProps,
   CloseButton,
   Divider,
-  ButtonProps,
+  Heading,
+  Modal,
+  ModalContent,
+  ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import React from "react";
 import { ClubForm } from "./ClubForm";
 
