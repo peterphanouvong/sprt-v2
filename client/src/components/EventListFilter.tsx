@@ -14,12 +14,13 @@ import {
   Icon,
   Spinner,
   CheckboxGroup,
+  ButtonProps,
 } from "@chakra-ui/react";
 import React from "react";
 import { BsFunnel } from "react-icons/bs";
 import { Club, PublicityType, useMeQuery } from "../generated/graphql";
 
-interface Props {
+type Props = ButtonProps & {
   clubs: Club[];
   selectedClubs: Record<string, boolean>;
   setSelectedClubs: React.Dispatch<
@@ -30,7 +31,7 @@ interface Props {
   setSelectedPublicityTypes: React.Dispatch<
     React.SetStateAction<Record<string, boolean>>
   >;
-}
+};
 
 const EventListFilter: React.FC<Props> = ({
   clubs,
@@ -39,6 +40,7 @@ const EventListFilter: React.FC<Props> = ({
   publicityTypes,
   selectedPublicityTypes,
   setSelectedPublicityTypes,
+  ...props
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [{ data, fetching }] = useMeQuery();
@@ -50,6 +52,7 @@ const EventListFilter: React.FC<Props> = ({
   return (
     <>
       <Button
+        {...props}
         leftIcon={<Icon as={BsFunnel} />}
         ref={btnRef}
         variant="outline"

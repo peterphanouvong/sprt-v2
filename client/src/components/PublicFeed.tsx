@@ -8,6 +8,7 @@ import {
   PublicityTypesQuery,
   useFeedQuery,
 } from "../generated/graphql";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 // import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
 import { EventList } from "./EventList";
 import { EventListFilter } from "./EventListFilter";
@@ -23,6 +24,8 @@ const PublicFeed: React.FC<Props> = ({ meData, publicityTypesData }) => {
       id: meData.me?.id as number,
     },
   });
+
+  const isMobile = useIsMobileScreen();
 
   const [selectedClubs, setSelectedClubs] = useState<Record<number, boolean>>(
     meData.me?.followingClubs?.reduce((map, obj) => {
@@ -45,6 +48,7 @@ const PublicFeed: React.FC<Props> = ({ meData, publicityTypesData }) => {
   return (
     <>
       <EventListFilter
+        size={isMobile ? "sm" : "md"}
         clubs={meData?.me?.followingClubs as Club[]}
         selectedClubs={selectedClubs}
         setSelectedClubs={setSelectedClubs}
@@ -52,8 +56,9 @@ const PublicFeed: React.FC<Props> = ({ meData, publicityTypesData }) => {
         selectedPublicityTypes={selectedPublicityTypes}
         setSelectedPublicityTypes={setSelectedPublicityTypes}
       />
-      {/* <RenderPrettyJSON object={selectedClubs} /> */}
       <EventList
+        sorryText={`Looks like there aren't any events.
+        Check out the "Explore" page to follow some clubs.`}
         events={
           data.feed.filter((x) => {
             return x.clubId

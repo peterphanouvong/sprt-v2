@@ -80,6 +80,7 @@ const Explore: React.FC<Props> = ({}) => {
 
       {selectedTag === "events" && eventData && (
         <EventList
+          sorryText="Looks like there are no events here. Check what you've searched for."
           events={
             eventData.events.filter((x) => {
               if (searchQuery === "") return true;
@@ -90,6 +91,7 @@ const Explore: React.FC<Props> = ({}) => {
       )}
       {selectedTag === "clubs" && clubData && (
         <ClubList
+          sorryText="Looks like there are no clubs here. Check what you've searched for."
           clubs={
             clubData.clubs.filter((x) => {
               if (searchQuery === "") return true;
