@@ -23,6 +23,7 @@ import NextLink from "next/link";
 import { DownloadIcon } from "@chakra-ui/icons";
 import { useIsMobileScreen } from "../../utils/useIsMobileScreen";
 import { EventJoinedStat } from "../../components/EventJoinedStat";
+import { CSVLink } from "react-csv";
 
 const Event = () => {
   const router = useRouter();
@@ -98,14 +99,19 @@ const Event = () => {
           <Skeleton width="111px" height="40px"></Skeleton>
         ) : (
           <Skeleton isLoaded={!fetching}>
-            <NextLink href={`/event-info/${data.event.id}`}>
+            <CSVLink
+              data={data.event.attendees.map((x) => ({
+                "First name": x.firstname,
+                "Last name": x.lastname,
+              }))}
+            >
               <IconButton
                 size={isMobile ? "sm" : "md"}
                 aria-label="export attendees"
                 variant="outline"
                 icon={<DownloadIcon />}
               />
-            </NextLink>
+            </CSVLink>
           </Skeleton>
         )}
       </HStack>
