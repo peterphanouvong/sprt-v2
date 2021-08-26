@@ -41,7 +41,7 @@ const Profile = () => {
         </Heading>
         <Text variant="body-2">
           {data.userByUsername.adminClubs?.map((club) => {
-            return <Text>club: {club.name}</Text>;
+            return <Text key={club.id}>club: {club.name}</Text>;
           })}
         </Text>
         <Text variant="caption">boobies</Text>

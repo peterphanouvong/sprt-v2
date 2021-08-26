@@ -9,7 +9,11 @@ import {
 import { pipe, tap } from "wonka";
 import {
   AddAttendeeMutationVariables,
+  ClubByAdminIdDocument,
+  ClubByAdminIdQuery,
+  ClubQuery,
   ClubsDocument,
+  CreateClubMutation,
   DeleteClubMutationVariables,
   DeleteEventMutationVariables,
   DeletePostMutationVariables,
@@ -24,18 +28,16 @@ import {
 import { betterUpdateQuery } from "./betterUpdateQuery";
 import { isServer } from "./isServer";
 
-const errorExchange: Exchange =
-  ({ forward }) =>
-  (ops$) => {
-    return pipe(
-      forward(ops$),
-      tap(({ error }) => {
-        if (error?.message.includes("not authenticated")) {
-          router.replace("/login");
-        }
-      })
-    );
-  };
+const errorExchange: Exchange = ({ forward }) => (ops$) => {
+  return pipe(
+    forward(ops$),
+    tap(({ error }) => {
+      if (error?.message.includes("not authenticated")) {
+        router.replace("/login");
+      }
+    })
+  );
+};
 
 export const cursorPagination = (): Resolver => {
   return (_parent, fieldArgs, cache, info) => {
@@ -124,13 +126,24 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 id: (args as AddAttendeeMutationVariables).eventId,
               });
             },
-            createClub: (result, _args, cache, _info) => {
-              cache.updateQuery({ query: ClubsDocument }, (data) => {
-                //@ts-ignore
-                data.clubs.push(result.createClub);
-                return data;
-              });
-            },
+            // createClub: (_result, args, cache, _info) => {
+            // betterUpdateQuery<CreateClubMutation, ClubByAdminIdQuery>(
+            //   cache,
+            //   { query: ClubByAdminIdDocument, variables: { ...args } },
+            //   _result,
+            //   (result, query) => {
+            //     console.log(args);
+            //     console.log(result.createClub);
+            //     return { clubByAdminId: result.createClub };
+            //   }
+            // );
+            // cache.updateQuery({ query: ClubsDocument }, (data) => {
+            //   console.log("DATA", data);
+            //   //@ts-ignore
+            //   data.clubs.push(result.createClub);
+            //   return null;
+            // });
+            // },
             deleteClub: (_result, args, cache, _info) => {
               cache.invalidate({
                 __typename: "Club",

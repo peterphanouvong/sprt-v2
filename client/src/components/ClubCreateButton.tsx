@@ -10,6 +10,7 @@ import {
   ButtonProps,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
 import { ClubForm } from "./ClubForm";
 
@@ -20,8 +21,8 @@ const ClubCreateButton: React.FC<Props> = ({ ...props }) => {
 
   return (
     <>
-      <Button {...props} onClick={onOpen} fontWeight="normal" width="full">
-        Create a New Club!
+      <Button {...props} onClick={onOpen} width="full">
+        Create a club
       </Button>
 
       <Modal
@@ -39,7 +40,11 @@ const ClubCreateButton: React.FC<Props> = ({ ...props }) => {
             padding={4}
           >
             <Heading fontSize="large">Create Club</Heading>
-            <CloseButton onClick={onClose} />
+            <CloseButton
+              onClick={() => {
+                onClose();
+              }}
+            />
           </Box>
           <Divider />
 

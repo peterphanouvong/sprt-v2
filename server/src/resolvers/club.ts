@@ -147,10 +147,10 @@ export class ClubResolver {
     const clubId = await getConnection().query(`
     select "clubId" 
     from "club_admin"
-    where "clubId" = ${adminId};
+    where "adminId" = ${adminId};
   `);
 
-    console.log(clubId);
+    console.log("HEYELEOEHEYUEEI ========", clubId);
 
     return Club.findOne(clubId[0].clubId);
   }

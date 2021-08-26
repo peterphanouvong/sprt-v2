@@ -1,5 +1,11 @@
 import { EmailIcon, PhoneIcon } from "@chakra-ui/icons";
-import { VStack, ModalFooter, Button } from "@chakra-ui/react";
+import {
+  VStack,
+  ModalFooter,
+  Button,
+  useTimeout,
+  useToast,
+} from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React from "react";
 import { errorMessageToObject } from "../utils/errorMessageToObject";
@@ -11,6 +17,7 @@ import {
   useCreateClubMutation,
   useUpdateClubMutation,
 } from "../generated/graphql";
+import { useRouter } from "next/router";
 
 interface Props {
   club?: Club;
@@ -21,6 +28,9 @@ interface Props {
 const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
   const [, createClub] = useCreateClubMutation();
   const [, updateClub] = useUpdateClubMutation();
+
+  const router = useRouter();
+  const toast = useToast();
 
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
@@ -38,28 +48,22 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
   });
 
   const onCreate = async (values, setErrors) => {
-    console.log(values);
-    const { data, error } = await createClub({ input: values });
-    console.log(data);
-    console.log(error);
+    const { error } = await createClub({ input: values });
     if (!error) {
       onClose();
-      // addClub(data.createClub);
+      router.reload();
     } else {
       setErrors(errorMessageToObject(error.message));
     }
   };
 
   const onEdit = async (values, setErrors) => {
-    console.log(values);
-    const { data, error } = await updateClub({
+    const { error } = await updateClub({
       input: { ...values },
       clubId: club!.id,
     });
-    console.log(data);
     if (!error) {
       onClose();
-      // addClub(data.createClub);
     } else {
       setErrors(errorMessageToObject(error.message));
     }

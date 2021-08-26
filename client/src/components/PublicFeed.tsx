@@ -1,4 +1,4 @@
-import { Spinner } from "@chakra-ui/react";
+import { Center, Spinner } from "@chakra-ui/react";
 import React, { useState } from "react";
 import {
   Club,
@@ -12,6 +12,7 @@ import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 // import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
 import { EventList } from "./EventList";
 import { EventListFilter } from "./EventListFilter";
+import { Layout } from "./Layout";
 
 interface Props {
   meData: MeQuery;
@@ -44,7 +45,14 @@ const PublicFeed: React.FC<Props> = ({ meData, publicityTypesData }) => {
   );
 
   if (!data && !fetching) return <>ya fucked it</>;
-  if (!data || !meData || !publicityTypesData) return <Spinner />;
+  if (!data || !meData || !publicityTypesData)
+    return (
+      <Layout>
+        <Center>
+          <Spinner />
+        </Center>
+      </Layout>
+    );
   return (
     <>
       <EventListFilter

@@ -123,9 +123,9 @@ let ClubResolver = class ClubResolver {
         const clubId = await typeorm_1.getConnection().query(`
     select "clubId" 
     from "club_admin"
-    where "clubId" = ${adminId};
+    where "adminId" = ${adminId};
   `);
-        console.log(clubId);
+        console.log("HEYELEOEHEYUEEI ========", clubId);
         return Club_1.Club.findOne(clubId[0].clubId);
     }
     async updateClub({ req }, clubId, input) {
