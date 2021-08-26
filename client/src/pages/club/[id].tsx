@@ -31,7 +31,7 @@ import { useIsAuthorised } from "../../utils/useIsAuthorised";
 import { FaVolleyballBall } from "react-icons/fa";
 
 const Club = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  // const { isOpen, onOpen, onClose } = useDisclosure();
   const [{ data: userData, fetching: userFetching }] = useMeQuery();
 
   const router = useRouter();
@@ -51,25 +51,21 @@ const Club = () => {
   if (!data) return <Layout>couldn't find the club</Layout>;
   if (!data?.club) return <Layout>couldn't find the club</Layout>;
 
-  console.log(
-    eventData.events.filter((event) => event.clubId === data.club.id)
-  );
-
   return (
     <Layout>
       <ClubSimpleCard
         club={data.club as ClubType}
-        modalOpen={onOpen}
-        modalClose={onClose}
+        // modalOpen={onOpen}
+        // modalClose={onClose}
         userData={userData}
       />
-      <ClubDetailsModal
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onClose={onClose}
+      {/* <ClubDetailsModal
+        // isOpen={isOpen}
+        // onOpen={onOpen}
+        // onClose={onClose}
         clubId={intId}
         userData={userData}
-      />
+      /> */}
 
       <Box mt={4}>
         <Flex>

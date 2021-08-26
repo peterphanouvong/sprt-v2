@@ -31,18 +31,16 @@ import { ClubDeleteButton } from "./ClubDeleteButton";
 import { ClubEditButton } from "./ClubEditButton";
 import { OptionsButton } from "./OptionsButton";
 import { useIsAuthorised } from "../utils/useIsAuthorised";
+import { ClubDetailsModal } from "./ClubDetailsModal";
 interface Props {
   club: Club;
-  modalOpen?: () => void;
-  modalClose?: () => void;
   hasLink?: boolean;
   userData: MeQuery;
-  // updateNumFollowers?: (number) => void;
 }
 
-const ClubSimpleCard: React.FC<Props> = ({ club, modalOpen, hasLink }) => {
-  const [{ data: userData }] = useMeQuery();
+const ClubSimpleCard: React.FC<Props> = ({ club, hasLink, userData }) => {
   const isAuthorised = useIsAuthorised(club);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   if (!userData) {
     return <Spinner></Spinner>;
@@ -72,7 +70,15 @@ const ClubSimpleCard: React.FC<Props> = ({ club, modalOpen, hasLink }) => {
         </OptionsButton>
       </Box>
 
-      <Box onClick={modalOpen} display={"inline"}>
+      <Box
+        _hover={{
+          background: "white",
+          color: "orange.500",
+          cursor: "pointer",
+        }}
+        onClick={onOpen}
+        display={"inline"}
+      >
         <Text variant={"body-3"} display={"inline"}>
           <b>{club.followers.length}</b>{" "}
           {pluralize(club.followers.length, "Follower")},{" "}
@@ -112,6 +118,14 @@ const ClubSimpleCard: React.FC<Props> = ({ club, modalOpen, hasLink }) => {
       <Text variant={"body-2"} marginY={4}>
         {club.description}
       </Text>
+
+      <ClubDetailsModal
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+        clubId={club.id}
+        userData={userData}
+      />
     </Card>
   );
 };

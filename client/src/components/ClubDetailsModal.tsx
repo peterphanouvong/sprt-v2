@@ -15,9 +15,10 @@ import {
   ModalFooter,
   Button,
   Text,
+  Spinner,
 } from "@chakra-ui/react";
 import React from "react";
-import { Club, MeQuery, useClubQuery, useMeQuery } from "../generated/graphql";
+import { MeQuery, useClubQuery } from "../generated/graphql";
 
 interface Props {
   isOpen: boolean;
@@ -27,17 +28,15 @@ interface Props {
   userData: MeQuery;
 }
 
-const ClubDetailsModal: React.FC<Props> = ({
-  isOpen,
-  onOpen,
-  onClose,
-  clubId,
-  userData,
-}) => {
+const ClubDetailsModal: React.FC<Props> = ({ isOpen, onClose, clubId }) => {
   const [{ data, fetching, error }] = useClubQuery({
     pause: clubId === -1,
     variables: { clubId: clubId },
   });
+
+  if (fetching) {
+    return <Spinner></Spinner>;
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
