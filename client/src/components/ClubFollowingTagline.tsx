@@ -1,6 +1,5 @@
 import { Box, Text, useDisclosure } from "@chakra-ui/react";
 import React from "react";
-import clubs from "../pages/clubs";
 import { pluralize } from "../utils/pluralize";
 import { ClubDetailsModal } from "./ClubDetailsModal";
 

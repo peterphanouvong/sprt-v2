@@ -1,4 +1,4 @@
-import { Box, VStack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import React from "react";
 import { Event } from "../generated/graphql";
 import { EventCard } from "./EventCard";

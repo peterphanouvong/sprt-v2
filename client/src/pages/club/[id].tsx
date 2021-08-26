@@ -1,37 +1,28 @@
 import {
-  Text,
+  Divider,
   Heading,
-  Box,
-  Flex,
-  Spacer,
-  Icon,
+  HStack,
   Link,
   Skeleton,
-  HStack,
-  Divider,
   SkeletonText,
+  Text,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { Card } from "../../components/Card";
+import { ClubFollowButton } from "../../components/ClubFollowButton";
+import { ClubFollowingTagline } from "../../components/ClubFollowingTagline";
+import { ClubJoinButton } from "../../components/ClubJoinButton";
+import { ClubMetaInfo } from "../../components/ClubMetaInfo";
 import { Layout } from "../../components/Layout";
 import {
-  useClubQuery,
-  Event,
-  User,
-  useMeQuery,
   Club as Clubtype,
+  useClubQuery,
+  useMeQuery,
+  User,
 } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
-import { EventList } from "../../components/EventList";
-import { EventCreateButton } from "../../components/EventCreateButton";
-import { FaVolleyballBall } from "react-icons/fa";
-import { EventListSkeleton } from "../../components/EventListSkeleton";
-import NextLink from "next/link";
-import { ClubFollowingTagline } from "../../components/ClubFollowingTagline";
-import { ClubFollowButton } from "../../components/ClubFollowButton";
-import { ClubJoinButton } from "../../components/ClubJoinButton";
 
 const Club = () => {
   const router = useRouter();
@@ -87,6 +78,14 @@ const Club = () => {
           <Skeleton width="100px" height="24px" />
         )}
       </HStack>
+
+      <ClubMetaInfo
+        name={
+          data?.club.admins[0].firstname + " " + data?.club.admins[0].lastname
+        }
+        phone={data?.club.phoneNumber}
+        email={data?.club.email}
+      />
 
       <Divider my={4} />
 

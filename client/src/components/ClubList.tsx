@@ -1,4 +1,3 @@
-import { VStack } from "@chakra-ui/react";
 import React from "react";
 import { Club } from "../generated/graphql";
 import { ClubListItem } from "./ClubListItem";
