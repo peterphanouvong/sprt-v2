@@ -58,9 +58,13 @@ const MobileNavbar: React.FC<Props> = ({}) => {
             </VStack>
           </NextLink>
 
-          <NextLink href="/clubs">
+          <NextLink href={`/my-club/${data.me?.id}`}>
             <VStack spacing={1} textAlign="center">
-              {router.pathname === "/clubs" ? <BsPeopleFill /> : <BsPeople />}
+              {router.pathname === "/my-club/[id]" ? (
+                <BsPeopleFill />
+              ) : (
+                <BsPeople />
+              )}
               <Text variant="label">My Club</Text>
             </VStack>
           </NextLink>

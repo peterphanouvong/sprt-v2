@@ -140,6 +140,21 @@ export class ClubResolver {
     return Club.findOne(clubId);
   }
 
+  @Query(() => Club)
+  async clubByAdminId(
+    @Arg("adminId") adminId: number
+  ): Promise<Club | undefined> {
+    const clubId = await getConnection().query(`
+    select "clubId" 
+    from "club_admin"
+    where "clubId" = ${adminId};
+  `);
+
+    console.log(clubId);
+
+    return Club.findOne(clubId[0].clubId);
+  }
+
   // Update
   @Mutation(() => Club, { nullable: true })
   async updateClub(

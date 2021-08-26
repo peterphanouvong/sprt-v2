@@ -1,36 +1,52 @@
 import { EditIcon } from "@chakra-ui/icons";
 import {
-  MenuItem,
-  Modal,
-  ModalOverlay,
-  ModalContent,
   Box,
-  Heading,
+  Button,
   CloseButton,
   Divider,
-  useDisclosure,
-  Text,
+  Heading,
+  MenuItem,
+  Modal,
+  ModalContent,
+  ModalOverlay,
   Skeleton,
+  Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
 import { Club, useClubQuery } from "../generated/graphql";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { ClubForm } from "./ClubForm";
 
 interface Props {
   clubId: number;
+  as?: "menuItem" | "button";
 }
 
-const ClubEditButton: React.FC<Props> = ({ clubId }) => {
+const ClubEditButton: React.FC<Props> = ({ clubId, as = "button" }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [{ data }] = useClubQuery({ variables: { clubId: clubId } });
+
+  const isMobile = useIsMobileScreen();
 
   if (!data) return <Skeleton></Skeleton>;
 
   return (
     <>
-      <MenuItem onClick={onOpen} icon={<EditIcon />}>
-        <Text>Edit</Text>
-      </MenuItem>
+      {as === "button" ? (
+        <Button
+          colorScheme="orange"
+          size={isMobile ? "xs" : "sm"}
+          variant="outline"
+          onClick={onOpen}
+        >
+          Edit
+        </Button>
+      ) : (
+        <MenuItem onClick={onOpen} icon={<EditIcon />}>
+          <Text>Edit</Text>
+        </MenuItem>
+      )}
 
       <Modal
         closeOnOverlayClick={false}

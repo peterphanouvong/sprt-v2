@@ -119,6 +119,15 @@ let ClubResolver = class ClubResolver {
     async club(clubId) {
         return Club_1.Club.findOne(clubId);
     }
+    async clubByAdminId(adminId) {
+        const clubId = await typeorm_1.getConnection().query(`
+    select "clubId" 
+    from "club_admin"
+    where "clubId" = ${adminId};
+  `);
+        console.log(clubId);
+        return Club_1.Club.findOne(clubId[0].clubId);
+    }
     async updateClub({ req }, clubId, input) {
         const admins = await ClubAdmin_1.ClubAdmin.find({ clubId });
         if (admins.length === 0) {
@@ -282,6 +291,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], ClubResolver.prototype, "club", null);
+__decorate([
+    type_graphql_1.Query(() => Club_1.Club),
+    __param(0, type_graphql_1.Arg("adminId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], ClubResolver.prototype, "clubByAdminId", null);
 __decorate([
     type_graphql_1.Mutation(() => Club_1.Club, { nullable: true }),
     __param(0, type_graphql_1.Ctx()),

@@ -4,9 +4,10 @@ import { EntityDeleteAlert } from "./EntityDeleteAlert";
 
 interface Props {
   clubId: number;
+  as?: "button" | "modalItem";
 }
 
-const ClubDeleteButton: React.FC<Props> = ({ clubId }) => {
+const ClubDeleteButton: React.FC<Props> = ({ clubId, as = "button" }) => {
   const [, deleteClub] = useDeleteClubMutation();
 
   const handleDelete = async (): Promise<string | null> => {
@@ -18,7 +19,13 @@ const ClubDeleteButton: React.FC<Props> = ({ clubId }) => {
     return null;
   };
 
-  return <EntityDeleteAlert handleDelete={handleDelete} entityName={"Club"} />;
+  return (
+    <EntityDeleteAlert
+      as={as}
+      handleDelete={handleDelete}
+      entityName={"Club"}
+    />
+  );
 };
 
 export { ClubDeleteButton };

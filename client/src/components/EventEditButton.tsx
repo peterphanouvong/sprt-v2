@@ -9,19 +9,23 @@ import {
   CloseButton,
   Divider,
   MenuItem,
+  Button,
 } from "@chakra-ui/react";
 import React from "react";
 import { Event, useUpdateEventMutation } from "../generated/graphql";
 import { formatDateForPostgres } from "../utils/parseDate";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { EventForm } from "./EventForm";
 
 interface Props {
   event: Event;
+  as?: "button" | "modalItem";
 }
 
-const EventEditButton: React.FC<Props> = ({ event }) => {
+const EventEditButton: React.FC<Props> = ({ event, as = "button" }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [, updateEvent] = useUpdateEventMutation();
+  const isMobile = useIsMobileScreen();
 
   const onSubmit = async (values) => {
     const { error } = await updateEvent({
@@ -42,9 +46,21 @@ const EventEditButton: React.FC<Props> = ({ event }) => {
 
   return (
     <>
-      <MenuItem onClick={onOpen} icon={<EditIcon />}>
-        Edit
-      </MenuItem>
+      {as === "button" ? (
+        <Button
+          colorScheme="orange"
+          size={isMobile ? "xs" : "sm"}
+          variant="outline"
+          onClick={onOpen}
+          icon={<EditIcon />}
+        >
+          Edit
+        </Button>
+      ) : (
+        <MenuItem onClick={onOpen} icon={<EditIcon />}>
+          Edit
+        </MenuItem>
+      )}
 
       <Modal
         closeOnOverlayClick={false}

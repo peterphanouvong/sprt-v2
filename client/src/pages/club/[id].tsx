@@ -41,18 +41,14 @@ const Club = () => {
   const [{ data: userData }] = useMeQuery();
 
   return (
-    <Layout title={data.club.name}>
-      <NextLink href={`/club/${data?.club.id}`}>
-        <Link>
-          <Heading as="h2" variant="h2">
-            {data?.club.name || (
-              <Skeleton height="30px" width="100px">
-                Club name
-              </Skeleton>
-            )}
-          </Heading>
-        </Link>
-      </NextLink>
+    <Layout title={data?.club.name}>
+      <Heading as="h2" variant="h2">
+        {data?.club.name || (
+          <Skeleton height="30px" width="100px">
+            Club name
+          </Skeleton>
+        )}
+      </Heading>
 
       {data ? (
         <ClubFollowingTagline
@@ -97,7 +93,7 @@ const Club = () => {
         {data?.club.description || <SkeletonText noOfLines={5} />}
       </Text>
 
-      <ClubEvents events={data.club.events as Event[]} />
+      {data && <ClubEvents events={data.club.events as Event[]} />}
     </Layout>
   );
 };

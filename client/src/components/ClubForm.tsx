@@ -98,6 +98,7 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
                 placeholder="What's your club name?"
                 label="Name"
                 touched={props.touched.name as boolean}
+                required
               />
 
               <InputField
@@ -106,6 +107,7 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
                 label="Email"
                 icon={<EmailIcon color="gray.300" />}
                 touched={props.touched.email as boolean}
+                required
               />
 
               <InputField
@@ -114,6 +116,7 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
                 label="Phone Number"
                 icon={<PhoneIcon color="gray.300" />}
                 touched={props.touched.phoneNumber as boolean}
+                required
               />
 
               <TextareaField

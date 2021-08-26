@@ -88,6 +88,7 @@ export type Mutation = {
   forgotPassword: Scalars['Boolean'];
   createEvent: Event;
   updateEvent?: Maybe<Event>;
+  addClubEvent: Scalars['Boolean'];
   deleteEvent: Scalars['Boolean'];
   addAttendee: User;
   createClub: Club;
@@ -146,6 +147,12 @@ export type MutationCreateEventArgs = {
 export type MutationUpdateEventArgs = {
   input: EventInput;
   id: Scalars['Float'];
+};
+
+
+export type MutationAddClubEventArgs = {
+  eventId: Scalars['Float'];
+  clubId: Scalars['Float'];
 };
 
 
@@ -242,6 +249,7 @@ export type Query = {
   feed: Array<Event>;
   clubs: Array<Club>;
   club: Club;
+  clubByAdminId: Club;
   publicityTypes: Array<PublicityType>;
 };
 
@@ -279,6 +287,11 @@ export type QueryFeedArgs = {
 
 export type QueryClubArgs = {
   clubId: Scalars['Float'];
+};
+
+
+export type QueryClubByAdminIdArgs = {
+  adminId: Scalars['Float'];
 };
 
 export type User = {
@@ -452,6 +465,13 @@ export type ClubQueryVariables = Exact<{
 
 
 export type ClubQuery = { __typename?: 'Query', club: { __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string, firstname: string, lastname: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string, firstname: string, lastname: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, members: Array<{ __typename?: 'User', id: number, username: string, email: string, firstname: string, lastname: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, requestedMembers: Array<{ __typename?: 'User', id: number, username: string, email: string, firstname: string, lastname: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, creatorTypeId: number, publicityTypeId: number, clubId?: Maybe<number>, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, firstname: string, lastname: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> }>> } };
+
+export type ClubByAdminIdQueryVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type ClubByAdminIdQuery = { __typename?: 'Query', clubByAdminId: { __typename?: 'Club', id: number, name: string, email: string, phoneNumber: string, description: string, createdAt: string, updatedAt: string, admins: Array<{ __typename?: 'User', id: number, username: string, email: string, firstname: string, lastname: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, followers: Array<{ __typename?: 'User', id: number, username: string, email: string, firstname: string, lastname: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, members: Array<{ __typename?: 'User', id: number, username: string, email: string, firstname: string, lastname: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, requestedMembers: Array<{ __typename?: 'User', id: number, username: string, email: string, firstname: string, lastname: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime: string, hostId: number, points: number, creatorTypeId: number, publicityTypeId: number, clubId?: Maybe<number>, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, firstname: string, lastname: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> }>> } };
 
 export type ClubsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -832,6 +852,17 @@ export const ClubDocument = gql`
 
 export function useClubQuery(options: Omit<Urql.UseQueryArgs<ClubQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<ClubQuery>({ query: ClubDocument, ...options });
+};
+export const ClubByAdminIdDocument = gql`
+    query ClubByAdminId($id: Float!) {
+  clubByAdminId(adminId: $id) {
+    ...RegularClub
+  }
+}
+    ${RegularClubFragmentDoc}`;
+
+export function useClubByAdminIdQuery(options: Omit<Urql.UseQueryArgs<ClubByAdminIdQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<ClubByAdminIdQuery>({ query: ClubByAdminIdDocument, ...options });
 };
 export const ClubsDocument = gql`
     query Clubs {

@@ -7,9 +7,10 @@ import Image from "next/image";
 
 interface Props {
   events: Event[];
+  mine?: boolean;
 }
 
-const ClubEvents: React.FC<Props> = ({ events }) => {
+const ClubEvents: React.FC<Props> = ({ events, mine = false }) => {
   return (
     <Box mt={5}>
       <Heading variant="h4" as="h4">
@@ -27,7 +28,7 @@ const ClubEvents: React.FC<Props> = ({ events }) => {
         </VStack>
       ) : (
         // <Image src={waiting} alt="Segun Adebayo" />
-        <EventList events={events} />
+        <EventList mine={mine} events={events} />
       )}
     </Box>
   );

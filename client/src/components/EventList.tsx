@@ -5,6 +5,7 @@ import { EventCard } from "./EventCard";
 import { MotionBox } from "./MotionBox";
 import Image from "next/image";
 import waiting from "../images/waiting.svg";
+import { MyEventCard } from "./MyEventCard";
 
 const container = {
   hidden: { opacity: 0 },
@@ -23,9 +24,10 @@ const item = {
 interface Props {
   events: Event[];
   sorryText?: string;
+  mine?: boolean;
 }
 
-const EventList: React.FC<Props> = ({ events, sorryText }) => {
+const EventList: React.FC<Props> = ({ events, sorryText, mine = false }) => {
   return events.length === 0 ? (
     <VStack>
       <Box paddingX={16} paddingY={5}>
@@ -50,7 +52,7 @@ const EventList: React.FC<Props> = ({ events, sorryText }) => {
                   exit={{ opacity: 0, x: -40 }}
                   mt={4}
                 >
-                  <EventCard event={e} />
+                  {mine ? <MyEventCard event={e} /> : <EventCard event={e} />}
                 </MotionBox>
               );
             })}
