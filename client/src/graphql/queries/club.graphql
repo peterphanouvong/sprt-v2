@@ -1,8 +1,5 @@
 query Club($clubId: Float!) {
   club(clubId: $clubId) {
     ...RegularClub
-    events {
-      ...RegularEvent
-    }
   }
 }

@@ -11,7 +11,6 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-// import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
 import NextLink from "next/link";
 import React from "react";
 import {
@@ -25,7 +24,6 @@ import { Card } from "./Card";
 import { ClubIcon } from "./ClubIcon";
 import { EventDeleteButton } from "./EventDeleteButton";
 import { EventEditButton } from "./EventEditButton";
-import { MotionBox } from "./MotionBox";
 import { OptionsButton } from "./OptionsButton";
 import { ViewAttendeesModalButton } from "./ViewAttendeesModalButton";
 

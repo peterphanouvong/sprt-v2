@@ -18,4 +18,7 @@ fragment RegularClub on Club {
   requestedMembers {
     ...RegularUser
   }
+  events {
+    ...RegularEvent
+  }
 }

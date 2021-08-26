@@ -19,7 +19,6 @@ import { parseRichText } from "../../utils/parseRichText";
 import { EventOptionsButton } from "../../components/EventOptionsButton";
 import { EventJoinButton } from "../../components/EventJoinButton";
 import { EventHeader } from "../../components/EventHeader";
-import NextLink from "next/link";
 import { DownloadIcon } from "@chakra-ui/icons";
 import { useIsMobileScreen } from "../../utils/useIsMobileScreen";
 import { EventJoinedStat } from "../../components/EventJoinedStat";
