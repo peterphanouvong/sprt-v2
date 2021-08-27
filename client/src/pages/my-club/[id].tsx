@@ -80,8 +80,8 @@ const MyClub = () => {
           </>
         ) : (
           <>
-            <Skeleton />
-            <Skeleton />
+            <Skeleton height="24px" width="50px" />
+            <Skeleton height="24px" width="50px" />
           </>
         )}
       </HStack>

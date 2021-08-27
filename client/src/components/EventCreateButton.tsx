@@ -13,6 +13,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  ButtonProps,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useCreateEventMutation, useMeQuery } from "../generated/graphql";
@@ -20,9 +21,9 @@ import { formatDateForPostgres } from "../utils/parseDate";
 import { EventForm } from "./EventForm";
 import { MotionBox } from "./MotionBox";
 
-interface Props {}
+type Props = ButtonProps;
 
-const EventCreateButton: React.FC<Props> = ({}) => {
+const EventCreateButton: React.FC<Props> = ({ ...props }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [, createEvent] = useCreateEventMutation();
   const [{ data, fetching }] = useMeQuery();
@@ -40,8 +41,6 @@ const EventCreateButton: React.FC<Props> = ({}) => {
       },
     });
 
-    console.log(error);
-
     if (!error) {
       onClose();
     }
@@ -49,8 +48,6 @@ const EventCreateButton: React.FC<Props> = ({}) => {
 
   if (!data && !fetching) return <>Something bad happened</>;
   if (!data) return <>Spinner</>;
-
-  console.log(data);
 
   return (
     <MotionBox
@@ -60,7 +57,7 @@ const EventCreateButton: React.FC<Props> = ({}) => {
     >
       {!!data.me?.adminClubs?.length ? (
         <Menu>
-          <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+          <MenuButton as={Button} {...props} rightIcon={<ChevronDownIcon />}>
             Create event
           </MenuButton>
           <MenuList>

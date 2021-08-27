@@ -1,9 +1,11 @@
-import { Box, Heading, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 import { Event } from "../generated/graphql";
 import { EventList } from "./EventList";
 import waiting from "../images/waiting.svg";
 import Image from "next/image";
+import { EventCreateButton } from "./EventCreateButton";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 
 interface Props {
   events: Event[];
@@ -11,11 +13,16 @@ interface Props {
 }
 
 const ClubEvents: React.FC<Props> = ({ events, mine = false }) => {
+  const isMobile = useIsMobileScreen();
   return (
     <Box mt={5}>
-      <Heading variant="h4" as="h4">
-        Events
-      </Heading>
+      <Flex justifyContent="space-between" alignItems="center">
+        <Heading variant="h4" as="h4">
+          Events
+        </Heading>
+
+        <EventCreateButton size={isMobile ? "sm" : "md"} />
+      </Flex>
 
       {events.length === 0 ? (
         <VStack>
