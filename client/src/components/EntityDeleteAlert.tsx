@@ -38,7 +38,6 @@ const EntityDeleteAlert: React.FC<Props> = ({
     <>
       {as === "button" ? (
         <Button
-          colorScheme="orange"
           size={isMobile ? "xs" : "sm"}
           variant="outline"
           onClick={() => {

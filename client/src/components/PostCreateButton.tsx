@@ -89,19 +89,10 @@ const PostCreateButton: React.FC<Props> = () => {
                 </VStack>
 
                 <ModalFooter>
-                  <Button
-                    colorScheme="orange"
-                    variant="ghost"
-                    mr={3}
-                    onClick={onClose}
-                  >
+                  <Button variant="ghost" mr={3} onClick={onClose}>
                     Close
                   </Button>
-                  <Button
-                    colorScheme="orange"
-                    isLoading={props.isSubmitting}
-                    type="submit"
-                  >
+                  <Button isLoading={props.isSubmitting} type="submit">
                     Post
                   </Button>
                 </ModalFooter>
