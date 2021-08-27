@@ -4,7 +4,6 @@ import React from "react";
 import { InputField } from "./InputField";
 
 interface Props {
-  matchTimes: (e: any, values: any) => void;
   props: FormikProps<{
     title: string;
     description: any;
@@ -21,7 +20,6 @@ interface Props {
 }
 
 const EventFormEventDetails: React.FC<Props> = ({
-  matchTimes,
   props,
   prevStep,
   nextStep,
@@ -45,7 +43,6 @@ const EventFormEventDetails: React.FC<Props> = ({
           required
           type="datetime-local"
           width="x-small"
-          onBlurCapture={(x) => matchTimes(x, props.values)}
           touched={props.touched.startTime as boolean}
         />
         <InputField
@@ -53,7 +50,6 @@ const EventFormEventDetails: React.FC<Props> = ({
           label="End time"
           width="x-small"
           type="datetime-local"
-          min={props.values.startTime}
           touched={props.touched.endTime as boolean}
         />
 
