@@ -1,13 +1,11 @@
-import React from "react";
-import NextLink from "next/link";
 import { Box, Link, Stack, useColorMode } from "@chakra-ui/react";
-
-import Logo from "./Logo";
-import { useLogoutMutation, useMeQuery } from "../generated/graphql";
-import SettingsDrawer from "./SettingsDrawer";
-
+import NextLink from "next/link";
 import { useRouter } from "next/router";
+import React from "react";
+import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import { ActiveLink } from "./ActiveLink";
+import Logo from "./Logo";
+
 interface Props {}
 
 const Navbar: React.FC<Props> = ({}) => {
