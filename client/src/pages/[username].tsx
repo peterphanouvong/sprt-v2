@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { useIsAuth } from "../utils/useIsAuth";
 import { Card } from "../components/Card";
 import Head from "next/head";
+import { EventCreateButton } from "../components/EventCreateButton";
 
 const Profile = () => {
   useIsAuth();
@@ -48,6 +49,8 @@ const Profile = () => {
       </Card>
       <Card>
         <Heading variant="h1"> Events </Heading>
+
+        <EventCreateButton />
 
         {data.userByUsername.events?.map((DEEZ) => {
           return <Text>{DEEZ.title}</Text>;
