@@ -44,7 +44,6 @@ const EventCreateButton: React.FC<Props> = ({ ...props }) => {
         capacity: values.capacity === "" ? null : parseInt(values.capacity),
       },
     });
-
     if (!error) {
       onClose();
       toast({
