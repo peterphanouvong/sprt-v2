@@ -16,7 +16,6 @@ import React from "react";
 import {
   Event,
   useAddAttendeeMutation,
-  useClubQuery,
   useMeQuery,
   User,
 } from "../generated/graphql";
