@@ -128,18 +128,18 @@ const Register: React.FC<Props> = ({}) => {
                     required
                   />
 
-                  <Checkbox colorScheme="orange">
+                  <Checkbox colorScheme="brand">
                     <Text display="inline" variant="body-3">
                       I have read and agree to the{" "}
                     </Text>
-                    <Link color="orange" href="#">
+                    <Link color="brand" href="#">
                       <Text display="inline" variant="body-3">
                         Terms of Service.
                       </Text>
                     </Link>
                   </Checkbox>
                   <Button
-                    colorScheme="orange"
+                    colorScheme="brand"
                     isLoading={props.isSubmitting}
                     type="submit"
                   >
@@ -151,8 +151,8 @@ const Register: React.FC<Props> = ({}) => {
                       Already have an account?{" "}
                     </Text>
                     <NextLink href="/login">
-                      <Link color="orange">
-                        <Text display="inline" color="orange" variant="body-3">
+                      <Link color="brand">
+                        <Text display="inline" color="brand" variant="body-3">
                           Login.
                         </Text>
                       </Link>

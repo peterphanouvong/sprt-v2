@@ -83,13 +83,13 @@ const Login: React.FC<Props> = ({}) => {
                       required
                     />
                     <NextLink href="/forgot-password">
-                      <Link fontSize="sm" colorScheme="orange">
+                      <Link fontSize="sm" colorScheme="brand">
                         <Text variant="body-3">Forgot password?</Text>
                       </Link>
                     </NextLink>
                   </VStack>
                   <Button
-                    colorScheme="orange"
+                    colorScheme="brand"
                     isLoading={props.isSubmitting}
                     type="submit"
                   >
@@ -101,8 +101,8 @@ const Login: React.FC<Props> = ({}) => {
                       Don't have an account yet?{" "}
                     </Text>
                     <NextLink href="/register">
-                      <Link color="orange">
-                        <Text display="inline" color="orange" variant="body-3">
+                      <Link color="brand">
+                        <Text display="inline" color="brand" variant="body-3">
                           Sign up.
                         </Text>
                       </Link>

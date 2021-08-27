@@ -68,7 +68,7 @@ const ForgotPassword: React.FC<Props> = ({}) => {
                 />
 
                 <Button
-                  colorScheme="orange"
+                  colorScheme="brand"
                   isLoading={props.isSubmitting}
                   type="submit"
                 >

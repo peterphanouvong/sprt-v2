@@ -35,7 +35,7 @@ const ClubEditButton: React.FC<Props> = ({ clubId, as = "button" }) => {
     <>
       {as === "button" ? (
         <Button
-          colorScheme="orange"
+          colorScheme="brand"
           size={isMobile ? "xs" : "sm"}
           variant="outline"
           onClick={onOpen}

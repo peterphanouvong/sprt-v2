@@ -20,7 +20,7 @@ const ClubCreateButton: React.FC<Props> = ({ ...props }) => {
 
   return (
     <>
-      <Button {...props} onClick={onOpen} width="full">
+      <Button onClick={onOpen} width="full" {...props}>
         Create a club
       </Button>
 

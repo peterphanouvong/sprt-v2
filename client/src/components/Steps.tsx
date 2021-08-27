@@ -14,7 +14,7 @@ const Steps: React.FC<Props> = ({ children, activeStep }) => {
       <Progress
         size="sm"
         value={(activeStep / (stepCount - 1)) * 100}
-        colorScheme="orange"
+        colorScheme="brand"
       />
       {childArr.map((child, index) => {
         return (

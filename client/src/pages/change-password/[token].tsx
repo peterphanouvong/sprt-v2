@@ -69,7 +69,7 @@ const ChangePassword: NextPage<{ token: string }> = () => {
                 touched={props.touched.confirmPassword as boolean}
               />
               <Button
-                colorScheme="orange"
+                colorScheme="brand"
                 isLoading={props.isSubmitting}
                 type="submit"
               >

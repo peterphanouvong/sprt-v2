@@ -48,7 +48,7 @@ const EventEditButton: React.FC<Props> = ({ event, as = "button" }) => {
     <>
       {as === "button" ? (
         <Button
-          colorScheme="orange"
+          colorScheme="brand"
           size={isMobile ? "xs" : "sm"}
           variant="outline"
           onClick={onOpen}

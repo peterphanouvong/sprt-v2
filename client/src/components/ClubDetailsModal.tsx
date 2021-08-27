@@ -52,7 +52,7 @@ const ClubDetailsModal: React.FC<Props> = ({ isOpen, onClose, clubId }) => {
         </Box>
         <Divider />
         <ModalBody p={2}>
-          <Tabs isFitted colorScheme="orange">
+          <Tabs isFitted colorScheme="brand">
             <TabList>
               <Tab>
                 <Text variant="body-3">
@@ -96,7 +96,7 @@ const ClubDetailsModal: React.FC<Props> = ({ isOpen, onClose, clubId }) => {
 
         <ModalFooter>
           <Button
-            colorScheme="orange"
+            colorScheme="brand"
             onClick={onClose}
             size={isMobile ? "xs" : "sm"}
             variant="ghost"

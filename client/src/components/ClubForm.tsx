@@ -126,7 +126,7 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
 
             <ModalFooter>
               <Button
-                colorScheme="orange"
+                colorScheme="brand"
                 variant="ghost"
                 mr={3}
                 onClick={onClose}
@@ -134,7 +134,7 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
                 Close
               </Button>
               <Button
-                colorScheme="orange"
+                colorScheme="brand"
                 isLoading={props.isSubmitting}
                 type="submit"
               >

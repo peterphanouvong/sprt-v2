@@ -113,7 +113,7 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
           <Divider />
 
           <ModalBody paddingX={4}>
-            <Tabs isFitted colorScheme="orange">
+            <Tabs isFitted colorScheme="brand">
               <TabList>
                 <Tab>
                   <Text variant="body-3">
@@ -160,7 +160,7 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
             <ButtonGroup>
               <Button
                 size={isMobile ? "sm" : "md"}
-                colorScheme="orange"
+                colorScheme="brand"
                 variant="ghost"
                 onClick={onClose}
               >
@@ -168,7 +168,7 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
               </Button>
               <Button
                 size={isMobile ? "sm" : "md"}
-                colorScheme="orange"
+                colorScheme="brand"
                 onClick={joinEvent}
               >
                 Join

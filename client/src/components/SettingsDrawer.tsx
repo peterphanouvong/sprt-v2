@@ -26,7 +26,7 @@ const SettingsDrawer: React.FC<Props> = ({}) => {
     <>
       <IconButton
         ref={btnRef}
-        colorScheme="orange"
+        colorScheme="brand"
         onClick={onOpen}
         aria-label="Open settings"
         icon={<SettingsIcon />}

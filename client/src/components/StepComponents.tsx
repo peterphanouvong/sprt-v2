@@ -48,7 +48,7 @@ export const PrevNextButtons: React.FC<Props> = ({
       <Tooltip label={final ? "finish" : "next"} fontSize="md">
         <IconButton
           aria-label="next"
-          colorScheme={final ? "orange" : "gray"}
+          colorScheme={final ? "brand" : "gray"}
           variant={final ? "outline" : "solid"}
           onClick={nextStep}
           isDisabled={!nextStep}

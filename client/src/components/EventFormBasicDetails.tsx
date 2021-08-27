@@ -54,7 +54,7 @@ const EventFormBasicDetails: React.FC<Props> = ({
             Cancel
           </Button>
           <Button
-            colorScheme="orange"
+            colorScheme="brand"
             disabled={props.values.title === ""}
             onClick={nextStep}
           >

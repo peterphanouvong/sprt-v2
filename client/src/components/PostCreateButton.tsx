@@ -90,7 +90,7 @@ const PostCreateButton: React.FC<Props> = () => {
 
                 <ModalFooter>
                   <Button
-                    colorScheme="orange"
+                    colorScheme="brand"
                     variant="ghost"
                     mr={3}
                     onClick={onClose}
@@ -98,7 +98,7 @@ const PostCreateButton: React.FC<Props> = () => {
                     Close
                   </Button>
                   <Button
-                    colorScheme="orange"
+                    colorScheme="brand"
                     isLoading={props.isSubmitting}
                     type="submit"
                   >

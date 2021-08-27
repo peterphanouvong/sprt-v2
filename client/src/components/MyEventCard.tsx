@@ -57,7 +57,7 @@ const MyEventCard: React.FC<Props> = ({ event }) => {
         <EventDeleteButton as="button" eventId={event.id} />
         <NextLink href={`/event/${event.id}`}>
           <Button
-            colorScheme="orange"
+            colorScheme="brand"
             size={isMobile ? "xs" : "sm"}
             variant="outline"
           >
@@ -66,7 +66,7 @@ const MyEventCard: React.FC<Props> = ({ event }) => {
         </NextLink>
         <NextLink href={`/event-info/${event.id}`}>
           <Button
-            colorScheme="orange"
+            colorScheme="brand"
             size={isMobile ? "xs" : "sm"}
             variant="outline"
           >
