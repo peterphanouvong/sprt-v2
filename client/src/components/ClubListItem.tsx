@@ -1,5 +1,6 @@
 import { Heading, HStack, Link, Skeleton, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { Club, useMeQuery, User } from "../generated/graphql";
 import { Card } from "./Card";
@@ -14,9 +15,10 @@ interface Props {
 
 const ClubListItem: React.FC<Props> = ({ club }) => {
   const [{ data: userData }] = useMeQuery();
+  const router = useRouter();
 
   return (
-    <Card>
+    <Card onClick={() => router.push(`/club/${club.id}`)}>
       <NextLink href={`/club/${club.id}`}>
         <Heading as="h3" variant="h3">
           <Link>{club.name}</Link>

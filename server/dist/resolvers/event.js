@@ -40,7 +40,7 @@ __decorate([
     __metadata("design:type", String)
 ], EventInput.prototype, "startTime", void 0);
 __decorate([
-    type_graphql_1.Field(),
+    type_graphql_1.Field({ nullable: true }),
     __metadata("design:type", String)
 ], EventInput.prototype, "endTime", void 0);
 __decorate([

@@ -22,17 +22,19 @@ interface Props {
   onClose: () => void;
   onSubmit: (values: any) => Promise<void>;
   clubId: number | null;
+  submitMessage?: string;
 }
 
-const EventForm: React.FC<Props> = ({ event, onClose, onSubmit, clubId }) => {
+const EventForm: React.FC<Props> = ({
+  event,
+  onClose,
+  onSubmit,
+  clubId,
+  submitMessage = "Create event",
+}) => {
   const { nextStep, prevStep, activeStep } = useSteps({
     initialStep: 0,
   });
-
-  const matchTimes = (e: any, values: any) => {
-    console.log(e.target.value);
-    values.endTime = e.target.value;
-  };
 
   return (
     <>
@@ -88,7 +90,6 @@ const EventForm: React.FC<Props> = ({ event, onClose, onSubmit, clubId }) => {
                 <Box mt={6}>
                   <EventFormEventDetails
                     props={props}
-                    matchTimes={matchTimes}
                     prevStep={prevStep}
                     nextStep={nextStep}
                   />
@@ -99,6 +100,7 @@ const EventForm: React.FC<Props> = ({ event, onClose, onSubmit, clubId }) => {
                     props={props}
                     prevStep={prevStep}
                     setValues={props.setFieldValue}
+                    submitMessage={submitMessage}
                   />
                 </Box>
               </Steps>

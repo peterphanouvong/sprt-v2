@@ -32,9 +32,15 @@ interface Props {
     value: any,
     shouldValidate?: boolean | undefined
   ) => void;
+  submitMessage: string;
 }
 
-const EventFormPickType: React.FC<Props> = ({ prevStep, setValues, props }) => {
+const EventFormPickType: React.FC<Props> = ({
+  prevStep,
+  setValues,
+  props,
+  submitMessage,
+}) => {
   const [{ data, fetching }] = usePublicityTypesQuery();
   const [selected, setSelected] = useState(
     props.values.publicityTypeId.toString()
@@ -107,7 +113,7 @@ const EventFormPickType: React.FC<Props> = ({ prevStep, setValues, props }) => {
           Go back
         </Button>
         <Button colorScheme="orange" type="submit">
-          Create event
+          {submitMessage}
         </Button>
       </HStack>
     </Box>

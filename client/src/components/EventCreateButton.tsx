@@ -15,6 +15,7 @@ import {
   MenuList,
   ButtonProps,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useCreateEventMutation, useMeQuery } from "../generated/graphql";
@@ -29,6 +30,8 @@ const EventCreateButton: React.FC<Props> = ({ ...props }) => {
   const [, createEvent] = useCreateEventMutation();
   const [{ data, fetching }] = useMeQuery();
 
+  const toast = useToast();
+
   const [creator, setCreator] = useState<string | undefined>("");
   const [clubId, setClubId] = useState<number | null>(null);
 
@@ -41,9 +44,17 @@ const EventCreateButton: React.FC<Props> = ({ ...props }) => {
         capacity: values.capacity === "" ? null : parseInt(values.capacity),
       },
     });
-
     if (!error) {
       onClose();
+      toast({
+        position: "top",
+        variant: "subtle",
+        duration: 3000,
+        isClosable: true,
+        status: "success",
+        title: `Successfully created "${values.title}".`,
+        description: "Find it on the explore page.",
+      });
     }
   };
 
@@ -52,7 +63,7 @@ const EventCreateButton: React.FC<Props> = ({ ...props }) => {
 
   return (
     <MotionBox
-      transformOrigin='center'
+      transformOrigin="center"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
@@ -70,7 +81,7 @@ const EventCreateButton: React.FC<Props> = ({ ...props }) => {
               }}
             >
               as {data.me?.username}
-              <Text variant='label' ml={2} mt={0.5} display='inline'>
+              <Text variant="label" ml={2} mt={0.5} display="inline">
                 (yourself)
               </Text>
             </MenuItem>
@@ -85,7 +96,7 @@ const EventCreateButton: React.FC<Props> = ({ ...props }) => {
                   }}
                 >
                   as {club.name}
-                  <Text variant='label' ml={2} mt={0.5} display='inline'>
+                  <Text variant="label" ml={2} mt={0.5} display="inline">
                     (your club)
                   </Text>
                 </MenuItem>
@@ -106,20 +117,20 @@ const EventCreateButton: React.FC<Props> = ({ ...props }) => {
 
       <Modal
         closeOnOverlayClick={false}
-        size='2xl'
+        size="2xl"
         isOpen={isOpen}
         onClose={onClose}
       >
         <ModalOverlay />
         <ModalContent>
           <Box
-            display='flex'
-            justifyContent='space-between'
-            alignItems='center'
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
             paddingX={6}
             paddingY={4}
           >
-            <Heading fontSize='large'>{creator}'s event</Heading>
+            <Heading fontSize="large">{creator}'s event</Heading>
             <CloseButton onClick={onClose} />
           </Box>
           <Divider />

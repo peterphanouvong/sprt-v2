@@ -35,7 +35,7 @@ class EventInput {
   @Field()
   startTime: string;
 
-  @Field()
+  @Field({ nullable: true })
   endTime: string;
 
   @Field({ nullable: true })

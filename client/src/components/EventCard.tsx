@@ -18,11 +18,11 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import {
   Event,
   useAddAttendeeMutation,
-  useClubQuery,
   useMeQuery,
   User,
   useRemoveAttendeeMutation,
@@ -35,7 +35,6 @@ import { EventDeleteButton } from "./EventDeleteButton";
 import { EventEditButton } from "./EventEditButton";
 import { OptionsButton } from "./OptionsButton";
 import { ViewAttendeesModalButton } from "./ViewAttendeesModalButton";
-
 interface Props {
   event: Event;
 }
@@ -44,6 +43,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
   const [, addAttendee] = useAddAttendeeMutation();
   const [, removeAttendee] = useRemoveAttendeeMutation();
   const toast = useToast();
+  const router = useRouter();
 
   const [{ data: userData }] = useMeQuery();
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
@@ -113,7 +113,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
   };
   // if (!data) return <>loading...</>;
   return (
-    <Card>
+    <Card onClick={() => router.push(`/event/${event.id}`)}>
       <Box
         mb={4}
         display='flex'
@@ -162,7 +162,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
               userData.me?.id === event.host.id ? (
                 <>
                   <EventEditButton as='modalItem' event={event} />
-                  <EventDeleteButton as='button' eventId={event.id} />
+                  <EventDeleteButton as='modalItem' eventId={event.id} />
                 </>
               ) : (
                 <MenuItem icon={<WarningIcon />}>Report</MenuItem>
