@@ -3,14 +3,26 @@ import React from "react";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 
-import { Code, Heading, Text } from "@chakra-ui/react";
+import {
+  Code,
+  Divider,
+  Flex,
+  Heading,
+  Link,
+  Tag,
+  Text,
+} from "@chakra-ui/react";
 import { Layout } from "../components/Layout";
-import { useUserByUsernameQuery } from "../generated/graphql";
+import { Event, useUserByUsernameQuery } from "../generated/graphql";
 import { useRouter } from "next/router";
 import { useIsAuth } from "../utils/useIsAuth";
 import { Card } from "../components/Card";
 import Head from "next/head";
 import { EventCreateButton } from "../components/EventCreateButton";
+import { ClubMetaInfo } from "../components/ClubMetaInfo";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
+import NextLink from "next/link";
+import { EventList } from "../components/EventList";
 
 const Profile = () => {
   useIsAuth();
@@ -21,6 +33,7 @@ const Profile = () => {
       username: username as string,
     },
   });
+  const isMobile = useIsMobileScreen();
   console.log(data);
 
   if (fetching) return <>loading..</>;
@@ -32,30 +45,30 @@ const Profile = () => {
       <Head>
         <title>{data.userByUsername.username} | sprt</title>
       </Head>
-      <Code>
-        <pre id="json">{JSON.stringify(data.userByUsername, null, 2)}</pre>
-      </Code>
+      <Heading variant="h2">
+        {data.userByUsername.firstname} {data.userByUsername.lastname}
+      </Heading>
+      {data.userByUsername.adminClubs?.map((x) => (
+        <NextLink key={x.id} href={`/club/${x.id}`}>
+          <Tag variant="subtle" my={2}>
+            <Link>{x.name}</Link>
+          </Tag>
+        </NextLink>
+      ))}
 
-      <Card>
-        <Heading variant="h1">
-          {data.userByUsername.firstname} {data.userByUsername.lastname}
-        </Heading>
-        <Text variant="body-2">
-          {data.userByUsername.adminClubs?.map((club) => {
-            return <Text key={club.id}>club: {club.name}</Text>;
-          })}
-        </Text>
-        <Text variant="caption">boobies</Text>
-      </Card>
-      <Card>
-        <Heading variant="h1"> Events </Heading>
+      {/* {data.} */}
+      <Text variant="body-2">
+        <b>{data.userByUsername.followingClubs?.length}</b> Following
+      </Text>
 
-        <EventCreateButton />
+      <Divider my={2} />
 
-        {data.userByUsername.events?.map((DEEZ) => {
-          return <Text>{DEEZ.title}</Text>;
-        })}
-      </Card>
+      <Flex justifyContent="space-between">
+        <Heading variant="h4"> Events </Heading>
+        <EventCreateButton size={isMobile ? "sm" : "md"} />
+      </Flex>
+
+      <EventList mine={true} events={data.userByUsername.events as Event[]} />
     </Layout>
   );
 };

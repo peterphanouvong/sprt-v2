@@ -7,6 +7,24 @@ fragment RegularUser on User {
   events {
     id
     title
+    description
+    location
+    capacity
+    startTime
+    endTime
+    host {
+      id
+      username
+      email
+      createdAt
+      updatedAt
+    }
+    attendees {
+      id
+      username
+      firstname
+      lastname
+    }
   }
   followingClubs {
     id
