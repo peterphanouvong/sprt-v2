@@ -42,7 +42,7 @@ const MyClub = () => {
           <Text variant="body-2" textAlign="center">
             Looks like you don't have a club yet
           </Text>
-          <ClubCreateButton my={6} colorScheme="brand" width="min" />
+          <ClubCreateButton my={6} width="min" />
           <br />
           <Image src={nothingHere} width="200px" height="200px" />
         </Box>

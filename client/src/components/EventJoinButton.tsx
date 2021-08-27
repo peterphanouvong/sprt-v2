@@ -47,7 +47,6 @@ const EventJoinButton: React.FC<Props> = ({
   return (
     <Button
       {...props}
-      colorScheme="brand"
       // variant="outline"
       onClick={joinEvent}
       size={isMobile ? "sm" : "md"}

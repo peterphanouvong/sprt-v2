@@ -128,7 +128,7 @@ const Register: React.FC<Props> = ({}) => {
                     required
                   />
 
-                  <Checkbox colorScheme="brand">
+                  <Checkbox>
                     <Text display="inline" variant="body-3">
                       I have read and agree to the{" "}
                     </Text>
@@ -138,11 +138,7 @@ const Register: React.FC<Props> = ({}) => {
                       </Text>
                     </Link>
                   </Checkbox>
-                  <Button
-                    colorScheme="brand"
-                    isLoading={props.isSubmitting}
-                    type="submit"
-                  >
+                  <Button isLoading={props.isSubmitting} type="submit">
                     Sign up
                   </Button>
 

@@ -53,11 +53,7 @@ const EventFormBasicDetails: React.FC<Props> = ({
           <Button variant="ghost" colorScheme="gray" onClick={onClose}>
             Cancel
           </Button>
-          <Button
-            colorScheme="brand"
-            disabled={props.values.title === ""}
-            onClick={nextStep}
-          >
+          <Button disabled={props.values.title === ""} onClick={nextStep}>
             Continue
           </Button>
         </HStack>

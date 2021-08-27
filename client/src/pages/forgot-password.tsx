@@ -67,11 +67,7 @@ const ForgotPassword: React.FC<Props> = ({}) => {
                   touched={props.touched.email as boolean}
                 />
 
-                <Button
-                  colorScheme="brand"
-                  isLoading={props.isSubmitting}
-                  type="submit"
-                >
+                <Button isLoading={props.isSubmitting} type="submit">
                   Send email
                 </Button>
               </VStack>

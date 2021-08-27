@@ -52,6 +52,7 @@ const Login: React.FC<Props> = ({}) => {
                 usernameOrEmail: values.usernameOrEmail,
               });
               if (res.data?.login.errors) {
+                console.log(res.data.login.errors);
                 setErrors(toErrorMap(res.data.login.errors));
               } else if (res.data?.login.user) {
                 console.log(res.data?.login.user);
@@ -83,16 +84,14 @@ const Login: React.FC<Props> = ({}) => {
                       required
                     />
                     <NextLink href="/forgot-password">
-                      <Link fontSize="sm" colorScheme="brand">
-                        <Text variant="body-3">Forgot password?</Text>
+                      <Link fontSize="sm">
+                        <Text color="brand.500" variant="body-3">
+                          Forgot password?
+                        </Text>
                       </Link>
                     </NextLink>
                   </VStack>
-                  <Button
-                    colorScheme="brand"
-                    isLoading={props.isSubmitting}
-                    type="submit"
-                  >
+                  <Button isLoading={props.isSubmitting} type="submit">
                     Log in
                   </Button>
 
@@ -101,8 +100,12 @@ const Login: React.FC<Props> = ({}) => {
                       Don't have an account yet?{" "}
                     </Text>
                     <NextLink href="/register">
-                      <Link color="brand">
-                        <Text display="inline" color="brand" variant="body-3">
+                      <Link>
+                        <Text
+                          display="inline"
+                          color="brand.500"
+                          variant="body-3"
+                        >
                           Sign up.
                         </Text>
                       </Link>

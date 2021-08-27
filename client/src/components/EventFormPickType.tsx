@@ -65,11 +65,7 @@ const EventFormPickType: React.FC<Props> = ({
         <Stack>
           {data.publicityTypes.map((value) => {
             return (
-              <Radio
-                colorScheme="brand"
-                value={value.id.toString()}
-                key={value.id}
-              >
+              <Radio value={value.id.toString()} key={value.id}>
                 {value.name}
               </Radio>
             );
@@ -112,9 +108,7 @@ const EventFormPickType: React.FC<Props> = ({
         <Button variant="ghost" colorScheme="gray" onClick={prevStep}>
           Go back
         </Button>
-        <Button colorScheme="brand" type="submit">
-          {submitMessage}
-        </Button>
+        <Button type="submit">{submitMessage}</Button>
       </HStack>
     </Box>
   );

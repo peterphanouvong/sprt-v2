@@ -54,7 +54,6 @@ const Explore: React.FC<Props> = ({}) => {
         <HStack py={2}>
           <Button
             size={isMobile ? "sm" : "md"}
-            colorScheme="brand"
             variant={selectedTag === "clubs" ? "solid" : "outline"}
             onClick={() => setSelectedTag("clubs")}
             _hover={{ cursor: "pointer" }}
@@ -63,7 +62,6 @@ const Explore: React.FC<Props> = ({}) => {
           </Button>
           <Button
             size={isMobile ? "sm" : "md"}
-            colorScheme="brand"
             variant={selectedTag === "events" ? "solid" : "outline"}
             onClick={() => setSelectedTag("events")}
             _hover={{ cursor: "pointer" }}

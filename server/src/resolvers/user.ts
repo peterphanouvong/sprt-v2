@@ -152,8 +152,8 @@ export class UserResolver {
       return {
         errors: [
           {
-            field: "username",
-            message: "that username or email doesn't exist",
+            field: "usernameOrEmail",
+            message: "That username or email doesn't exist.",
           },
         ],
       };
@@ -162,7 +162,7 @@ export class UserResolver {
     console.log(valid);
     if (!valid) {
       return {
-        errors: [{ field: "password", message: "incorrect password" }],
+        errors: [{ field: "password", message: "Incorrect password." }],
       };
     }
 

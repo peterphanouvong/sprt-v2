@@ -68,11 +68,7 @@ const ChangePassword: NextPage<{ token: string }> = () => {
                 type="password"
                 touched={props.touched.confirmPassword as boolean}
               />
-              <Button
-                colorScheme="brand"
-                isLoading={props.isSubmitting}
-                type="submit"
-              >
+              <Button isLoading={props.isSubmitting} type="submit">
                 Change password
               </Button>
               <Box color="red.400">{tokenError}</Box>

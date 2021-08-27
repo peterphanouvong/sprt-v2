@@ -125,19 +125,10 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
             </VStack>
 
             <ModalFooter>
-              <Button
-                colorScheme="brand"
-                variant="ghost"
-                mr={3}
-                onClick={onClose}
-              >
+              <Button variant="ghost" mr={3} onClick={onClose}>
                 Close
               </Button>
-              <Button
-                colorScheme="brand"
-                isLoading={props.isSubmitting}
-                type="submit"
-              >
+              <Button isLoading={props.isSubmitting} type="submit">
                 {formType}
               </Button>
             </ModalFooter>
