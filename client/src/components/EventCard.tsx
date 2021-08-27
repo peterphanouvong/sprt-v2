@@ -12,7 +12,8 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 import {
   Event,
   useAddAttendeeMutation,
@@ -27,7 +28,6 @@ import { EventDeleteButton } from "./EventDeleteButton";
 import { EventEditButton } from "./EventEditButton";
 import { OptionsButton } from "./OptionsButton";
 import { ViewAttendeesModalButton } from "./ViewAttendeesModalButton";
-
 interface Props {
   event: Event;
 }
@@ -35,7 +35,9 @@ interface Props {
 const EventCard: React.FC<Props> = ({ event }) => {
   const [, addAttendee] = useAddAttendeeMutation();
   const toast = useToast();
+  const router = useRouter();
   const [{ data }] = useMeQuery();
+
   // const [hasJoined, setHasJoined] = useState(event.attendees.map())
   // const [attendees, setAttendees] = useState<User[]>(event.attendees);
   console.log(event);
@@ -72,7 +74,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
 
   // if (!data) return <>loading...</>;
   return (
-    <Card>
+    <Card onClick={() => router.push(`/event/${event.id}`)}>
       <Box
         mb={4}
         display="flex"
