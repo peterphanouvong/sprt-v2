@@ -17,7 +17,11 @@ const ClubMetaInfo: React.FC<Props> = ({ email, name, phone }) => {
           <PhoneIcon w={3} h={3} mr={3} />
         </Text>
         <Text variant="label">
-          {name || <Skeleton>some name lol</Skeleton>}
+          {!name?.includes("undefined") ? (
+            name
+          ) : (
+            <Skeleton>Erik Shoji</Skeleton>
+          )}
         </Text>
       </Flex>
 
@@ -25,7 +29,9 @@ const ClubMetaInfo: React.FC<Props> = ({ email, name, phone }) => {
         <Text variant="label">
           <Icon as={BsPersonFill} w={3} h={3} mr={3} />
         </Text>
-        <Text variant="label">{phone || <Skeleton>000000000</Skeleton>}</Text>
+        <Text variant="label">
+          {phone || <Skeleton mt={1}>000000000</Skeleton>}
+        </Text>
       </Flex>
 
       <Flex>
@@ -33,7 +39,7 @@ const ClubMetaInfo: React.FC<Props> = ({ email, name, phone }) => {
           <EmailIcon w={3} h={3} mr={3} />
         </Text>
         <Text variant="label">
-          {email || <Skeleton>example@example.com</Skeleton>}
+          {email || <Skeleton mt={1}>example@example.com</Skeleton>}
         </Text>
       </Flex>
     </Box>

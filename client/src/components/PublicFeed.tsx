@@ -1,4 +1,4 @@
-import { Center, Spinner } from "@chakra-ui/react";
+import { Center, Flex, Spinner } from "@chakra-ui/react";
 import React, { useState } from "react";
 import {
   Club,
@@ -9,6 +9,7 @@ import {
   useFeedQuery,
 } from "../generated/graphql";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
+import { EventCreateButton } from "./EventCreateButton";
 // import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
 import { EventList } from "./EventList";
 import { EventListFilter } from "./EventListFilter";
@@ -55,15 +56,18 @@ const PublicFeed: React.FC<Props> = ({ meData, publicityTypesData }) => {
     );
   return (
     <>
-      <EventListFilter
-        size={isMobile ? "sm" : "md"}
-        clubs={meData?.me?.followingClubs as Club[]}
-        selectedClubs={selectedClubs}
-        setSelectedClubs={setSelectedClubs}
-        publicityTypes={publicityTypesData?.publicityTypes as PublicityType[]}
-        selectedPublicityTypes={selectedPublicityTypes}
-        setSelectedPublicityTypes={setSelectedPublicityTypes}
-      />
+      <Flex justifyContent="space-between">
+        <EventCreateButton size={isMobile ? "sm" : "md"} />
+        <EventListFilter
+          size={isMobile ? "sm" : "md"}
+          clubs={meData?.me?.followingClubs as Club[]}
+          selectedClubs={selectedClubs}
+          setSelectedClubs={setSelectedClubs}
+          publicityTypes={publicityTypesData?.publicityTypes as PublicityType[]}
+          selectedPublicityTypes={selectedPublicityTypes}
+          setSelectedPublicityTypes={setSelectedPublicityTypes}
+        />
+      </Flex>
       <EventList
         sorryText={`Looks like there aren't any events.
         Check out the "Explore" page to follow some clubs.`}
