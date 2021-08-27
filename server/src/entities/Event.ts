@@ -45,8 +45,8 @@ export class Event extends BaseEntity {
   @Column({ nullable: true })
   capacity: number;
 
-  @Field(() => String)
-  @Column()
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
   endTime: Date;
 
   @Field()
