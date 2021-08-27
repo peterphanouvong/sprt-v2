@@ -6,7 +6,6 @@ import {
   Skeleton,
   SkeletonText,
   Text,
-  VStack,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Image from "next/image";
