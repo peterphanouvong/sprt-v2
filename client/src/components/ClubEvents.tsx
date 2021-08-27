@@ -16,12 +16,12 @@ const ClubEvents: React.FC<Props> = ({ events, mine = false }) => {
   const isMobile = useIsMobileScreen();
   return (
     <Box mt={5}>
-      <Flex justifyContent="space-between" alignItems="center">
-        <Heading variant="h4" as="h4">
+      <Flex justifyContent='space-between' alignItems='center'>
+        <Heading variant='h4' as='h4'>
           Events
         </Heading>
 
-        <EventCreateButton size={isMobile ? "sm" : "md"} />
+        {mine && <EventCreateButton size={isMobile ? "sm" : "md"} />}
       </Flex>
 
       {events.length === 0 ? (
@@ -29,7 +29,7 @@ const ClubEvents: React.FC<Props> = ({ events, mine = false }) => {
           <Box paddingX={16} paddingY={5}>
             <Image src={waiting} />
           </Box>
-          <Text variant="body-2">
+          <Text variant='body-2'>
             Looks like there aren't any events yet...
           </Text>
         </VStack>
