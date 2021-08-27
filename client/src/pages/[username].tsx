@@ -1,28 +1,16 @@
-import React from "react";
-
+import { Divider, Flex, Heading, Link, Tag, Text } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../utils/createUrqlClient";
-
-import {
-  Code,
-  Divider,
-  Flex,
-  Heading,
-  Link,
-  Tag,
-  Text,
-} from "@chakra-ui/react";
+import Head from "next/head";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import React from "react";
+import { EventCreateButton } from "../components/EventCreateButton";
+import { EventList } from "../components/EventList";
 import { Layout } from "../components/Layout";
 import { Event, useUserByUsernameQuery } from "../generated/graphql";
-import { useRouter } from "next/router";
+import { createUrqlClient } from "../utils/createUrqlClient";
 import { useIsAuth } from "../utils/useIsAuth";
-import { Card } from "../components/Card";
-import Head from "next/head";
-import { EventCreateButton } from "../components/EventCreateButton";
-import { ClubMetaInfo } from "../components/ClubMetaInfo";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
-import NextLink from "next/link";
-import { EventList } from "../components/EventList";
 
 const Profile = () => {
   useIsAuth();
