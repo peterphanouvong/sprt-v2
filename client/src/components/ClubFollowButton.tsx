@@ -68,18 +68,13 @@ const ClubFollowButton: React.FC<Props> = ({
   };
 
   if (!data) {
-    return (
-      <Button isLoading={true} colorScheme="orange">
-        Follow
-      </Button>
-    );
+    return <Button isLoading={true}>Follow</Button>;
   }
   return (
     <Button
       leftIcon={
         isFollowing ? <MinusIcon w={2} h={2} /> : <AddIcon w={2} h={2} />
       }
-      colorScheme="orange"
       variant={isFollowing ? "outline" : "solid"}
       onClick={handleButton}
       size={isMobile ? "xs" : "sm"}

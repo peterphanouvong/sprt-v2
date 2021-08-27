@@ -6,7 +6,6 @@ import {
   Skeleton,
   SkeletonText,
   Text,
-  VStack,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Image from "next/image";
@@ -38,16 +37,14 @@ const MyClub = () => {
   if (error?.message === "[GraphQL] Cannot read property 'clubId' of undefined")
     return (
       <Layout>
-        <VStack paddingX={20} paddingY={5}>
-          <ClubCreateButton />
-
-          <Box pt={4}></Box>
-          <Text variant="body-1" textAlign="center">
+        <Box textAlign="center">
+          <Text variant="body-2" textAlign="center">
             Looks like you don't have a club yet
           </Text>
-          <Box pt={4}></Box>
-          <Image src={nothingHere} />
-        </VStack>
+          <ClubCreateButton my={6} width="min" />
+          <br />
+          <Image src={nothingHere} width="200px" height="200px" />
+        </Box>
       </Layout>
     );
 

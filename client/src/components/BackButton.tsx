@@ -10,6 +10,8 @@ const BackButton: React.FC<Props> = ({ ...props }) => {
   return (
     <IconButton
       isRound={true}
+      colorScheme="gray"
+      variant="solid"
       aria-label="back-button"
       icon={<ChevronLeftIcon />}
       onClick={() => router.back()}

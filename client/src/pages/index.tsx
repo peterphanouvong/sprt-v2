@@ -60,7 +60,7 @@ const Index = () => {
               attendees.
             </Text>
             <NextLink href="/register">
-              <Button mt={8} colorScheme="orange" size={buttonSize}>
+              <Button mt={8} size={buttonSize}>
                 Get started for free
               </Button>
             </NextLink>

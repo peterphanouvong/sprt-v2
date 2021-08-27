@@ -68,7 +68,6 @@ const EventFormEventDetails: React.FC<Props> = ({
             Go back
           </Button>
           <Button
-            colorScheme="orange"
             disabled={
               !!props.errors.location ||
               !!props.errors.startTime ||

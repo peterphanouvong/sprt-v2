@@ -11,11 +11,7 @@ const Steps: React.FC<Props> = ({ children, activeStep }) => {
 
   return (
     <Box>
-      <Progress
-        size="sm"
-        value={(activeStep / (stepCount - 1)) * 100}
-        colorScheme="orange"
-      />
+      <Progress size="sm" value={(activeStep / (stepCount - 1)) * 100} />
       {childArr.map((child, index) => {
         return (
           <Box hidden={index !== activeStep} key={index}>
