@@ -39,13 +39,14 @@ const MyClub = () => {
     return (
       <Layout>
         <VStack paddingX={20} paddingY={5}>
-          <Image src={nothingHere} />
+          <ClubCreateButton />
+
           <Box pt={4}></Box>
           <Text variant="body-1" textAlign="center">
             Looks like you don't have a club yet
           </Text>
           <Box pt={4}></Box>
-          <ClubCreateButton />
+          <Image src={nothingHere} />
         </VStack>
       </Layout>
     );
