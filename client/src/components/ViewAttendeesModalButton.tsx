@@ -44,32 +44,32 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
   const [, addAttendee] = useAddAttendeeMutation();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const joinEvent = async () => {
-    const { error } = await addAttendee({ eventId: eventId });
-    if (!error) {
-      // router.reload();
-      toast({
-        title: "Joined event",
-        variant: "subtle",
-        description: `We've added you as an attendee to "${eventTitle}"`,
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "top",
-      });
-      // router.reload();
-    } else if (error) {
-      toast({
-        title: "Error",
-        variant: "subtle",
-        position: "top",
-        description: `${error.message}`,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
+  // const joinEvent = async () => {
+  //   const { error } = await addAttendee({ eventId: eventId });
+  //   if (!error) {
+  //     // router.reload();
+  //     toast({
+  //       title: "Joined event",
+  //       variant: "subtle",
+  //       description: `We've added you as an attendee to "${eventTitle}"`,
+  //       status: "success",
+  //       duration: 5000,
+  //       isClosable: true,
+  //       position: "top",
+  //     });
+  //     // router.reload();
+  //   } else if (error) {
+  //     toast({
+  //       title: "Error",
+  //       variant: "subtle",
+  //       position: "top",
+  //       description: `${error.message}`,
+  //       status: "error",
+  //       duration: 5000,
+  //       isClosable: true,
+  //     });
+  //   }
+  // };
 
   const isMobile = useIsMobileScreen();
 
@@ -85,7 +85,7 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
   return (
     <>
       {as === "button" ? (
-        <Button size={buttonSize} variant="outline" onClick={onOpen}>
+        <Button size={buttonSize} variant='outline' onClick={onOpen}>
           View attendees
         </Button>
       ) : (
@@ -100,12 +100,12 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
         <ModalOverlay />
         <ModalContent>
           <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
+            display='flex'
+            justifyContent='space-between'
+            alignItems='center'
             padding={4}
           >
-            <Heading variant="h5" as="h5">
+            <Heading variant='h5' as='h5'>
               Event attendees
             </Heading>
             <CloseButton onClick={onClose} />
@@ -113,40 +113,40 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
           <Divider />
 
           <ModalBody paddingX={4}>
-            <Tabs isFitted colorScheme="orange">
+            <Tabs isFitted colorScheme='orange'>
               <TabList>
                 <Tab>
-                  <Text variant="body-3">
+                  <Text variant='body-3'>
                     Attending ({attending.length}
                     {capacity ? "/" + capacity : ""})
                   </Text>
                 </Tab>
                 <Tab>
-                  <Text variant="body-3">Waitlist ({waitlisted.length})</Text>
+                  <Text variant='body-3'>Waitlist ({waitlisted.length})</Text>
                 </Tab>
               </TabList>
               <TabPanels>
-                <TabPanel paddingY={0} paddingX={0} maxH="sm" overflowY="auto">
+                <TabPanel paddingY={0} paddingX={0} maxH='sm' overflowY='auto'>
                   {attending.map((attendee) => (
                     <Box
                       key={attendee.id}
-                      borderBottom="1px solid"
+                      borderBottom='1px solid'
                       paddingY={2}
-                      borderColor="gray.100"
+                      borderColor='gray.100'
                     >
-                      <Text variant="body-2">
+                      <Text variant='body-2'>
                         {attendee.firstname} {attendee.lastname}
                       </Text>
                     </Box>
                   ))}
                 </TabPanel>
-                <TabPanel paddingY={0} paddingX={2} maxH="sm" overflowY="auto">
+                <TabPanel paddingY={0} paddingX={2} maxH='sm' overflowY='auto'>
                   {waitlisted.map((attendee) => (
                     <Box
                       key={attendee.id}
-                      borderBottom="1px solid"
+                      borderBottom='1px solid'
                       paddingY={2}
-                      borderColor="gray.100"
+                      borderColor='gray.100'
                     >
                       {attendee.username}
                     </Box>
@@ -156,23 +156,23 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
             </Tabs>
           </ModalBody>
 
-          <HStack padding={4} justifyContent="flex-end">
+          <HStack padding={4} justifyContent='flex-end'>
             <ButtonGroup>
               <Button
                 size={isMobile ? "sm" : "md"}
-                colorScheme="orange"
-                variant="ghost"
+                colorScheme='orange'
+                variant='ghost'
                 onClick={onClose}
               >
-                Cancel
+                Close
               </Button>
-              <Button
+              {/* <Button
                 size={isMobile ? "sm" : "md"}
                 colorScheme="orange"
                 onClick={joinEvent}
               >
                 Join
-              </Button>
+              </Button> */}
             </ButtonGroup>
           </HStack>
         </ModalContent>

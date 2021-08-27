@@ -4,7 +4,12 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useRouter } from "next/router";
 import { Layout } from "../../components/Layout";
-import { useEventQuery, User } from "../../generated/graphql";
+import {
+  MeQuery,
+  useEventQuery,
+  useMeQuery,
+  User,
+} from "../../generated/graphql";
 import {
   Box,
   Divider,
@@ -27,6 +32,7 @@ import { CSVLink } from "react-csv";
 const Event = () => {
   const router = useRouter();
   const isMobile = useIsMobileScreen();
+  const [{ data: userData }] = useMeQuery();
   const intId =
     typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
 
@@ -43,12 +49,12 @@ const Event = () => {
     <Layout title={data?.event?.title}>
       <Box
         mb={4}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="flex-end"
+        display='flex'
+        justifyContent='space-between'
+        alignItems='flex-end'
       >
         <EventHeader eventId={intId} />
-        <Box textAlign="right">
+        <Box textAlign='right'>
           <EventOptionsButton eventId={intId} />
           {!data?.event ? (
             <Skeleton>
@@ -69,10 +75,13 @@ const Event = () => {
 
       <HStack mb={4}>
         {!data?.event ? (
-          <Skeleton width="111px" height="40px"></Skeleton>
+          <Skeleton width='111px' height='40px'></Skeleton>
         ) : (
           <Skeleton isLoaded={!fetching}>
             <EventJoinButton
+              // event={data as Event}
+              attendees={data.event.attendees as User[]}
+              userData={userData as MeQuery}
               eventId={data.event.id}
               eventTitle={data.event.title}
             />
@@ -80,11 +89,11 @@ const Event = () => {
         )}
 
         {!data?.event ? (
-          <Skeleton width="111px" height="40px" />
+          <Skeleton width='111px' height='40px' />
         ) : (
           <Skeleton isLoaded={!!data?.event}>
             <ViewAttendeesModalButton
-              as="button"
+              as='button'
               buttonSize={isMobile ? "sm" : "md"}
               capacity={data.event.capacity}
               attendees={data.event.attendees as User[]}
@@ -95,7 +104,7 @@ const Event = () => {
         )}
 
         {!data?.event ? (
-          <Skeleton width="111px" height="40px"></Skeleton>
+          <Skeleton width='111px' height='40px'></Skeleton>
         ) : (
           <Skeleton isLoaded={!fetching}>
             <CSVLink
@@ -106,8 +115,8 @@ const Event = () => {
             >
               <IconButton
                 size={isMobile ? "sm" : "md"}
-                aria-label="export attendees"
-                variant="outline"
+                aria-label='export attendees'
+                variant='outline'
                 icon={<DownloadIcon />}
               />
             </CSVLink>
@@ -117,11 +126,11 @@ const Event = () => {
 
       <Divider mb={2} />
       {!data?.event ? (
-        <SkeletonText my="4" noOfLines={4} spacing="4" />
+        <SkeletonText my='4' noOfLines={4} spacing='4' />
       ) : (
         <Skeleton isLoaded={!fetching}>
           <DynamicEditor
-            name="description"
+            name='description'
             initialValue={parseRichText(data.event.description)}
             readOnly={true}
           />

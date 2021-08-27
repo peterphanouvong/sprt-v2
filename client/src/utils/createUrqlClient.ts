@@ -23,16 +23,18 @@ import {
 import { betterUpdateQuery } from "./betterUpdateQuery";
 import { isServer } from "./isServer";
 
-const errorExchange: Exchange = ({ forward }) => (ops$) => {
-  return pipe(
-    forward(ops$),
-    tap(({ error }) => {
-      if (error?.message.includes("not authenticated")) {
-        router.replace("/login");
-      }
-    })
-  );
-};
+const errorExchange: Exchange =
+  ({ forward }) =>
+  (ops$) => {
+    return pipe(
+      forward(ops$),
+      tap(({ error }) => {
+        if (error?.message.includes("not authenticated")) {
+          router.replace("/login");
+        }
+      })
+    );
+  };
 
 export const cursorPagination = (): Resolver => {
   return (_parent, fieldArgs, cache, info) => {
@@ -116,6 +118,12 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               });
             },
             addAttendee: (_result, args, cache, _info) => {
+              cache.invalidate({
+                __typename: "Event",
+                id: (args as AddAttendeeMutationVariables).eventId,
+              });
+            },
+            removeAttendee: (_result, args, cache, _info) => {
               cache.invalidate({
                 __typename: "Event",
                 id: (args as AddAttendeeMutationVariables).eventId,

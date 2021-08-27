@@ -19,6 +19,7 @@ import { EventAttendee } from "../entities/EventAttendee";
 import { getConnection } from "typeorm";
 import { Club } from "../entities/Club";
 import { ClubEvent } from "../entities/ClubEvent";
+import { ClubAdmin } from "src/entities/ClubAdmin";
 
 @InputType()
 class EventInput {
@@ -201,9 +202,13 @@ export class EventResolver {
   @Mutation(() => Boolean)
   async removeAttendee(
     @Arg("eventId", () => Int) eventId: number,
-    @Arg("userId", () => Int) userId: number
+    @Arg("attendeeId", () => Int) attendeeId: number
   ): Promise<boolean> {
-    return false;
+    await EventAttendee.delete({
+      eventId: eventId,
+      attendeeId: attendeeId,
+    });
+    return true;
   }
 
   @Query(() => [Event])

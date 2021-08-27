@@ -145,8 +145,12 @@ let EventResolver = class EventResolver {
         }
         return await User_1.User.findOne(req.session.userId);
     }
-    async removeAttendee(eventId, userId) {
-        return false;
+    async removeAttendee(eventId, attendeeId) {
+        await EventAttendee_1.EventAttendee.delete({
+            eventId: eventId,
+            attendeeId: attendeeId,
+        });
+        return true;
     }
     async feed(id, { eventLoader }) {
         var _a;
@@ -243,7 +247,7 @@ __decorate([
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
     __param(0, type_graphql_1.Arg("eventId", () => type_graphql_1.Int)),
-    __param(1, type_graphql_1.Arg("userId", () => type_graphql_1.Int)),
+    __param(1, type_graphql_1.Arg("attendeeId", () => type_graphql_1.Int)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, Number]),
     __metadata("design:returntype", Promise)

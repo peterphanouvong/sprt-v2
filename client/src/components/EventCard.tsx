@@ -1,5 +1,11 @@
 import { WarningIcon } from "@chakra-ui/icons";
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Box,
   Button,
   Heading,
@@ -19,6 +25,7 @@ import {
   useClubQuery,
   useMeQuery,
   User,
+  useRemoveAttendeeMutation,
 } from "../generated/graphql";
 import { parseDatePretty } from "../utils/parseDate";
 import { useGetClubName } from "../utils/useGetClubName";
@@ -35,13 +42,46 @@ interface Props {
 
 const EventCard: React.FC<Props> = ({ event }) => {
   const [, addAttendee] = useAddAttendeeMutation();
+  const [, removeAttendee] = useRemoveAttendeeMutation();
   const toast = useToast();
-  const [{ data }] = useMeQuery();
-  // const [hasJoined, setHasJoined] = useState(event.attendees.map())
-  // const [attendees, setAttendees] = useState<User[]>(event.attendees);
-  console.log(event);
-  console.log(event.clubId);
+
+  const [{ data: userData }] = useMeQuery();
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+  const cancelRef = React.useRef() as React.MutableRefObject<HTMLInputElement>;
+
+  const [isAttending, setIsAttending] = React.useState<boolean>(
+    event.attendees.map((user) => user.id).includes(userData?.me?.id as number)
+  );
+
+  const onClose = () => setIsOpen(false);
   const clubname = useGetClubName(event.clubId as number);
+
+  const handleButton = async () => {
+    if (!isAttending) {
+      await joinEvent();
+    } else {
+      console.log("already joined");
+      setIsOpen(true); // confirm if user wants to leave event
+    }
+  };
+
+  const leaveEvent = async () => {
+    await removeAttendee({
+      eventId: event.id,
+      attendeeId: userData?.me?.id as number,
+    });
+    toast({
+      title: "Left event",
+      variant: "subtle",
+      description: `You are no longer attending "${event.title}"`,
+      status: "warning",
+      duration: 5000,
+      isClosable: true,
+      position: "top",
+    });
+    setIsAttending(false);
+    setIsOpen(false);
+  };
 
   const joinEvent = async () => {
     const { error, data } = await addAttendee({ eventId: event.id });
@@ -58,6 +98,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
         isClosable: true,
         position: "top",
       });
+      setIsAttending(true);
     } else if (error) {
       toast({
         title: "Error",
@@ -70,7 +111,6 @@ const EventCard: React.FC<Props> = ({ event }) => {
       });
     }
   };
-
   // if (!data) return <>loading...</>;
   return (
     <Card>
@@ -118,8 +158,8 @@ const EventCard: React.FC<Props> = ({ event }) => {
 
         <Box textAlign='right'>
           <OptionsButton>
-            {data ? (
-              data.me?.id === event.host.id ? (
+            {userData ? (
+              userData.me?.id === event.host.id ? (
                 <>
                   <EventEditButton as='modalItem' event={event} />
                   <EventDeleteButton as='button' eventId={event.id} />
@@ -144,8 +184,8 @@ const EventCard: React.FC<Props> = ({ event }) => {
       </Box>
 
       <VStack alignItems='stretch'>
-        <Button onClick={joinEvent} mt={4}>
-          Join
+        <Button onClick={handleButton} mt={4}>
+          {isAttending ? "Leave" : "Join"}
         </Button>
 
         <ViewAttendeesModalButton
@@ -157,6 +197,34 @@ const EventCard: React.FC<Props> = ({ event }) => {
           eventTitle={event?.title}
         />
       </VStack>
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+              Leave Event
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? You may lose your current spot.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              {/*@ts-ignore*/}
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button colorScheme='red' onClick={leaveEvent} ml={3}>
+                Leave
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Card>
   );
 };
