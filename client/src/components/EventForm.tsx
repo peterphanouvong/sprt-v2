@@ -29,11 +29,6 @@ const EventForm: React.FC<Props> = ({ event, onClose, onSubmit, clubId }) => {
     initialStep: 0,
   });
 
-  const matchTimes = (e: any, values: any) => {
-    console.log(e.target.value);
-    values.endTime = e.target.value;
-  };
-
   return (
     <>
       <Formik
@@ -88,7 +83,6 @@ const EventForm: React.FC<Props> = ({ event, onClose, onSubmit, clubId }) => {
                 <Box mt={6}>
                   <EventFormEventDetails
                     props={props}
-                    matchTimes={matchTimes}
                     prevStep={prevStep}
                     nextStep={nextStep}
                   />
