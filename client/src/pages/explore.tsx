@@ -1,13 +1,13 @@
 import { SearchIcon } from "@chakra-ui/icons";
 import {
   Box,
+  Button,
   Divider,
   Heading,
   HStack,
   Input,
   InputGroup,
   InputLeftElement,
-  Tag,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
@@ -22,6 +22,7 @@ import {
   useEventsQuery,
 } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 // import { useIsAuth } from "../utils/useIsAuth";
 
 interface Props {}
@@ -29,6 +30,8 @@ interface Props {}
 const Explore: React.FC<Props> = ({}) => {
   const [selectedTag, setSelectedTag] = useState<"clubs" | "events">("clubs");
   const [searchQuery, setSearchQuery] = useState<string>("");
+
+  const isMobile = useIsMobileScreen();
 
   const [{ data: eventData }] = useEventsQuery();
   const [{ data: clubData }] = useClubsQuery();
@@ -49,20 +52,24 @@ const Explore: React.FC<Props> = ({}) => {
       </Heading>
       <Box position="sticky" top="55px" bg="white" zIndex="10">
         <HStack py={2}>
-          <Tag
-            variant={selectedTag === "clubs" ? "solid" : "subtle"}
+          <Button
+            size={isMobile ? "sm" : "md"}
+            colorScheme="orange"
+            variant={selectedTag === "clubs" ? "solid" : "outline"}
             onClick={() => setSelectedTag("clubs")}
             _hover={{ cursor: "pointer" }}
           >
             Clubs
-          </Tag>
-          <Tag
-            variant={selectedTag === "events" ? "solid" : "subtle"}
+          </Button>
+          <Button
+            size={isMobile ? "sm" : "md"}
+            colorScheme="orange"
+            variant={selectedTag === "events" ? "solid" : "outline"}
             onClick={() => setSelectedTag("events")}
             _hover={{ cursor: "pointer" }}
           >
             Events
-          </Tag>
+          </Button>
         </HStack>
 
         <InputGroup>
@@ -76,15 +83,15 @@ const Explore: React.FC<Props> = ({}) => {
         <Divider my={2} />
       </Box>
 
-      {/* <Divider /> */}
-
       {selectedTag === "events" && eventData && (
         <EventList
           sorryText="Looks like there are no events here. Check what you've searched for."
           events={
             eventData.events.filter((x) => {
               if (searchQuery === "") return true;
-              return x.title.toLowerCase().includes(searchQuery.toLowerCase());
+              return x.title
+                .toLowerCase()
+                .includes(searchQuery.replace(/\s/g, "").toLowerCase());
             }) as Event[]
           }
         />
@@ -95,7 +102,9 @@ const Explore: React.FC<Props> = ({}) => {
           clubs={
             clubData.clubs.filter((x) => {
               if (searchQuery === "") return true;
-              return x.name.toLowerCase().includes(searchQuery.toLowerCase());
+              return x.name
+                .toLowerCase()
+                .includes(searchQuery.replace(/\s/g, "").toLowerCase());
             }) as Club[]
           }
         />
