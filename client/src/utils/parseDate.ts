@@ -11,5 +11,6 @@ export const parseDatePretty = (dateString: string) => {
 };
 
 export const formatDateForPostgres = (dateString: string) => {
+  if (dateString === "") return null;
   return format(new Date(dateString), "yyyy-MM-dd HH:mm:ss xxx");
 };
