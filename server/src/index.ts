@@ -65,11 +65,11 @@ const main = async () => {
   // await Post.delete({});
   // await EventAttendee.delete({});
   // await Event.delete({});
-  // await ClubRequestedMember.delete({});
-  // await ClubFollower.delete({});
-  // await ClubAdmin.delete({});
-  // await ClubMember.delete({});
   // await ClubEvent.delete({});
+  // await ClubFollower.delete({});
+  // await ClubMember.delete({});
+  // await ClubAdmin.delete({});
+  // await ClubRequestedMember.delete({});
   // await Club.delete({});
   // await User.delete({});
 

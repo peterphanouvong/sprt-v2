@@ -13,6 +13,7 @@ const homePages = [
   "/clubs",
   "/[username]",
   "/my-club/[id]",
+  "/",
 ];
 
 interface Props {
