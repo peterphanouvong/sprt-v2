@@ -1,12 +1,11 @@
-import React from "react";
-import NextLink from "next/link";
 import { Box, Link, Stack, useColorMode } from "@chakra-ui/react";
-
-import Logo from "./Logo";
-import { useLogoutMutation, useMeQuery } from "../generated/graphql";
-import SettingsDrawer from "./SettingsDrawer";
-
+import NextLink from "next/link";
 import { useRouter } from "next/router";
+import React from "react";
+import { useLogoutMutation, useMeQuery } from "../generated/graphql";
+import { ActiveLink } from "./ActiveLink";
+import Logo from "./Logo";
+
 interface Props {}
 
 const Navbar: React.FC<Props> = ({}) => {
@@ -23,13 +22,10 @@ const Navbar: React.FC<Props> = ({}) => {
   } else if (!data?.me) {
     body = (
       <Stack alignItems={"center"} direction={"row"} spacing={8}>
-        <NextLink href="/login">
-          <Link>login</Link>
-        </NextLink>
-        <NextLink href="/register">
-          <Link>register</Link>
-        </NextLink>
-        <SettingsDrawer />
+        <ActiveLink href="login">login</ActiveLink>
+        <ActiveLink href="register">register</ActiveLink>
+
+        {/* <SettingsDrawer /> */}
       </Stack>
     );
 
@@ -37,9 +33,9 @@ const Navbar: React.FC<Props> = ({}) => {
   } else {
     body = (
       <Stack alignItems={"center"} direction={"row"} spacing={8}>
-        <NextLink href={`/${data.me.username}`}>
-          <Link>{data.me.username}</Link>
-        </NextLink>
+        <ActiveLink href={`/${data.me.username}`}>
+          {data.me.username}
+        </ActiveLink>
         <Link
           onClick={() => {
             logout();
@@ -50,7 +46,7 @@ const Navbar: React.FC<Props> = ({}) => {
         >
           logout
         </Link>
-        <SettingsDrawer />
+        {/* <SettingsDrawer /> */}
       </Stack>
     );
 
@@ -60,23 +56,9 @@ const Navbar: React.FC<Props> = ({}) => {
         direction={"row"}
         spacing={8}
       >
-        <NextLink href="/feed">
-          <Link>feed</Link>
-        </NextLink>
-        <NextLink href="/clubs">
-          <Link>clubs</Link>
-        </NextLink>{" "}
-        <NextLink href="/events">
-          <Link
-            px={2}
-            py={1}
-            borderBottom={
-              router.pathname === "/events" ? "2px solid orange" : ""
-            }
-          >
-            events
-          </Link>
-        </NextLink>
+        <ActiveLink href="/feed">feed</ActiveLink>
+        <ActiveLink href="/explore">explore</ActiveLink>
+        <ActiveLink href={`/my-club/${data.me.id}`}>my club</ActiveLink>
       </Stack>
     );
   }
