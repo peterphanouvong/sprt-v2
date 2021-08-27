@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React from "react";
 import { useDeleteEventMutation } from "../generated/graphql";
 import { EntityDeleteAlert } from "./EntityDeleteAlert";
@@ -9,6 +10,7 @@ interface Props {
 
 const EventDeleteButton: React.FC<Props> = ({ eventId, as }) => {
   const [, deleteEvent] = useDeleteEventMutation();
+  const router = useRouter();
 
   const handleDelete = async () => {
     const { error } = await deleteEvent({ id: eventId });
@@ -16,7 +18,9 @@ const EventDeleteButton: React.FC<Props> = ({ eventId, as }) => {
     if (error) {
       return error.message;
     }
-
+        if (router.pathname === "/event/[id]") {
+      router.back();
+    }
     return null;
   };
 

@@ -29,6 +29,7 @@ const InputField: React.FC<InputFieldProps> = ({
   size: _,
   icon,
   touched,
+  min,
   ...props
 }) => {
   const [field, { error }] = useField(props);
@@ -46,7 +47,7 @@ const InputField: React.FC<InputFieldProps> = ({
       <InputGroup>
         {icon && <InputLeftElement pointerEvents="none" children={icon} />}
         {props.type === "number" ? (
-          <NumberInput>
+          <NumberInput min={min as number | undefined}>
             <NumberInputField
               {...field}
               {...props}

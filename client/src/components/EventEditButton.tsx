@@ -84,7 +84,7 @@ const EventEditButton: React.FC<Props> = ({ event, as = "button" }) => {
             event={event}
             onClose={onClose}
             onSubmit={onSubmit}
-            // submitMessage='Save'
+            submitMessage="Save"
             clubId={null}
           />
         </ModalContent>

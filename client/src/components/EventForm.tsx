@@ -22,9 +22,16 @@ interface Props {
   onClose: () => void;
   onSubmit: (values: any) => Promise<void>;
   clubId: number | null;
+  submitMessage?: string;
 }
 
-const EventForm: React.FC<Props> = ({ event, onClose, onSubmit, clubId }) => {
+const EventForm: React.FC<Props> = ({
+  event,
+  onClose,
+  onSubmit,
+  clubId,
+  submitMessage = "Create event",
+}) => {
   const { nextStep, prevStep, activeStep } = useSteps({
     initialStep: 0,
   });
@@ -93,6 +100,7 @@ const EventForm: React.FC<Props> = ({ event, onClose, onSubmit, clubId }) => {
                     props={props}
                     prevStep={prevStep}
                     setValues={props.setFieldValue}
+                    submitMessage={submitMessage}
                   />
                 </Box>
               </Steps>
