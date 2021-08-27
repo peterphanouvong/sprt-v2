@@ -1,4 +1,3 @@
-import { ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -6,12 +5,10 @@ import {
   Divider,
   Flex,
   Heading,
-  IconButton,
   Link,
   Text,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
 import React from "react";
 import { Event } from "../generated/graphql";
 import { parseDatePretty } from "../utils/parseDate";
