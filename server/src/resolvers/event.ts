@@ -19,7 +19,6 @@ import { EventAttendee } from "../entities/EventAttendee";
 import { getConnection } from "typeorm";
 import { Club } from "../entities/Club";
 import { ClubEvent } from "../entities/ClubEvent";
-import { ClubAdmin } from "src/entities/ClubAdmin";
 
 @InputType()
 class EventInput {

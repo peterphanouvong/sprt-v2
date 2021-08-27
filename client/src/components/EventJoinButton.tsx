@@ -11,37 +11,43 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import {
-  MeQuery,
   useAddAttendeeMutation,
   User,
   useRemoveAttendeeMutation,
+  Event,
+  useMeQuery,
 } from "../generated/graphql";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 
 type Props = ButtonProps & {
+  event: Event;
   attendees: User[];
-  userData: MeQuery;
   eventId: number;
   eventTitle: string;
 };
 
 const EventJoinButton: React.FC<Props> = ({
+  event,
   attendees,
-  userData,
   eventId,
   eventTitle,
   ...props
 }) => {
   const [, addAttendee] = useAddAttendeeMutation();
   const [, removeAttendee] = useRemoveAttendeeMutation();
+  const [{ data: userData }] = useMeQuery();
 
   const toast = useToast();
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const cancelRef = React.useRef() as React.MutableRefObject<HTMLInputElement>;
+  console.log(event);
+  console.log(event.attendees);
   const [isAttending, setIsAttending] = React.useState<boolean>(
-    attendees.map((user) => user.id).includes(userData?.me?.id as number)
+    event.attendees.map((user) => user.id).includes(userData?.me?.id as number)
   );
-
+  console.log(attendees);
+  console.log(userData);
+  console.log(isAttending);
   const isMobile = useIsMobileScreen();
   const onClose = () => setIsOpen(false);
 
@@ -75,7 +81,6 @@ const EventJoinButton: React.FC<Props> = ({
   const joinEvent = async () => {
     const { error } = await addAttendee({ eventId: eventId });
     if (!error) {
-      // router.reload();
       toast({
         title: "Joined event",
         variant: "subtle",
@@ -86,7 +91,6 @@ const EventJoinButton: React.FC<Props> = ({
         position: "top",
       });
       setIsAttending(true);
-      // router.reload();
     } else if (error) {
       toast({
         title: "Error",
@@ -99,12 +103,13 @@ const EventJoinButton: React.FC<Props> = ({
       });
     }
   };
+
   return (
     <>
       <Button
         {...props}
         colorScheme='orange'
-        // variant="outline"
+        variant={isAttending ? "outline" : "solid"}
         onClick={handleButton}
         size={isMobile ? "sm" : "md"}
       >

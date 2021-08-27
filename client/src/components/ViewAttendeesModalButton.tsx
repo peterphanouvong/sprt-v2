@@ -17,10 +17,9 @@ import {
   Tabs,
   Text,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import React from "react";
-import { useAddAttendeeMutation, User } from "../generated/graphql";
+import { User } from "../generated/graphql";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { EventJoinedStat } from "./EventJoinedStat";
 
@@ -36,40 +35,10 @@ interface Props {
 const ViewAttendeesModalButton: React.FC<Props> = ({
   attendees,
   capacity,
-  eventId,
-  eventTitle,
   as = "stat",
   buttonSize = "md",
 }) => {
-  const [, addAttendee] = useAddAttendeeMutation();
-  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // const joinEvent = async () => {
-  //   const { error } = await addAttendee({ eventId: eventId });
-  //   if (!error) {
-  //     // router.reload();
-  //     toast({
-  //       title: "Joined event",
-  //       variant: "subtle",
-  //       description: `We've added you as an attendee to "${eventTitle}"`,
-  //       status: "success",
-  //       duration: 5000,
-  //       isClosable: true,
-  //       position: "top",
-  //     });
-  //     // router.reload();
-  //   } else if (error) {
-  //     toast({
-  //       title: "Error",
-  //       variant: "subtle",
-  //       position: "top",
-  //       description: `${error.message}`,
-  //       status: "error",
-  //       duration: 5000,
-  //       isClosable: true,
-  //     });
-  //   }
-  // };
 
   const isMobile = useIsMobileScreen();
 

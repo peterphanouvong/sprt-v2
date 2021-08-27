@@ -5,10 +5,9 @@ import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useRouter } from "next/router";
 import { Layout } from "../../components/Layout";
 import {
-  MeQuery,
   useEventQuery,
-  useMeQuery,
   User,
+  Event as EventType,
 } from "../../generated/graphql";
 import {
   Box,
@@ -32,7 +31,6 @@ import { CSVLink } from "react-csv";
 const Event = () => {
   const router = useRouter();
   const isMobile = useIsMobileScreen();
-  const [{ data: userData }] = useMeQuery();
   const intId =
     typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
 
@@ -79,9 +77,8 @@ const Event = () => {
         ) : (
           <Skeleton isLoaded={!fetching}>
             <EventJoinButton
-              // event={data as Event}
+              event={data.event as EventType}
               attendees={data.event.attendees as User[]}
-              userData={userData as MeQuery}
               eventId={data.event.id}
               eventTitle={data.event.title}
             />
