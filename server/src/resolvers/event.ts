@@ -198,6 +198,14 @@ export class EventResolver {
     return await User.findOne(req.session.userId);
   }
 
+  @Mutation(() => Boolean)
+  async removeAttendee(
+    @Arg("eventId", () => Int) eventId: number,
+    @Arg("userId", () => Int) userId: number
+  ): Promise<boolean> {
+    return false;
+  }
+
   @Query(() => [Event])
   @UseMiddleware(isAuth)
   async feed(@Arg("id") id: number, @Ctx() { eventLoader }: MyContext) {
