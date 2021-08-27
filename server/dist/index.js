@@ -61,6 +61,16 @@ const main = async () => {
         ],
         migrations: [path_1.default.join(__dirname, "./migrations/*")],
     });
+    await Post_1.Post.delete({});
+    await EventAttendee_1.EventAttendee.delete({});
+    await Event_1.Event.delete({});
+    await ClubEvent_1.ClubEvent.delete({});
+    await ClubFollower_1.ClubFollower.delete({});
+    await ClubMember_1.ClubMember.delete({});
+    await ClubAdmin_1.ClubAdmin.delete({});
+    await ClubRequestedMember_1.ClubRequestedMember.delete({});
+    await Club_1.Club.delete({});
+    await User_1.User.delete({});
     await conn.runMigrations();
     const app = express_1.default();
     const RedisStore = connect_redis_1.default(express_session_1.default);

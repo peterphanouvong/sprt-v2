@@ -58,7 +58,7 @@ const Login: React.FC<Props> = ({}) => {
                 if (typeof router.query.next === "string") {
                   router.push(router.query.next);
                 } else {
-                  router.push("/home");
+                  router.push("/feed");
                 }
               }
             }}
