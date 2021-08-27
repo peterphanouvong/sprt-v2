@@ -76,23 +76,23 @@ const EventCard: React.FC<Props> = ({ event }) => {
     <Card>
       <Box
         mb={4}
-        display='flex'
-        justifyContent='space-between'
-        alignItems='flex-end'
+        display="flex"
+        justifyContent="space-between"
+        alignItems="flex-end"
       >
         <Box>
           <Box>
             <HStack mb={2}>
               <ClubIcon />
               <Box>
-                <Text variant='label' fontWeight='semibold'>
+                <Text variant="label" fontWeight="semibold">
                   {event.host.username}
-                  <Text fontWeight='normal' display='inline'>
+                  <Text fontWeight="normal" display="inline">
                     {" "}
                     {/* is hosting {clubname && `for ${clubname}`} */}
                     is hosting
                     {clubname && (
-                      <Text display='inline'>
+                      <Text display="inline">
                         {" "}
                         for{" "}
                         <NextLink href={`/club/${event.clubId}`}>
@@ -105,24 +105,24 @@ const EventCard: React.FC<Props> = ({ event }) => {
               </Box>
             </HStack>
 
-            <Heading variant='h3' as='h3'>
+            <Heading variant="h3" as="h3">
               <NextLink href={`/event/${event.id}`}>
                 <Link>{event.title}</Link>
               </NextLink>
             </Heading>
-            <Text variant='label'>
+            <Text variant="label">
               {parseDatePretty(event.startTime)} [{event.location}]
             </Text>
           </Box>
         </Box>
 
-        <Box textAlign='right'>
+        <Box textAlign="right">
           <OptionsButton>
             {data ? (
               data.me?.id === event.host.id ? (
                 <>
-                  <EventEditButton as='modalItem' event={event} />
-                  <EventDeleteButton as='button' eventId={event.id} />
+                  <EventEditButton as="modalItem" event={event} />
+                  <EventDeleteButton as="modalItem" eventId={event.id} />
                 </>
               ) : (
                 <MenuItem icon={<WarningIcon />}>Report</MenuItem>
@@ -143,14 +143,14 @@ const EventCard: React.FC<Props> = ({ event }) => {
         </Box>
       </Box>
 
-      <VStack alignItems='stretch'>
+      <VStack alignItems="stretch">
         <Button onClick={joinEvent} mt={4}>
           Join
         </Button>
 
         <ViewAttendeesModalButton
-          as='button'
-          buttonSize='md'
+          as="button"
+          buttonSize="md"
           capacity={event.capacity}
           attendees={event.attendees as User[]}
           eventId={event?.id}
