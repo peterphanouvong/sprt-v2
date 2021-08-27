@@ -300,11 +300,15 @@ export class UserResolver {
     select array_agg(e.id)
     from "event" e
     inner join "club_follower" cf on cf."clubId" = e."clubId"
-    where cf."followerId" = ${req.session.userId};
+    where (
+      cf."followerId" = ${req.session.userId}
+      or e."hostId" = ${req.session.userId}
+    );
   `);
 
     return eventLoader.loadMany(eventIds[0].array_agg ?? []);
 
     // aim: show me events posted by the clubs that i follow
+    // show events that I have created too
   }
 }
