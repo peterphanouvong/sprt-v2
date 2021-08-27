@@ -11,6 +11,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { Event } from "../generated/graphql";
 import { parseDatePretty } from "../utils/parseDate";
@@ -28,7 +29,7 @@ const MyEventCard: React.FC<Props> = ({ event }) => {
   const isMobile = useIsMobileScreen();
 
   return (
-    <Card>
+    <Card shadow="sm">
       <Box display="flex" justifyContent="space-between" alignItems="flex-end">
         <Box>
           <Box>
@@ -38,14 +39,6 @@ const MyEventCard: React.FC<Props> = ({ event }) => {
                   <Link>{event.title}</Link>
                 </NextLink>
               </Heading>
-              <NextLink href={`/event/${event.id}`}>
-                <IconButton
-                  variant="ghost"
-                  size={isMobile ? "sm" : "md"}
-                  aria-label="view event"
-                  icon={<ExternalLinkIcon />}
-                />
-              </NextLink>
             </Flex>
             <Text variant="label">
               {parseDatePretty(event.startTime)} [{event.location}]
@@ -65,13 +58,22 @@ const MyEventCard: React.FC<Props> = ({ event }) => {
       <ButtonGroup alignItems="center">
         <EventEditButton as="button" event={event} />
         <EventDeleteButton as="button" eventId={event.id} />
+        <NextLink href={`/event/${event.id}`}>
+          <Button
+            colorScheme="orange"
+            size={isMobile ? "xs" : "sm"}
+            variant="outline"
+          >
+            View
+          </Button>
+        </NextLink>
         <NextLink href={`/event-info/${event.id}`}>
           <Button
             colorScheme="orange"
             size={isMobile ? "xs" : "sm"}
             variant="outline"
           >
-            View attendees
+            Export attendees
           </Button>
         </NextLink>
       </ButtonGroup>
