@@ -64,7 +64,8 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
             onOpen();
           }}
         >
-          View {attendees.length} {capacity ? `/${capacity}` : ""}{" "}
+          View {attendees.length}
+          {capacity ? `/${capacity}` : ""}{" "}
           {pluralize(attendees.length, "attendee")}
         </Button>
       ) : (

@@ -15,6 +15,7 @@ const EventSchema = Yup.object().shape({
   title: Yup.string().required("Required"),
   location: Yup.string().required("Required"),
   startTime: Yup.string().required("Required"),
+  capacity: Yup.number().moreThan(0),
 });
 
 interface Props {
