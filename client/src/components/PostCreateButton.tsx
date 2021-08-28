@@ -61,7 +61,6 @@ const PostCreateButton: React.FC<Props> = () => {
           <Formik
             initialValues={{ title: "", description: "" }}
             onSubmit={async (values) => {
-              console.log(values);
               const { error } = await createPost({ input: values });
               console.log(error);
               if (!error) {

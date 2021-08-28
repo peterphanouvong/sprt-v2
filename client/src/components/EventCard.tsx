@@ -41,10 +41,6 @@ const EventCard: React.FC<Props> = ({ event }) => {
   const toast = useToast();
   const [{ data }] = useMeQuery();
 
-  // const [hasJoined, setHasJoined] = useState(event.attendees.map())
-  // const [attendees, setAttendees] = useState<User[]>(event.attendees);
-  console.log(event);
-  console.log(event.clubId);
   const clubname = useGetClubName(event.clubId as number);
 
   const isMobile = useIsMobileScreen();
@@ -77,7 +73,6 @@ const EventCard: React.FC<Props> = ({ event }) => {
     }
   };
 
-  // if (!data) return <>loading...</>;
   return (
     <Card>
       <Box display="flex" justifyContent="space-between" alignItems="flex-end">

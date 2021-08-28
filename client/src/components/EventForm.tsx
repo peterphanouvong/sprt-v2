@@ -66,8 +66,6 @@ const EventForm: React.FC<Props> = ({
               }
         }
         onSubmit={(values) => {
-          console.log(values);
-
           onSubmit({
             ...values,
             capacity: values.capacity,

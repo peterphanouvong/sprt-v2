@@ -38,9 +38,7 @@ const Explore: React.FC<Props> = ({}) => {
 
   const handleChange = (e: any) => {
     setSearchQuery(e.target.value);
-    console.log(e.target.value);
   };
-  // useIsAuth();
   return (
     <Layout title="Explore">
       <Head>
