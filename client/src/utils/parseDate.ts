@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 
 export const parseDate = (dateString: string) => {
+  if (dateString === null) return null;
   const date = new Date(parseInt(dateString));
   return format(date, "yyyy-MM-dd") + "T" + format(date, "HH:mm");
 };

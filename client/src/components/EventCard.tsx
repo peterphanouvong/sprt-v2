@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import React from "react";
-import { BsPeople } from "react-icons/bs";
+import { BsController, BsPeople } from "react-icons/bs";
 import {
   Event,
   useAddAttendeeMutation,
@@ -80,12 +80,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
   // if (!data) return <>loading...</>;
   return (
     <Card>
-      <Box
-        mb={4}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="flex-end"
-      >
+      <Box display="flex" justifyContent="space-between" alignItems="flex-end">
         <Box>
           <Box>
             <HStack mb={2}>
@@ -120,28 +115,6 @@ const EventCard: React.FC<Props> = ({ event }) => {
               {parseDatePretty(event.startTime)} [{event.location}]
             </Text>
           </Box>
-          <ButtonGroup mt={4}>
-            <NextLink href={`/event/${event.id}`}>
-              <Button
-                rightIcon={<LinkIcon />}
-                size={isMobile ? "xs" : "sm"}
-                colorScheme="gray"
-              >
-                View details
-              </Button>
-            </NextLink>
-
-            <ViewAttendeesModalButton
-              as="button"
-              rightIcon={<BsPeople />}
-              size={isMobile ? "xs" : "sm"}
-              colorScheme="gray"
-              capacity={event.capacity}
-              attendees={event.attendees as User[]}
-              eventId={event?.id}
-              eventTitle={event?.title}
-            />
-          </ButtonGroup>
         </Box>
 
         <Box textAlign="right">
@@ -170,6 +143,37 @@ const EventCard: React.FC<Props> = ({ event }) => {
           />
         </Box>
       </Box>
+
+      <Flex my={4} justifyContent="space-between">
+        <ButtonGroup>
+          <NextLink href={`/event/${event.id}`}>
+            <Button
+              rightIcon={<LinkIcon />}
+              size={isMobile ? "xs" : "sm"}
+              colorScheme="gray"
+            >
+              Go to event page
+            </Button>
+          </NextLink>
+
+          <ViewAttendeesModalButton
+            as="button"
+            capacity={event.capacity}
+            attendees={event.attendees as User[]}
+            eventId={event?.id}
+            eventTitle={event?.title}
+          />
+        </ButtonGroup>
+
+        <Button
+          rightIcon={<BsController />}
+          variant="outline"
+          colorScheme="gray"
+          size={isMobile ? "xs" : "sm"}
+        >
+          View as host
+        </Button>
+      </Flex>
 
       <Button width="full" onClick={joinEvent} variant="solid">
         Join

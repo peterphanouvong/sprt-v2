@@ -1,12 +1,11 @@
 import {
   Box,
   Button,
-  ButtonGroup,
   ButtonProps,
   CloseButton,
   Divider,
+  Flex,
   Heading,
-  HStack,
   Modal,
   ModalBody,
   ModalContent,
@@ -21,6 +20,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import React from "react";
+import { BsPeople } from "react-icons/bs";
 import { useAddAttendeeMutation, User } from "../generated/graphql";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { EventJoinedStat } from "./EventJoinedStat";
@@ -30,7 +30,7 @@ type Props = ButtonProps & {
   capacity: number | undefined | null;
   eventId: number;
   eventTitle: string;
-  as?: "button" | "stat";
+  as?: "button";
   buttonSize?: string;
 };
 
@@ -46,32 +46,6 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
   const [, addAttendee] = useAddAttendeeMutation();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const joinEvent = async () => {
-    const { error } = await addAttendee({ eventId: eventId });
-    if (!error) {
-      // router.reload();
-      toast({
-        title: "Joined event",
-        variant: "subtle",
-        description: `We've added you as an attendee to "${eventTitle}"`,
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "top",
-      });
-      // router.reload();
-    } else if (error) {
-      toast({
-        title: "Error",
-        variant: "subtle",
-        position: "top",
-        description: `${error.message}`,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
 
   const isMobile = useIsMobileScreen();
 
@@ -87,7 +61,13 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
   return (
     <>
       {as === "button" ? (
-        <Button size={buttonSize} {...props} onClick={onOpen}>
+        <Button
+          rightIcon={<BsPeople />}
+          size={isMobile ? "xs" : "sm"}
+          colorScheme="gray"
+          {...props}
+          onClick={onOpen}
+        >
           View attendees
         </Button>
       ) : (
@@ -158,20 +138,15 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
             </Tabs>
           </ModalBody>
 
-          <HStack padding={4} justifyContent="flex-end">
-            <ButtonGroup>
-              <Button
-                size={isMobile ? "sm" : "md"}
-                variant="ghost"
-                onClick={onClose}
-              >
-                Cancel
-              </Button>
-              <Button size={isMobile ? "sm" : "md"} onClick={joinEvent}>
-                Join
-              </Button>
-            </ButtonGroup>
-          </HStack>
+          <Flex padding={4} justifyContent="flex-end">
+            <Button
+              size={isMobile ? "sm" : "md"}
+              variant="ghost"
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+          </Flex>
         </ModalContent>
       </Modal>
     </>

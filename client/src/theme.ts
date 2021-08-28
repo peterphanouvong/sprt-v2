@@ -61,7 +61,11 @@ const theme = extendTheme(
   },
   withDefaultColorScheme({
     colorScheme: "brand",
-    components: ["Button"],
+    components: ["Button", "Progress", "Spinner"],
+  }),
+  withDefaultColorScheme({
+    colorScheme: "yellow",
+    components: ["Tabs", "Checkbox", "Radio"],
   })
 );
 

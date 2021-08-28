@@ -48,11 +48,9 @@ const PublicFeed: React.FC<Props> = ({ meData, publicityTypesData }) => {
   if (!data && !fetching) return <>ya fucked it</>;
   if (!data || !meData || !publicityTypesData)
     return (
-      <Layout>
-        <Center>
-          <Spinner />
-        </Center>
-      </Layout>
+      <Center>
+        <Spinner />
+      </Center>
     );
   return (
     <>
