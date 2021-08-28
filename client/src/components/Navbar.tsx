@@ -1,5 +1,6 @@
 import { Box, Link, Stack, useColorMode } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import { ActiveLink } from "./ActiveLink";
@@ -11,6 +12,7 @@ const Navbar: React.FC<Props> = ({}) => {
   const { colorMode } = useColorMode();
   const [, logout] = useLogoutMutation();
   const [{ data, fetching }] = useMeQuery({});
+  const router = useRouter();
 
   let body: any = null;
   let left: any = null;
@@ -35,6 +37,7 @@ const Navbar: React.FC<Props> = ({}) => {
         </ActiveLink>
         <Link
           onClick={() => {
+            router.push("/");
             logout();
           }}
           // isloading={logoutFetching}
