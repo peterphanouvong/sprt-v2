@@ -6,7 +6,7 @@ import { parseDatePretty } from "../utils/parseDate";
 
 type Props = BoxProps & {
   location: string;
-  startTime: string;
+  startTime: string | undefined;
   endTime: string | undefined;
   capacity: number | undefined;
 };

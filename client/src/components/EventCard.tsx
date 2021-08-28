@@ -29,7 +29,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
         hostFirstname={event.host.firstname}
       />
 
-      <Grid mt={2} gridGap={2} gridTemplateColumns="1fr 1fr">
+      <ButtonGroup mt={2}>
         <EventJoinButton
           colorScheme="brand"
           size={isMobile ? "xs" : "sm"}
@@ -44,8 +44,6 @@ const EventCard: React.FC<Props> = ({ event }) => {
             colorScheme="gray"
             capacity={event.capacity}
             attendees={event.attendees as User[]}
-            eventId={event?.id}
-            eventTitle={event?.title}
           />
           <IconButton
             onClick={(e) => e.stopPropagation()}
@@ -56,7 +54,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
             aria-label="options"
           />
         </ButtonGroup>
-      </Grid>
+      </ButtonGroup>
 
       <EventMetaInfo
         mt={2}

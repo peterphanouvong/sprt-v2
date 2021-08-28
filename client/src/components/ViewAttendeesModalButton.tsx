@@ -28,8 +28,6 @@ import { EventJoinedStat } from "./EventJoinedStat";
 type Props = ButtonProps & {
   attendees: User[];
   capacity: number | undefined | null;
-  eventId: number;
-  eventTitle: string;
   as?: "button";
   buttonSize?: string;
 };
