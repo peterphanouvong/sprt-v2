@@ -22,17 +22,9 @@ import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 type Props = ButtonProps & {
   event: Event;
   attendees: User[];
-  eventId: number;
-  eventTitle: string;
 };
 
-const EventJoinButton: React.FC<Props> = ({
-  event,
-  attendees,
-  eventId,
-  eventTitle,
-  ...props
-}) => {
+const EventJoinButton: React.FC<Props> = ({ event, attendees, ...props }) => {
   const [, addAttendee] = useAddAttendeeMutation();
   const [, removeAttendee] = useRemoveAttendeeMutation();
   const [{ data: userData }] = useMeQuery();
@@ -40,14 +32,9 @@ const EventJoinButton: React.FC<Props> = ({
   const toast = useToast();
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const cancelRef = React.useRef() as React.MutableRefObject<HTMLInputElement>;
-  console.log(event);
-  console.log(event.attendees);
   const [isAttending, setIsAttending] = React.useState<boolean>(
     event.attendees.map((user) => user.id).includes(userData?.me?.id as number)
   );
-  console.log(attendees);
-  console.log(userData);
-  console.log(isAttending);
   const isMobile = useIsMobileScreen();
   const onClose = () => setIsOpen(false);
 
@@ -62,13 +49,13 @@ const EventJoinButton: React.FC<Props> = ({
 
   const leaveEvent = async () => {
     await removeAttendee({
-      eventId: eventId,
+      eventId: event.id,
       attendeeId: userData?.me?.id as number,
     });
     toast({
       title: "Left event",
       variant: "subtle",
-      description: `You are no longer attending "${eventTitle}"`,
+      description: `You are no longer attending "${event.title}"`,
       status: "warning",
       duration: 5000,
       isClosable: true,
@@ -79,12 +66,12 @@ const EventJoinButton: React.FC<Props> = ({
   };
 
   const joinEvent = async () => {
-    const { error } = await addAttendee({ eventId: eventId });
+    const { error } = await addAttendee({ eventId: event.id });
     if (!error) {
       toast({
         title: "Joined event",
         variant: "subtle",
-        description: `We've added you as an attendee to "${eventTitle}"`,
+        description: `We've added you as an attendee to "${event.title}"`,
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -107,13 +94,14 @@ const EventJoinButton: React.FC<Props> = ({
   return (
     <>
       <Button
-        {...props}
-        colorScheme='orange'
         variant={isAttending ? "outline" : "solid"}
-        onClick={handleButton}
-        size={isMobile ? "sm" : "md"}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleButton();
+        }}
+        {...props}
       >
-        {isAttending ? "Leave Event" : "Join Event"}
+        {isAttending ? "Leave event" : "Join event"}
       </Button>
 
       <AlertDialog
@@ -123,7 +111,7 @@ const EventJoinButton: React.FC<Props> = ({
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
               Leave Event
             </AlertDialogHeader>
 
@@ -132,12 +120,17 @@ const EventJoinButton: React.FC<Props> = ({
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              {/*@ts-ignore*/}
-              <Button ref={cancelRef} onClick={onClose}>
+              <Button
+                colorScheme="gray"
+                variant="ghost"
+                /*@ts-ignore*/
+                ref={cancelRef}
+                onClick={onClose}
+              >
                 Cancel
               </Button>
-              <Button colorScheme='red' onClick={leaveEvent} ml={3}>
-                Leave
+              <Button colorScheme="red" onClick={leaveEvent} ml={3}>
+                Leave event
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

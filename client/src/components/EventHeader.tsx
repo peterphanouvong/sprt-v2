@@ -24,7 +24,6 @@ const EventHeader: React.FC<Props> = ({ eventId }) => {
       id: eventId,
     },
   });
-  console.log(data);
 
   if (error) return <>there was an error</>;
   return (
