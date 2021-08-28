@@ -1,28 +1,28 @@
-import React from "react";
-
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../../utils/createUrqlClient";
-import { useRouter } from "next/router";
-import { Layout } from "../../components/Layout";
-import { useEventQuery, User } from "../../generated/graphql";
+import { DownloadIcon } from "@chakra-ui/icons";
 import {
   Box,
   Divider,
+  Flex,
   HStack,
   IconButton,
   Skeleton,
   SkeletonText,
 } from "@chakra-ui/react";
-import { ViewAttendeesModalButton } from "../../components/ViewAttendeesModalButton";
-import { DynamicEditor } from "../../components/DynamicEditor";
-import { parseRichText } from "../../utils/parseRichText";
-import { EventOptionsButton } from "../../components/EventOptionsButton";
-import { EventJoinButton } from "../../components/EventJoinButton";
-import { EventHeader } from "../../components/EventHeader";
-import { DownloadIcon } from "@chakra-ui/icons";
-import { useIsMobileScreen } from "../../utils/useIsMobileScreen";
-import { EventJoinedStat } from "../../components/EventJoinedStat";
+import { withUrqlClient } from "next-urql";
+import { useRouter } from "next/router";
+import React from "react";
 import { CSVLink } from "react-csv";
+import { DynamicEditor } from "../../components/DynamicEditor";
+import { EventHeader } from "../../components/EventHeader";
+import { EventJoinButton } from "../../components/EventJoinButton";
+import { EventJoinedStat } from "../../components/EventJoinedStat";
+import { EventOptionsButton } from "../../components/EventOptionsButton";
+import { Layout } from "../../components/Layout";
+import { ViewAttendeesModalButton } from "../../components/ViewAttendeesModalButton";
+import { useEventQuery, User } from "../../generated/graphql";
+import { createUrqlClient } from "../../utils/createUrqlClient";
+import { parseRichText } from "../../utils/parseRichText";
+import { useIsMobileScreen } from "../../utils/useIsMobileScreen";
 
 const Event = () => {
   const router = useRouter();
@@ -47,7 +47,10 @@ const Event = () => {
         justifyContent="space-between"
         alignItems="flex-end"
       >
-        <EventHeader eventId={intId} />
+        <Flex>
+          <EventHeader eventId={intId} />
+        </Flex>
+
         <Box textAlign="right">
           <EventOptionsButton eventId={intId} />
           {!data?.event ? (
@@ -69,23 +72,11 @@ const Event = () => {
 
       <HStack mb={4}>
         {!data?.event ? (
-          <Skeleton width="111px" height="40px"></Skeleton>
-        ) : (
-          <Skeleton isLoaded={!fetching}>
-            <EventJoinButton
-              eventId={data.event.id}
-              eventTitle={data.event.title}
-            />
-          </Skeleton>
-        )}
-
-        {!data?.event ? (
           <Skeleton width="111px" height="40px" />
         ) : (
           <Skeleton isLoaded={!!data?.event}>
             <ViewAttendeesModalButton
               as="button"
-              buttonSize={isMobile ? "sm" : "md"}
               capacity={data.event.capacity}
               attendees={data.event.attendees as User[]}
               eventId={data?.event?.id}
@@ -105,17 +96,28 @@ const Event = () => {
               }))}
             >
               <IconButton
-                size={isMobile ? "sm" : "md"}
+                size={isMobile ? "xs" : "sm"}
                 aria-label="export attendees"
-                variant="outline"
+                colorScheme="gray"
                 icon={<DownloadIcon />}
               />
             </CSVLink>
           </Skeleton>
         )}
       </HStack>
+      {!data?.event ? (
+        <Skeleton height="40px"></Skeleton>
+      ) : (
+        <Skeleton isLoaded={!fetching}>
+          <EventJoinButton
+            width="full"
+            eventId={data.event.id}
+            eventTitle={data.event.title}
+          />
+        </Skeleton>
+      )}
 
-      <Divider mb={2} />
+      <Divider my={2} />
       {!data?.event ? (
         <SkeletonText my="4" noOfLines={4} spacing="4" />
       ) : (

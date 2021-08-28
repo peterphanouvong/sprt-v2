@@ -75,7 +75,7 @@ const Navbar: React.FC<Props> = ({}) => {
         bg={colorMode === "dark" ? "gray.800" : `white`}
       >
         <Box display="flex" flexDirection={"row"} alignItems={"center"}>
-          <NextLink href="/home">
+          <NextLink href="/feed">
             <a style={{ paddingTop: "6px" }}>
               <Logo color={colorMode === "dark" ? "white" : "black"} />
             </a>

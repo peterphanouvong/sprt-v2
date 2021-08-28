@@ -204,8 +204,11 @@ export class EventResolver {
     const eventIds = await getConnection().query(`
     select array_agg(e.id)
     from "event" e
-    inner join "club_follower" cf on cf."clubId" = e."clubId"
-    where cf."followerId" = ${id};
+    left join "club_follower" cf on cf."clubId" = e."clubId"
+    where (
+      cf."followerId" = ${id}
+      or e."hostId" = ${id}
+    );
   `);
 
     return eventLoader.loadMany(eventIds[0].array_agg ?? []);

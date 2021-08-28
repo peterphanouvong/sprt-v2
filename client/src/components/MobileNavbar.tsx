@@ -21,8 +21,6 @@ const MobileNavbar: React.FC<Props> = ({}) => {
   const router = useRouter();
   const [{ data, fetching }] = useMeQuery({});
 
-  console.log(router.pathname);
-
   if (!data && !fetching) <>uh oh</>;
   if (!data) return <></>;
 

@@ -1,7 +1,10 @@
-import { WarningIcon } from "@chakra-ui/icons";
+import { LinkIcon, WarningIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
+  ButtonGroup,
+  Flex,
+  Grid,
   Heading,
   HStack,
   Link,
@@ -12,8 +15,8 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
 import React from "react";
+import { BsController, BsPeople } from "react-icons/bs";
 import {
   Event,
   useAddAttendeeMutation,
@@ -22,6 +25,7 @@ import {
 } from "../generated/graphql";
 import { parseDatePretty } from "../utils/parseDate";
 import { useGetClubName } from "../utils/useGetClubName";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { Card } from "./Card";
 import { ClubIcon } from "./ClubIcon";
 import { EventDeleteButton } from "./EventDeleteButton";
@@ -35,14 +39,11 @@ interface Props {
 const EventCard: React.FC<Props> = ({ event }) => {
   const [, addAttendee] = useAddAttendeeMutation();
   const toast = useToast();
-  const router = useRouter();
   const [{ data }] = useMeQuery();
 
-  // const [hasJoined, setHasJoined] = useState(event.attendees.map())
-  // const [attendees, setAttendees] = useState<User[]>(event.attendees);
-  console.log(event);
-  console.log(event.clubId);
   const clubname = useGetClubName(event.clubId as number);
+
+  const isMobile = useIsMobileScreen();
 
   const joinEvent = async () => {
     const { error, data } = await addAttendee({ eventId: event.id });
@@ -72,15 +73,9 @@ const EventCard: React.FC<Props> = ({ event }) => {
     }
   };
 
-  // if (!data) return <>loading...</>;
   return (
-    <Card onClick={() => router.push(`/event/${event.id}`)}>
-      <Box
-        mb={4}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="flex-end"
-      >
+    <Card>
+      <Box display="flex" justifyContent="space-between" alignItems="flex-end">
         <Box>
           <Box>
             <HStack mb={2}>
@@ -144,20 +139,40 @@ const EventCard: React.FC<Props> = ({ event }) => {
         </Box>
       </Box>
 
-      <VStack alignItems="stretch">
-        <Button onClick={joinEvent} mt={4}>
-          Join
-        </Button>
+      <Flex my={4} justifyContent="space-between">
+        <ButtonGroup>
+          <NextLink href={`/event/${event.id}`}>
+            <Button
+              rightIcon={<LinkIcon />}
+              size={isMobile ? "xs" : "sm"}
+              colorScheme="gray"
+            >
+              Go to event page
+            </Button>
+          </NextLink>
 
-        <ViewAttendeesModalButton
-          as="button"
-          buttonSize="md"
-          capacity={event.capacity}
-          attendees={event.attendees as User[]}
-          eventId={event?.id}
-          eventTitle={event?.title}
-        />
-      </VStack>
+          <ViewAttendeesModalButton
+            as="button"
+            capacity={event.capacity}
+            attendees={event.attendees as User[]}
+            eventId={event?.id}
+            eventTitle={event?.title}
+          />
+        </ButtonGroup>
+
+        <Button
+          rightIcon={<BsController />}
+          variant="outline"
+          colorScheme="gray"
+          size={isMobile ? "xs" : "sm"}
+        >
+          View as host
+        </Button>
+      </Flex>
+
+      <Button width="full" onClick={joinEvent} variant="solid">
+        Join
+      </Button>
     </Card>
   );
 };
