@@ -17,7 +17,6 @@ import {
   Event,
   useMeQuery,
 } from "../generated/graphql";
-import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 
 type Props = ButtonProps & {
   event: Event;
@@ -35,7 +34,6 @@ const EventJoinButton: React.FC<Props> = ({ event, attendees, ...props }) => {
   const [isAttending, setIsAttending] = React.useState<boolean>(
     event.attendees.map((user) => user.id).includes(userData?.me?.id as number)
   );
-  const isMobile = useIsMobileScreen();
   const onClose = () => setIsOpen(false);
 
   const handleButton = async () => {

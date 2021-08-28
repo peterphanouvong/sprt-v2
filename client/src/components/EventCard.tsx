@@ -1,5 +1,5 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { ButtonGroup, Grid, IconButton } from "@chakra-ui/react";
+import { ButtonGroup, IconButton } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { Event, User } from "../generated/graphql";

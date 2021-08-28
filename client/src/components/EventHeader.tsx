@@ -1,17 +1,6 @@
-import {
-  Box,
-  Heading,
-  HStack,
-  Link,
-  Skeleton,
-  SkeletonCircle,
-  Text,
-} from "@chakra-ui/react";
-import NextLink from "next/link";
+import { Box, Skeleton } from "@chakra-ui/react";
 import React from "react";
 import { useEventQuery } from "../generated/graphql";
-import { parseDatePretty } from "../utils/parseDate";
-import { ClubIcon } from "./ClubIcon";
 import { EventCardHeader } from "./EventCardHeader";
 import { EventCardHostAndLocation } from "./EventCardHostAndLocation";
 

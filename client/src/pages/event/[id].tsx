@@ -1,30 +1,17 @@
-import { DownloadIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  ButtonGroup,
-  Divider,
-  Flex,
-  HStack,
-  IconButton,
-  Skeleton,
-  SkeletonText,
-} from "@chakra-ui/react";
+import { ButtonGroup, Divider, Skeleton, SkeletonText } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
-import { CSVLink } from "react-csv";
 import { DynamicEditor } from "../../components/DynamicEditor";
 import { EventHeader } from "../../components/EventHeader";
 import { EventJoinButton } from "../../components/EventJoinButton";
-import { EventJoinedStat } from "../../components/EventJoinedStat";
 import { EventMetaInfo } from "../../components/EventMetaInfo";
-import { EventOptionsButton } from "../../components/EventOptionsButton";
 import { Layout } from "../../components/Layout";
 import { ViewAttendeesModalButton } from "../../components/ViewAttendeesModalButton";
 import {
+  Event as EventType,
   useEventQuery,
   User,
-  Event as EventType,
 } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { parseRichText } from "../../utils/parseRichText";
