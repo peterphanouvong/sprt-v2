@@ -106,6 +106,7 @@ const EventInfo: React.FC<Props> = ({}) => {
           >
             {attendeeFieldOptions.map((x) => (
               <MenuItemOption
+                key={x.value}
                 onClick={() =>
                   setSelectedAttendeeFields({
                     ...selectedAttendeeFields,
