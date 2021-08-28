@@ -1,5 +1,3 @@
-import { useToast } from "@chakra-ui/react";
-
 export const handleNotLoggedin = (toast) => {
   toast({
     // title: "Warning",

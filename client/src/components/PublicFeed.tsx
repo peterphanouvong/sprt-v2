@@ -13,7 +13,7 @@ import { EventCreateButton } from "./EventCreateButton";
 // import { RenderPrettyJSON } from "../utils/renderPrettyJSON";
 import { EventList } from "./EventList";
 import { EventListFilter } from "./EventListFilter";
-import { Layout } from "./Layout";
+// import { Layout } from "./Layout";
 
 interface Props {
   meData: MeQuery;
