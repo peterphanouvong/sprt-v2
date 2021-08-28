@@ -137,7 +137,7 @@ let UserResolver = class UserResolver {
                 errors: [
                     {
                         field: "usernameOrEmail",
-                        message: "that username or email doesn't exist",
+                        message: "That username or email doesn't exist.",
                     },
                 ],
             };
@@ -146,7 +146,7 @@ let UserResolver = class UserResolver {
         console.log(valid);
         if (!valid) {
             return {
-                errors: [{ field: "password", message: "incorrect password" }],
+                errors: [{ field: "password", message: "Incorrect password." }],
             };
         }
         req.session.userId = user.id;
