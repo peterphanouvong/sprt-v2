@@ -48,16 +48,14 @@ const PublicFeed: React.FC<Props> = ({ meData, publicityTypesData }) => {
   if (!data && !fetching) return <>ya fucked it</>;
   if (!data || !meData || !publicityTypesData)
     return (
-      <Layout>
-        <Center>
-          <Spinner />
-        </Center>
-      </Layout>
+      <Center>
+        <Spinner />
+      </Center>
     );
   return (
     <>
       <Flex justifyContent="space-between">
-        <EventCreateButton size={isMobile ? "sm" : "md"} />
+        <EventCreateButton colorScheme="gray" size={isMobile ? "sm" : "md"} />
         <EventListFilter
           size={isMobile ? "sm" : "md"}
           clubs={meData?.me?.followingClubs as Club[]}

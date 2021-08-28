@@ -157,8 +157,11 @@ let EventResolver = class EventResolver {
         const eventIds = await typeorm_1.getConnection().query(`
     select array_agg(e.id)
     from "event" e
-    inner join "club_follower" cf on cf."clubId" = e."clubId"
-    where cf."followerId" = ${id};
+    left join "club_follower" cf on cf."clubId" = e."clubId"
+    where (
+      cf."followerId" = ${id}
+      or e."hostId" = ${id}
+    );
   `);
         return eventLoader.loadMany((_a = eventIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
     }

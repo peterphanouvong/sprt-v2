@@ -1,11 +1,11 @@
 import {
   Box,
   Button,
-  ButtonGroup,
+  ButtonProps,
   CloseButton,
   Divider,
+  Flex,
   Heading,
-  HStack,
   Modal,
   ModalBody,
   ModalContent,
@@ -19,24 +19,27 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
+import { BsPeople } from "react-icons/bs";
 import { User } from "../generated/graphql";
+import { pluralize } from "../utils/pluralize";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { EventJoinedStat } from "./EventJoinedStat";
 
-interface Props {
+type Props = ButtonProps & {
   attendees: User[];
   capacity: number | undefined | null;
   eventId: number;
   eventTitle: string;
-  as?: "button" | "stat";
+  as?: "button";
   buttonSize?: string;
-}
+};
 
 const ViewAttendeesModalButton: React.FC<Props> = ({
   attendees,
   capacity,
   as = "stat",
   buttonSize = "md",
+  ...props
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -54,8 +57,17 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
   return (
     <>
       {as === "button" ? (
-        <Button size={buttonSize} variant='outline' onClick={onOpen}>
-          View attendees
+        <Button
+          rightIcon={<BsPeople />}
+          size={isMobile ? "xs" : "sm"}
+          {...props}
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpen();
+          }}
+        >
+          View {attendees.length} {capacity ? `/${capacity}` : ""}{" "}
+          {pluralize(attendees.length, "attendee")}
         </Button>
       ) : (
         <EventJoinedStat
@@ -69,12 +81,12 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
         <ModalOverlay />
         <ModalContent>
           <Box
-            display='flex'
-            justifyContent='space-between'
-            alignItems='center'
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
             padding={4}
           >
-            <Heading variant='h5' as='h5'>
+            <Heading variant="h5" as="h5">
               Event attendees
             </Heading>
             <CloseButton onClick={onClose} />
@@ -82,40 +94,40 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
           <Divider />
 
           <ModalBody paddingX={4}>
-            <Tabs isFitted colorScheme='orange'>
+            <Tabs isFitted colorScheme="orange">
               <TabList>
                 <Tab>
-                  <Text variant='body-3'>
+                  <Text variant="body-3">
                     Attending ({attending.length}
                     {capacity ? "/" + capacity : ""})
                   </Text>
                 </Tab>
                 <Tab>
-                  <Text variant='body-3'>Waitlist ({waitlisted.length})</Text>
+                  <Text variant="body-3">Waitlist ({waitlisted.length})</Text>
                 </Tab>
               </TabList>
               <TabPanels>
-                <TabPanel paddingY={0} paddingX={0} maxH='sm' overflowY='auto'>
+                <TabPanel paddingY={0} paddingX={0} maxH="sm" overflowY="auto">
                   {attending.map((attendee) => (
                     <Box
                       key={attendee.id}
-                      borderBottom='1px solid'
+                      borderBottom="1px solid"
                       paddingY={2}
-                      borderColor='gray.100'
+                      borderColor="gray.100"
                     >
-                      <Text variant='body-2'>
+                      <Text variant="body-2">
                         {attendee.firstname} {attendee.lastname}
                       </Text>
                     </Box>
                   ))}
                 </TabPanel>
-                <TabPanel paddingY={0} paddingX={2} maxH='sm' overflowY='auto'>
+                <TabPanel paddingY={0} paddingX={2} maxH="sm" overflowY="auto">
                   {waitlisted.map((attendee) => (
                     <Box
                       key={attendee.id}
-                      borderBottom='1px solid'
+                      borderBottom="1px solid"
                       paddingY={2}
-                      borderColor='gray.100'
+                      borderColor="gray.100"
                     >
                       {attendee.username}
                     </Box>
@@ -125,25 +137,15 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
             </Tabs>
           </ModalBody>
 
-          <HStack padding={4} justifyContent='flex-end'>
-            <ButtonGroup>
-              <Button
-                size={isMobile ? "sm" : "md"}
-                colorScheme='orange'
-                variant='ghost'
-                onClick={onClose}
-              >
-                Close
-              </Button>
-              {/* <Button
-                size={isMobile ? "sm" : "md"}
-                colorScheme="orange"
-                onClick={joinEvent}
-              >
-                Join
-              </Button> */}
-            </ButtonGroup>
-          </HStack>
+          <Flex padding={4} justifyContent="flex-end">
+            <Button
+              size={isMobile ? "sm" : "md"}
+              variant="ghost"
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+          </Flex>
         </ModalContent>
       </Modal>
     </>

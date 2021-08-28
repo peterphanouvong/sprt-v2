@@ -1,32 +1,32 @@
-import React from "react";
-
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../../utils/createUrqlClient";
-import { useRouter } from "next/router";
-import { Layout } from "../../components/Layout";
-import {
-  useEventQuery,
-  User,
-  Event as EventType,
-} from "../../generated/graphql";
+import { DownloadIcon } from "@chakra-ui/icons";
 import {
   Box,
   Divider,
+  Flex,
   HStack,
   IconButton,
   Skeleton,
   SkeletonText,
 } from "@chakra-ui/react";
-import { ViewAttendeesModalButton } from "../../components/ViewAttendeesModalButton";
-import { DynamicEditor } from "../../components/DynamicEditor";
-import { parseRichText } from "../../utils/parseRichText";
-import { EventOptionsButton } from "../../components/EventOptionsButton";
-import { EventJoinButton } from "../../components/EventJoinButton";
-import { EventHeader } from "../../components/EventHeader";
-import { DownloadIcon } from "@chakra-ui/icons";
-import { useIsMobileScreen } from "../../utils/useIsMobileScreen";
-import { EventJoinedStat } from "../../components/EventJoinedStat";
+import { withUrqlClient } from "next-urql";
+import { useRouter } from "next/router";
+import React from "react";
 import { CSVLink } from "react-csv";
+import { DynamicEditor } from "../../components/DynamicEditor";
+import { EventHeader } from "../../components/EventHeader";
+import { EventJoinButton } from "../../components/EventJoinButton";
+import { EventJoinedStat } from "../../components/EventJoinedStat";
+import { EventOptionsButton } from "../../components/EventOptionsButton";
+import { Layout } from "../../components/Layout";
+import { ViewAttendeesModalButton } from "../../components/ViewAttendeesModalButton";
+import {
+  useEventQuery,
+  User,
+  Event as EventType,
+} from "../../generated/graphql";
+import { createUrqlClient } from "../../utils/createUrqlClient";
+import { parseRichText } from "../../utils/parseRichText";
+import { useIsMobileScreen } from "../../utils/useIsMobileScreen";
 
 const Event = () => {
   const router = useRouter();
@@ -47,12 +47,12 @@ const Event = () => {
     <Layout title={data?.event?.title}>
       <Box
         mb={4}
-        display='flex'
-        justifyContent='space-between'
-        alignItems='flex-end'
+        display="flex"
+        justifyContent="space-between"
+        alignItems="flex-end"
       >
         <EventHeader eventId={intId} />
-        <Box textAlign='right'>
+        <Box textAlign="right">
           <EventOptionsButton eventId={intId} />
           {!data?.event ? (
             <Skeleton>
@@ -73,7 +73,7 @@ const Event = () => {
 
       <HStack mb={4}>
         {!data?.event ? (
-          <Skeleton width='111px' height='40px'></Skeleton>
+          <Skeleton width="111px" height="40px"></Skeleton>
         ) : (
           <Skeleton isLoaded={!fetching}>
             <EventJoinButton
@@ -86,11 +86,11 @@ const Event = () => {
         )}
 
         {!data?.event ? (
-          <Skeleton width='111px' height='40px' />
+          <Skeleton width="111px" height="40px" />
         ) : (
           <Skeleton isLoaded={!!data?.event}>
             <ViewAttendeesModalButton
-              as='button'
+              as="button"
               buttonSize={isMobile ? "sm" : "md"}
               capacity={data.event.capacity}
               attendees={data.event.attendees as User[]}
@@ -101,7 +101,7 @@ const Event = () => {
         )}
 
         {!data?.event ? (
-          <Skeleton width='111px' height='40px'></Skeleton>
+          <Skeleton width="111px" height="40px"></Skeleton>
         ) : (
           <Skeleton isLoaded={!fetching}>
             <CSVLink
@@ -112,22 +112,35 @@ const Event = () => {
             >
               <IconButton
                 size={isMobile ? "sm" : "md"}
-                aria-label='export attendees'
-                variant='outline'
+                aria-label="export attendees"
+                variant="outline"
                 icon={<DownloadIcon />}
               />
             </CSVLink>
           </Skeleton>
         )}
       </HStack>
-
-      <Divider mb={2} />
       {!data?.event ? (
-        <SkeletonText my='4' noOfLines={4} spacing='4' />
+        <Skeleton height="40px"></Skeleton>
+      ) : (
+        <Skeleton isLoaded={!fetching}>
+          <EventJoinButton
+            width="full"
+            event={data.event as EventType}
+            eventId={data.event.id}
+            eventTitle={data.event.title}
+            attendees={data.event.attendees as User[]}
+          />
+        </Skeleton>
+      )}
+
+      <Divider my={2} />
+      {!data?.event ? (
+        <SkeletonText my="4" noOfLines={4} spacing="4" />
       ) : (
         <Skeleton isLoaded={!fetching}>
           <DynamicEditor
-            name='description'
+            name="description"
             initialValue={parseRichText(data.event.description)}
             readOnly={true}
           />

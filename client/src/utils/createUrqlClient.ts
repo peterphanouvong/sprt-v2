@@ -155,9 +155,6 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
             },
             createEvent: (result, _args, cache, _info) => {
               cache.updateQuery({ query: EventsDocument }, (data) => {
-                console.log("result", result);
-                console.log("data", data);
-
                 if (data === null) {
                   return data;
                 }
@@ -192,7 +189,6 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 { query: MeDocument },
                 _result,
                 (result, query) => {
-                  console.log(query);
                   if (result.login.errors) {
                     return query;
                   } else {

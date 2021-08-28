@@ -22,8 +22,6 @@ const Profile = () => {
     },
   });
   const isMobile = useIsMobileScreen();
-  console.log(data);
-
   if (fetching) return <>loading..</>;
   if (error) return <Layout>{error.message}</Layout>;
   if (!data?.userByUsername) return <Layout>couldn't find the user</Layout>;

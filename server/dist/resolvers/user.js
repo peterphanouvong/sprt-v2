@@ -231,7 +231,10 @@ let UserResolver = class UserResolver {
     select array_agg(e.id)
     from "event" e
     inner join "club_follower" cf on cf."clubId" = e."clubId"
-    where cf."followerId" = ${req.session.userId};
+    where (
+      cf."followerId" = ${req.session.userId}
+      or e."hostId" = ${req.session.userId}
+    );
   `);
         return eventLoader.loadMany((_a = eventIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
     }

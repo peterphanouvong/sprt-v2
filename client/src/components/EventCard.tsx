@@ -1,4 +1,4 @@
-import { WarningIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -6,18 +6,13 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Box,
   Button,
-  Heading,
-  HStack,
-  Link,
-  MenuItem,
-  Spinner,
-  Text,
+  ButtonGroup,
+  Grid,
+  IconButton,
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import {
@@ -27,13 +22,10 @@ import {
   User,
   useRemoveAttendeeMutation,
 } from "../generated/graphql";
-import { parseDatePretty } from "../utils/parseDate";
-import { useGetClubName } from "../utils/useGetClubName";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { Card } from "./Card";
-import { ClubIcon } from "./ClubIcon";
-import { EventDeleteButton } from "./EventDeleteButton";
-import { EventEditButton } from "./EventEditButton";
-import { OptionsButton } from "./OptionsButton";
+import { EventCardHeader } from "./EventCardHeader";
+import { EventCardHostAndLocation } from "./EventCardHostAndLocation";
 import { ViewAttendeesModalButton } from "./ViewAttendeesModalButton";
 interface Props {
   event: Event;
@@ -43,8 +35,10 @@ const EventCard: React.FC<Props> = ({ event }) => {
   const [, addAttendee] = useAddAttendeeMutation();
   const [, removeAttendee] = useRemoveAttendeeMutation();
   const toast = useToast();
+
   const router = useRouter();
 
+  const isMobile = useIsMobileScreen();
   const [{ data: userData }] = useMeQuery();
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const cancelRef = React.useRef() as React.MutableRefObject<HTMLInputElement>;
@@ -54,7 +48,6 @@ const EventCard: React.FC<Props> = ({ event }) => {
   );
 
   const onClose = () => setIsOpen(false);
-  const clubname = useGetClubName(event.clubId as number);
 
   const handleButton = async () => {
     if (!isAttending) {
@@ -111,86 +104,57 @@ const EventCard: React.FC<Props> = ({ event }) => {
       });
     }
   };
-  // if (!data) return <>loading...</>;
+
   return (
-    <Card onClick={() => router.push(`/event/${event.id}`)}>
-      <Box
-        mb={4}
-        display='flex'
-        justifyContent='space-between'
-        alignItems='flex-end'
-      >
-        <Box>
-          <Box>
-            <HStack mb={2}>
-              <ClubIcon />
-              <Box>
-                <Text variant='label' fontWeight='semibold'>
-                  {event.host.username}
-                  <Text fontWeight='normal' display='inline'>
-                    {" "}
-                    {/* is hosting {clubname && `for ${clubname}`} */}
-                    is hosting
-                    {clubname && (
-                      <Text display='inline'>
-                        {" "}
-                        for{" "}
-                        <NextLink href={`/club/${event.clubId}`}>
-                          <Link>{clubname}</Link>
-                        </NextLink>
-                      </Text>
-                    )}
-                  </Text>
-                </Text>
-              </Box>
-            </HStack>
+    <Card
+      onClick={isMobile ? () => router.push(`/event/${event.id}`) : undefined}
+    >
+      <EventCardHeader id={event.id} title={event.title} />
+      <EventCardHostAndLocation
+        clubName={event.club?.name}
+        hostLastname={event.host.lastname}
+        hostFirstname={event.host.firstname}
+      />
 
-            <Heading variant='h3' as='h3'>
-              <NextLink href={`/event/${event.id}`}>
-                <Link>{event.title}</Link>
-              </NextLink>
-            </Heading>
-            <Text variant='label'>
-              {parseDatePretty(event.startTime)} [{event.location}]
-            </Text>
-          </Box>
-        </Box>
-
-        <Box textAlign='right'>
-          <OptionsButton>
-            {userData ? (
-              userData.me?.id === event.host.id ? (
-                <>
-                  <EventEditButton as='modalItem' event={event} />
-                  <EventDeleteButton as='modalItem' eventId={event.id} />
-                </>
-              ) : (
-                <MenuItem icon={<WarningIcon />}>Report</MenuItem>
-              )
-            ) : (
-              <MenuItem>
-                <Spinner />
-              </MenuItem>
-            )}
-          </OptionsButton>
+      <Grid mt={2} gridGap={2} gridTemplateColumns="1fr 1fr">
+        <Button
+          size={isMobile ? "xs" : "sm"}
+          onClick={(e) => {
+            e.stopPropagation();
+            joinEvent();
+          }}
+        >
+          Join
+        </Button>
+        <ButtonGroup>
           <ViewAttendeesModalButton
+            as="button"
+            variant="outline"
+            colorScheme="gray"
             capacity={event.capacity}
-            attendees={event.attendees}
-            eventTitle={event.title}
-            eventId={event.id}
-            // joinEvent={joinEvent}
+            attendees={event.attendees as User[]}
+            eventId={event?.id}
+            eventTitle={event?.title}
           />
-        </Box>
-      </Box>
+          <IconButton
+            onClick={(e) => e.stopPropagation()}
+            colorScheme="gray"
+            size={isMobile ? "xs" : "sm"}
+            icon={<ChevronDownIcon />}
+            variant="outline"
+            aria-label="options"
+          />
+        </ButtonGroup>
+      </Grid>
 
-      <VStack alignItems='stretch'>
+      <VStack alignItems="stretch">
         <Button onClick={handleButton} mt={4}>
           {isAttending ? "Leave" : "Join"}
         </Button>
 
         <ViewAttendeesModalButton
-          as='button'
-          buttonSize='md'
+          as="button"
+          buttonSize="md"
           capacity={event.capacity}
           attendees={event.attendees as User[]}
           eventId={event?.id}
@@ -205,7 +169,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
               Leave Event
             </AlertDialogHeader>
 
@@ -218,7 +182,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
               <Button ref={cancelRef} onClick={onClose}>
                 Cancel
               </Button>
-              <Button colorScheme='red' onClick={leaveEvent} ml={3}>
+              <Button colorScheme="red" onClick={leaveEvent} ml={3}>
                 Leave
               </Button>
             </AlertDialogFooter>

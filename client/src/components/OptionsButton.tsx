@@ -4,7 +4,6 @@ import {
   IconButton,
   MenuList,
   MenuProps,
-  Tooltip,
 } from "@chakra-ui/react";
 import React from "react";
 import { BsThreeDots } from "react-icons/bs";
@@ -18,14 +17,13 @@ const OptionsButton: React.FC<Props> = ({
 }) => {
   return (
     <Menu closeOnSelect={closeOnSelect} {...props}>
-      <Tooltip label="options">
-        <MenuButton
-          as={IconButton}
-          aria-label="Options"
-          icon={<BsThreeDots />}
-          variant="ghost"
-        />
-      </Tooltip>
+      <MenuButton
+        as={IconButton}
+        aria-label="Options"
+        icon={<BsThreeDots />}
+        colorScheme="gray"
+        variant="ghost"
+      />
       <MenuList>{children}</MenuList>
     </Menu>
   );

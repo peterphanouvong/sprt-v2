@@ -20,8 +20,6 @@ const Post = () => {
     },
   });
 
-  console.log(data);
-
   if (fetching) return <>loading..</>;
   if (error) return <Layout>{error.message}</Layout>;
   if (!data?.post) return <Layout>couldn't find the post</Layout>;
