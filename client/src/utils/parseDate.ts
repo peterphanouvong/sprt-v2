@@ -1,12 +1,14 @@
 import { format } from "date-fns";
 
-export const parseDate = (dateString: string) => {
-  if (dateString === null) return null;
+export const parseDate = (dateString: string | null | undefined) => {
+  if (dateString === null || dateString === undefined) return null;
   const date = new Date(parseInt(dateString));
   return format(date, "yyyy-MM-dd") + "T" + format(date, "HH:mm");
 };
 
-export const parseDatePretty = (dateString: string) => {
+export const parseDatePretty = (dateString: string | null | undefined) => {
+  console.log(dateString);
+  if (dateString === null || dateString === undefined) return null;
   const date = new Date(parseInt(dateString));
   return format(date, "eee, LLL d @ h:mm aaa");
 };

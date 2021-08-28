@@ -51,6 +51,7 @@ const ClubJoinButton: React.FC<Props> = ({ club }) => {
   return (
     <Button
       variant={"outline"}
+      colorScheme="gray"
       onClick={requestToJoinClub}
       size={isMobile ? "xs" : "sm"}
     >

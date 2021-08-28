@@ -145,6 +145,13 @@ let EventResolver = class EventResolver {
         }
         return await User_1.User.findOne(req.session.userId);
     }
+    async removeAttendee(eventId, attendeeId) {
+        await EventAttendee_1.EventAttendee.delete({
+            eventId: eventId,
+            attendeeId: attendeeId,
+        });
+        return true;
+    }
     async feed(id, { eventLoader }) {
         var _a;
         const eventIds = await typeorm_1.getConnection().query(`
@@ -240,6 +247,14 @@ __decorate([
     __metadata("design:paramtypes", [Object, Number]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "addAttendee", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg("eventId", () => type_graphql_1.Int)),
+    __param(1, type_graphql_1.Arg("attendeeId", () => type_graphql_1.Int)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "removeAttendee", null);
 __decorate([
     type_graphql_1.Query(() => [Event_1.Event]),
     type_graphql_1.UseMiddleware(isAuth_1.isAuth),

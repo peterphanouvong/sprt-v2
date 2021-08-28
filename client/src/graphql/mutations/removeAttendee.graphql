@@ -1,0 +1,3 @@
+mutation RemoveAttendee($attendeeId: Int!, $eventId: Int!) {
+  removeAttendee(attendeeId: $attendeeId, eventId: $eventId)
+}

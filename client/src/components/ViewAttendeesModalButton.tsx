@@ -17,19 +17,17 @@ import {
   Tabs,
   Text,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import React from "react";
 import { BsPeople } from "react-icons/bs";
-import { useAddAttendeeMutation, User } from "../generated/graphql";
+import { User } from "../generated/graphql";
+import { pluralize } from "../utils/pluralize";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { EventJoinedStat } from "./EventJoinedStat";
 
 type Props = ButtonProps & {
   attendees: User[];
   capacity: number | undefined | null;
-  eventId: number;
-  eventTitle: string;
   as?: "button";
   buttonSize?: string;
 };
@@ -37,14 +35,10 @@ type Props = ButtonProps & {
 const ViewAttendeesModalButton: React.FC<Props> = ({
   attendees,
   capacity,
-  eventId,
-  eventTitle,
   as = "stat",
   buttonSize = "md",
   ...props
 }) => {
-  const [, addAttendee] = useAddAttendeeMutation();
-  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const isMobile = useIsMobileScreen();
@@ -64,11 +58,14 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
         <Button
           rightIcon={<BsPeople />}
           size={isMobile ? "xs" : "sm"}
-          colorScheme="gray"
           {...props}
-          onClick={onOpen}
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpen();
+          }}
         >
-          View attendees
+          View {attendees.length} {capacity ? `/${capacity}` : ""}{" "}
+          {pluralize(attendees.length, "attendee")}
         </Button>
       ) : (
         <EventJoinedStat
@@ -95,7 +92,7 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
           <Divider />
 
           <ModalBody paddingX={4}>
-            <Tabs isFitted>
+            <Tabs isFitted colorScheme="orange">
               <TabList>
                 <Tab>
                   <Text variant="body-3">

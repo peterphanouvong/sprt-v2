@@ -9,7 +9,8 @@ fragment RegularEvent on Event {
   hostId
   host {
     id
-    username
+    firstname
+    lastname
     email
     createdAt
     updatedAt
@@ -21,7 +22,9 @@ fragment RegularEvent on Event {
   creatorTypeId
   publicityTypeId
   clubId
-
+  club {
+    name
+  }
   createdAt
   updatedAt
 }

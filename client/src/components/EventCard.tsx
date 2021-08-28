@@ -1,178 +1,68 @@
-import { LinkIcon, WarningIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Flex,
-  Grid,
-  Heading,
-  HStack,
-  Link,
-  MenuItem,
-  Spinner,
-  Text,
-  useToast,
-  VStack,
-} from "@chakra-ui/react";
-import NextLink from "next/link";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import { ButtonGroup, IconButton } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
-import { BsController, BsPeople } from "react-icons/bs";
-import {
-  Event,
-  useAddAttendeeMutation,
-  useMeQuery,
-  User,
-} from "../generated/graphql";
-import { parseDatePretty } from "../utils/parseDate";
-import { useGetClubName } from "../utils/useGetClubName";
+import { Event, User } from "../generated/graphql";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { Card } from "./Card";
-import { ClubIcon } from "./ClubIcon";
-import { EventDeleteButton } from "./EventDeleteButton";
-import { EventEditButton } from "./EventEditButton";
-import { OptionsButton } from "./OptionsButton";
+import { EventCardHeader } from "./EventCardHeader";
+import { EventCardHostAndLocation } from "./EventCardHostAndLocation";
+import { EventJoinButton } from "./EventJoinButton";
+import { EventMetaInfo } from "./EventMetaInfo";
 import { ViewAttendeesModalButton } from "./ViewAttendeesModalButton";
 interface Props {
   event: Event;
 }
 
 const EventCard: React.FC<Props> = ({ event }) => {
-  const [, addAttendee] = useAddAttendeeMutation();
-  const toast = useToast();
-  const [{ data }] = useMeQuery();
-
-  const clubname = useGetClubName(event.clubId as number);
-
+  const router = useRouter();
   const isMobile = useIsMobileScreen();
 
-  const joinEvent = async () => {
-    const { error, data } = await addAttendee({ eventId: event.id });
-
-    if (data && !error) {
-      // @ts-ignore
-      // setAttendees([...attendees, data.addAttendee]);
-      toast({
-        title: "Joined event",
-        variant: "subtle",
-        description: `We've added you as an attendee to "${event.title}"`,
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "top",
-      });
-    } else if (error) {
-      toast({
-        title: "Error",
-        variant: "subtle",
-        position: "top",
-        description: `${error.message}`,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
-
   return (
-    <Card>
-      <Box display="flex" justifyContent="space-between" alignItems="flex-end">
-        <Box>
-          <Box>
-            <HStack mb={2}>
-              <ClubIcon />
-              <Box>
-                <Text variant="label" fontWeight="semibold">
-                  {event.host.username}
-                  <Text fontWeight="normal" display="inline">
-                    {" "}
-                    {/* is hosting {clubname && `for ${clubname}`} */}
-                    is hosting
-                    {clubname && (
-                      <Text display="inline">
-                        {" "}
-                        for{" "}
-                        <NextLink href={`/club/${event.clubId}`}>
-                          <Link>{clubname}</Link>
-                        </NextLink>
-                      </Text>
-                    )}
-                  </Text>
-                </Text>
-              </Box>
-            </HStack>
+    <Card
+      onClick={isMobile ? () => router.push(`/event/${event.id}`) : undefined}
+    >
+      <EventCardHeader id={event.id} title={event.title} />
+      <EventCardHostAndLocation
+        clubName={event.club?.name}
+        hostLastname={event.host.lastname}
+        hostFirstname={event.host.firstname}
+      />
 
-            <Heading variant="h3" as="h3">
-              <NextLink href={`/event/${event.id}`}>
-                <Link>{event.title}</Link>
-              </NextLink>
-            </Heading>
-            <Text variant="label">
-              {parseDatePretty(event.startTime)} [{event.location}]
-            </Text>
-          </Box>
-        </Box>
+      <ButtonGroup mt={2}>
+        <EventJoinButton
+          colorScheme="brand"
+          size={isMobile ? "xs" : "sm"}
+          event={event}
+          attendees={event.attendees}
+        />
 
-        <Box textAlign="right">
-          <OptionsButton>
-            {data ? (
-              data.me?.id === event.host.id ? (
-                <>
-                  <EventEditButton as="modalItem" event={event} />
-                  <EventDeleteButton as="modalItem" eventId={event.id} />
-                </>
-              ) : (
-                <MenuItem icon={<WarningIcon />}>Report</MenuItem>
-              )
-            ) : (
-              <MenuItem>
-                <Spinner />
-              </MenuItem>
-            )}
-          </OptionsButton>
-          <ViewAttendeesModalButton
-            capacity={event.capacity}
-            attendees={event.attendees}
-            eventTitle={event.title}
-            eventId={event.id}
-            // joinEvent={joinEvent}
-          />
-        </Box>
-      </Box>
-
-      <Flex my={4} justifyContent="space-between">
         <ButtonGroup>
-          <NextLink href={`/event/${event.id}`}>
-            <Button
-              rightIcon={<LinkIcon />}
-              size={isMobile ? "xs" : "sm"}
-              colorScheme="gray"
-            >
-              Go to event page
-            </Button>
-          </NextLink>
-
           <ViewAttendeesModalButton
             as="button"
+            variant="outline"
+            colorScheme="gray"
             capacity={event.capacity}
             attendees={event.attendees as User[]}
-            eventId={event?.id}
-            eventTitle={event?.title}
+          />
+          <IconButton
+            onClick={(e) => e.stopPropagation()}
+            colorScheme="gray"
+            size={isMobile ? "xs" : "sm"}
+            icon={<ChevronDownIcon />}
+            variant="outline"
+            aria-label="options"
           />
         </ButtonGroup>
+      </ButtonGroup>
 
-        <Button
-          rightIcon={<BsController />}
-          variant="outline"
-          colorScheme="gray"
-          size={isMobile ? "xs" : "sm"}
-        >
-          View as host
-        </Button>
-      </Flex>
-
-      <Button width="full" onClick={joinEvent} variant="solid">
-        Join
-      </Button>
+      <EventMetaInfo
+        mt={2}
+        location={event.location}
+        startTime={event.startTime}
+        endTime={event.endTime ?? undefined}
+        capacity={event.capacity ?? undefined}
+      />
     </Card>
   );
 };

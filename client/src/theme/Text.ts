@@ -10,7 +10,7 @@ export const Text = {
       fontSize: ["0.694rem", "0.694rem", "0.833rem"],
     },
     meta: {
-      color: "blackAlpha.600",
+      color: "gray.600",
       fontSize: ["0.579rem", "0.579rem", "0.694rem"],
     },
     footer: {
@@ -19,11 +19,11 @@ export const Text = {
     caption: {
       fontSize: ["0.694rem", "0.694rem", "0.833rem"],
       textTransform: "uppercase",
-      color: "blackAlpha.600",
+      color: "gray.600",
     },
     label: {
       fontSize: ["0.694rem", "0.694rem", "0.833rem"],
-      color: "blackAlpha.600",
+      color: "gray.600",
     },
   },
 };

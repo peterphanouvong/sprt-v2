@@ -1,17 +1,8 @@
-import {
-  Box,
-  Heading,
-  HStack,
-  Link,
-  Skeleton,
-  SkeletonCircle,
-  Text,
-} from "@chakra-ui/react";
-import NextLink from "next/link";
+import { Box, Skeleton } from "@chakra-ui/react";
 import React from "react";
 import { useEventQuery } from "../generated/graphql";
-import { parseDatePretty } from "../utils/parseDate";
-import { ClubIcon } from "./ClubIcon";
+import { EventCardHeader } from "./EventCardHeader";
+import { EventCardHostAndLocation } from "./EventCardHostAndLocation";
 
 interface Props {
   eventId: number;
@@ -24,45 +15,23 @@ const EventHeader: React.FC<Props> = ({ eventId }) => {
       id: eventId,
     },
   });
-  console.log(data);
 
   if (error) return <>there was an error</>;
   return (
     <Box>
-      <HStack mb={2}>
-        <SkeletonCircle isLoaded={!!data?.event && !fetching}>
-          <ClubIcon />
-        </SkeletonCircle>
-        <Box display="flex" alignItems="center">
-          <Skeleton isLoaded={!!data?.event?.host.username}>
-            <Text display="inline" variant="label" fontWeight="normal">
-              <b>{data?.event?.host.username || "username"}</b> is hosting{" "}
-              {data?.event?.club?.name && (
-                <Text display="inline">
-                  for{" "}
-                  <NextLink href={`/club/${data?.event.club.id}`}>
-                    <Link>{data?.event?.club?.name}</Link>
-                  </NextLink>
-                </Text>
-              )}
-            </Text>
-          </Skeleton>
-        </Box>
-      </HStack>
-
       <Skeleton isLoaded={!!data?.event && !fetching}>
-        <Heading variant="h2" as="h2" mb={1}>
-          {data?.event?.title || "Title"}
-        </Heading>
+        <EventCardHeader
+          id={data?.event?.id || 1}
+          title={data?.event?.title || "title"}
+        />
       </Skeleton>
 
       <Skeleton isLoaded={!!data?.event && !fetching}>
-        <Text variant="label">
-          {data?.event?.startTime
-            ? `${parseDatePretty(data.event.startTime)} [
-          ${data?.event?.location}]`
-            : "Mon, Jan 01 @ 10:00 am [location]"}
-        </Text>
+        <EventCardHostAndLocation
+          clubName={data?.event?.club?.name}
+          hostLastname={data?.event?.host.lastname || "last name"}
+          hostFirstname={data?.event?.host.firstname || "firstname"}
+        />
       </Skeleton>
     </Box>
   );

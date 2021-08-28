@@ -46,8 +46,6 @@ const MyEventCard: React.FC<Props> = ({ event }) => {
         <ViewAttendeesModalButton
           capacity={event.capacity}
           attendees={event.attendees}
-          eventTitle={event.title}
-          eventId={event.id}
         />
       </Box>
       <Divider my={2} />
