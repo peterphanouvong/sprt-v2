@@ -86,8 +86,13 @@ const EntityDeleteAlert: React.FC<Props> = ({
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              {/*@ts-ignore*/}
-              <Button ref={cancelRef} onClick={onClose}>
+              <Button
+                /*@ts-ignore*/
+                ref={cancelRef}
+                colorScheme="gray"
+                variant="ghost"
+                onClick={onClose}
+              >
                 Cancel
               </Button>
               <Button
