@@ -28,6 +28,7 @@ const EventEditButton: React.FC<Props> = ({ event, as = "button" }) => {
   const isMobile = useIsMobileScreen();
 
   const onSubmit = async (values) => {
+    console.log("edit form values: ", values);
     const { error } = await updateEvent({
       input: {
         ...values,

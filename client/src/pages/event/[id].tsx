@@ -6,6 +6,7 @@ import { DynamicEditor } from "../../components/DynamicEditor";
 import { EventHeader } from "../../components/EventHeader";
 import { EventJoinButton } from "../../components/EventJoinButton";
 import { EventMetaInfo } from "../../components/EventMetaInfo";
+import { EventOptionsButton } from "../../components/EventOptionsButton";
 import { Layout } from "../../components/Layout";
 import { ViewAttendeesModalButton } from "../../components/ViewAttendeesModalButton";
 import {
@@ -62,6 +63,18 @@ const Event = () => {
               attendees={data.event.attendees as User[]}
             />
           </Skeleton>
+        )}
+
+        {!data?.event ? (
+          <Skeleton width="111px" height="40px" />
+        ) : (
+          <EventOptionsButton
+            eventId={data.event.id}
+            onClick={(e) => e.stopPropagation()}
+            colorScheme="gray"
+            size={isMobile ? "xs" : "sm"}
+            variant="outline"
+          />
         )}
       </ButtonGroup>
 

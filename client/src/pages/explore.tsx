@@ -28,7 +28,7 @@ import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 interface Props {}
 
 const Explore: React.FC<Props> = ({}) => {
-  const [selectedTag, setSelectedTag] = useState<"clubs" | "events">("clubs");
+  const [selectedTag, setSelectedTag] = useState<"clubs" | "events">("events");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const isMobile = useIsMobileScreen();

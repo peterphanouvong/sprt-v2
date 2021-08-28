@@ -8,6 +8,7 @@ import {
   Link,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
@@ -23,6 +24,7 @@ interface Props {
 const TopMobileNavbar: React.FC<Props> = ({ variant = "home", title }) => {
   const [{ data }] = useMeQuery();
   const [, logout] = useLogoutMutation();
+  const router = useRouter();
 
   const isMobile = useIsMobileScreen();
 
@@ -59,6 +61,7 @@ const TopMobileNavbar: React.FC<Props> = ({ variant = "home", title }) => {
         <Box textAlign="right">
           <Button
             onClick={() => {
+              router.push("/");
               logout();
             }}
             size={isMobile ? "xs" : "sm"}

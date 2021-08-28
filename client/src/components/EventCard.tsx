@@ -1,5 +1,4 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import { ButtonGroup, IconButton } from "@chakra-ui/react";
+import { ButtonGroup } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { Event, User } from "../generated/graphql";
@@ -9,6 +8,7 @@ import { EventCardHeader } from "./EventCardHeader";
 import { EventCardHostAndLocation } from "./EventCardHostAndLocation";
 import { EventJoinButton } from "./EventJoinButton";
 import { EventMetaInfo } from "./EventMetaInfo";
+import { EventOptionsButton } from "./EventOptionsButton";
 import { ViewAttendeesModalButton } from "./ViewAttendeesModalButton";
 interface Props {
   event: Event;
@@ -23,6 +23,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
       onClick={isMobile ? () => router.push(`/event/${event.id}`) : undefined}
     >
       <EventCardHeader id={event.id} title={event.title} />
+
       <EventCardHostAndLocation
         clubName={event.club?.name}
         hostLastname={event.host.lastname}
@@ -45,13 +46,13 @@ const EventCard: React.FC<Props> = ({ event }) => {
             capacity={event.capacity}
             attendees={event.attendees as User[]}
           />
-          <IconButton
+
+          <EventOptionsButton
+            eventId={event.id}
             onClick={(e) => e.stopPropagation()}
             colorScheme="gray"
             size={isMobile ? "xs" : "sm"}
-            icon={<ChevronDownIcon />}
             variant="outline"
-            aria-label="options"
           />
         </ButtonGroup>
       </ButtonGroup>
