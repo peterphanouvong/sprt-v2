@@ -91,6 +91,7 @@ export type Mutation = {
   addClubEvent: Scalars['Boolean'];
   deleteEvent: Scalars['Boolean'];
   addAttendee: User;
+  removeAttendee: Scalars['Boolean'];
   createClub: Club;
   updateClub?: Maybe<Club>;
   deleteClub: Scalars['Boolean'];
@@ -162,6 +163,12 @@ export type MutationDeleteEventArgs = {
 
 
 export type MutationAddAttendeeArgs = {
+  eventId: Scalars['Int'];
+};
+
+
+export type MutationRemoveAttendeeArgs = {
+  attendeeId: Scalars['Int'];
   eventId: Scalars['Int'];
 };
 
@@ -434,6 +441,14 @@ export type RegisterMutationVariables = Exact<{
 
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string }>>, user?: Maybe<{ __typename?: 'User', id: number, username: string, email: string, firstname: string, lastname: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime?: Maybe<string>, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, firstname: string, lastname: string }> }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> } };
+
+export type RemoveAttendeeMutationVariables = Exact<{
+  attendeeId: Scalars['Int'];
+  eventId: Scalars['Int'];
+}>;
+
+
+export type RemoveAttendeeMutation = { __typename?: 'Mutation', removeAttendee: boolean };
 
 export type UnfollowClubMutationVariables = Exact<{
   followerId: Scalars['Float'];
@@ -832,6 +847,15 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const RemoveAttendeeDocument = gql`
+    mutation RemoveAttendee($attendeeId: Int!, $eventId: Int!) {
+  removeAttendee(attendeeId: $attendeeId, eventId: $eventId)
+}
+    `;
+
+export function useRemoveAttendeeMutation() {
+  return Urql.useMutation<RemoveAttendeeMutation, RemoveAttendeeMutationVariables>(RemoveAttendeeDocument);
 };
 export const UnfollowClubDocument = gql`
     mutation UnfollowClub($followerId: Float!, $clubId: Float!) {

@@ -19,7 +19,11 @@ import { EventJoinedStat } from "../../components/EventJoinedStat";
 import { EventOptionsButton } from "../../components/EventOptionsButton";
 import { Layout } from "../../components/Layout";
 import { ViewAttendeesModalButton } from "../../components/ViewAttendeesModalButton";
-import { useEventQuery, User } from "../../generated/graphql";
+import {
+  useEventQuery,
+  User,
+  Event as EventType,
+} from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { parseRichText } from "../../utils/parseRichText";
 import { useIsMobileScreen } from "../../utils/useIsMobileScreen";
@@ -47,10 +51,7 @@ const Event = () => {
         justifyContent="space-between"
         alignItems="flex-end"
       >
-        <Flex>
-          <EventHeader eventId={intId} />
-        </Flex>
-
+        <EventHeader eventId={intId} />
         <Box textAlign="right">
           <EventOptionsButton eventId={intId} />
           {!data?.event ? (
@@ -72,11 +73,25 @@ const Event = () => {
 
       <HStack mb={4}>
         {!data?.event ? (
+          <Skeleton width="111px" height="40px"></Skeleton>
+        ) : (
+          <Skeleton isLoaded={!fetching}>
+            <EventJoinButton
+              event={data.event as EventType}
+              attendees={data.event.attendees as User[]}
+              eventId={data.event.id}
+              eventTitle={data.event.title}
+            />
+          </Skeleton>
+        )}
+
+        {!data?.event ? (
           <Skeleton width="111px" height="40px" />
         ) : (
           <Skeleton isLoaded={!!data?.event}>
             <ViewAttendeesModalButton
               as="button"
+              buttonSize={isMobile ? "sm" : "md"}
               capacity={data.event.capacity}
               attendees={data.event.attendees as User[]}
               eventId={data?.event?.id}
@@ -96,9 +111,9 @@ const Event = () => {
               }))}
             >
               <IconButton
-                size={isMobile ? "xs" : "sm"}
+                size={isMobile ? "sm" : "md"}
                 aria-label="export attendees"
-                colorScheme="gray"
+                variant="outline"
                 icon={<DownloadIcon />}
               />
             </CSVLink>
@@ -111,8 +126,10 @@ const Event = () => {
         <Skeleton isLoaded={!fetching}>
           <EventJoinButton
             width="full"
+            event={data.event as EventType}
             eventId={data.event.id}
             eventTitle={data.event.title}
+            attendees={data.event.attendees as User[]}
           />
         </Skeleton>
       )}

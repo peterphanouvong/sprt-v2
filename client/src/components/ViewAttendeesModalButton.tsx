@@ -17,11 +17,10 @@ import {
   Tabs,
   Text,
   useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
 import React from "react";
 import { BsPeople } from "react-icons/bs";
-import { useAddAttendeeMutation, User } from "../generated/graphql";
+import { User } from "../generated/graphql";
 import { pluralize } from "../utils/pluralize";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { EventJoinedStat } from "./EventJoinedStat";
@@ -38,8 +37,6 @@ type Props = ButtonProps & {
 const ViewAttendeesModalButton: React.FC<Props> = ({
   attendees,
   capacity,
-  eventId,
-  eventTitle,
   as = "stat",
   buttonSize = "md",
   ...props
@@ -97,7 +94,7 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
           <Divider />
 
           <ModalBody paddingX={4}>
-            <Tabs isFitted>
+            <Tabs isFitted colorScheme="orange">
               <TabList>
                 <Tab>
                   <Text variant="body-3">

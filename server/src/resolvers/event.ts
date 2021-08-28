@@ -198,6 +198,18 @@ export class EventResolver {
     return await User.findOne(req.session.userId);
   }
 
+  @Mutation(() => Boolean)
+  async removeAttendee(
+    @Arg("eventId", () => Int) eventId: number,
+    @Arg("attendeeId", () => Int) attendeeId: number
+  ): Promise<boolean> {
+    await EventAttendee.delete({
+      eventId: eventId,
+      attendeeId: attendeeId,
+    });
+    return true;
+  }
+
   @Query(() => [Event])
   @UseMiddleware(isAuth)
   async feed(@Arg("id") id: number, @Ctx() { eventLoader }: MyContext) {
