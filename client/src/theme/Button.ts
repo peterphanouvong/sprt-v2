@@ -1,3 +1,8 @@
 export const Button = {
-  baseStyle: {},
+  sizes: {
+    xs: {
+      px: "10px",
+      height: "26px",
+    },
+  },
 };

@@ -22,6 +22,7 @@ import {
 import React from "react";
 import { BsPeople } from "react-icons/bs";
 import { useAddAttendeeMutation, User } from "../generated/graphql";
+import { pluralize } from "../utils/pluralize";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { EventJoinedStat } from "./EventJoinedStat";
 
@@ -43,8 +44,6 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
   buttonSize = "md",
   ...props
 }) => {
-  const [, addAttendee] = useAddAttendeeMutation();
-  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const isMobile = useIsMobileScreen();
@@ -64,11 +63,14 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
         <Button
           rightIcon={<BsPeople />}
           size={isMobile ? "xs" : "sm"}
-          colorScheme="gray"
           {...props}
-          onClick={onOpen}
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpen();
+          }}
         >
-          View attendees
+          View {attendees.length} {capacity ? `/${capacity}` : ""}{" "}
+          {pluralize(attendees.length, "attendee")}
         </Button>
       ) : (
         <EventJoinedStat

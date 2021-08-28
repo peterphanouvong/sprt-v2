@@ -1,36 +1,18 @@
-import { LinkIcon, WarningIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
-  Box,
   Button,
   ButtonGroup,
-  Flex,
   Grid,
-  Heading,
-  HStack,
-  Link,
-  MenuItem,
-  Spinner,
-  Text,
+  IconButton,
   useToast,
-  VStack,
 } from "@chakra-ui/react";
-import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
-import { BsController, BsPeople } from "react-icons/bs";
-import {
-  Event,
-  useAddAttendeeMutation,
-  useMeQuery,
-  User,
-} from "../generated/graphql";
-import { parseDatePretty } from "../utils/parseDate";
-import { useGetClubName } from "../utils/useGetClubName";
+import { Event, useAddAttendeeMutation, User } from "../generated/graphql";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { Card } from "./Card";
-import { ClubIcon } from "./ClubIcon";
-import { EventDeleteButton } from "./EventDeleteButton";
-import { EventEditButton } from "./EventEditButton";
-import { OptionsButton } from "./OptionsButton";
+import { EventCardHeader } from "./EventCardHeader";
+import { EventCardHostAndLocation } from "./EventCardHostAndLocation";
 import { ViewAttendeesModalButton } from "./ViewAttendeesModalButton";
 interface Props {
   event: Event;
@@ -39,9 +21,8 @@ interface Props {
 const EventCard: React.FC<Props> = ({ event }) => {
   const [, addAttendee] = useAddAttendeeMutation();
   const toast = useToast();
-  const [{ data }] = useMeQuery();
 
-  const clubname = useGetClubName(event.clubId as number);
+  const router = useRouter();
 
   const isMobile = useIsMobileScreen();
 
@@ -74,105 +55,46 @@ const EventCard: React.FC<Props> = ({ event }) => {
   };
 
   return (
-    <Card>
-      <Box display="flex" justifyContent="space-between" alignItems="flex-end">
-        <Box>
-          <Box>
-            <HStack mb={2}>
-              <ClubIcon />
-              <Box>
-                <Text variant="label" fontWeight="semibold">
-                  {event.host.username}
-                  <Text fontWeight="normal" display="inline">
-                    {" "}
-                    {/* is hosting {clubname && `for ${clubname}`} */}
-                    is hosting
-                    {clubname && (
-                      <Text display="inline">
-                        {" "}
-                        for{" "}
-                        <NextLink href={`/club/${event.clubId}`}>
-                          <Link>{clubname}</Link>
-                        </NextLink>
-                      </Text>
-                    )}
-                  </Text>
-                </Text>
-              </Box>
-            </HStack>
+    <Card
+      onClick={isMobile ? () => router.push(`/event/${event.id}`) : undefined}
+    >
+      <EventCardHeader id={event.id} title={event.title} />
+      <EventCardHostAndLocation
+        clubName={event.club?.name}
+        hostLastname={event.host.lastname}
+        hostFirstname={event.host.firstname}
+      />
 
-            <Heading variant="h3" as="h3">
-              <NextLink href={`/event/${event.id}`}>
-                <Link>{event.title}</Link>
-              </NextLink>
-            </Heading>
-            <Text variant="label">
-              {parseDatePretty(event.startTime)} [{event.location}]
-            </Text>
-          </Box>
-        </Box>
-
-        <Box textAlign="right">
-          <OptionsButton>
-            {data ? (
-              data.me?.id === event.host.id ? (
-                <>
-                  <EventEditButton as="modalItem" event={event} />
-                  <EventDeleteButton as="modalItem" eventId={event.id} />
-                </>
-              ) : (
-                <MenuItem icon={<WarningIcon />}>Report</MenuItem>
-              )
-            ) : (
-              <MenuItem>
-                <Spinner />
-              </MenuItem>
-            )}
-          </OptionsButton>
-          <ViewAttendeesModalButton
-            capacity={event.capacity}
-            attendees={event.attendees}
-            eventTitle={event.title}
-            eventId={event.id}
-            // joinEvent={joinEvent}
-          />
-        </Box>
-      </Box>
-
-      <Flex my={4} justifyContent="space-between">
+      <Grid mt={2} gridGap={2} gridTemplateColumns="1fr 1fr">
+        <Button
+          size={isMobile ? "xs" : "sm"}
+          onClick={(e) => {
+            e.stopPropagation();
+            joinEvent();
+          }}
+        >
+          Join
+        </Button>
         <ButtonGroup>
-          <NextLink href={`/event/${event.id}`}>
-            <Button
-              rightIcon={<LinkIcon />}
-              size={isMobile ? "xs" : "sm"}
-              colorScheme="gray"
-            >
-              Go to event page
-            </Button>
-          </NextLink>
-
           <ViewAttendeesModalButton
             as="button"
+            variant="outline"
+            colorScheme="gray"
             capacity={event.capacity}
             attendees={event.attendees as User[]}
             eventId={event?.id}
             eventTitle={event?.title}
           />
+          <IconButton
+            onClick={(e) => e.stopPropagation()}
+            colorScheme="gray"
+            size={isMobile ? "xs" : "sm"}
+            icon={<ChevronDownIcon />}
+            variant="outline"
+            aria-label="options"
+          />
         </ButtonGroup>
-
-        <Button
-          rightIcon={<BsController />}
-          variant="outline"
-          colorScheme="gray"
-          size={isMobile ? "xs" : "sm"}
-        >
-          View as host
-        </Button>
-      </Flex>
-
-      <Button width="full" onClick={joinEvent} variant="solid">
-        Join
-      </Button>
+      </Grid>
     </Card>
   );
 };
