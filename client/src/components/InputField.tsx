@@ -1,17 +1,12 @@
 import {
-  FormLabel,
-  Input,
-  FormErrorMessage,
-  InputLeftElement,
   FormControl,
-  InputGroup,
-  Text,
+  FormErrorMessage,
+  FormLabel,
   HStack,
-  NumberInputStepper,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Text,
 } from "@chakra-ui/react";
 import { useField } from "formik";
 import React, { InputHTMLAttributes, ReactElement } from "react";
