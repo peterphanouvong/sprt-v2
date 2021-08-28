@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   ButtonGroup,
+  ButtonProps,
   CloseButton,
   Divider,
   Heading,
@@ -24,14 +25,14 @@ import { useAddAttendeeMutation, User } from "../generated/graphql";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { EventJoinedStat } from "./EventJoinedStat";
 
-interface Props {
+type Props = ButtonProps & {
   attendees: User[];
   capacity: number | undefined | null;
   eventId: number;
   eventTitle: string;
   as?: "button" | "stat";
   buttonSize?: string;
-}
+};
 
 const ViewAttendeesModalButton: React.FC<Props> = ({
   attendees,
@@ -40,6 +41,7 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
   eventTitle,
   as = "stat",
   buttonSize = "md",
+  ...props
 }) => {
   const [, addAttendee] = useAddAttendeeMutation();
   const toast = useToast();
@@ -85,7 +87,7 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
   return (
     <>
       {as === "button" ? (
-        <Button size={buttonSize} variant="outline" onClick={onOpen}>
+        <Button size={buttonSize} {...props} onClick={onOpen}>
           View attendees
         </Button>
       ) : (

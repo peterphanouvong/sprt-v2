@@ -23,6 +23,7 @@ const OptionsButton: React.FC<Props> = ({
           as={IconButton}
           aria-label="Options"
           icon={<BsThreeDots />}
+          colorScheme="gray"
           variant="ghost"
         />
       </Tooltip>

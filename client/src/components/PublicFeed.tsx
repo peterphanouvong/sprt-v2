@@ -57,7 +57,7 @@ const PublicFeed: React.FC<Props> = ({ meData, publicityTypesData }) => {
   return (
     <>
       <Flex justifyContent="space-between">
-        <EventCreateButton size={isMobile ? "sm" : "md"} />
+        <EventCreateButton colorScheme="gray" size={isMobile ? "sm" : "md"} />
         <EventListFilter
           size={isMobile ? "sm" : "md"}
           clubs={meData?.me?.followingClubs as Club[]}
