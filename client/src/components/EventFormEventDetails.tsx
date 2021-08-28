@@ -72,8 +72,8 @@ const EventFormEventDetails: React.FC<Props> = ({
               !!props.errors.location ||
               !!props.errors.startTime ||
               !!props.errors.endTime ||
-              !!props.errors.capacity ||
-              parseInt(props.values.capacity.toString()) <= 0
+              !!props.errors.capacity
+              // parseInt(props.values.capacity.toString()) <= 0
             }
             onClick={nextStep}
           >
