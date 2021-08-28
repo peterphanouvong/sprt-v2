@@ -7,7 +7,6 @@ export const parseDate = (dateString: string | null | undefined) => {
 };
 
 export const parseDatePretty = (dateString: string | null | undefined) => {
-  console.log(dateString);
   if (dateString === null || dateString === undefined) return null;
   const date = new Date(parseInt(dateString));
   return format(date, "eee, LLL d @ h:mm aaa");

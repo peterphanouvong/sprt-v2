@@ -1,17 +1,25 @@
 import { DownloadIcon, WarningIcon } from "@chakra-ui/icons";
-import { MenuItem, Skeleton } from "@chakra-ui/react";
+import {
+  ButtonProps,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Skeleton,
+} from "@chakra-ui/react";
 import router from "next/router";
 import React from "react";
 import { Event, useEventQuery, useMeQuery } from "../generated/graphql";
 import { EventDeleteButton } from "./EventDeleteButton";
 import { EventEditButton } from "./EventEditButton";
-import { OptionsButton } from "./OptionsButton";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 
-interface Props {
+type Props = ButtonProps & {
   eventId: number;
-}
+};
 
-const EventOptionsButton: React.FC<Props> = ({ eventId }) => {
+const EventOptionsButton: React.FC<Props> = ({ eventId, ...props }) => {
   const [{ data, fetching }] = useMeQuery();
   const [{ data: eventData, fetching: fetchingEvent }] = useEventQuery({
     pause: eventId === -1,
@@ -30,22 +38,37 @@ const EventOptionsButton: React.FC<Props> = ({ eventId }) => {
 
   return (
     <Skeleton isLoaded={!fetching && !fetchingEvent && !!eventData}>
-      <OptionsButton gutter={0}>
-        {data?.me?.id === eventData?.event?.hostId ? (
-          <>
-            <EventEditButton as="modalItem" event={eventData.event as Event} />
-            <EventDeleteButton as="modalItem" eventId={eventId} />
-            <MenuItem
-              onClick={() => router.push(`/event-info/${eventData?.event?.id}`)}
-              icon={<DownloadIcon />}
-            >
-              Export attendees
-            </MenuItem>
-          </>
-        ) : (
-          <MenuItem icon={<WarningIcon />}>Report</MenuItem>
-        )}
-      </OptionsButton>
+      <Menu>
+        <MenuButton
+          as={IconButton}
+          aria-label="Options"
+          icon={<ChevronDownIcon />}
+          colorScheme="gray"
+          onClick={(e) => e.stopPropagation()}
+          {...props}
+        />
+        <MenuList>
+          {data?.me?.id === eventData?.event?.hostId ? (
+            <>
+              <EventEditButton
+                as="modalItem"
+                event={eventData.event as Event}
+              />
+              <EventDeleteButton as="modalItem" eventId={eventId} />
+              <MenuItem
+                onClick={() =>
+                  router.push(`/event-info/${eventData?.event?.id}`)
+                }
+                icon={<DownloadIcon />}
+              >
+                Export attendees
+              </MenuItem>
+            </>
+          ) : (
+            <MenuItem icon={<WarningIcon />}>Report</MenuItem>
+          )}
+        </MenuList>
+      </Menu>
     </Skeleton>
   );
 };
