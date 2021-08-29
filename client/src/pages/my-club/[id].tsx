@@ -35,7 +35,6 @@ const MyClub = () => {
       id: intId,
     },
   });
-  console.log(isLoggedIn);
 
   if (!isLoggedIn) {
     return (
