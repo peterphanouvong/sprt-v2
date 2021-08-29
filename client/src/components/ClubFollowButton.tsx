@@ -86,7 +86,10 @@ const ClubFollowButton: React.FC<Props> = ({
         isFollowing ? <MinusIcon w={2} h={2} /> : <AddIcon w={2} h={2} />
       }
       variant={isFollowing ? "outline" : "solid"}
-      onClick={handleButton}
+      onClick={(e) => {
+        e.stopPropagation();
+        handleButton();
+      }}
       size={isMobile ? "xs" : "sm"}
       {...props}
     >
