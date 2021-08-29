@@ -1,4 +1,10 @@
-import { ButtonGroup, Divider, Skeleton, SkeletonText } from "@chakra-ui/react";
+import {
+  ButtonGroup,
+  Divider,
+  Skeleton,
+  SkeletonText,
+  Text,
+} from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
@@ -33,13 +39,17 @@ const Event = () => {
 
   if (error) return <Layout>{error.message}</Layout>;
 
+  if (!fetching && data?.event === null) {
+    return <Text>Couldn't find this event...</Text>;
+  }
+
   return (
     <Layout title={data?.event?.title}>
       <EventHeader eventId={intId} />
 
       <ButtonGroup mt={4}>
         {!data?.event ? (
-          <Skeleton width="111px" height="40px"></Skeleton>
+          <Skeleton width='111px' height='40px'></Skeleton>
         ) : (
           <Skeleton isLoaded={!fetching}>
             <EventJoinButton
@@ -51,13 +61,13 @@ const Event = () => {
         )}
 
         {!data?.event ? (
-          <Skeleton width="111px" height="40px" />
+          <Skeleton width='111px' height='40px' />
         ) : (
           <Skeleton isLoaded={!!data?.event}>
             <ViewAttendeesModalButton
-              as="button"
-              colorScheme="gray"
-              variant="outline"
+              as='button'
+              colorScheme='gray'
+              variant='outline'
               buttonSize={isMobile ? "sm" : "md"}
               capacity={data.event.capacity}
               attendees={data.event.attendees as User[]}
@@ -66,14 +76,14 @@ const Event = () => {
         )}
 
         {!data?.event ? (
-          <Skeleton width="111px" height="40px" />
+          <Skeleton width='111px' height='40px' />
         ) : (
           <EventOptionsButton
             eventId={data.event.id}
             onClick={(e) => e.stopPropagation()}
-            colorScheme="gray"
+            colorScheme='gray'
             size={isMobile ? "xs" : "sm"}
-            variant="outline"
+            variant='outline'
           />
         )}
       </ButtonGroup>
@@ -90,11 +100,11 @@ const Event = () => {
 
       <Divider my={2} />
       {!data?.event ? (
-        <SkeletonText my="4" noOfLines={4} spacing="4" />
+        <SkeletonText my='4' noOfLines={4} spacing='4' />
       ) : (
         <Skeleton isLoaded={!fetching}>
           <DynamicEditor
-            name="description"
+            name='description'
             initialValue={parseRichText(data.event.description)}
             readOnly={true}
           />

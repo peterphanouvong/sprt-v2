@@ -7,6 +7,8 @@ import {
   User,
   useUnfollowClubMutation,
 } from "../generated/graphql";
+import { handleNotLoggedin } from "../utils/handleNotLoggedIn";
+import { useIsLoggedIn } from "../utils/useIsLoggedIn";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 
 // Passing chakra props into custom component
@@ -22,8 +24,11 @@ const ClubFollowButton: React.FC<Props> = ({
   data,
   ...props
 }) => {
+  const isLoggedIn = useIsLoggedIn();
   const [isFollowing, setIsFollowing] = React.useState(
-    followerList.map((user) => user.id).includes(data.me!.id)
+    isLoggedIn
+      ? followerList.map((user) => user.id).includes(data.me!.id)
+      : false
   );
   const [, followClub] = useFollowClubMutation();
   const [, unfollowClub] = useUnfollowClubMutation();
@@ -31,6 +36,11 @@ const ClubFollowButton: React.FC<Props> = ({
   const isMobile = useIsMobileScreen();
 
   const handleButton = async (): Promise<void> => {
+    if (!isLoggedIn) {
+      handleNotLoggedin(toast);
+      return;
+    }
+
     if (!isFollowing) {
       handleFollow();
     } else {

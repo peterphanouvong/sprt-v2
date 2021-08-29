@@ -5,6 +5,8 @@ import {
   useAddRequestedMemberMutation,
   useMeQuery,
 } from "../generated/graphql";
+import { handleNotLoggedin } from "../utils/handleNotLoggedIn";
+import { useIsLoggedIn } from "../utils/useIsLoggedIn";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 
 interface Props {
@@ -17,8 +19,13 @@ const ClubJoinButton: React.FC<Props> = ({ club }) => {
   const [, addRequestedMember] = useAddRequestedMemberMutation();
   const toast = useToast();
   const isMobile = useIsMobileScreen();
+  const isLoggedIn = useIsLoggedIn();
 
   const requestToJoinClub = async () => {
+    if (!isLoggedIn) {
+      handleNotLoggedin(toast);
+      return;
+    }
     const { data, error } = await addRequestedMember({
       userId: userData!.me!.id,
       clubId: club.id,
@@ -51,7 +58,7 @@ const ClubJoinButton: React.FC<Props> = ({ club }) => {
   return (
     <Button
       variant={"outline"}
-      colorScheme="gray"
+      colorScheme='gray'
       onClick={(e) => {
         e.stopPropagation();
         requestToJoinClub();
