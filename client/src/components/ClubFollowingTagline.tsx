@@ -18,7 +18,14 @@ const ClubFollowingTagline: React.FC<Props> = ({
   return (
     <>
       <Box mt={1}>
-        <Text onClick={onOpen} variant="body-3" _hover={{ cursor: "pointer" }}>
+        <Text
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpen();
+          }}
+          variant='body-3'
+          _hover={{ cursor: "pointer" }}
+        >
           <b>{followerCount}</b> {pluralize(0, "Follower")},{" "}
           <b>{memberCount}</b> {pluralize(0, "Member")}
         </Text>
