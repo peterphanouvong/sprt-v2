@@ -6,6 +6,7 @@ import {
   IconButton,
   Skeleton,
   SkeletonText,
+  Text,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
@@ -41,6 +42,10 @@ const Event = () => {
   });
 
   if (error) return <Layout>{error.message}</Layout>;
+
+  if (!fetching && data?.event === null) {
+    return <Text>Couldn't find this event...</Text>;
+  }
 
   return (
     <Layout title={data?.event?.title}>
