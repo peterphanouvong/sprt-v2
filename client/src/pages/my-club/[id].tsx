@@ -21,9 +21,11 @@ import { Layout } from "../../components/Layout";
 import { Event, useClubByAdminIdQuery } from "../../generated/graphql";
 import nothingHere from "../../images/nothing-here.svg";
 import { createUrqlClient } from "../../utils/createUrqlClient";
+import { useIsLoggedIn } from "../../utils/useIsLoggedIn";
 
 const MyClub = () => {
   const router = useRouter();
+  const isLoggedIn = useIsLoggedIn();
   const intId =
     typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
 
@@ -33,26 +35,44 @@ const MyClub = () => {
       id: intId,
     },
   });
+  console.log(isLoggedIn);
+
+  if (!isLoggedIn) {
+    return (
+      <Layout>
+        <Heading as='h3' variant='h3'>
+          My Club
+        </Heading>
+        <Box mt={32} textAlign='center'>
+          <Heading mb={8} as='h6' variant='h6' textAlign='center'>
+            Log in to view this page!
+          </Heading>
+          <br />
+          <Image src={nothingHere} width='200px' height='200px' />
+        </Box>
+      </Layout>
+    );
+  }
 
   if (error?.message === "[GraphQL] Cannot read property 'clubId' of undefined")
     return (
       <Layout>
-        <Box textAlign="center">
-          <Text variant="body-2" textAlign="center">
+        <Box textAlign='center'>
+          <Text variant='body-2' textAlign='center'>
             Looks like you don't have a club yet
           </Text>
-          <ClubCreateButton my={6} width="min" />
+          <ClubCreateButton my={6} width='min' />
           <br />
-          <Image src={nothingHere} width="200px" height="200px" />
+          <Image src={nothingHere} width='200px' height='200px' />
         </Box>
       </Layout>
     );
 
   return (
     <Layout title={data?.clubByAdminId.name}>
-      <Heading as="h2" variant="h2">
+      <Heading as='h2' variant='h2'>
         {data?.clubByAdminId.name || (
-          <Skeleton height="30px" width="100px">
+          <Skeleton height='30px' width='100px'>
             Club name
           </Skeleton>
         )}
@@ -65,7 +85,7 @@ const MyClub = () => {
           clubId={data.clubByAdminId.id}
         />
       ) : (
-        <Skeleton width="150px" height="15px" mt={1}>
+        <Skeleton width='150px' height='15px' mt={1}>
           <Text>X Follower, X Members</Text>
         </Skeleton>
       )}
@@ -73,13 +93,13 @@ const MyClub = () => {
       <HStack mt={2} spacing={2}>
         {data ? (
           <>
-            <ClubEditButton clubId={data?.clubByAdminId.id} as="button" />
-            <ClubDeleteButton clubId={data?.clubByAdminId.id} as="button" />
+            <ClubEditButton clubId={data?.clubByAdminId.id} as='button' />
+            <ClubDeleteButton clubId={data?.clubByAdminId.id} as='button' />
           </>
         ) : (
           <>
-            <Skeleton height="24px" width="50px" />
-            <Skeleton height="24px" width="50px" />
+            <Skeleton height='24px' width='50px' />
+            <Skeleton height='24px' width='50px' />
           </>
         )}
       </HStack>
@@ -96,7 +116,7 @@ const MyClub = () => {
 
       <Divider my={4} />
 
-      <Text variant="body-3">
+      <Text variant='body-3'>
         {data?.clubByAdminId.description || (
           <SkeletonText isLoaded={!fetching} noOfLines={5} />
         )}
