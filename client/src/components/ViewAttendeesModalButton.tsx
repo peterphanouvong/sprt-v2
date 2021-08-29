@@ -28,8 +28,6 @@ import { EventJoinedStat } from "./EventJoinedStat";
 type Props = ButtonProps & {
   attendees: User[];
   capacity: number | undefined | null;
-  eventId: number;
-  eventTitle: string;
   as?: "button";
   buttonSize?: string;
 };
@@ -66,7 +64,8 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
             onOpen();
           }}
         >
-          View {attendees.length} {capacity ? `/${capacity}` : ""}{" "}
+          View {attendees.length}
+          {capacity ? `/${capacity}` : ""}{" "}
           {pluralize(attendees.length, "attendee")}
         </Button>
       ) : (

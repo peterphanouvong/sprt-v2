@@ -59,7 +59,10 @@ const ClubJoinButton: React.FC<Props> = ({ club }) => {
     <Button
       variant={"outline"}
       colorScheme='gray'
-      onClick={requestToJoinClub}
+      onClick={(e) => {
+        e.stopPropagation();
+        requestToJoinClub();
+      }}
       size={isMobile ? "xs" : "sm"}
     >
       {hasRequestedToJoin ? "Requested" : "Request to join"}

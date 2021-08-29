@@ -1,17 +1,12 @@
 import {
-  FormLabel,
-  Input,
-  FormErrorMessage,
-  InputLeftElement,
   FormControl,
-  InputGroup,
-  Text,
+  FormErrorMessage,
+  FormLabel,
   HStack,
-  NumberInputStepper,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Text,
 } from "@chakra-ui/react";
 import { useField } from "formik";
 import React, { InputHTMLAttributes, ReactElement } from "react";
@@ -46,27 +41,13 @@ const InputField: React.FC<InputFieldProps> = ({
       )}
       <InputGroup>
         {icon && <InputLeftElement pointerEvents="none" children={icon} />}
-        {props.type === "number" ? (
-          <NumberInput min={min as number | undefined}>
-            <NumberInputField
-              {...field}
-              {...props}
-              id={field.name}
-              placeholder={props.placeholder}
-            />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-        ) : (
-          <Input
-            {...field}
-            {...props}
-            id={field.name}
-            placeholder={props.placeholder}
-          />
-        )}
+
+        <Input
+          {...field}
+          {...props}
+          id={field.name}
+          placeholder={props.placeholder}
+        />
       </InputGroup>
       {touched && <FormErrorMessage>{error}</FormErrorMessage>}
     </FormControl>

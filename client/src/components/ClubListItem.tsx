@@ -1,12 +1,15 @@
 import { Heading, HStack, Link, Skeleton, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { Club, useMeQuery, User } from "../generated/graphql";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { Card } from "./Card";
 import { ClubFollowButton } from "./ClubFollowButton";
 import { ClubFollowingTagline } from "./ClubFollowingTagline";
 import { ClubJoinButton } from "./ClubJoinButton";
 import { ClubMetaInfo } from "./ClubMetaInfo";
+import { ClubOptionsButton } from "./ClubOptionsButton";
 
 interface Props {
   club: Club;
@@ -14,9 +17,13 @@ interface Props {
 
 const ClubListItem: React.FC<Props> = ({ club }) => {
   const [{ data: userData }] = useMeQuery();
+  const isMobile = useIsMobileScreen();
+  const router = useRouter();
 
   return (
-    <Card>
+    <Card
+      onClick={isMobile ? () => router.push(`/club/${club.id}`) : undefined}
+    >
       <NextLink href={`/club/${club.id}`}>
         <Heading as="h3" variant="h3">
           <Link>{club.name}</Link>
@@ -41,6 +48,8 @@ const ClubListItem: React.FC<Props> = ({ club }) => {
         )}
 
         <ClubJoinButton club={club as Club} />
+
+        <ClubOptionsButton clubId={club.id} />
       </HStack>
 
       <ClubMetaInfo

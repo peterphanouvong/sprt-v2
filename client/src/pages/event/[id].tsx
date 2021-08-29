@@ -1,28 +1,18 @@
-import { DownloadIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Divider,
-  HStack,
-  IconButton,
-  Skeleton,
-  SkeletonText,
-  Text,
-} from "@chakra-ui/react";
+import { ButtonGroup, Divider, Skeleton, SkeletonText } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
-import { CSVLink } from "react-csv";
 import { DynamicEditor } from "../../components/DynamicEditor";
 import { EventHeader } from "../../components/EventHeader";
 import { EventJoinButton } from "../../components/EventJoinButton";
-import { EventJoinedStat } from "../../components/EventJoinedStat";
+import { EventMetaInfo } from "../../components/EventMetaInfo";
 import { EventOptionsButton } from "../../components/EventOptionsButton";
 import { Layout } from "../../components/Layout";
 import { ViewAttendeesModalButton } from "../../components/ViewAttendeesModalButton";
 import {
+  Event as EventType,
   useEventQuery,
   User,
-  Event as EventType,
 } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { parseRichText } from "../../utils/parseRichText";
@@ -49,42 +39,17 @@ const Event = () => {
 
   return (
     <Layout title={data?.event?.title}>
-      <Box
-        mb={4}
-        display='flex'
-        justifyContent='space-between'
-        alignItems='flex-end'
-      >
-        <EventHeader eventId={intId} />
-        <Box textAlign='right'>
-          <EventOptionsButton eventId={intId} />
-          {!data?.event ? (
-            <Skeleton>
-              <EventJoinedStat capacity={10} attendees={[]} onOpen={() => {}} />
-            </Skeleton>
-          ) : (
-            <Skeleton isLoaded={!!data?.event}>
-              <ViewAttendeesModalButton
-                capacity={data.event.capacity}
-                attendees={data.event.attendees as User[]}
-                eventId={data?.event?.id}
-                eventTitle={data?.event?.title}
-              />
-            </Skeleton>
-          )}
-        </Box>
-      </Box>
+      <EventHeader eventId={intId} />
 
-      <HStack mb={4}>
+      <ButtonGroup mt={4}>
         {!data?.event ? (
           <Skeleton width='111px' height='40px'></Skeleton>
         ) : (
           <Skeleton isLoaded={!fetching}>
             <EventJoinButton
+              size={isMobile ? "xs" : "sm"}
               event={data.event as EventType}
               attendees={data.event.attendees as User[]}
-              eventId={data.event.id}
-              eventTitle={data.event.title}
             />
           </Skeleton>
         )}
@@ -95,48 +60,37 @@ const Event = () => {
           <Skeleton isLoaded={!!data?.event}>
             <ViewAttendeesModalButton
               as='button'
+              colorScheme='gray'
+              variant='outline'
               buttonSize={isMobile ? "sm" : "md"}
               capacity={data.event.capacity}
               attendees={data.event.attendees as User[]}
-              eventId={data?.event?.id}
-              eventTitle={data?.event?.title}
             />
           </Skeleton>
         )}
 
         {!data?.event ? (
-          <Skeleton width='111px' height='40px'></Skeleton>
+          <Skeleton width='111px' height='40px' />
         ) : (
-          <Skeleton isLoaded={!fetching}>
-            <CSVLink
-              data={data.event.attendees.map((x) => ({
-                "First name": x.firstname,
-                "Last name": x.lastname,
-              }))}
-            >
-              <IconButton
-                size={isMobile ? "sm" : "md"}
-                aria-label='export attendees'
-                variant='outline'
-                icon={<DownloadIcon />}
-              />
-            </CSVLink>
-          </Skeleton>
-        )}
-      </HStack>
-      {!data?.event ? (
-        <Skeleton height='40px'></Skeleton>
-      ) : (
-        <Skeleton isLoaded={!fetching}>
-          <EventJoinButton
-            width='full'
-            event={data.event as EventType}
+          <EventOptionsButton
             eventId={data.event.id}
-            eventTitle={data.event.title}
-            attendees={data.event.attendees as User[]}
+            onClick={(e) => e.stopPropagation()}
+            colorScheme='gray'
+            size={isMobile ? "xs" : "sm"}
+            variant='outline'
           />
-        </Skeleton>
-      )}
+        )}
+      </ButtonGroup>
+
+      <Skeleton isLoaded={!!data?.event}>
+        <EventMetaInfo
+          mt={2}
+          location={data?.event?.location || "location"}
+          startTime={data?.event?.startTime || undefined}
+          endTime={data?.event?.endTime || undefined}
+          capacity={data?.event?.capacity || undefined}
+        />
+      </Skeleton>
 
       <Divider my={2} />
       {!data?.event ? (

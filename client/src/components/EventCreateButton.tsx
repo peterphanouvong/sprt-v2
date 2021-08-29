@@ -36,6 +36,7 @@ const EventCreateButton: React.FC<Props> = ({ ...props }) => {
   const [clubId, setClubId] = useState<number | null>(null);
 
   const onSubmit = async (values) => {
+    console.log("create form values: ", values);
     const { error } = await createEvent({
       input: {
         ...values,

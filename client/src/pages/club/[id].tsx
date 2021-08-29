@@ -1,7 +1,7 @@
 import {
+  ButtonGroup,
   Divider,
   Heading,
-  HStack,
   Skeleton,
   SkeletonText,
   Text,
@@ -14,6 +14,7 @@ import { ClubFollowButton } from "../../components/ClubFollowButton";
 import { ClubFollowingTagline } from "../../components/ClubFollowingTagline";
 import { ClubJoinButton } from "../../components/ClubJoinButton";
 import { ClubMetaInfo } from "../../components/ClubMetaInfo";
+import { ClubOptionsButton } from "../../components/ClubOptionsButton";
 import { Layout } from "../../components/Layout";
 import {
   Club as Clubtype,
@@ -58,7 +59,7 @@ const Club = () => {
         </Skeleton>
       )}
 
-      <HStack mt={2}>
+      <ButtonGroup mt={2}>
         {userData && data ? (
           <ClubFollowButton
             followerList={data?.club.followers as User[]}
@@ -68,12 +69,19 @@ const Club = () => {
         ) : (
           <Skeleton width="100px" height="24px" />
         )}
+
         {data ? (
           <ClubJoinButton club={data?.club as Clubtype} />
         ) : (
           <Skeleton width="100px" height="24px" />
         )}
-      </HStack>
+
+        {data ? (
+          <ClubOptionsButton clubId={data?.club.id} />
+        ) : (
+          <Skeleton width="24px" height="24px" />
+        )}
+      </ButtonGroup>
 
       <ClubMetaInfo
         name={

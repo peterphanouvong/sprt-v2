@@ -15,6 +15,15 @@ const EventSchema = Yup.object().shape({
   title: Yup.string().required("Required"),
   location: Yup.string().required("Required"),
   startTime: Yup.string().required("Required"),
+  endTime: Yup.date()
+    .default(null)
+    .when(
+      "startTime",
+      (started, yup) =>
+        started && yup.min(started, "End time cannot be before start time")
+    )
+    .nullable(),
+  capacity: Yup.number().moreThan(0),
 });
 
 interface Props {
