@@ -1,4 +1,5 @@
 import {
+  Button,
   ButtonGroup,
   Divider,
   Heading,
@@ -24,6 +25,7 @@ import {
   User,
 } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
+import { useIsMobileScreen } from "../../utils/useIsMobileScreen";
 
 const Club = () => {
   const router = useRouter();
@@ -36,6 +38,7 @@ const Club = () => {
   });
 
   const [{ data: userData }] = useMeQuery();
+  const isMobile = useIsMobileScreen();
 
   return (
     <Layout title={data?.club.name}>
@@ -74,6 +77,17 @@ const Club = () => {
           <ClubJoinButton club={data?.club as Clubtype} />
         ) : (
           <Skeleton width="100px" height="24px" />
+        )}
+
+        {userData && (
+          <Button
+            onClick={() => router.push(`/club-info/${intId}`)}
+            size={isMobile ? "xs" : "sm"}
+            colorScheme="gray"
+            variant="outline"
+          >
+            View as admin
+          </Button>
         )}
 
         {data ? (
