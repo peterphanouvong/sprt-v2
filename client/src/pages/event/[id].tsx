@@ -1,4 +1,10 @@
-import { ButtonGroup, Divider, Skeleton, SkeletonText } from "@chakra-ui/react";
+import {
+  ButtonGroup,
+  Divider,
+  Skeleton,
+  SkeletonText,
+  Text,
+} from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
