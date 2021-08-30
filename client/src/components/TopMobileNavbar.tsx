@@ -33,32 +33,32 @@ const TopMobileNavbar: React.FC<Props> = ({ variant = "home", title }) => {
   return data.me !== null ? (
     <Box
       zIndex={900}
-      width="100%"
+      width='100%'
       bg={"white"}
-      position="fixed"
-      top="0"
+      position='fixed'
+      top='0'
       paddingX={2}
       paddingTop={2}
-      height="55px"
-      borderBottom="1px solid"
-      borderColor="blackAlpha.300"
+      height='55px'
+      borderBottom='1px solid'
+      borderColor='blackAlpha.300'
     >
-      <Grid gridTemplateColumns="1fr 1fr 1fr" alignItems="center">
-        <Box textAlign="left">
+      <Grid gridTemplateColumns='1fr 1fr 1fr' alignItems='center'>
+        <Box textAlign='left'>
           {variant === "page" ? (
-            <BackButton variant="ghost" />
+            <BackButton variant='ghost' />
           ) : (
-            <NextLink href="/feed">
-              <Link height="40px">
-                <Logo size="sm" />
+            <NextLink href='/feed'>
+              <Link height='40px'>
+                <Logo size='sm' />
               </Link>
             </NextLink>
           )}
         </Box>
-        <Heading textAlign="center" as="h5" variant="h5">
+        <Heading textAlign='center' as='h5' variant='h5'>
           {title}
         </Heading>
-        <Box textAlign="right">
+        <Box textAlign='right'>
           <Button
             onClick={() => {
               router.push("/");
@@ -74,27 +74,27 @@ const TopMobileNavbar: React.FC<Props> = ({ variant = "home", title }) => {
   ) : (
     <Box
       zIndex={900}
-      width="100%"
+      width='100%'
       bg={"white"}
-      position="fixed"
-      top="0"
+      position='fixed'
+      top='0'
       paddingX={2}
       paddingTop={2}
-      height="55px"
-      borderBottom="1px solid"
-      borderColor="blackAlpha.300"
+      height='55px'
+      borderBottom='1px solid'
+      borderColor='blackAlpha.300'
     >
-      <Flex alignItems="center" justifyContent="space-between">
-        <NextLink href="/">
-          <Link height="40px">
-            <Logo size="sm" />
+      <Flex alignItems='center' justifyContent='space-between'>
+        <NextLink href='/'>
+          <Link height='40px'>
+            <Logo size='sm' />
           </Link>
         </NextLink>
         <ButtonGroup>
-          <ActiveLink href="login">
+          <ActiveLink href='/login'>
             <Button size={isMobile ? "xs" : "sm"}>login</Button>
           </ActiveLink>
-          <ActiveLink href="register">
+          <ActiveLink href='/register'>
             <Button size={isMobile ? "xs" : "sm"}>register</Button>
           </ActiveLink>
         </ButtonGroup>

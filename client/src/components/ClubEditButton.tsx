@@ -36,32 +36,41 @@ const ClubEditButton: React.FC<Props> = ({ clubId, as = "button" }) => {
       {as === "button" ? (
         <Button
           size={isMobile ? "xs" : "sm"}
-          variant="outline"
-          onClick={onOpen}
+          variant='outline'
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpen();
+          }}
         >
           Edit
         </Button>
       ) : (
-        <MenuItem onClick={onOpen} icon={<EditIcon />}>
+        <MenuItem
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpen();
+          }}
+          icon={<EditIcon />}
+        >
           <Text>Edit</Text>
         </MenuItem>
       )}
 
       <Modal
         closeOnOverlayClick={false}
-        size="3xl"
+        size='3xl'
         isOpen={isOpen}
         onClose={onClose}
       >
         <ModalOverlay />
         <ModalContent>
           <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
+            display='flex'
+            justifyContent='space-between'
+            alignItems='center'
             padding={4}
           >
-            <Heading fontSize="large">Edit club</Heading>
+            <Heading fontSize='large'>Edit club</Heading>
             <CloseButton onClick={onClose} />
           </Box>
           <Divider />

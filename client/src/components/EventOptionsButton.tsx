@@ -43,10 +43,10 @@ const EventOptionsButton: React.FC<Props> = ({ eventId, ...props }) => {
       <Menu>
         <MenuButton
           as={IconButton}
-          aria-label="Options"
+          aria-label='Options'
           icon={<ChevronDownIcon />}
           size={isMobile ? "xs" : "sm"}
-          colorScheme="gray"
+          colorScheme='gray'
           onClick={(e) => e.stopPropagation()}
           {...props}
         />
@@ -54,10 +54,10 @@ const EventOptionsButton: React.FC<Props> = ({ eventId, ...props }) => {
           {data?.me?.id === eventData?.event?.hostId ? (
             <>
               <EventEditButton
-                as="modalItem"
+                as='modalItem'
                 event={eventData.event as Event}
               />
-              <EventDeleteButton as="modalItem" eventId={eventId} />
+              <EventDeleteButton as='modalItem' eventId={eventId} />
               <MenuItem
                 onClick={() =>
                   router.push(`/event-info/${eventData?.event?.id}`)
@@ -68,7 +68,12 @@ const EventOptionsButton: React.FC<Props> = ({ eventId, ...props }) => {
               </MenuItem>
             </>
           ) : (
-            <MenuItem icon={<WarningIcon />}>Report</MenuItem>
+            <MenuItem
+              onClick={(e) => e.stopPropagation()}
+              icon={<WarningIcon />}
+            >
+              Report
+            </MenuItem>
           )}
         </MenuList>
       </Menu>

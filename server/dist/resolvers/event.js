@@ -155,7 +155,7 @@ let EventResolver = class EventResolver {
     async feed(id, { eventLoader }) {
         var _a;
         const eventIds = await typeorm_1.getConnection().query(`
-    select array_agg(e.id)
+    select array_agg(distinct(e.id))
     from "event" e
     left join "club_follower" cf on cf."clubId" = e."clubId"
     where (

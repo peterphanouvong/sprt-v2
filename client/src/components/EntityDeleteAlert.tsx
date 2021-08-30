@@ -39,8 +39,9 @@ const EntityDeleteAlert: React.FC<Props> = ({
       {as === "button" ? (
         <Button
           size={isMobile ? "xs" : "sm"}
-          variant="outline"
-          onClick={() => {
+          variant='outline'
+          onClick={(e) => {
+            e.stopPropagation();
             setIsOpen(true);
           }}
         >
@@ -48,7 +49,8 @@ const EntityDeleteAlert: React.FC<Props> = ({
         </Button>
       ) : (
         <MenuItem
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             setIsOpen(true);
           }}
           icon={<DeleteIcon />}
@@ -64,21 +66,21 @@ const EntityDeleteAlert: React.FC<Props> = ({
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
               Delete {entityName}
             </AlertDialogHeader>
 
             <AlertDialogBody>
               Are you sure? You can't undo this action afterwards.
               {deleteError && (
-                <Alert status="error">
+                <Alert status='error'>
                   <AlertIcon />
                   <AlertTitle mr={2}>Error</AlertTitle>
                   <AlertDescription>{deleteError}</AlertDescription>
                   <CloseButton
-                    position="absolute"
-                    right="8px"
-                    top="8px"
+                    position='absolute'
+                    right='8px'
+                    top='8px'
                     onClick={() => setDeleteError(null)}
                   />
                 </Alert>
@@ -89,14 +91,14 @@ const EntityDeleteAlert: React.FC<Props> = ({
               <Button
                 /*@ts-ignore*/
                 ref={cancelRef}
-                colorScheme="gray"
-                variant="ghost"
+                colorScheme='gray'
+                variant='ghost'
                 onClick={onClose}
               >
                 Cancel
               </Button>
               <Button
-                colorScheme="red"
+                colorScheme='red'
                 onClick={async () => {
                   const fail = await handleDelete();
                   if (!fail) {

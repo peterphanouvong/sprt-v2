@@ -21,11 +21,12 @@ import { Layout } from "../../components/Layout";
 import { Event, useClubByAdminIdQuery } from "../../generated/graphql";
 import nothingHere from "../../images/nothing-here.svg";
 import { createUrqlClient } from "../../utils/createUrqlClient";
-import { useIsLoggedIn } from "../../utils/useIsLoggedIn";
+import { useIsAuth } from "../../utils/useIsAuth";
 
 const MyClub = () => {
+  useIsAuth();
   const router = useRouter();
-  const isLoggedIn = useIsLoggedIn();
+  // const isLoggedIn = useIsLoggedIn();
   const intId =
     typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
 
@@ -35,23 +36,23 @@ const MyClub = () => {
       id: intId,
     },
   });
-
-  if (!isLoggedIn) {
-    return (
-      <Layout>
-        <Heading as='h3' variant='h3'>
-          My Club
-        </Heading>
-        <Box mt={32} textAlign='center'>
-          <Heading mb={8} as='h6' variant='h6' textAlign='center'>
-            Log in to view this page!
-          </Heading>
-          <br />
-          <Image src={nothingHere} width='200px' height='200px' />
-        </Box>
-      </Layout>
-    );
-  }
+  // console.log(isLoggedIn);
+  // if (!isLoggedIn) {
+  //   return (
+  //     <Layout>
+  //       <Heading as='h3' variant='h3'>
+  //         My Club
+  //       </Heading>
+  //       <Box mt={32} textAlign='center'>
+  //         <Heading mb={8} as='h6' variant='h6' textAlign='center'>
+  //           Log in to view this page!
+  //         </Heading>
+  //         <br />
+  //         <Image src={nothingHere} width='200px' height='200px' />
+  //       </Box>
+  //     </Layout>
+  //   );
+  // }
 
   if (error?.message === "[GraphQL] Cannot read property 'clubId' of undefined")
     return (

@@ -9,10 +9,14 @@ import {
 import { pipe, tap } from "wonka";
 import {
   AddAttendeeMutationVariables,
+  CreateEventMutation,
   DeleteClubMutationVariables,
   DeleteEventMutationVariables,
   DeletePostMutationVariables,
+  Event,
   EventsDocument,
+  FeedDocument,
+  FeedQuery,
   FollowClubMutationVariables,
   LoginMutation,
   LogoutMutation,
@@ -129,23 +133,30 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 id: (args as AddAttendeeMutationVariables).eventId,
               });
             },
+
             // createClub: (_result, args, cache, _info) => {
-            // betterUpdateQuery<CreateClubMutation, ClubByAdminIdQuery>(
-            //   cache,
-            //   { query: ClubByAdminIdDocument, variables: { ...args } },
-            //   _result,
-            //   (result, query) => {
-            //     console.log(args);
-            //     console.log(result.createClub);
-            //     return { clubByAdminId: result.createClub };
-            //   }
-            // );
-            // cache.updateQuery({ query: ClubsDocument }, (data) => {
-            //   console.log("DATA", data);
-            //   //@ts-ignore
-            //   data.clubs.push(result.createClub);
-            //   return null;
-            // });
+            //   betterUpdateQuery<CreateClubMutation, ClubByAdminIdQuery>(
+            //     cache,
+            //     {
+            //       query: ClubByAdminIdDocument,
+            //       //@ts-ignore
+            //       variables: { id: _result.createClub.admins[0].id },
+            //     },
+            //     _result,
+            //     (result, data) => {
+            //       console.log(args);
+            //       console.log(result);
+            //       console.log(data);
+
+            //       return { clubByAdminId: result.createClub };
+            //     }
+            //   );
+            //   // cache.updateQuery({ query: ClubsDocument }, (data) => {
+            //   //   console.log("DATA", data);
+            //   //   //@ts-ignore
+            //   //   data.clubs.push(result.createClub);
+            //   //   return null;
+            //   // });
             // },
             deleteClub: (_result, args, cache, _info) => {
               cache.invalidate({
@@ -153,7 +164,35 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 id: (args as DeleteClubMutationVariables).id,
               });
             },
-            createEvent: (result, _args, cache, _info) => {
+            createEvent: (_result, _args, cache, _info) => {
+              betterUpdateQuery<CreateEventMutation, MeQuery>(
+                cache,
+                { query: MeDocument },
+                _result,
+                (result, data) => {
+                  console.log(result, data);
+                  data.me?.events?.push(result.createEvent as Event);
+                  return data;
+                }
+              );
+
+              betterUpdateQuery<CreateEventMutation, FeedQuery>(
+                cache,
+                {
+                  query: FeedDocument,
+                  // @ts-ignore
+                  variables: { id: _result.createEvent?.hostId },
+                },
+                _result,
+                (result, data) => {
+                  console.log(result, data);
+                  if (data !== null) {
+                    data.feed.push(result.createEvent as Event);
+                  }
+                  return data;
+                }
+              );
+
               cache.updateQuery({ query: EventsDocument }, (data) => {
                 if (data === null) {
                   return data;

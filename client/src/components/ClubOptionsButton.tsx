@@ -31,11 +31,11 @@ const ClubOptionsButton: React.FC<Props> = ({ clubId, ...props }) => {
       <Menu>
         <MenuButton
           size={isMobile ? "xs" : "sm"}
-          variant="outline"
+          variant='outline'
           as={IconButton}
-          aria-label="Options"
+          aria-label='Options'
           icon={<ChevronDownIcon />}
-          colorScheme="gray"
+          colorScheme='gray'
           onClick={(e) => e.stopPropagation()}
           {...props}
         />
@@ -44,11 +44,16 @@ const ClubOptionsButton: React.FC<Props> = ({ clubId, ...props }) => {
             .map((x) => x.id)
             .includes(data?.me?.id || 0) ? (
             <>
-              <ClubEditButton clubId={clubId} as="menuItem" />
-              <ClubDeleteButton clubId={clubId} as="modalItem" />
+              <ClubEditButton clubId={clubId} as='menuItem' />
+              <ClubDeleteButton clubId={clubId} as='modalItem' />
             </>
           ) : (
-            <MenuItem icon={<WarningIcon />}>Report</MenuItem>
+            <MenuItem
+              onClick={(e) => e.stopPropagation()}
+              icon={<WarningIcon />}
+            >
+              Report
+            </MenuItem>
           )}
         </MenuList>
       </Menu>
