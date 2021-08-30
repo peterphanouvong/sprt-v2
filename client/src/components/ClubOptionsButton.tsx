@@ -30,7 +30,7 @@ const ClubOptionsButton: React.FC<Props> = ({ clubId, ...props }) => {
     <Skeleton isLoaded={!fetching && !fetchingClub && !!clubData}>
       <Menu>
         <MenuButton
-          size={isMobile ? "xs" : "md"}
+          size={isMobile ? "xs" : "sm"}
           variant='outline'
           as={IconButton}
           aria-label='Options'

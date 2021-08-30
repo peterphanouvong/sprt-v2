@@ -14,6 +14,7 @@ import { Event, useEventQuery, useMeQuery } from "../generated/graphql";
 import { EventDeleteButton } from "./EventDeleteButton";
 import { EventEditButton } from "./EventEditButton";
 import { ChevronDownIcon } from "@chakra-ui/icons";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 
 type Props = ButtonProps & {
   eventId: number;
@@ -27,6 +28,7 @@ const EventOptionsButton: React.FC<Props> = ({ eventId, ...props }) => {
       id: eventId,
     },
   });
+  const isMobile = useIsMobileScreen();
 
   if (!eventData) {
     return (
@@ -43,6 +45,7 @@ const EventOptionsButton: React.FC<Props> = ({ eventId, ...props }) => {
           as={IconButton}
           aria-label='Options'
           icon={<ChevronDownIcon />}
+          size={isMobile ? "xs" : "sm"}
           colorScheme='gray'
           onClick={(e) => e.stopPropagation()}
           {...props}
