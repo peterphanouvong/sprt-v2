@@ -25,7 +25,8 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
 
   const router = useRouter();
 
-  const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+  const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
   const CreateClubSchema = Yup.object().shape({
     email: Yup.string()
@@ -89,46 +90,46 @@ const ClubForm: React.FC<Props> = ({ club, onClose, formType }) => {
       {(props) => {
         return (
           <Form>
-            <VStack align="stretch" spacing={4} padding={4}>
+            <VStack align='stretch' spacing={4} padding={4}>
               <InputField
-                name="name"
-                placeholder="the Lakers"
-                label="Name"
+                name='name'
+                placeholder='the Lakers'
+                label='Name'
                 touched={props.touched.name as boolean}
                 required
               />
 
               <InputField
-                name="email"
-                placeholder="example@example.com"
-                label="Email"
-                icon={<EmailIcon color="gray.300" />}
+                name='email'
+                placeholder='example@example.com'
+                label='Email'
+                icon={<EmailIcon color='gray.300' />}
                 touched={props.touched.email as boolean}
                 required
               />
 
               <InputField
-                name="phoneNumber"
-                placeholder="0000000000"
-                type="tel"
-                label="Phone Number"
-                icon={<PhoneIcon color="gray.300" />}
+                name='phoneNumber'
+                placeholder='0000000000'
+                type='tel'
+                label='Phone Number'
+                icon={<PhoneIcon color='gray.300' />}
                 touched={props.touched.phoneNumber as boolean}
                 required
               />
 
               <TextareaField
-                name="description"
-                placeholder="you can thank us for Kobe & Shaq"
-                label="Description"
+                name='description'
+                placeholder='you can thank us for Kobe & Shaq'
+                label='Description'
               />
             </VStack>
 
             <ModalFooter>
-              <Button variant="ghost" mr={3} onClick={onClose}>
+              <Button variant='ghost' mr={3} onClick={onClose}>
                 Close
               </Button>
-              <Button isLoading={props.isSubmitting} type="submit">
+              <Button isLoading={props.isSubmitting} type='submit'>
                 {formType}
               </Button>
             </ModalFooter>
