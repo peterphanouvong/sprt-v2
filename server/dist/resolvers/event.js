@@ -257,7 +257,6 @@ __decorate([
 ], EventResolver.prototype, "removeAttendee", null);
 __decorate([
     type_graphql_1.Query(() => [Event_1.Event]),
-    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
     __param(0, type_graphql_1.Arg("id")),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),

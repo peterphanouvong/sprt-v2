@@ -25,6 +25,8 @@ import {
   MeDocument,
   MeQuery,
   RegisterMutation,
+  RegularEventFragmentDoc,
+  RegularUserFragmentDoc,
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 import { isServer } from "./isServer";
@@ -171,8 +173,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 }
               );
 
-              // betterUpdateQuery<CreateEventMutation, FeedQuery>(
-              //   cache,
+              // cache.updateQuery(
               //   {
               //     query: gql`
               //       query Feed($id: Float!) {
@@ -182,18 +183,31 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               //       }
               //     `,
               //   },
-              //   _result,
-              //   (result, data) => {
-              //     console.log(result, data);
-              //     //@ts-ignore
-              //     data.feed.push(result.createEvent as Event);
+              //   (data) => {
+              //     console.log(data);
+              //     if (data !== null) {
+              //       data.feed.push(_result.createEvent as Event);
+              //     }
               //     return data;
               //   }
               // );
-              // cache.updateQuery({ query: MeDocument }, (data) => {
-              //   console.log(data);
-              //   return data;
-              // });
+
+              betterUpdateQuery<CreateEventMutation, FeedQuery>(
+                cache,
+                {
+                  query: FeedDocument,
+                  // @ts-ignore
+                  variables: { id: _result.createEvent?.hostId },
+                },
+                _result,
+                (result, data) => {
+                  console.log(result, data);
+                  if (data !== null) {
+                    data.feed.push(result.createEvent as Event);
+                  }
+                  return data;
+                }
+              );
 
               cache.updateQuery({ query: EventsDocument }, (data) => {
                 if (data === null) {

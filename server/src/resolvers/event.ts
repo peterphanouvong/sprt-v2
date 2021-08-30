@@ -210,8 +210,8 @@ export class EventResolver {
     return true;
   }
 
+  // @UseMiddleware(isAuth)
   @Query(() => [Event])
-  @UseMiddleware(isAuth)
   async feed(@Arg("id") id: number, @Ctx() { eventLoader }: MyContext) {
     const eventIds = await getConnection().query(`
     select array_agg(e.id)
