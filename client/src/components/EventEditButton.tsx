@@ -50,33 +50,42 @@ const EventEditButton: React.FC<Props> = ({ event, as = "button" }) => {
       {as === "button" ? (
         <Button
           size={isMobile ? "xs" : "sm"}
-          variant="outline"
-          onClick={onOpen}
+          variant='outline'
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpen();
+          }}
           icon={<EditIcon />}
         >
           Edit
         </Button>
       ) : (
-        <MenuItem onClick={onOpen} icon={<EditIcon />}>
+        <MenuItem
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpen();
+          }}
+          icon={<EditIcon />}
+        >
           Edit
         </MenuItem>
       )}
 
       <Modal
         closeOnOverlayClick={false}
-        size="3xl"
+        size='3xl'
         isOpen={isOpen}
         onClose={onClose}
       >
         <ModalOverlay />
         <ModalContent>
           <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
+            display='flex'
+            justifyContent='space-between'
+            alignItems='center'
             padding={4}
           >
-            <Heading fontSize="large">Edit event</Heading>
+            <Heading fontSize='large'>Edit event</Heading>
             <CloseButton onClick={onClose} />
           </Box>
           <Divider />
@@ -84,7 +93,7 @@ const EventEditButton: React.FC<Props> = ({ event, as = "button" }) => {
             event={event}
             onClose={onClose}
             onSubmit={onSubmit}
-            submitMessage="Save"
+            submitMessage='Save'
             clubId={null}
           />
         </ModalContent>

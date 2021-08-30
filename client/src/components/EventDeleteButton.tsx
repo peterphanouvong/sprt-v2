@@ -18,7 +18,7 @@ const EventDeleteButton: React.FC<Props> = ({ eventId, as }) => {
     if (error) {
       return error.message;
     }
-        if (router.pathname === "/event/[id]") {
+    if (router.pathname === "/event/[id]") {
       router.back();
     }
     return null;

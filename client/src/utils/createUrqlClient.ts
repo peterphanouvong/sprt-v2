@@ -4,15 +4,21 @@ import {
   dedupExchange,
   Exchange,
   fetchExchange,
+  gql,
   stringifyVariables,
 } from "urql";
 import { pipe, tap } from "wonka";
 import {
   AddAttendeeMutationVariables,
+  CreateEventMutation,
+  CreateEventMutationVariables,
   DeleteClubMutationVariables,
   DeleteEventMutationVariables,
   DeletePostMutationVariables,
+  Event,
   EventsDocument,
+  FeedDocument,
+  FeedQuery,
   FollowClubMutationVariables,
   LoginMutation,
   LogoutMutation,
@@ -153,7 +159,42 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 id: (args as DeleteClubMutationVariables).id,
               });
             },
-            createEvent: (result, _args, cache, _info) => {
+            createEvent: (_result, _args, cache, _info) => {
+              betterUpdateQuery<CreateEventMutation, MeQuery>(
+                cache,
+                { query: MeDocument },
+                _result,
+                (result, data) => {
+                  console.log(result, data);
+                  data.me?.events?.push(result.createEvent as Event);
+                  return data;
+                }
+              );
+
+              // betterUpdateQuery<CreateEventMutation, FeedQuery>(
+              //   cache,
+              //   {
+              //     query: gql`
+              //       query Feed($id: Float!) {
+              //         feed(id: 1) {
+              //           id
+              //         }
+              //       }
+              //     `,
+              //   },
+              //   _result,
+              //   (result, data) => {
+              //     console.log(result, data);
+              //     //@ts-ignore
+              //     data.feed.push(result.createEvent as Event);
+              //     return data;
+              //   }
+              // );
+              // cache.updateQuery({ query: MeDocument }, (data) => {
+              //   console.log(data);
+              //   return data;
+              // });
+
               cache.updateQuery({ query: EventsDocument }, (data) => {
                 if (data === null) {
                   return data;
