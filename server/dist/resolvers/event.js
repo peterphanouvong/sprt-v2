@@ -155,7 +155,7 @@ let EventResolver = class EventResolver {
     async feed(id, { eventLoader }) {
         var _a;
         const eventIds = await typeorm_1.getConnection().query(`
-    select array_agg(e.id)
+    select array_agg(distinct(e.id))
     from "event" e
     left join "club_follower" cf on cf."clubId" = e."clubId"
     where (
@@ -257,6 +257,7 @@ __decorate([
 ], EventResolver.prototype, "removeAttendee", null);
 __decorate([
     type_graphql_1.Query(() => [Event_1.Event]),
+    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
     __param(0, type_graphql_1.Arg("id")),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
