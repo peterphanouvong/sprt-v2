@@ -214,7 +214,7 @@ export class EventResolver {
   @UseMiddleware(isAuth)
   async feed(@Arg("id") id: number, @Ctx() { eventLoader }: MyContext) {
     const eventIds = await getConnection().query(`
-    select array_agg(e.id)
+    select array_agg(distinct(e.id))
     from "event" e
     left join "club_follower" cf on cf."clubId" = e."clubId"
     where (
