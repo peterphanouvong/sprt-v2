@@ -23,6 +23,7 @@ fragment RegularEvent on Event {
   publicityTypeId
   clubId
   club {
+    id
     name
   }
   createdAt
