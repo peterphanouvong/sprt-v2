@@ -26,6 +26,8 @@ const PublicFeed: React.FC<Props> = ({ meData, publicityTypesData }) => {
     },
   });
 
+  console.log("FEED: ", data);
+
   const isMobile = useIsMobileScreen();
 
   const [selectedClubs, setSelectedClubs] = useState<Record<number, boolean>>(
@@ -70,10 +72,13 @@ const PublicFeed: React.FC<Props> = ({ meData, publicityTypesData }) => {
         Check out the "Explore" page to follow some clubs.`}
         events={
           data.feed.filter((x) => {
-            return x.clubId
-              ? selectedClubs[x.clubId] &&
+            return (
+              (x.clubId
+                ? selectedClubs[x.clubId] &&
                   selectedPublicityTypes[x.publicityTypeId]
-              : selectedPublicityTypes[x.publicityTypeId];
+                : selectedPublicityTypes[x.publicityTypeId]) ||
+              x.hostId === meData.me?.id
+            );
           }) as Event[]
         }
       />
