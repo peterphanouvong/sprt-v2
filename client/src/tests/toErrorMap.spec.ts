@@ -1,4 +1,4 @@
-import { toErrorMap } from "./toErrorMap";
+import { toErrorMap } from "../utils/toErrorMap";
 
 describe("Error map function", () => {
   test("it should change an array of errors into a map of fields and messages", () => {
