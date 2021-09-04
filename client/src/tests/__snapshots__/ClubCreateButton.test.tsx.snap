@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ClubCreateButton snapshot 1`] = `
+<Fragment>
+  <Button
+    onClick={[Function]}
+    width="full"
+  >
+    Create a club
+  </Button>
+  <Modal
+    allowPinchZoom={false}
+    autoFocus={true}
+    blockScrollOnMount={true}
+    closeOnOverlayClick={false}
+    isOpen={false}
+    lockFocusAcrossFrames={true}
+    motionPreset="scale"
+    onClose={[Function]}
+    returnFocusOnClose={true}
+    scrollBehavior="outside"
+    size="3xl"
+    trapFocus={true}
+  >
+    <ModalOverlay />
+    <ModalContent>
+      <Box
+        alignItems="center"
+        display="flex"
+        justifyContent="space-between"
+        padding={4}
+      >
+        <Heading
+          fontSize="large"
+        >
+          Create Club
+        </Heading>
+        <CloseButton
+          onClick={[Function]}
+        />
+      </Box>
+      <Divider />
+      <ClubForm
+        formType="Create club"
+        onClose={[Function]}
+      />
+    </ModalContent>
+  </Modal>
+</Fragment>
+`;
