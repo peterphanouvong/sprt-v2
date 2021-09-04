@@ -19,6 +19,7 @@ import {
 import React from "react";
 import { BsFunnel } from "react-icons/bs";
 import { Club, PublicityType, useMeQuery } from "../generated/graphql";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 
 type Props = ButtonProps & {
   clubs: Club[];
@@ -46,6 +47,8 @@ const EventListFilter: React.FC<Props> = ({
   const [{ data, fetching }] = useMeQuery();
   const btnRef = React.useRef() as React.MutableRefObject<HTMLButtonElement>;
 
+  const isMobile = useIsMobileScreen();
+
   if (!data) return <Spinner />;
   if (!data && !fetching) return <>ya dun fucked it</>;
 
@@ -62,9 +65,10 @@ const EventListFilter: React.FC<Props> = ({
       </Button>
       <Drawer
         isOpen={isOpen}
-        placement="right"
+        placement={isMobile ? "top" : "right"}
         onClose={onClose}
         finalFocusRef={btnRef}
+        size="xs"
       >
         <DrawerOverlay />
         <DrawerContent>
