@@ -10,6 +10,7 @@ import { toErrorMap } from "../../utils/toErrorMap";
 import { useRouter } from "next/router";
 import { NextComponentType, withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
+import Head from "next/head";
 
 const ChangePassword: NextPage<{ token: string }> = () => {
   const router = useRouter();
@@ -19,6 +20,9 @@ const ChangePassword: NextPage<{ token: string }> = () => {
 
   return (
     <Wrapper variant="small">
+      <Head>
+        <title>Change Password | sprt</title>
+      </Head>
       <Heading as="h1" fontSize="x-large" mb={4}>
         Change password
       </Heading>

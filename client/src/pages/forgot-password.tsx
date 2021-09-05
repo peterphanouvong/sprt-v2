@@ -17,6 +17,7 @@ import { Wrapper } from "../components/Wrapper";
 import { useForgotPasswordMutation } from "../generated/graphql";
 import NextLink from "next/link";
 import { ArrowBackIcon } from "@chakra-ui/icons";
+import Head from "next/head";
 
 interface Props {}
 
@@ -26,6 +27,9 @@ const ForgotPassword: React.FC<Props> = ({}) => {
   const [complete, setComplete] = useState(false);
   return (
     <Wrapper variant="small">
+      <Head>
+        <title>Forgot Password | sprt</title>
+      </Head>
       <Heading as="h1" fontSize="x-large" mb={4}>
         Forgot password?
       </Heading>
