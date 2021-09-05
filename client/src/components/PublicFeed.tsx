@@ -26,8 +26,6 @@ const PublicFeed: React.FC<Props> = ({ meData, publicityTypesData }) => {
     },
   });
 
-  console.log("FEED: ", data);
-
   const isMobile = useIsMobileScreen();
 
   const [selectedClubs, setSelectedClubs] = useState<Record<number, boolean>>(
