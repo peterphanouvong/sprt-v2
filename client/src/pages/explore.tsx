@@ -15,7 +15,9 @@ import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import React, { useContext, useState } from "react";
 import { ClubList } from "../components/ClubList";
+import { ClubListSkeleton } from "../components/ClubListSkeleton";
 import { EventList } from "../components/EventList";
+import { EventListSkeleton } from "../components/EventListSkeleton";
 import { Layout } from "../components/Layout";
 import { ExploreContext } from "../context/exploreContext";
 import {
@@ -72,7 +74,7 @@ const Explore: React.FC<Props> = ({}) => {
               />
               <Input placeholder="socials..." onChange={handleChange} />
             </InputGroup>
-            {selectedTag === "events" && eventData && (
+            {selectedTag === "events" && eventData ? (
               <EventList
                 sorryText="Looks like there are no events here. Check what you've searched for."
                 events={
@@ -84,6 +86,8 @@ const Explore: React.FC<Props> = ({}) => {
                   }) as Event[]
                 }
               />
+            ) : (
+              <EventListSkeleton />
             )}
           </TabPanel>
 
@@ -95,7 +99,7 @@ const Explore: React.FC<Props> = ({}) => {
               />
               <Input placeholder="redfox..." onChange={handleChange} />
             </InputGroup>
-            {selectedTag === "clubs" && clubData && (
+            {selectedTag === "clubs" && clubData ? (
               <ClubList
                 sorryText="Looks like there are no clubs here. Check what you've searched for."
                 clubs={
@@ -107,6 +111,8 @@ const Explore: React.FC<Props> = ({}) => {
                   }) as Club[]
                 }
               />
+            ) : (
+              <ClubListSkeleton />
             )}
           </TabPanel>
         </TabPanels>
