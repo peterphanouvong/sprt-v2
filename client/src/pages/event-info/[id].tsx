@@ -16,6 +16,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { CSVLink } from "react-csv";
@@ -59,6 +60,11 @@ const EventInfo: React.FC<Props> = ({}) => {
 
   return (
     <Layout title={data.event.title}>
+      <Head>
+        <title>{data.event.title} | sprt</title>
+        <meta name="description" content={data.event.title} />
+      </Head>
+
       <HStack spacing={4} mb={6}>
         <Heading as="h3" variant="h3">
           {data.event.title}

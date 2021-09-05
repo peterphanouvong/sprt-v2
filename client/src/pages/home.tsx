@@ -5,6 +5,7 @@ import { Layout } from "../components/Layout";
 import { Input, Text } from "@chakra-ui/react";
 import { useIsAuth } from "../utils/useIsAuth";
 import Select from "react-select";
+import Head from "next/head";
 
 interface Props {}
 
@@ -19,6 +20,9 @@ const Home: React.FC<Props> = ({}) => {
 
   return (
     <Layout>
+      <Head>
+        <title>Home | sprt</title>
+      </Head>
       <Text as="h1" fontSize="large">
         Home page
       </Text>

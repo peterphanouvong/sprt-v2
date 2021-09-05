@@ -7,6 +7,7 @@ import { Layout } from "../../components/Layout";
 import { usePostQuery } from "../../generated/graphql";
 import { Heading, Text } from "@chakra-ui/react";
 import { Card } from "../../components/Card";
+import Head from "next/head";
 
 const Post = () => {
   const router = useRouter();
@@ -26,6 +27,9 @@ const Post = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>data.post.title | sprt</title>
+      </Head>
       <Card>
         <Heading mb={4}>{data.post.title}</Heading>
         <Text>{data.post.description}</Text>

@@ -8,6 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
 import { ClubEvents } from "../../components/ClubEvents";
@@ -42,6 +43,11 @@ const Club = () => {
 
   return (
     <Layout title={data?.club.name}>
+      <Head>
+        <title>{data?.club.name} | sprt</title>
+        <meta name="description" content={data?.club.name} />
+      </Head>
+
       <Heading as="h2" variant="h2">
         {data?.club.name || (
           <Skeleton height="30px" width="100px">
