@@ -31,7 +31,7 @@ const EventList: React.FC<Props> = ({ events, sorryText, mine = false }) => {
   return events.length === 0 ? (
     <VStack>
       <Box paddingX={16} paddingY={5}>
-        <Image src={waiting} />
+        <Image src={waiting} height="200px" width="200px" />
       </Box>
       <Text variant="body-2" textAlign="center">
         {sorryText || "Looks like there aren't any events..."}

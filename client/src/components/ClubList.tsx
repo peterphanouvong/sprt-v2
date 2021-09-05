@@ -30,7 +30,7 @@ const ClubList: React.FC<Props> = ({ clubs, sorryText }) => {
   return clubs.length === 0 ? (
     <VStack>
       <Box paddingX={16} paddingY={5}>
-        <Image src={waiting} />
+        <Image src={waiting} width="200px" height="200px" />
       </Box>
       <Text variant="body-2" textAlign="center">
         {sorryText || "Looks like there aren't any clubs..."}

@@ -32,7 +32,7 @@ const Club = () => {
   const intId =
     typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
 
-  const [{ data }] = useClubQuery({
+  const [{ data, fetching }] = useClubQuery({
     pause: intId === -1,
     variables: { clubId: intId },
   });
@@ -108,7 +108,9 @@ const Club = () => {
       <Divider my={4} />
 
       <Text variant="body-3">
-        {data?.club.description || <SkeletonText noOfLines={5} />}
+        {(data?.club.description && !fetching) || (
+          <SkeletonText noOfLines={5} />
+        )}
       </Text>
 
       {data && <ClubEvents events={data.club.events as Event[]} />}

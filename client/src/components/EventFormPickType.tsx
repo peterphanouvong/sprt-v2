@@ -108,7 +108,9 @@ const EventFormPickType: React.FC<Props> = ({
         <Button variant="ghost" colorScheme="gray" onClick={prevStep}>
           Go back
         </Button>
-        <Button type="submit">{submitMessage}</Button>
+        <Button isLoading={props.isSubmitting} type="submit">
+          {submitMessage}
+        </Button>
       </HStack>
     </Box>
   );
