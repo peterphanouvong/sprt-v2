@@ -114,9 +114,7 @@ const Club = () => {
       <Divider my={4} />
 
       <Text variant="body-3">
-        {(data?.club.description && !fetching) || (
-          <SkeletonText noOfLines={5} />
-        )}
+        {data?.club.description || !fetching || <SkeletonText noOfLines={5} />}
       </Text>
 
       {data && <ClubEvents events={data.club.events as Event[]} />}
