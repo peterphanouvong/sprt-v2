@@ -11,7 +11,6 @@ const Card: React.FC<Props> = ({ children, onClick, ...props }) => {
   }>({ backgroundColor: "", shadow: "md" });
   return (
     <Box
-      // onClick={onClick}
       borderWidth="1px"
       borderRadius="lg"
       overflow="hidden"
