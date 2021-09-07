@@ -12,6 +12,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: any;
 };
 
 export type Club = {
@@ -99,6 +101,7 @@ export type Mutation = {
   unfollowClub: Scalars['Boolean'];
   addRequestedMember: Scalars['Boolean'];
   addAdmin: Scalars['Boolean'];
+  uploadImage: Scalars['Boolean'];
 };
 
 
@@ -212,6 +215,11 @@ export type MutationAddAdminArgs = {
   clubId: Scalars['Float'];
 };
 
+
+export type MutationUploadImageArgs = {
+  file: Scalars['Upload'];
+};
+
 export type PaginatedPosts = {
   __typename?: 'PaginatedPosts';
   posts: Array<Post>;
@@ -300,6 +308,7 @@ export type QueryClubArgs = {
 export type QueryClubByAdminIdArgs = {
   adminId: Scalars['Float'];
 };
+
 
 export type User = {
   __typename?: 'User';
@@ -473,6 +482,13 @@ export type UpdateEventMutationVariables = Exact<{
 
 
 export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: Maybe<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime?: Maybe<string>, hostId: number, points: number, creatorTypeId: number, publicityTypeId: number, clubId?: Maybe<number>, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, firstname: string, lastname: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, firstname: string, lastname: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime?: Maybe<string>, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, firstname: string, lastname: string }> }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, club?: Maybe<{ __typename?: 'Club', id: number, name: string }> }> };
+
+export type UploadImageMutationVariables = Exact<{
+  file: Scalars['Upload'];
+}>;
+
+
+export type UploadImageMutation = { __typename?: 'Mutation', uploadImage: boolean };
 
 export type ClubQueryVariables = Exact<{
   clubId: Scalars['Float'];
@@ -888,6 +904,15 @@ export const UpdateEventDocument = gql`
 
 export function useUpdateEventMutation() {
   return Urql.useMutation<UpdateEventMutation, UpdateEventMutationVariables>(UpdateEventDocument);
+};
+export const UploadImageDocument = gql`
+    mutation UploadImage($file: Upload!) {
+  uploadImage(file: $file)
+}
+    `;
+
+export function useUploadImageMutation() {
+  return Urql.useMutation<UploadImageMutation, UploadImageMutationVariables>(UploadImageDocument);
 };
 export const ClubDocument = gql`
     query Club($clubId: Float!) {

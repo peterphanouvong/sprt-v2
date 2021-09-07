@@ -12,13 +12,13 @@ const Card: React.FC<Props> = ({ children, onClick, ...props }) => {
   return (
     <Box
       // onClick={onClick}
-      borderWidth="1px"
-      borderRadius="lg"
-      overflow="hidden"
+      borderWidth='1px'
+      borderRadius='lg'
+      overflow='hidden'
       padding={4}
       shadow={!!onClick ? cardStyle.shadow : "md"}
       backgroundColor={!!onClick ? cardStyle.backgroundColor : ""}
-      transition="0.2s ease"
+      transition='0.2s ease'
       onTouchStartCapture={
         !!onClick
           ? () => setCardStyle({ backgroundColor: "gray.50", shadow: "sm" })

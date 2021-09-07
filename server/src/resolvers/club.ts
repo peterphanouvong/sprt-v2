@@ -19,6 +19,9 @@ import { ClubFollower } from "../entities/ClubFollower";
 import { ClubRequestedMember } from "../entities/ClubRequestedMember";
 import { isAuth } from "../middleware/isAuth";
 import { errorDetailToObject } from "../utils/errorDetailToObject";
+import { FileUpload, GraphQLUpload, Upload } from "graphql-upload";
+import path from "path";
+const { Storage } = require("@google-cloud/storage");
 
 @InputType()
 class ClubInput {
@@ -34,6 +37,12 @@ class ClubInput {
   @Field()
   phoneNumber: string;
 }
+
+const storage = new Storage({
+  keyFilename: path.join(__dirname, "../../sprt-5111-c956c44c12d4.json"),
+  projectId: "sprt-5111",
+});
+const bucketName = "test-sprt-bucket";
 
 @Resolver(Club)
 export class ClubResolver {
@@ -292,6 +301,47 @@ export class ClubResolver {
     }
     return true;
   }
+
+  @Mutation(() => Boolean)
+  async uploadImage(
+    //1
+    @Arg("file", () => GraphQLUpload)
+    { createReadStream, filename }: FileUpload
+  ) {
+    console.log(filename);
+  }
+
+  // @Mutation(() => Boolean)
+  // async uploadImage(
+  //   //1
+  //   @Arg("file", () => GraphQLUploadvvv)
+  //   { createReadStream, filename }: FileUpload
+  // ) {
+  //   //2
+  //   await new Promise(async (_resolve, reject) =>
+  //     createReadStream()
+  //       .pipe(
+  //         storage.bucket(bucketName).file(filename).createWriteStream({
+  //           resumable: false,
+  //           gzip: true,
+  //         })
+  //       )
+  //       //3
+  //       .on("finish", () =>
+  //         storage
+  //           .bucket(bucketName)
+  //           .file(filename)
+  //           .makePublic()
+  //           .then((e: { object: any }[]) => {
+  //             console.log(e[0].object);
+  //             console.log(
+  //               `https://storage.googleapis.com/${bucketName}/${e[0].object}`
+  //             );
+  //           })
+  //       )
+  //       .on("error", () => reject(false))
+  //   );
+  // }
 
   async removeAllAdminsFromClub(clubId: number): Promise<boolean> {
     await ClubAdmin.delete({ clubId: clubId });

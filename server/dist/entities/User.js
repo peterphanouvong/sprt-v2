@@ -64,12 +64,12 @@ __decorate([
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.CreateDateColumn(),
-    __metadata("design:type", Date)
+    __metadata("design:type", Object)
 ], User.prototype, "createdAt", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.UpdateDateColumn(),
-    __metadata("design:type", Date)
+    __metadata("design:type", Object)
 ], User.prototype, "updatedAt", void 0);
 __decorate([
     type_graphql_1.Field(() => [Club_1.Club], { nullable: true }),

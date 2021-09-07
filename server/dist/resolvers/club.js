@@ -11,6 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClubResolver = void 0;
 const type_graphql_1 = require("type-graphql");
@@ -22,6 +25,9 @@ const ClubFollower_1 = require("../entities/ClubFollower");
 const ClubRequestedMember_1 = require("../entities/ClubRequestedMember");
 const isAuth_1 = require("../middleware/isAuth");
 const errorDetailToObject_1 = require("../utils/errorDetailToObject");
+const graphql_upload_1 = require("graphql-upload");
+const path_1 = __importDefault(require("path"));
+const { Storage } = require("@google-cloud/storage");
 let ClubInput = class ClubInput {
 };
 __decorate([
@@ -43,6 +49,11 @@ __decorate([
 ClubInput = __decorate([
     type_graphql_1.InputType()
 ], ClubInput);
+const storage = new Storage({
+    keyFilename: path_1.default.join(__dirname, "../../sprt-5111-c956c44c12d4.json"),
+    projectId: "sprt-5111",
+});
+const bucketName = "test-sprt-bucket";
 let ClubResolver = class ClubResolver {
     async followers(club, { userLoader }) {
         var _a;
@@ -224,6 +235,9 @@ let ClubResolver = class ClubResolver {
         }
         return true;
     }
+    async uploadImage({ createReadStream, filename }) {
+        console.log(filename);
+    }
     async removeAllAdminsFromClub(clubId) {
         await ClubAdmin_1.ClubAdmin.delete({ clubId: clubId });
         return true;
@@ -347,6 +361,13 @@ __decorate([
     __metadata("design:paramtypes", [Number, Number]),
     __metadata("design:returntype", Promise)
 ], ClubResolver.prototype, "addAdmin", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg("file", () => graphql_upload_1.GraphQLUpload)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ClubResolver.prototype, "uploadImage", null);
 ClubResolver = __decorate([
     type_graphql_1.Resolver(Club_1.Club)
 ], ClubResolver);

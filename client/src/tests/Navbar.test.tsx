@@ -5,5 +5,5 @@ test("navbar snapshot", () => {
   expect(shallow(<Navbar />)).toMatchSnapshot();
 });
 
-test("it shows login & register when not logged in");
-test("it shows username & logout when logged in");
+// test("it shows login & register when not logged in");
+// test("it shows username & logout when logged in");

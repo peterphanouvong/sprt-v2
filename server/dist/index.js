@@ -38,6 +38,7 @@ const ClubRequestedMember_1 = require("./entities/ClubRequestedMember");
 const PublicityType_1 = require("./entities/PublicityType");
 const CreatorType_1 = require("./entities/CreatorType");
 const publicityType_1 = require("./resolvers/publicityType");
+const graphql_upload_1 = require("graphql-upload");
 const main = async () => {
     const conn = await typeorm_1.createConnection({
         type: "postgres",
@@ -92,6 +93,7 @@ const main = async () => {
         resave: false,
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
+        uploads: false,
         schema: await type_graphql_1.buildSchema({
             resolvers: [
                 hello_1.HelloResolver,
@@ -112,6 +114,7 @@ const main = async () => {
             eventLoader: createEventLoader_1.createEventLoader(),
         }),
     });
+    app.use(graphql_upload_1.graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
     await apolloServer.start();
     apolloServer.applyMiddleware({
         app,

@@ -36,6 +36,7 @@ import { ClubRequestedMember } from "./entities/ClubRequestedMember";
 import { PublicityType } from "./entities/PublicityType";
 import { CreatorType } from "./entities/CreatorType";
 import { PublicityTypeResolver } from "./resolvers/publicityType";
+import { graphqlUploadExpress } from "graphql-upload";
 
 const main = async () => {
   const conn = await createConnection({
@@ -112,6 +113,8 @@ const main = async () => {
   );
 
   const apolloServer = new ApolloServer({
+    // @ts-ignore
+    uploads: false,
     schema: await buildSchema({
       resolvers: [
         HelloResolver,
@@ -133,6 +136,7 @@ const main = async () => {
     }),
   });
 
+  app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
   await apolloServer.start();
 
   apolloServer.applyMiddleware({
