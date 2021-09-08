@@ -1,15 +1,13 @@
 import { Button, ButtonProps } from "@chakra-ui/button";
-import { useDisclosure } from "@chakra-ui/hooks";
 import {
   AlertDialog,
-  AlertDialogOverlay,
-  AlertDialogContent,
-  AlertDialogHeader,
   AlertDialogBody,
+  AlertDialogContent,
   AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
 } from "@chakra-ui/modal";
 import React from "react";
-
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 
 type Props = ButtonProps & {

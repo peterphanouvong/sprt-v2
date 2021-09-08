@@ -1,21 +1,13 @@
-import React from "react";
+import { Text } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../utils/createUrqlClient";
-import { Layout } from "../components/Layout";
-import { Input, Text } from "@chakra-ui/react";
-import { useIsAuth } from "../utils/useIsAuth";
-import Select from "react-select";
 import Head from "next/head";
-import { EventJoinWaitlistButton } from "../components/EventJoinWaitlistButton";
+import React from "react";
+import { Layout } from "../components/Layout";
+import { createUrqlClient } from "../utils/createUrqlClient";
+import { useIsAuth } from "../utils/useIsAuth";
 
 interface Props {}
 
-const options = [
-  { label: "option", value: "1" },
-  { label: "option", value: "2" },
-  { label: "option", value: "3" },
-  { label: "option", value: "4" },
-];
 const Home: React.FC<Props> = ({}) => {
   useIsAuth();
 
