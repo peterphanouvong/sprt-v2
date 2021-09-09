@@ -6,6 +6,7 @@ import {
   fetchExchange,
   stringifyVariables,
 } from "urql";
+import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";
 import { pipe, tap } from "wonka";
 import {
   AddAttendeeMutationVariables,
@@ -259,7 +260,8 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
       }),
       errorExchange,
       ssrExchange,
-      fetchExchange,
+      // fetchExchange,
+      multipartFetchExchange,
     ],
   };
 };

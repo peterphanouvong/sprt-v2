@@ -10,11 +10,16 @@
     "gen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@apollo/react-hooks": "^4.0.0",
     "@chakra-ui/icons": "^1.0.14",
     "@chakra-ui/react": "^1.4.2",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
     "@urql/exchange-graphcache": "^4.2.1",
+    "@urql/exchange-multipart-fetch": "^0.1.13",
+    "apollo-cache-inmemory": "^1.6.6",
+    "apollo-client": "^2.6.10",
+    "apollo-upload-client": "^16.0.0",
     "axios": "^0.21.1",
     "date-fns": "^2.23.0",
     "formik": "^2.2.9",

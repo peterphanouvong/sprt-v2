@@ -111,7 +111,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     // @ts-ignore
-    // uploads: false,
+    uploads: false,
     schema: await buildSchema({
       resolvers: [
         HelloResolver,

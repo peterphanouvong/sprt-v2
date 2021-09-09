@@ -93,6 +93,7 @@ const main = async () => {
         resave: false,
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
+        uploads: false,
         schema: await type_graphql_1.buildSchema({
             resolvers: [
                 hello_1.HelloResolver,

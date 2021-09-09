@@ -320,7 +320,7 @@ export class ClubResolver {
         .on("finish", res)
     );
 
-    return false;
+    return true;
   }
 
   async removeAllAdminsFromClub(clubId: number): Promise<boolean> {

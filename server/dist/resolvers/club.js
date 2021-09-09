@@ -242,7 +242,7 @@ let ClubResolver = class ClubResolver {
             gzip: true,
         }))
             .on("finish", res));
-        return false;
+        return true;
     }
     async removeAllAdminsFromClub(clubId) {
         await ClubAdmin_1.ClubAdmin.delete({ clubId: clubId });
