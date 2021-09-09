@@ -3,7 +3,7 @@ import router from "next/router";
 import {
   dedupExchange,
   Exchange,
-  fetchExchange,
+  // fetchExchange,
   stringifyVariables,
 } from "urql";
 import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";

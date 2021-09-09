@@ -30,6 +30,7 @@ import { EventResolver } from "./resolvers/event";
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
 import { PublicityTypeResolver } from "./resolvers/publicityType";
+import { UploadResolver } from "./resolvers/upload";
 import { UserResolver } from "./resolvers/user";
 import { createClubLoader } from "./utils/createClubLoader";
 import { createEventLoader } from "./utils/createEventLoader";
@@ -120,6 +121,7 @@ const main = async () => {
         EventResolver,
         ClubResolver,
         PublicityTypeResolver,
+        UploadResolver,
       ],
       validate: false,
     }),

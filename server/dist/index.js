@@ -35,6 +35,7 @@ const event_1 = require("./resolvers/event");
 const hello_1 = require("./resolvers/hello");
 const post_1 = require("./resolvers/post");
 const publicityType_1 = require("./resolvers/publicityType");
+const upload_1 = require("./resolvers/upload");
 const user_1 = require("./resolvers/user");
 const createClubLoader_1 = require("./utils/createClubLoader");
 const createEventLoader_1 = require("./utils/createEventLoader");
@@ -102,6 +103,7 @@ const main = async () => {
                 event_1.EventResolver,
                 club_1.ClubResolver,
                 publicityType_1.PublicityTypeResolver,
+                upload_1.UploadResolver,
             ],
             validate: false,
         }),

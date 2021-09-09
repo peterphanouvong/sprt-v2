@@ -1,5 +1,3 @@
-import { FileUpload, GraphQLUpload } from "graphql-upload";
-import path from "path";
 import { MyContext } from "src/types";
 import {
   Arg,
@@ -21,7 +19,6 @@ import { ClubRequestedMember } from "../entities/ClubRequestedMember";
 import { User } from "../entities/User";
 import { isAuth } from "../middleware/isAuth";
 import { errorDetailToObject } from "../utils/errorDetailToObject";
-const { Storage } = require("@google-cloud/storage");
 
 @InputType()
 class ClubInput {
@@ -37,12 +34,6 @@ class ClubInput {
   @Field()
   phoneNumber: string;
 }
-
-const storage = new Storage({
-  keyFilename: path.join(__dirname, "../../sprt-5111-c956c44c12d4.json"),
-  projectId: "sprt-5111",
-});
-// const bucketName = "test-sprt-bucket";
 
 @Resolver(Club)
 export class ClubResolver {
@@ -299,27 +290,6 @@ export class ClubResolver {
         throw Error(`That user is already an admin of this club`);
       }
     }
-    return true;
-  }
-
-  @Mutation(() => Boolean)
-  async uploadImage(
-    //1
-    @Arg("file", () => GraphQLUpload)
-    { createReadStream, filename }: FileUpload
-  ): Promise<boolean> {
-    console.log(filename);
-    await new Promise((res) =>
-      createReadStream()
-        .pipe(
-          storage.bucket("test-sprt-bucket").file(filename).createWriteStream({
-            resumable: false,
-            gzip: true,
-          })
-        )
-        .on("finish", res)
-    );
-
     return true;
   }
 
