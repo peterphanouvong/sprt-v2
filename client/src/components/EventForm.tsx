@@ -41,7 +41,7 @@ const EventForm: React.FC<Props> = ({
   clubId,
   submitMessage = "Create event",
 }) => {
-  const { nextStep, prevStep, activeStep } = useSteps({
+  const { nextStep, prevStep, activeStep, setStep } = useSteps({
     initialStep: 0,
   });
 
@@ -85,7 +85,11 @@ const EventForm: React.FC<Props> = ({
         {(props) => (
           <Form>
             <Box padding={6}>
-              <Steps activeStep={activeStep}>
+              <Steps
+                steps={["Basic details", "Event details", "Confirmation"]}
+                activeStep={activeStep}
+                setStep={event?.title ? setStep : undefined}
+              >
                 <Box mt={6}>
                   <EventFormBasicDetails
                     props={props}
