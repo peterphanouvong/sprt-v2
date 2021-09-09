@@ -16,17 +16,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClubResolver = void 0;
+const graphql_upload_1 = require("graphql-upload");
+const path_1 = __importDefault(require("path"));
 const type_graphql_1 = require("type-graphql");
-const Club_1 = require("../entities/Club");
-const User_1 = require("../entities/User");
 const typeorm_1 = require("typeorm");
+const Club_1 = require("../entities/Club");
 const ClubAdmin_1 = require("../entities/ClubAdmin");
 const ClubFollower_1 = require("../entities/ClubFollower");
 const ClubRequestedMember_1 = require("../entities/ClubRequestedMember");
+const User_1 = require("../entities/User");
 const isAuth_1 = require("../middleware/isAuth");
 const errorDetailToObject_1 = require("../utils/errorDetailToObject");
-const graphql_upload_1 = require("graphql-upload");
-const path_1 = __importDefault(require("path"));
 const { Storage } = require("@google-cloud/storage");
 let ClubInput = class ClubInput {
 };
@@ -53,7 +53,6 @@ const storage = new Storage({
     keyFilename: path_1.default.join(__dirname, "../../sprt-5111-c956c44c12d4.json"),
     projectId: "sprt-5111",
 });
-const bucketName = "test-sprt-bucket";
 let ClubResolver = class ClubResolver {
     async followers(club, { userLoader }) {
         var _a;
@@ -237,6 +236,13 @@ let ClubResolver = class ClubResolver {
     }
     async uploadImage({ createReadStream, filename }) {
         console.log(filename);
+        await new Promise((res) => createReadStream()
+            .pipe(storage.bucket("test-sprt-bucket").file(filename).createWriteStream({
+            resumable: false,
+            gzip: true,
+        }))
+            .on("finish", res));
+        return false;
     }
     async removeAllAdminsFromClub(clubId) {
         await ClubAdmin_1.ClubAdmin.delete({ clubId: clubId });

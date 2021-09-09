@@ -49,12 +49,12 @@ __decorate([
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.CreateDateColumn(),
-    __metadata("design:type", Object)
+    __metadata("design:type", Date)
 ], Club.prototype, "createdAt", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.UpdateDateColumn(),
-    __metadata("design:type", Object)
+    __metadata("design:type", Date)
 ], Club.prototype, "updatedAt", void 0);
 __decorate([
     type_graphql_1.Field(() => [User_1.User]),

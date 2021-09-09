@@ -8,12 +8,12 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 interface Props {}
 
 const testpage: React.FC<Props> = ({}) => {
-  // const [, uploadImage] = useUploadImageMutation();
+  const [, uploadImage] = useUploadImageMutation();
 
   const onDrop = useCallback(async ([file]) => {
     // Do something with the files
     console.log(file);
-    // await uploadImage(file);
+    await uploadImage(file);
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 

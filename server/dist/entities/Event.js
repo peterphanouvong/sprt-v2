@@ -41,7 +41,7 @@ __decorate([
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.Column(),
-    __metadata("design:type", Object)
+    __metadata("design:type", Date)
 ], Event.prototype, "startTime", void 0);
 __decorate([
     type_graphql_1.Field(() => type_graphql_1.Int, { nullable: true }),
@@ -51,7 +51,7 @@ __decorate([
 __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     typeorm_1.Column({ nullable: true }),
-    __metadata("design:type", Object)
+    __metadata("design:type", Date)
 ], Event.prototype, "endTime", void 0);
 __decorate([
     type_graphql_1.Field(),
@@ -95,12 +95,12 @@ __decorate([
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.CreateDateColumn(),
-    __metadata("design:type", Object)
+    __metadata("design:type", Date)
 ], Event.prototype, "createdAt", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.UpdateDateColumn(),
-    __metadata("design:type", Object)
+    __metadata("design:type", Date)
 ], Event.prototype, "updatedAt", void 0);
 __decorate([
     typeorm_1.OneToMany(() => ClubEvent_1.ClubEvent, (ce) => ce.event),

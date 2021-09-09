@@ -1,26 +1,26 @@
+import { FileUpload, GraphQLUpload } from "graphql-upload";
+import path from "path";
+import { MyContext } from "src/types";
 import {
   Arg,
-  Query,
-  Mutation,
-  Resolver,
-  InputType,
-  Field,
   Ctx,
+  Field,
   FieldResolver,
+  InputType,
+  Mutation,
+  Query,
+  Resolver,
   Root,
   UseMiddleware,
 } from "type-graphql";
-import { MyContext } from "src/types";
-import { Club } from "../entities/Club";
-import { User } from "../entities/User";
 import { getConnection } from "typeorm";
+import { Club } from "../entities/Club";
 import { ClubAdmin } from "../entities/ClubAdmin";
 import { ClubFollower } from "../entities/ClubFollower";
 import { ClubRequestedMember } from "../entities/ClubRequestedMember";
+import { User } from "../entities/User";
 import { isAuth } from "../middleware/isAuth";
 import { errorDetailToObject } from "../utils/errorDetailToObject";
-import { FileUpload, GraphQLUpload, Upload } from "graphql-upload";
-import path from "path";
 const { Storage } = require("@google-cloud/storage");
 
 @InputType()
@@ -42,7 +42,7 @@ const storage = new Storage({
   keyFilename: path.join(__dirname, "../../sprt-5111-c956c44c12d4.json"),
   projectId: "sprt-5111",
 });
-const bucketName = "test-sprt-bucket";
+// const bucketName = "test-sprt-bucket";
 
 @Resolver(Club)
 export class ClubResolver {
@@ -307,41 +307,21 @@ export class ClubResolver {
     //1
     @Arg("file", () => GraphQLUpload)
     { createReadStream, filename }: FileUpload
-  ) {
+  ): Promise<boolean> {
     console.log(filename);
-  }
+    await new Promise((res) =>
+      createReadStream()
+        .pipe(
+          storage.bucket("test-sprt-bucket").file(filename).createWriteStream({
+            resumable: false,
+            gzip: true,
+          })
+        )
+        .on("finish", res)
+    );
 
-  // @Mutation(() => Boolean)
-  // async uploadImage(
-  //   //1
-  //   @Arg("file", () => GraphQLUploadvvv)
-  //   { createReadStream, filename }: FileUpload
-  // ) {
-  //   //2
-  //   await new Promise(async (_resolve, reject) =>
-  //     createReadStream()
-  //       .pipe(
-  //         storage.bucket(bucketName).file(filename).createWriteStream({
-  //           resumable: false,
-  //           gzip: true,
-  //         })
-  //       )
-  //       //3
-  //       .on("finish", () =>
-  //         storage
-  //           .bucket(bucketName)
-  //           .file(filename)
-  //           .makePublic()
-  //           .then((e: { object: any }[]) => {
-  //             console.log(e[0].object);
-  //             console.log(
-  //               `https://storage.googleapis.com/${bucketName}/${e[0].object}`
-  //             );
-  //           })
-  //       )
-  //       .on("error", () => reject(false))
-  //   );
-  // }
+    return false;
+  }
 
   async removeAllAdminsFromClub(clubId: number): Promise<boolean> {
     await ClubAdmin.delete({ clubId: clubId });
