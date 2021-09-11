@@ -49,7 +49,11 @@ const InputField: React.FC<InputFieldProps> = ({
           placeholder={props.placeholder}
         />
       </InputGroup>
-      {touched && <FormErrorMessage>{error}</FormErrorMessage>}
+      {touched && (
+        <FormErrorMessage data-testid={`${field.name}-register-form-error`}>
+          {error}
+        </FormErrorMessage>
+      )}
     </FormControl>
   );
 };
