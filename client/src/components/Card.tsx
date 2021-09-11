@@ -17,7 +17,7 @@ const Card: React.FC<Props> = ({ children, onClick, ...props }) => {
       overflow='hidden'
       padding={4}
       shadow={!!onClick ? cardStyle.shadow : "md"}
-      backgroundColor={!!onClick ? cardStyle.backgroundColor : ""}
+      backgroundColor={!!onClick ? cardStyle.backgroundColor : "white"}
       transition='0.2s ease'
       onTouchStartCapture={
         !!onClick

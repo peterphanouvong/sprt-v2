@@ -17,6 +17,7 @@ import React from "react";
 import { Club, useClubQuery } from "../generated/graphql";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { ClubForm } from "./ClubForm";
+import router from "next/router";
 
 interface Props {
   clubId: number;
@@ -26,8 +27,12 @@ interface Props {
 const ClubEditButton: React.FC<Props> = ({ clubId, as = "button" }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [{ data }] = useClubQuery({ variables: { clubId: clubId } });
-
+  console.log(data);
   const isMobile = useIsMobileScreen();
+
+  const handleEdit = () => {
+    router.push(`/my-club/edit/${data?.club.admins[0].id}`);
+  };
 
   if (!data) return <Skeleton></Skeleton>;
 
@@ -39,7 +44,8 @@ const ClubEditButton: React.FC<Props> = ({ clubId, as = "button" }) => {
           variant='outline'
           onClick={(e) => {
             e.stopPropagation();
-            onOpen();
+            // onOpen();
+            handleEdit();
           }}
         >
           Edit
@@ -49,6 +55,7 @@ const ClubEditButton: React.FC<Props> = ({ clubId, as = "button" }) => {
           onClick={(e) => {
             e.stopPropagation();
             onOpen();
+            // handleEdit();
           }}
           icon={<EditIcon />}
         >

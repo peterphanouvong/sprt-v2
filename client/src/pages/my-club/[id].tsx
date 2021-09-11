@@ -79,7 +79,11 @@ const MyClub = () => {
         src={`https://storage.cloud.google.com/test-sprt-bucket/Kevin's_Club/stings_logo.png`}
       /> */}
 
-      <Container paddingX={4} maxW='container.lg'>
+      <Container
+        paddingX={4}
+        maxW='container.lg'
+        // style={{ backgroundColor: "rgb(247,249,251)" }}
+      >
         {/* <ChakraImage
           position='absolute'
           top='40%'
