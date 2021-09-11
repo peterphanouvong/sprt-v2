@@ -24,11 +24,27 @@ const storage = new Storage({
     keyFilename: path_1.default.join(__dirname, "../../sprt-5111-c956c44c12d4.json"),
     projectId: "sprt-5111",
 });
+const bucketName = "test-sprt-bucket";
 let UploadResolver = class UploadResolver {
     async uploadImage({ createReadStream, filename }) {
         console.log(filename);
         await new Promise((res) => createReadStream()
-            .pipe(storage.bucket("test-sprt-bucket").file(filename).createWriteStream({
+            .pipe(storage.bucket(bucketName).file(filename).createWriteStream({
+            resumable: false,
+            gzip: true,
+        }))
+            .on("finish", res));
+        return true;
+    }
+    async uploadBannerImage({ createReadStream, filename }, clubname) {
+        console.log(filename);
+        console.log(clubname);
+        const formattedName = clubname
+            .replace(" ", "_")
+            .concat("/", "banner_image.png");
+        console.log(formattedName);
+        await new Promise((res) => createReadStream()
+            .pipe(storage.bucket(bucketName).file(formattedName).createWriteStream({
             resumable: false,
             gzip: true,
         }))
@@ -43,6 +59,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UploadResolver.prototype, "uploadImage", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg("file", () => graphql_upload_1.GraphQLUpload)),
+    __param(1, type_graphql_1.Arg("clubname")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
+], UploadResolver.prototype, "uploadBannerImage", null);
 UploadResolver = __decorate([
     type_graphql_1.Resolver(graphql_upload_1.Upload)
 ], UploadResolver);

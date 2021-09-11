@@ -80,20 +80,6 @@ export type FieldError = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createPost: Post;
-  updatePost?: Maybe<Post>;
-  deletePost: Scalars['Boolean'];
-  register: UserResponse;
-  login: UserResponse;
-  logout: Scalars['Boolean'];
-  changePassword: UserResponse;
-  forgotPassword: Scalars['Boolean'];
-  createEvent: Event;
-  updateEvent?: Maybe<Event>;
-  addClubEvent: Scalars['Boolean'];
-  deleteEvent: Scalars['Boolean'];
-  addAttendee: User;
-  removeAttendee: Scalars['Boolean'];
   createClub: Club;
   updateClub?: Maybe<Club>;
   deleteClub: Scalars['Boolean'];
@@ -101,78 +87,22 @@ export type Mutation = {
   unfollowClub: Scalars['Boolean'];
   addRequestedMember: Scalars['Boolean'];
   addAdmin: Scalars['Boolean'];
+  createEvent: Event;
+  updateEvent?: Maybe<Event>;
+  addClubEvent: Scalars['Boolean'];
+  deleteEvent: Scalars['Boolean'];
+  addAttendee: User;
+  removeAttendee: Scalars['Boolean'];
+  createPost: Post;
+  updatePost?: Maybe<Post>;
+  deletePost: Scalars['Boolean'];
   uploadImage: Scalars['Boolean'];
-};
-
-
-export type MutationCreatePostArgs = {
-  input: PostInput;
-};
-
-
-export type MutationUpdatePostArgs = {
-  title: Scalars['String'];
-  id: Scalars['Float'];
-};
-
-
-export type MutationDeletePostArgs = {
-  id: Scalars['Float'];
-};
-
-
-export type MutationRegisterArgs = {
-  options: UsernamePasswordInput;
-};
-
-
-export type MutationLoginArgs = {
-  password: Scalars['String'];
-  usernameOrEmail: Scalars['String'];
-};
-
-
-export type MutationChangePasswordArgs = {
-  newPassword: Scalars['String'];
-  token: Scalars['String'];
-};
-
-
-export type MutationForgotPasswordArgs = {
-  email: Scalars['String'];
-};
-
-
-export type MutationCreateEventArgs = {
-  input: EventInput;
-};
-
-
-export type MutationUpdateEventArgs = {
-  input: EventInput;
-  id: Scalars['Float'];
-};
-
-
-export type MutationAddClubEventArgs = {
-  eventId: Scalars['Float'];
-  clubId: Scalars['Float'];
-};
-
-
-export type MutationDeleteEventArgs = {
-  id: Scalars['Float'];
-};
-
-
-export type MutationAddAttendeeArgs = {
-  eventId: Scalars['Int'];
-};
-
-
-export type MutationRemoveAttendeeArgs = {
-  attendeeId: Scalars['Int'];
-  eventId: Scalars['Int'];
+  uploadBannerImage: Scalars['Boolean'];
+  register: UserResponse;
+  login: UserResponse;
+  logout: Scalars['Boolean'];
+  changePassword: UserResponse;
+  forgotPassword: Scalars['Boolean'];
 };
 
 
@@ -216,8 +146,85 @@ export type MutationAddAdminArgs = {
 };
 
 
+export type MutationCreateEventArgs = {
+  input: EventInput;
+};
+
+
+export type MutationUpdateEventArgs = {
+  input: EventInput;
+  id: Scalars['Float'];
+};
+
+
+export type MutationAddClubEventArgs = {
+  eventId: Scalars['Float'];
+  clubId: Scalars['Float'];
+};
+
+
+export type MutationDeleteEventArgs = {
+  id: Scalars['Float'];
+};
+
+
+export type MutationAddAttendeeArgs = {
+  eventId: Scalars['Int'];
+};
+
+
+export type MutationRemoveAttendeeArgs = {
+  attendeeId: Scalars['Int'];
+  eventId: Scalars['Int'];
+};
+
+
+export type MutationCreatePostArgs = {
+  input: PostInput;
+};
+
+
+export type MutationUpdatePostArgs = {
+  title: Scalars['String'];
+  id: Scalars['Float'];
+};
+
+
+export type MutationDeletePostArgs = {
+  id: Scalars['Float'];
+};
+
+
 export type MutationUploadImageArgs = {
   file: Scalars['Upload'];
+};
+
+
+export type MutationUploadBannerImageArgs = {
+  clubname: Scalars['String'];
+  file: Scalars['Upload'];
+};
+
+
+export type MutationRegisterArgs = {
+  options: UsernamePasswordInput;
+};
+
+
+export type MutationLoginArgs = {
+  password: Scalars['String'];
+  usernameOrEmail: Scalars['String'];
+};
+
+
+export type MutationChangePasswordArgs = {
+  newPassword: Scalars['String'];
+  token: Scalars['String'];
+};
+
+
+export type MutationForgotPasswordArgs = {
+  email: Scalars['String'];
 };
 
 export type PaginatedPosts = {
@@ -252,20 +259,40 @@ export type PublicityType = {
 
 export type Query = {
   __typename?: 'Query';
+  clubs: Array<Club>;
+  club: Club;
+  clubByAdminId: Club;
+  events: Array<Event>;
+  event?: Maybe<Event>;
+  feed: Array<Event>;
   hello: Scalars['String'];
   posts: PaginatedPosts;
   post?: Maybe<Post>;
+  publicityTypes: Array<PublicityType>;
   me?: Maybe<User>;
   user?: Maybe<User>;
   userByUsername?: Maybe<User>;
   myFeed: Array<Event>;
-  events: Array<Event>;
-  event?: Maybe<Event>;
-  feed: Array<Event>;
-  clubs: Array<Club>;
-  club: Club;
-  clubByAdminId: Club;
-  publicityTypes: Array<PublicityType>;
+};
+
+
+export type QueryClubArgs = {
+  clubId: Scalars['Float'];
+};
+
+
+export type QueryClubByAdminIdArgs = {
+  adminId: Scalars['Float'];
+};
+
+
+export type QueryEventArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type QueryFeedArgs = {
+  id: Scalars['Float'];
 };
 
 
@@ -287,26 +314,6 @@ export type QueryUserArgs = {
 
 export type QueryUserByUsernameArgs = {
   username: Scalars['String'];
-};
-
-
-export type QueryEventArgs = {
-  id: Scalars['Int'];
-};
-
-
-export type QueryFeedArgs = {
-  id: Scalars['Float'];
-};
-
-
-export type QueryClubArgs = {
-  clubId: Scalars['Float'];
-};
-
-
-export type QueryClubByAdminIdArgs = {
-  adminId: Scalars['Float'];
 };
 
 
@@ -482,6 +489,14 @@ export type UpdateEventMutationVariables = Exact<{
 
 
 export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: Maybe<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime?: Maybe<string>, hostId: number, points: number, creatorTypeId: number, publicityTypeId: number, clubId?: Maybe<number>, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, firstname: string, lastname: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, firstname: string, lastname: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime?: Maybe<string>, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, firstname: string, lastname: string }> }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, club?: Maybe<{ __typename?: 'Club', id: number, name: string }> }> };
+
+export type UploadBannerImageMutationVariables = Exact<{
+  clubname: Scalars['String'];
+  file: Scalars['Upload'];
+}>;
+
+
+export type UploadBannerImageMutation = { __typename?: 'Mutation', uploadBannerImage: boolean };
 
 export type UploadImageMutationVariables = Exact<{
   file: Scalars['Upload'];
@@ -904,6 +919,15 @@ export const UpdateEventDocument = gql`
 
 export function useUpdateEventMutation() {
   return Urql.useMutation<UpdateEventMutation, UpdateEventMutationVariables>(UpdateEventDocument);
+};
+export const UploadBannerImageDocument = gql`
+    mutation UploadBannerImage($clubname: String!, $file: Upload!) {
+  uploadBannerImage(clubname: $clubname, file: $file)
+}
+    `;
+
+export function useUploadBannerImageMutation() {
+  return Urql.useMutation<UploadBannerImageMutation, UploadBannerImageMutationVariables>(UploadBannerImageDocument);
 };
 export const UploadImageDocument = gql`
     mutation UploadImage($file: Upload!) {
