@@ -26,6 +26,8 @@ import {
 import nothingHere from "../../../images/nothing-here.svg";
 import { createUrqlClient } from "../../../utils/createUrqlClient";
 import { useIsMobileScreen } from "../../../utils/useIsMobileScreen";
+import { ClubSocialsForm } from "../../../components/ClubSocialsForm";
+import { ClubUploadImagesForm } from "../../../components/ClubUploadImagesForm";
 
 interface Props {}
 
@@ -100,16 +102,21 @@ const edit: React.FC<Props> = ({}) => {
               <Card>
                 <Heading fontSize='large'>Edit Socials</Heading>
                 <br />
-                <ClubForm
+                <ClubSocialsForm club={data?.clubByAdminId as Club} />
+              </Card>
+            </TabPanel>
+            <TabPanel>
+              <Card>
+                <Heading fontSize='large'>Upload Club Images</Heading>
+                <br />
+                {/* <ClubForm
                   noClose
                   onClose={() => {}}
                   club={data?.clubByAdminId as Club}
                   formType={"Save"}
-                />
+                /> */}
+                <ClubUploadImagesForm club={data as ClubByAdminIdQuery} />
               </Card>
-            </TabPanel>
-            <TabPanel>
-              <p>three!</p>
             </TabPanel>
           </TabPanels>
         </Tabs>

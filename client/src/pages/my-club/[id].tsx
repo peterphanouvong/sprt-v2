@@ -6,7 +6,6 @@ import {
   Skeleton,
   SkeletonText,
   Text,
-  Image as ChakraImage,
   Container,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
@@ -69,30 +68,11 @@ const MyClub = () => {
 
       <ClubBanner club={data as ClubByAdminIdQuery} />
 
-      {/* <ChakraImage
-        position='absolute'
-        // top='30px'
-        // left='10px'
-        border='1px solid black'
-        borderRadius='full'
-        boxSize={32}
-        src={`https://storage.cloud.google.com/test-sprt-bucket/Kevin's_Club/stings_logo.png`}
-      /> */}
-
       <Container
         paddingX={4}
         maxW='container.lg'
         // style={{ backgroundColor: "rgb(247,249,251)" }}
       >
-        {/* <ChakraImage
-          position='absolute'
-          top='40%'
-          // left='clamp(3vw, 10%, 1.5em)'
-          border='1px solid black'
-          borderRadius='full'
-          boxSize={isMobile ? 28 : 32}
-          src={`https://storage.cloud.google.com/test-sprt-bucket/Kevin's_Club/stings_logo.png`}
-        /> */}
         <Heading as='h2' variant='h2' mt={isMobile ? 20 : 28}>
           {data?.clubByAdminId.name || (
             <Skeleton height='30px' width='100px'>
@@ -135,6 +115,9 @@ const MyClub = () => {
           }
           phone={data?.clubByAdminId.phoneNumber}
           email={data?.clubByAdminId.email}
+          facebookLink={data?.clubByAdminId.facebookLink}
+          instagramLink={data?.clubByAdminId.instagramLink}
+          websiteLink={data?.clubByAdminId.websiteLink}
         />
 
         <Divider my={4} />

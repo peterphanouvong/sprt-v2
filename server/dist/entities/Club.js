@@ -73,6 +73,21 @@ __decorate([
     __metadata("design:type", Array)
 ], Club.prototype, "members", void 0);
 __decorate([
+    type_graphql_1.Field(() => String, { nullable: true }),
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], Club.prototype, "facebookLink", void 0);
+__decorate([
+    type_graphql_1.Field(() => String, { nullable: true }),
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], Club.prototype, "instagramLink", void 0);
+__decorate([
+    type_graphql_1.Field(() => String, { nullable: true }),
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], Club.prototype, "websiteLink", void 0);
+__decorate([
     type_graphql_1.Field(() => [Event_1.Event], { nullable: true }),
     typeorm_1.OneToMany(() => Event_1.Event, (event) => event.club),
     __metadata("design:type", Array)

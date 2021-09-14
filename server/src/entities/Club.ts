@@ -63,6 +63,18 @@ export class Club extends BaseEntity {
   @Field(() => [User])
   members: User[];
 
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  facebookLink: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  instagramLink: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  websiteLink: string;
+
   // hosting events
   @Field(() => [Event], { nullable: true })
   @OneToMany(() => Event, (event) => event.club)

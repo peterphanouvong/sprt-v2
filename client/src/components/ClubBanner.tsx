@@ -64,8 +64,8 @@ const ClubBanner: React.FC<Props> = ({ club }) => {
           _hover={{
             cursor: "pointer",
           }}
-          // src={`https://storage.cloud.google.com/test-sprt-bucket/${clubName}/banner_image.png`}
-          src={`https://storage.googleapis.com/test-sprt-bucket/Kevin's_Club/players_banner.jpeg`}
+          src={`https://storage.cloud.google.com/test-sprt-bucket/${clubName}/banner_image.png`}
+          // src={`https://storage.googleapis.com/test-sprt-bucket/Kevin's_Club/players_banner.jpeg`}
           alt='banner picture'
           fallback={
             <Image
