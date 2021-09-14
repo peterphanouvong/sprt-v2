@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/button";
-import { AspectRatio, Box } from "@chakra-ui/layout";
+import { Box } from "@chakra-ui/layout";
 import {
   Icon,
   Image,

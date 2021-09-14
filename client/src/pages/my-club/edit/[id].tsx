@@ -37,7 +37,7 @@ const edit: React.FC<Props> = ({}) => {
   const intId =
     typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
 
-  const [{ data, fetching, error }] = useClubByAdminIdQuery({
+  const [{ data, error }] = useClubByAdminIdQuery({
     pause: intId === -1,
     variables: {
       id: intId,

@@ -1,4 +1,4 @@
-import { EmailIcon, PhoneIcon } from "@chakra-ui/icons";
+import { EmailIcon } from "@chakra-ui/icons";
 import { VStack, ModalFooter, Button } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import React from "react";

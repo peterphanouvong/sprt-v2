@@ -1,4 +1,4 @@
-import { PhoneIcon, EmailIcon } from "@chakra-ui/icons";
+import { EmailIcon } from "@chakra-ui/icons";
 import { Box, Flex, Icon, Skeleton, Text } from "@chakra-ui/react";
 import React from "react";
 import { BsPersonFill } from "react-icons/bs";
@@ -10,15 +10,15 @@ interface Props {
   email: string | undefined;
   name: string | undefined;
   phone: string | undefined;
-  facebookLink: Maybe<string> | undefined;
-  instagramLink: Maybe<string> | undefined;
-  websiteLink: Maybe<string> | undefined;
+  facebookLink?: Maybe<string> | undefined;
+  instagramLink?: Maybe<string> | undefined;
+  websiteLink?: Maybe<string> | undefined;
 }
 
 const ClubMetaInfo: React.FC<Props> = ({
   email,
   name,
-  phone,
+  // phone,
   facebookLink,
   instagramLink,
   websiteLink,
