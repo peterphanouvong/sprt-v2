@@ -21,6 +21,7 @@
     "framer-motion": "^4.0.3",
     "graphql": "^15.5.1",
     "is-hotkey": "^0.2.0",
+    "msw": "^0.35.0",
     "next": "latest",
     "next-pwa": "^5.3.1",
     "next-urql": "^3.1.1",

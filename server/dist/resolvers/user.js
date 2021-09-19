@@ -114,14 +114,24 @@ let UserResolver = class UserResolver {
             user = res.raw[0];
         }
         catch (err) {
-            return {
-                errors: [
-                    {
-                        field: "username",
-                        message: "that username has been taken",
-                    },
-                ],
-            };
+            console.log(err);
+            return err.detail.includes("email")
+                ? {
+                    errors: [
+                        {
+                            field: "email",
+                            message: "that email is already in use",
+                        },
+                    ],
+                }
+                : {
+                    errors: [
+                        {
+                            field: "username",
+                            message: "that username is already in use",
+                        },
+                    ],
+                };
         }
         req.session.userId = user.id;
         return { user };
