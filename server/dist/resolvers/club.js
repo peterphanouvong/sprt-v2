@@ -14,12 +14,12 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClubResolver = void 0;
 const type_graphql_1 = require("type-graphql");
-const Club_1 = require("../entities/Club");
-const User_1 = require("../entities/User");
 const typeorm_1 = require("typeorm");
+const Club_1 = require("../entities/Club");
 const ClubAdmin_1 = require("../entities/ClubAdmin");
 const ClubFollower_1 = require("../entities/ClubFollower");
 const ClubRequestedMember_1 = require("../entities/ClubRequestedMember");
+const User_1 = require("../entities/User");
 const isAuth_1 = require("../middleware/isAuth");
 const errorDetailToObject_1 = require("../utils/errorDetailToObject");
 let ClubInput = class ClubInput {

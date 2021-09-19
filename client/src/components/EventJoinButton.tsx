@@ -17,6 +17,7 @@ import {
   Event,
   useMeQuery,
 } from "../generated/graphql";
+import { EventJoinWaitlistButton } from "./EventJoinWaitlistButton";
 
 type Props = ButtonProps & {
   event: Event;
@@ -89,18 +90,63 @@ const EventJoinButton: React.FC<Props> = ({ event, attendees, ...props }) => {
     }
   };
 
+  const joinWaitlist = async () => {
+    const { error } = await addAttendee({ eventId: event.id });
+    if (!error) {
+      toast({
+        title: "Joined waitlist",
+        variant: "subtle",
+        description: `We've added you to the waitlist for "${
+          event.title
+        }". There are ${
+          attendees.length - (event.capacity || 0)
+        } in line ahead of you.`,
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+      setIsAttending(true);
+    } else if (error) {
+      toast({
+        title: "Error",
+        variant: "subtle",
+        position: "top",
+        description: `${error.message}`,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <>
-      <Button
-        variant={isAttending ? "outline" : "solid"}
-        onClick={(e) => {
-          e.stopPropagation();
-          handleButton();
-        }}
-        {...props}
-      >
-        {isAttending ? "Leave event" : "Join event"}
-      </Button>
+      {isAttending ? (
+        <Button
+          variant="outline"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleButton();
+          }}
+          {...props}
+        >
+          Leave event
+        </Button>
+      ) : event.capacity && attendees.length >= event.capacity ? (
+        <EventJoinWaitlistButton joinWaitlist={joinWaitlist} />
+      ) : (
+        <Button
+          variant="solid"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleButton();
+          }}
+          {...props}
+        >
+          Join event
+        </Button>
+      )}
 
       <AlertDialog
         isOpen={isOpen}

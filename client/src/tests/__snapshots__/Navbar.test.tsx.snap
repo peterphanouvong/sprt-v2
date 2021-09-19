@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`navbar snapshot 1`] = `
+<Fragment>
+  <Box
+    alignItems="center"
+    bg="white"
+    display="flex"
+    flexDirection="row"
+    justifyContent="space-between"
+    mb={8}
+    paddingX={16}
+    position="sticky"
+    top={0}
+    zIndex="10"
+  >
+    <Box
+      alignItems="center"
+      display="flex"
+      flexDirection="row"
+    >
+      <Link
+        href="/feed"
+      >
+        <a
+          style={
+            Object {
+              "paddingTop": "6px",
+            }
+          }
+        >
+          <Logo
+            color="black"
+          />
+        </a>
+      </Link>
+      <Box
+        mr={4}
+      />
+    </Box>
+  </Box>
+</Fragment>
+`;

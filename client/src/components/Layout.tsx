@@ -36,7 +36,12 @@ const Layout: React.FC<Props> = ({ children, title }) => {
       ) : (
         <Navbar />
       )}
-      <Container paddingX={4} maxW="container.xl" paddingY={isMobile ? 16 : 0}>
+      <Container
+        paddingX={4}
+        maxW='container.xl'
+        paddingY={isMobile ? 16 : 0}
+        // style={{ backgroundColor: "rgb(247,249,251)" }}
+      >
         {children}
       </Container>
     </>

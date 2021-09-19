@@ -1,22 +1,22 @@
+import { MyContext } from "src/types";
 import {
   Arg,
-  Query,
-  Mutation,
-  Resolver,
-  InputType,
-  Field,
   Ctx,
+  Field,
   FieldResolver,
+  InputType,
+  Mutation,
+  Query,
+  Resolver,
   Root,
   UseMiddleware,
 } from "type-graphql";
-import { MyContext } from "src/types";
-import { Club } from "../entities/Club";
-import { User } from "../entities/User";
 import { getConnection } from "typeorm";
+import { Club } from "../entities/Club";
 import { ClubAdmin } from "../entities/ClubAdmin";
 import { ClubFollower } from "../entities/ClubFollower";
 import { ClubRequestedMember } from "../entities/ClubRequestedMember";
+import { User } from "../entities/User";
 import { isAuth } from "../middleware/isAuth";
 import { errorDetailToObject } from "../utils/errorDetailToObject";
 
