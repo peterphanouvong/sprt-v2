@@ -32,7 +32,7 @@ const EventCard: React.FC<Props> = ({ event }) => {
 
       <ButtonGroup mt={2}>
         <EventJoinButton
-          colorScheme="brand"
+          // colorScheme="brand"
           size={isMobile ? "xs" : "sm"}
           event={event}
           attendees={event.attendees}

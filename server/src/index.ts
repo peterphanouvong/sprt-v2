@@ -23,6 +23,7 @@ import { Event } from "./entities/Event";
 import { EventAttendee } from "./entities/EventAttendee";
 import { Post } from "./entities/Post";
 import { PublicityType } from "./entities/PublicityType";
+import { QuickEvent } from "./entities/QuickEvent";
 import { Sport } from "./entities/Sport";
 import { User } from "./entities/User";
 import { ClubResolver } from "./resolvers/club";
@@ -30,6 +31,7 @@ import { EventResolver } from "./resolvers/event";
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
 import { PublicityTypeResolver } from "./resolvers/publicityType";
+import { QuickEventResolver } from "./resolvers/quick-event";
 import { UploadResolver } from "./resolvers/upload";
 import { UserResolver } from "./resolvers/user";
 import { createClubLoader } from "./utils/createClubLoader";
@@ -57,6 +59,7 @@ const main = async () => {
       ClubRequestedMember,
       Sport,
       ClubSport,
+      QuickEvent,
     ],
     migrations: [path.join(__dirname, "./migrations/*")],
   });
@@ -71,6 +74,7 @@ const main = async () => {
   // await ClubRequestedMember.delete({});
   // await Club.delete({});
   // await User.delete({});
+  // await QuickEvent.delete({});
 
   await conn.runMigrations();
 
@@ -122,6 +126,7 @@ const main = async () => {
         ClubResolver,
         PublicityTypeResolver,
         UploadResolver,
+        QuickEventResolver,
       ],
       validate: false,
     }),

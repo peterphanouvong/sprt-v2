@@ -28,6 +28,7 @@ const Event_1 = require("./entities/Event");
 const EventAttendee_1 = require("./entities/EventAttendee");
 const Post_1 = require("./entities/Post");
 const PublicityType_1 = require("./entities/PublicityType");
+const QuickEvent_1 = require("./entities/QuickEvent");
 const Sport_1 = require("./entities/Sport");
 const User_1 = require("./entities/User");
 const club_1 = require("./resolvers/club");
@@ -35,6 +36,7 @@ const event_1 = require("./resolvers/event");
 const hello_1 = require("./resolvers/hello");
 const post_1 = require("./resolvers/post");
 const publicityType_1 = require("./resolvers/publicityType");
+const quick_event_1 = require("./resolvers/quick-event");
 const upload_1 = require("./resolvers/upload");
 const user_1 = require("./resolvers/user");
 const createClubLoader_1 = require("./utils/createClubLoader");
@@ -60,6 +62,7 @@ const main = async () => {
             ClubRequestedMember_1.ClubRequestedMember,
             Sport_1.Sport,
             ClubSport_1.ClubSport,
+            QuickEvent_1.QuickEvent,
         ],
         migrations: [path_1.default.join(__dirname, "./migrations/*")],
     });
@@ -104,6 +107,7 @@ const main = async () => {
                 club_1.ClubResolver,
                 publicityType_1.PublicityTypeResolver,
                 upload_1.UploadResolver,
+                quick_event_1.QuickEventResolver,
             ],
             validate: false,
         }),
