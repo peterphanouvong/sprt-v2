@@ -1,15 +1,15 @@
 import { Button } from "@chakra-ui/button";
-import { Box, VStack } from "@chakra-ui/layout";
-import { FormLabel, useToast, Text } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/layout";
+import { Checkbox, Text, useToast } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import * as Yup from "yup";
 import { useJoinQuickEventMutation } from "../generated/graphql";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { InputField } from "./InputField";
-import { UploadeCovidCertificate } from "./UploadeCovidCertificate";
 interface Props {
   quickEventId: number;
+  isFull: boolean;
 }
 
 const QuickEventSchema = Yup.object().shape({
@@ -26,7 +26,7 @@ const QuickEventSchema = Yup.object().shape({
     .required("This field is required"),
 });
 
-const JoinQuickEventForm: React.FC<Props> = ({ quickEventId }) => {
+const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
   const [, joinQuickEvent] = useJoinQuickEventMutation();
   const toast = useToast();
   const isMobile = useIsMobileScreen();
@@ -34,6 +34,8 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId }) => {
   const [hasJoined, setHasJoined] = useState(
     !!localStorage.getItem(String(quickEventId))
   );
+
+  const [isVaccinated, setIsVaccinated] = useState(false);
   return (
     <Formik
       initialValues={{
@@ -44,6 +46,16 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId }) => {
       }}
       validationSchema={QuickEventSchema}
       onSubmit={async (values) => {
+        if (!isVaccinated) {
+          toast({
+            description: "You must confirm that you're vaccinated to join.",
+            isClosable: true,
+            position: "top",
+            status: "warning",
+            variant: "subtle",
+          });
+          return;
+        }
         console.log(values);
         const { error } = await joinQuickEvent({
           joinQuickEventId: quickEventId,
@@ -98,12 +110,21 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId }) => {
               disabled={hasJoined}
             />
 
-            <Box>
+            {/* <Box>
               <FormLabel>
                 <Text>Proof of vaccination</Text>
               </FormLabel>
               <UploadeCovidCertificate />
-            </Box>
+            </Box> */}
+
+            <Checkbox
+              checked={isVaccinated}
+              onChange={() => setIsVaccinated(!isVaccinated)}
+              colorScheme="blue"
+              isDisabled={hasJoined}
+            >
+              <Text variant="body-2">I am fully vaccinated</Text>
+            </Checkbox>
 
             <Button
               type={hasJoined ? "button" : "submit"}
@@ -111,7 +132,11 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId }) => {
               size={isMobile ? "md" : "lg"}
               isLoading={props.isSubmitting}
             >
-              {hasJoined ? "You're in" : "Join event!"}
+              {hasJoined
+                ? "You're in"
+                : isFull
+                ? "Join waitlist"
+                : "Join event!"}
             </Button>
           </VStack>
         </Form>

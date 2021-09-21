@@ -80,6 +80,13 @@ const JoinQuickEvent = () => {
   };
 
   if (!queryData) return <>popp</>;
+  const spotsLeft = Math.max(
+    queryData.quickEvent?.capacity! -
+      (attendees
+        ? attendees.length
+        : JSON.parse(queryData.quickEvent?.users!).length),
+    0
+  );
 
   return (
     <MobileLayout>
@@ -96,12 +103,7 @@ const JoinQuickEvent = () => {
           <Box textAlign="center" my={6}>
             {queryData.quickEvent?.capacity ? (
               <>
-                <Heading variant="h3">
-                  {queryData.quickEvent?.capacity -
-                    (attendees
-                      ? attendees.length
-                      : JSON.parse(queryData.quickEvent?.users).length)}
-                </Heading>
+                <Heading variant="h3">{spotsLeft}</Heading>
                 <Text variant="body-3">spot(s) left</Text>
               </>
             ) : (
@@ -147,7 +149,7 @@ const JoinQuickEvent = () => {
             Join event
           </Heading>
 
-          <JoinQuickEventForm quickEventId={intId} />
+          <JoinQuickEventForm quickEventId={intId} isFull={spotsLeft === 0} />
         </>
       ) : (
         <>
@@ -184,6 +186,7 @@ const JoinQuickEvent = () => {
             <Table>
               <Thead>
                 <Tr>
+                  <Th></Th>
                   <Th>First</Th>
                   <Th>Last</Th>
                   <Th>Email</Th>
@@ -198,24 +201,43 @@ const JoinQuickEvent = () => {
                     (a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)
                   )
                   .map(
-                    (user: {
-                      email: string;
-                      firstName: string;
-                      lastName: string;
-                      createdAt: string;
-                    }) => {
+                    (
+                      user: {
+                        email: string;
+                        firstName: string;
+                        lastName: string;
+                        createdAt: string;
+                      },
+                      idx
+                    ) => {
                       return (
-                        <Tr key={user.email}>
-                          <Td>{user.firstName}</Td>
-                          <Td>{user.lastName}</Td>
-                          <Td>{user.email}</Td>
-                          <Td>
-                            {format(
-                              Date.parse(user.createdAt),
-                              "K:mm aa, do MMMM"
-                            )}
-                          </Td>
-                        </Tr>
+                        <>
+                          {idx === queryData.quickEvent?.capacity && (
+                            <Tr>
+                              <Th>Waitlist</Th>
+                              <Th></Th>
+                              <Th></Th>
+                              <Th></Th>
+                              <Th></Th>
+                            </Tr>
+                          )}
+                          <Tr key={user.email}>
+                            <Td>
+                              {idx >= queryData.quickEvent?.capacity!
+                                ? queryData.quickEvent?.capacity! - idx + 1
+                                : idx + 1}
+                            </Td>
+                            <Td>{user.firstName}</Td>
+                            <Td>{user.lastName}</Td>
+                            <Td>{user.email}</Td>
+                            <Td>
+                              {format(
+                                Date.parse(user.createdAt),
+                                "K:mmaaa dd/MM"
+                              )}
+                            </Td>
+                          </Tr>
+                        </>
                       );
                     }
                   )}
