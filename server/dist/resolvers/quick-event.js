@@ -13,9 +13,9 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.QuickEventResolver = void 0;
-const QuickEvent_1 = require("../entities/QuickEvent");
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
+const QuickEvent_1 = require("../entities/QuickEvent");
 let QuickEventInput = class QuickEventInput {
 };
 __decorate([
@@ -33,9 +33,38 @@ __decorate([
 QuickEventInput = __decorate([
     type_graphql_1.InputType()
 ], QuickEventInput);
+let QuickEventUserInput = class QuickEventUserInput {
+};
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], QuickEventUserInput.prototype, "firstName", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], QuickEventUserInput.prototype, "lastName", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], QuickEventUserInput.prototype, "email", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", String)
+], QuickEventUserInput.prototype, "createdAt", void 0);
+QuickEventUserInput = __decorate([
+    type_graphql_1.InputType()
+], QuickEventUserInput);
 let QuickEventResolver = class QuickEventResolver {
-    async createQuickEvent(input) {
+    async newQuickEvent(quickEvent, id) {
+        console.log("ON SUBSCRIBE");
+        if (quickEvent === undefined) {
+            return QuickEvent_1.QuickEvent.findOne(id);
+        }
+        return quickEvent;
+    }
+    async createQuickEvent(input, pubSub) {
         const event = await QuickEvent_1.QuickEvent.create(Object.assign({}, input)).save();
+        await pubSub.publish(`QUICK-EVENT-${event.id}`, event);
         return QuickEvent_1.QuickEvent.findOne(event.id);
     }
     quickEvent(id) {
@@ -53,12 +82,51 @@ let QuickEventResolver = class QuickEventResolver {
             .execute();
         return raw[0];
     }
+    async joinQuickEvent(input, id, pubSub) {
+        const event = await QuickEvent_1.QuickEvent.findOne(id);
+        console.log(event === null || event === void 0 ? void 0 : event.users);
+        let userString = "";
+        if (event === null || event === void 0 ? void 0 : event.users) {
+            let users = JSON.parse(event.users);
+            users.forEach((user) => {
+                if (user.email === input.email) {
+                    throw Error("An attendee with that email already exists");
+                }
+            });
+            users.push(input);
+            userString = JSON.stringify(users);
+            console.log(JSON.parse(userString));
+        }
+        const { raw } = await typeorm_1.getConnection()
+            .createQueryBuilder()
+            .update(QuickEvent_1.QuickEvent)
+            .set({ users: userString })
+            .where("id = :id", {
+            id,
+        })
+            .returning("*")
+            .execute();
+        await pubSub.publish(`QUICK-EVENT-${id}`, raw[0]);
+        return raw[0];
+    }
 };
+__decorate([
+    type_graphql_1.Subscription(() => QuickEvent_1.QuickEvent, {
+        topics: ({ args }) => `QUICK-EVENT-${args.id}`,
+    }),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Arg("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number]),
+    __metadata("design:returntype", Promise)
+], QuickEventResolver.prototype, "newQuickEvent", null);
 __decorate([
     type_graphql_1.Mutation(() => QuickEvent_1.QuickEvent),
     __param(0, type_graphql_1.Arg("input")),
+    __param(1, type_graphql_1.PubSub()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [QuickEventInput]),
+    __metadata("design:paramtypes", [QuickEventInput,
+        type_graphql_1.PubSubEngine]),
     __metadata("design:returntype", Promise)
 ], QuickEventResolver.prototype, "createQuickEvent", null);
 __decorate([
@@ -76,6 +144,15 @@ __decorate([
     __metadata("design:paramtypes", [Number, QuickEventInput]),
     __metadata("design:returntype", Promise)
 ], QuickEventResolver.prototype, "updateQuickEvent", null);
+__decorate([
+    type_graphql_1.Mutation(() => QuickEvent_1.QuickEvent),
+    __param(0, type_graphql_1.Arg("input")),
+    __param(1, type_graphql_1.Arg("id")),
+    __param(2, type_graphql_1.PubSub()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [QuickEventUserInput, Number, type_graphql_1.PubSubEngine]),
+    __metadata("design:returntype", Promise)
+], QuickEventResolver.prototype, "joinQuickEvent", null);
 QuickEventResolver = __decorate([
     type_graphql_1.Resolver(QuickEvent_1.QuickEvent)
 ], QuickEventResolver);

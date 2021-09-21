@@ -1,12 +1,12 @@
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
+import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";
 import router from "next/router";
 import {
   dedupExchange,
   Exchange,
-  // fetchExchange,
   stringifyVariables,
+  subscriptionExchange,
 } from "urql";
-import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";
 import { pipe, tap } from "wonka";
 import {
   AddAttendeeMutationVariables,
@@ -19,27 +19,29 @@ import {
   FeedDocument,
   FeedQuery,
   FollowClubMutationVariables,
+  JoinQuickEventMutation,
   LoginMutation,
   LogoutMutation,
   MeDocument,
   MeQuery,
+  QuickEventDocument,
+  QuickEventQuery,
   RegisterMutation,
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 import { isServer } from "./isServer";
+import { SubscriptionClient } from "subscriptions-transport-ws";
 
-const errorExchange: Exchange =
-  ({ forward }) =>
-  (ops$) => {
-    return pipe(
-      forward(ops$),
-      tap(({ error }) => {
-        if (error?.message.includes("not authenticated")) {
-          router.replace("/login");
-        }
-      })
-    );
-  };
+const errorExchange: Exchange = ({ forward }) => (ops$) => {
+  return pipe(
+    forward(ops$),
+    tap(({ error }) => {
+      if (error?.message.includes("not authenticated")) {
+        router.replace("/login");
+      }
+    })
+  );
+};
 
 export const cursorPagination = (): Resolver => {
   return (_parent, fieldArgs, cache, info) => {
@@ -82,6 +84,17 @@ export const cursorPagination = (): Resolver => {
   };
 };
 
+let subscriptionClient;
+
+if (process.browser) {
+  subscriptionClient = new SubscriptionClient(
+    "ws://localhost:4000/subscriptions",
+    {
+      reconnect: true,
+    }
+  );
+}
+
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   let cookie = "";
   if (isServer()) {
@@ -89,6 +102,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   }
   return {
     url: process.env.NEXT_PUBLIC_API_URL as string,
+
     fetchOptions: {
       credentials: "include" as const,
       headers: cookie
@@ -99,6 +113,10 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
     },
     exchanges: [
       dedupExchange,
+      subscriptionExchange({
+        forwardSubscription: (operation) =>
+          subscriptionClient.request(operation),
+      }),
       cacheExchange({
         keys: {
           PaginatedPosts: () => null,
@@ -110,6 +128,19 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
+            joinQuickEvent: (_result, _args, cache, _info) => {
+              betterUpdateQuery<JoinQuickEventMutation, QuickEventQuery>(
+                cache,
+                {
+                  query: QuickEventDocument,
+                  variables: { quickEventId: _args.id },
+                },
+                _result,
+                (res, _) => {
+                  return { quickEvent: res.joinQuickEvent };
+                }
+              );
+            },
             followClub: (_result, _args, cache, _info) => {
               cache.invalidate({
                 __typename: "Club",

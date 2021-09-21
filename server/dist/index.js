@@ -9,10 +9,13 @@ const cors_1 = __importDefault(require("cors"));
 require("dotenv-safe/config");
 const express_1 = __importDefault(require("express"));
 const express_session_1 = __importDefault(require("express-session"));
+const graphql_1 = require("graphql");
 const graphql_upload_1 = require("graphql-upload");
+const http_1 = require("http");
 const ioredis_1 = __importDefault(require("ioredis"));
 const path_1 = __importDefault(require("path"));
 require("reflect-metadata");
+const subscriptions_transport_ws_1 = require("subscriptions-transport-ws");
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const constants_1 = require("./constants");
@@ -96,21 +99,22 @@ const main = async () => {
         secret: process.env.SESSION_SECRET,
         resave: false,
     }));
+    const schema = await type_graphql_1.buildSchema({
+        resolvers: [
+            hello_1.HelloResolver,
+            post_1.PostResolver,
+            user_1.UserResolver,
+            event_1.EventResolver,
+            club_1.ClubResolver,
+            publicityType_1.PublicityTypeResolver,
+            upload_1.UploadResolver,
+            quick_event_1.QuickEventResolver,
+        ],
+        validate: false,
+    });
     const apolloServer = new apollo_server_express_1.ApolloServer({
         uploads: false,
-        schema: await type_graphql_1.buildSchema({
-            resolvers: [
-                hello_1.HelloResolver,
-                post_1.PostResolver,
-                user_1.UserResolver,
-                event_1.EventResolver,
-                club_1.ClubResolver,
-                publicityType_1.PublicityTypeResolver,
-                upload_1.UploadResolver,
-                quick_event_1.QuickEventResolver,
-            ],
-            validate: false,
-        }),
+        schema,
         context: ({ req, res }) => ({
             req,
             res,
@@ -126,7 +130,16 @@ const main = async () => {
         app,
         cors: false,
     });
-    app.listen(parseInt(process.env.PORT), () => {
+    const httpServer = http_1.createServer(app);
+    httpServer.listen(parseInt(process.env.PORT), () => {
+        new subscriptions_transport_ws_1.SubscriptionServer({
+            execute: graphql_1.execute,
+            subscribe: graphql_1.subscribe,
+            schema: schema,
+        }, {
+            server: httpServer,
+            path: "/subscriptions",
+        });
         console.log("server started on localhost:4000");
     });
 };

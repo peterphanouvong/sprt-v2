@@ -99,6 +99,9 @@ export type Mutation = {
   createPost: Post;
   updatePost?: Maybe<Post>;
   deletePost: Scalars['Boolean'];
+  createQuickEvent: QuickEvent;
+  updateQuickEvent?: Maybe<QuickEvent>;
+  joinQuickEvent: QuickEvent;
   uploadImage: Scalars['Boolean'];
   uploadBannerImage: Scalars['Boolean'];
   register: UserResponse;
@@ -198,6 +201,23 @@ export type MutationDeletePostArgs = {
 };
 
 
+export type MutationCreateQuickEventArgs = {
+  input: QuickEventInput;
+};
+
+
+export type MutationUpdateQuickEventArgs = {
+  input: QuickEventInput;
+  id: Scalars['Float'];
+};
+
+
+export type MutationJoinQuickEventArgs = {
+  id: Scalars['Float'];
+  input: QuickEventUserInput;
+};
+
+
 export type MutationUploadImageArgs = {
   file: Scalars['Upload'];
 };
@@ -272,6 +292,7 @@ export type Query = {
   posts: PaginatedPosts;
   post?: Maybe<Post>;
   publicityTypes: Array<PublicityType>;
+  quickEvent?: Maybe<QuickEvent>;
   me?: Maybe<User>;
   user?: Maybe<User>;
   userByUsername?: Maybe<User>;
@@ -310,6 +331,11 @@ export type QueryPostArgs = {
 };
 
 
+export type QueryQuickEventArgs = {
+  id: Scalars['Int'];
+};
+
+
 export type QueryUserArgs = {
   id: Scalars['Float'];
 };
@@ -317,6 +343,40 @@ export type QueryUserArgs = {
 
 export type QueryUserByUsernameArgs = {
   username: Scalars['String'];
+};
+
+export type QuickEvent = {
+  __typename?: 'QuickEvent';
+  id: Scalars['Int'];
+  title: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  capacity?: Maybe<Scalars['Float']>;
+  users: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+};
+
+export type QuickEventInput = {
+  title: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  capacity?: Maybe<Scalars['Float']>;
+};
+
+export type QuickEventUserInput = {
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  email: Scalars['String'];
+  createdAt: Scalars['String'];
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  newQuickEvent: QuickEvent;
+};
+
+
+export type SubscriptionNewQuickEventArgs = {
+  id: Scalars['Float'];
 };
 
 
@@ -405,6 +465,13 @@ export type CreatePostMutationVariables = Exact<{
 
 export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number, description: string, title: string, creatorId: number, createdAt: string, points: number, updatedAt: string, descriptionSnippet: string, creator: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string } } };
 
+export type CreateQuickEventMutationVariables = Exact<{
+  createQuickEventInput: QuickEventInput;
+}>;
+
+
+export type CreateQuickEventMutation = { __typename?: 'Mutation', createQuickEvent: { __typename?: 'QuickEvent', id: number, title: string, description?: Maybe<string>, capacity?: Maybe<number>, users: string, createdAt: string, updatedAt: string } };
+
 export type DeleteClubMutationVariables = Exact<{
   id: Scalars['Float'];
 }>;
@@ -440,6 +507,14 @@ export type ForgotPasswordMutationVariables = Exact<{
 
 
 export type ForgotPasswordMutation = { __typename?: 'Mutation', forgotPassword: boolean };
+
+export type JoinQuickEventMutationVariables = Exact<{
+  joinQuickEventId: Scalars['Float'];
+  joinQuickEventInput: QuickEventUserInput;
+}>;
+
+
+export type JoinQuickEventMutation = { __typename?: 'Mutation', joinQuickEvent: { __typename?: 'QuickEvent', id: number, title: string, description?: Maybe<string>, capacity?: Maybe<number>, users: string, updatedAt: string, createdAt: string } };
 
 export type LoginMutationVariables = Exact<{
   password: Scalars['String'];
@@ -576,12 +651,26 @@ export type PublicityTypesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type PublicityTypesQuery = { __typename?: 'Query', publicityTypes: Array<{ __typename?: 'PublicityType', id: number, name: string }> };
 
+export type QuickEventQueryVariables = Exact<{
+  quickEventId: Scalars['Int'];
+}>;
+
+
+export type QuickEventQuery = { __typename?: 'Query', quickEvent?: Maybe<{ __typename?: 'QuickEvent', id: number, title: string, description?: Maybe<string>, capacity?: Maybe<number>, users: string, createdAt: string, updatedAt: string }> };
+
 export type UserByUsernameQueryVariables = Exact<{
   username: Scalars['String'];
 }>;
 
 
 export type UserByUsernameQuery = { __typename?: 'Query', userByUsername?: Maybe<{ __typename?: 'User', id: number, username: string, email: string, firstname: string, lastname: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime?: Maybe<string>, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, firstname: string, lastname: string }> }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }> };
+
+export type NewQuickEventSubscriptionVariables = Exact<{
+  newQuickEventId: Scalars['Float'];
+}>;
+
+
+export type NewQuickEventSubscription = { __typename?: 'Subscription', newQuickEvent: { __typename?: 'QuickEvent', id: number, title: string, description?: Maybe<string>, capacity?: Maybe<number>, users: string, createdAt: string, updatedAt: string } };
 
 export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
@@ -810,6 +899,23 @@ export const CreatePostDocument = gql`
 export function useCreatePostMutation() {
   return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument);
 };
+export const CreateQuickEventDocument = gql`
+    mutation CreateQuickEvent($createQuickEventInput: QuickEventInput!) {
+  createQuickEvent(input: $createQuickEventInput) {
+    id
+    title
+    description
+    capacity
+    users
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+export function useCreateQuickEventMutation() {
+  return Urql.useMutation<CreateQuickEventMutation, CreateQuickEventMutationVariables>(CreateQuickEventDocument);
+};
 export const DeleteClubDocument = gql`
     mutation DeleteClub($id: Float!) {
   deleteClub(id: $id)
@@ -854,6 +960,23 @@ export const ForgotPasswordDocument = gql`
 
 export function useForgotPasswordMutation() {
   return Urql.useMutation<ForgotPasswordMutation, ForgotPasswordMutationVariables>(ForgotPasswordDocument);
+};
+export const JoinQuickEventDocument = gql`
+    mutation JoinQuickEvent($joinQuickEventId: Float!, $joinQuickEventInput: QuickEventUserInput!) {
+  joinQuickEvent(id: $joinQuickEventId, input: $joinQuickEventInput) {
+    id
+    title
+    description
+    capacity
+    users
+    updatedAt
+    createdAt
+  }
+}
+    `;
+
+export function useJoinQuickEventMutation() {
+  return Urql.useMutation<JoinQuickEventMutation, JoinQuickEventMutationVariables>(JoinQuickEventDocument);
 };
 export const LoginDocument = gql`
     mutation Login($password: String!, $usernameOrEmail: String!) {
@@ -1097,6 +1220,23 @@ export const PublicityTypesDocument = gql`
 export function usePublicityTypesQuery(options: Omit<Urql.UseQueryArgs<PublicityTypesQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<PublicityTypesQuery>({ query: PublicityTypesDocument, ...options });
 };
+export const QuickEventDocument = gql`
+    query QuickEvent($quickEventId: Int!) {
+  quickEvent(id: $quickEventId) {
+    id
+    title
+    description
+    capacity
+    users
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+export function useQuickEventQuery(options: Omit<Urql.UseQueryArgs<QuickEventQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<QuickEventQuery>({ query: QuickEventDocument, ...options });
+};
 export const UserByUsernameDocument = gql`
     query userByUsername($username: String!) {
   userByUsername(username: $username) {
@@ -1107,4 +1247,21 @@ export const UserByUsernameDocument = gql`
 
 export function useUserByUsernameQuery(options: Omit<Urql.UseQueryArgs<UserByUsernameQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<UserByUsernameQuery>({ query: UserByUsernameDocument, ...options });
+};
+export const NewQuickEventDocument = gql`
+    subscription newQuickEvent($newQuickEventId: Float!) {
+  newQuickEvent(id: $newQuickEventId) {
+    id
+    title
+    description
+    capacity
+    users
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+export function useNewQuickEventSubscription<TData = NewQuickEventSubscription>(options: Omit<Urql.UseSubscriptionArgs<NewQuickEventSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<NewQuickEventSubscription, TData>) {
+  return Urql.useSubscription<NewQuickEventSubscription, TData, NewQuickEventSubscriptionVariables>({ query: NewQuickEventDocument, ...options }, handler);
 };

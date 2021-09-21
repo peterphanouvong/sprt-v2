@@ -19,6 +19,7 @@
     "@urql/exchange-multipart-fetch": "^0.1.13",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
+    "apollo-link-ws": "^1.0.20",
     "apollo-upload-client": "^16.0.0",
     "axios": "^0.21.1",
     "date-fns": "^2.23.0",

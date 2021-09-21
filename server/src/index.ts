@@ -4,10 +4,13 @@ import cors from "cors";
 import "dotenv-safe/config";
 import express from "express";
 import session from "express-session";
+import { execute, subscribe } from "graphql";
 import { graphqlUploadExpress } from "graphql-upload";
+import { createServer } from "http";
 import Redis from "ioredis";
 import path from "path";
 import "reflect-metadata";
+import { SubscriptionServer } from "subscriptions-transport-ws";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
 import { COOKIE_NAME, __prod__ } from "./constants";
@@ -114,22 +117,24 @@ const main = async () => {
     })
   );
 
+  const schema = await buildSchema({
+    resolvers: [
+      HelloResolver,
+      PostResolver,
+      UserResolver,
+      EventResolver,
+      ClubResolver,
+      PublicityTypeResolver,
+      UploadResolver,
+      QuickEventResolver,
+    ],
+    validate: false,
+  });
+
   const apolloServer = new ApolloServer({
     // @ts-ignore
     uploads: false,
-    schema: await buildSchema({
-      resolvers: [
-        HelloResolver,
-        PostResolver,
-        UserResolver,
-        EventResolver,
-        ClubResolver,
-        PublicityTypeResolver,
-        UploadResolver,
-        QuickEventResolver,
-      ],
-      validate: false,
-    }),
+    schema,
     context: ({ req, res }) => ({
       req,
       res,
@@ -148,7 +153,20 @@ const main = async () => {
     cors: false,
   });
 
-  app.listen(parseInt(process.env.PORT), () => {
+  const httpServer = createServer(app);
+
+  httpServer.listen(parseInt(process.env.PORT), () => {
+    new SubscriptionServer(
+      {
+        execute,
+        subscribe,
+        schema: schema,
+      },
+      {
+        server: httpServer,
+        path: "/subscriptions",
+      }
+    );
     console.log("server started on localhost:4000");
   });
 };

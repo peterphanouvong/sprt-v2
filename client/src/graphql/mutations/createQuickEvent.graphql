@@ -1,0 +1,11 @@
+mutation CreateQuickEvent($createQuickEventInput: QuickEventInput!) {
+  createQuickEvent(input: $createQuickEventInput) {
+    id
+    title
+    description
+    capacity
+    users
+    createdAt
+    updatedAt
+  }
+}

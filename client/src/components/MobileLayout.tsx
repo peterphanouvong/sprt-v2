@@ -5,7 +5,7 @@ interface Props {}
 
 const MobileLayout: React.FC<Props> = ({ children }) => {
   return (
-    <Container maxW="lg" padding={4}>
+    <Container maxW="lg" padding={6}>
       {children}
     </Container>
   );

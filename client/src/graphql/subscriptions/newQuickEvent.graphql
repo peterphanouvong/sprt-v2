@@ -1,0 +1,11 @@
+subscription newQuickEvent($newQuickEventId: Float!) {
+  newQuickEvent(id: $newQuickEventId) {
+    id
+    title
+    description
+    capacity
+    users
+    createdAt
+    updatedAt
+  }
+}

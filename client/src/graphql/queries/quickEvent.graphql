@@ -1,0 +1,11 @@
+query QuickEvent($quickEventId: Int!) {
+  quickEvent(id: $quickEventId) {
+    id
+    title
+    description
+    capacity
+    users
+    createdAt
+    updatedAt
+  }
+}
