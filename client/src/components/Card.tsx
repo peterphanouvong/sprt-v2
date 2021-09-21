@@ -11,13 +11,12 @@ const Card: React.FC<Props> = ({ children, onClick, ...props }) => {
   }>({ backgroundColor: "", shadow: "md" });
   return (
     <Box
-      // onClick={onClick}
       borderWidth="1px"
       borderRadius="lg"
       overflow="hidden"
       padding={4}
       shadow={!!onClick ? cardStyle.shadow : "md"}
-      backgroundColor={!!onClick ? cardStyle.backgroundColor : ""}
+      backgroundColor={!!onClick ? cardStyle.backgroundColor : "white"}
       transition="0.2s ease"
       onTouchStartCapture={
         !!onClick

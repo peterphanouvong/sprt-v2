@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BackButton Snapshot 1`] = `
+<IconButton
+  aria-label="back-button"
+  colorScheme="gray"
+  icon={<ChevronLeftIcon />}
+  isRound={true}
+  onClick={[Function]}
+  variant="solid"
+/>
+`;

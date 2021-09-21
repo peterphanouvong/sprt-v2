@@ -6,6 +6,9 @@ fragment RegularClub on Club {
   description
   createdAt
   updatedAt
+  facebookLink
+  instagramLink
+  websiteLink
   admins {
     ...RegularUser
   }

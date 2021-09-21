@@ -9,7 +9,7 @@ interface Props {
 
 const ActiveLink: React.FC<Props> = ({ children, href }) => {
   const router = useRouter();
-  const isActive = router.pathname === href;
+  const isActive = router?.pathname === href;
   return (
     <Box
       _hover={{ borderBottom: "1px solid", borderColor: "gray.300" }}

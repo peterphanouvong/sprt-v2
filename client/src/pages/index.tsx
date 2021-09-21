@@ -64,6 +64,11 @@ const Index = () => {
                 Get started for free
               </Button>
             </NextLink>
+            <NextLink href="/quick-event">
+              <Button mt={4} size={buttonSize} variant="outline">
+                Create a quick event
+              </Button>
+            </NextLink>
           </Box>
         </Center>
       </Layout>

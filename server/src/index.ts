@@ -1,41 +1,45 @@
-import "reflect-metadata";
-import express from "express";
-import "dotenv-safe/config";
-import Redis from "ioredis";
-import session from "express-session";
+import { ApolloServer } from "apollo-server-express";
 import connectRedis from "connect-redis";
 import cors from "cors";
-import { createConnection } from "typeorm";
-import { ApolloServer } from "apollo-server-express";
-import { buildSchema } from "type-graphql";
+import "dotenv-safe/config";
+import express from "express";
+import session from "express-session";
+import { execute, subscribe } from "graphql";
+import { graphqlUploadExpress } from "graphql-upload";
+import { createServer } from "http";
+import Redis from "ioredis";
 import path from "path";
-
+import "reflect-metadata";
+import { SubscriptionServer } from "subscriptions-transport-ws";
+import { buildSchema } from "type-graphql";
+import { createConnection } from "typeorm";
 import { COOKIE_NAME, __prod__ } from "./constants";
-import { createUserLoader } from "./utils/createUserLoader";
-import { createClubLoader } from "./utils/createClubLoader";
-import { createEventLoader } from "./utils/createEventLoader";
-
-import { HelloResolver } from "./resolvers/hello";
-import { PostResolver } from "./resolvers/post";
-import { UserResolver } from "./resolvers/user";
-import { EventResolver } from "./resolvers/event";
-import { ClubResolver } from "./resolvers/club";
-
-import { Post } from "./entities/Post";
-import { User } from "./entities/User";
-import { Event } from "./entities/Event";
 import { Club } from "./entities/Club";
+import { ClubAdmin } from "./entities/ClubAdmin";
 import { ClubEvent } from "./entities/ClubEvent";
-import { Sport } from "./entities/Sport";
-import { ClubSport } from "./entities/ClubSport";
 import { ClubFollower } from "./entities/ClubFollower";
 import { ClubMember } from "./entities/ClubMember";
-import { ClubAdmin } from "./entities/ClubAdmin";
-import { EventAttendee } from "./entities/EventAttendee";
 import { ClubRequestedMember } from "./entities/ClubRequestedMember";
-import { PublicityType } from "./entities/PublicityType";
+import { ClubSport } from "./entities/ClubSport";
 import { CreatorType } from "./entities/CreatorType";
+import { Event } from "./entities/Event";
+import { EventAttendee } from "./entities/EventAttendee";
+import { Post } from "./entities/Post";
+import { PublicityType } from "./entities/PublicityType";
+import { QuickEvent } from "./entities/QuickEvent";
+import { Sport } from "./entities/Sport";
+import { User } from "./entities/User";
+import { ClubResolver } from "./resolvers/club";
+import { EventResolver } from "./resolvers/event";
+import { HelloResolver } from "./resolvers/hello";
+import { PostResolver } from "./resolvers/post";
 import { PublicityTypeResolver } from "./resolvers/publicityType";
+import { QuickEventResolver } from "./resolvers/quick-event";
+import { UploadResolver } from "./resolvers/upload";
+import { UserResolver } from "./resolvers/user";
+import { createClubLoader } from "./utils/createClubLoader";
+import { createEventLoader } from "./utils/createEventLoader";
+import { createUserLoader } from "./utils/createUserLoader";
 
 const main = async () => {
   const conn = await createConnection({
@@ -58,6 +62,7 @@ const main = async () => {
       ClubRequestedMember,
       Sport,
       ClubSport,
+      QuickEvent,
     ],
     migrations: [path.join(__dirname, "./migrations/*")],
   });
@@ -72,6 +77,7 @@ const main = async () => {
   // await ClubRequestedMember.delete({});
   // await Club.delete({});
   // await User.delete({});
+  // await QuickEvent.delete({});
 
   await conn.runMigrations();
 
@@ -111,18 +117,24 @@ const main = async () => {
     })
   );
 
+  const schema = await buildSchema({
+    resolvers: [
+      HelloResolver,
+      PostResolver,
+      UserResolver,
+      EventResolver,
+      ClubResolver,
+      PublicityTypeResolver,
+      UploadResolver,
+      QuickEventResolver,
+    ],
+    validate: false,
+  });
+
   const apolloServer = new ApolloServer({
-    schema: await buildSchema({
-      resolvers: [
-        HelloResolver,
-        PostResolver,
-        UserResolver,
-        EventResolver,
-        ClubResolver,
-        PublicityTypeResolver,
-      ],
-      validate: false,
-    }),
+    // @ts-ignore
+    uploads: false,
+    schema,
     context: ({ req, res }) => ({
       req,
       res,
@@ -134,13 +146,27 @@ const main = async () => {
   });
 
   await apolloServer.start();
+  app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 
   apolloServer.applyMiddleware({
     app,
     cors: false,
   });
 
-  app.listen(parseInt(process.env.PORT), () => {
+  const httpServer = createServer(app);
+
+  httpServer.listen(parseInt(process.env.PORT), () => {
+    new SubscriptionServer(
+      {
+        execute,
+        subscribe,
+        schema: schema,
+      },
+      {
+        server: httpServer,
+        path: "/subscriptions",
+      }
+    );
     console.log("server started on localhost:4000");
   });
 };
