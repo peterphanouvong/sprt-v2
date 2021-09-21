@@ -88,7 +88,8 @@ let subscriptionClient;
 
 if (process.browser) {
   subscriptionClient = new SubscriptionClient(
-    "ws://localhost:4000/subscriptions",
+    //@ts-ignore
+    process.env.NEXT_PUBLIC_SUBSCRIPTION_API_URL,
     {
       reconnect: true,
     }
