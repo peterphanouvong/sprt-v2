@@ -30,5 +30,5 @@
     "cypress/support/index.js",
     "cypress/support/commands.js"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "coverage", "cypress"]
 }

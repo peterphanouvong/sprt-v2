@@ -1,7 +1,6 @@
 import { Box, Heading, Stack, Text } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import React from "react";
 import { BackButton } from "../components/BackButton";
 import Logo from "../components/Logo";

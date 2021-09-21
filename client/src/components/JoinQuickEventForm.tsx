@@ -40,7 +40,7 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId }) => {
         firstName: "",
         lastName: "",
         email: "",
-        createdAt: new Date(),
+        createdAt: new Date().toString(),
       }}
       validationSchema={QuickEventSchema}
       onSubmit={async (values) => {
