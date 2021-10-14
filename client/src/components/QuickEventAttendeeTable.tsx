@@ -36,7 +36,7 @@ const QuickEventAttendeeTable: React.FC<Props> = ({
             <Th>Joined</Th>
             {isAdmin && (
               <>
-                <Th>Email</Th>
+                <Th>Phone</Th>
                 <Th>BeemID</Th>
                 <Th>Status</Th>
                 <Th></Th>
