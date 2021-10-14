@@ -5,9 +5,10 @@ import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import React from "react";
 import { useCreateQuickEventMutation } from "../generated/graphql";
+import { parseRichText } from "../utils/parseRichText";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
+import { DynamicEditor } from "./DynamicEditor";
 import { InputField } from "./InputField";
-import { TextareaField } from "./TextareaField";
 
 interface Props {}
 
@@ -21,14 +22,17 @@ const QuickEventForm: React.FC<Props> = ({}) => {
     <Formik
       initialValues={{
         title: "",
-        description: "",
+        description: parseRichText(""),
         capacity: undefined,
       }}
       onSubmit={async (values) => {
         console.log(values);
 
         const { error, data } = await createQuickEvent({
-          createQuickEventInput: { ...values },
+          createQuickEventInput: {
+            ...values,
+            description: JSON.stringify(values.description),
+          },
         });
 
         if (error) {
@@ -63,7 +67,13 @@ const QuickEventForm: React.FC<Props> = ({}) => {
               width={20}
             />
 
-            <TextareaField label="Description" name="description" />
+            {/* <TextareaField label="Description" name="description" /> */}
+            <DynamicEditor
+              label="Description"
+              setFieldValue={props.setFieldValue}
+              name="description"
+              initialValue={props.values.description}
+            />
 
             <Button
               isLoading={props.isSubmitting}

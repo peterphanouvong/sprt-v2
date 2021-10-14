@@ -18,6 +18,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { CSVLink } from "react-csv";
+import { DynamicEditor } from "../../components/DynamicEditor";
 import { JoinQuickEventForm } from "../../components/JoinQuickEventForm";
 import { MobileLayout } from "../../components/MobileLayout";
 import { QuickEventTables } from "../../components/QuickEventTables";
@@ -27,6 +28,7 @@ import {
   useQuickEventQuery,
 } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
+import { parseRichText } from "../../utils/parseRichText";
 import { useIsMobileScreen } from "../../utils/useIsMobileScreen";
 
 const JoinQuickEvent = () => {
@@ -93,7 +95,13 @@ const JoinQuickEvent = () => {
           <Heading as="h1" variant="h1">
             {queryData.quickEvent?.title}
           </Heading>
-          <Text>{queryData.quickEvent?.description}</Text>
+          <DynamicEditor
+            name="description"
+            initialValue={parseRichText(
+              queryData.quickEvent?.description || ""
+            )}
+            readOnly={true}
+          />
 
           <Box textAlign="center" my={6}>
             {queryData.quickEvent?.capacity ? (
