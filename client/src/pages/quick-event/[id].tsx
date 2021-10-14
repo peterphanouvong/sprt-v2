@@ -13,7 +13,6 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { data } from "msw/lib/types/context";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import { useRouter } from "next/router";

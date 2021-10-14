@@ -9,7 +9,6 @@ import { parseRichText } from "../utils/parseRichText";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { DynamicEditor } from "./DynamicEditor";
 import { InputField } from "./InputField";
-import { TextareaField } from "./TextareaField";
 
 interface Props {}
 
