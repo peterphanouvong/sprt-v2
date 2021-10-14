@@ -16,7 +16,7 @@ import { QuickEvent } from "../entities/QuickEvent";
 
 @InputType()
 class QuickEventInput {
-  @Field()
+  @Field({ nullable: true })
   title: string;
 
   @Field({ nullable: true })
@@ -24,6 +24,9 @@ class QuickEventInput {
 
   @Field({ nullable: true })
   capacity: number;
+
+  @Field({ nullable: true })
+  users: string;
 }
 
 @InputType()
@@ -36,6 +39,12 @@ class QuickEventUserInput {
 
   @Field()
   email: string;
+
+  @Field()
+  beemId: string;
+
+  @Field()
+  status: string;
 
   @Field()
   createdAt: string;
@@ -54,7 +63,6 @@ export class QuickEventResolver {
     @Root() quickEvent: QuickEvent | undefined,
     @Arg("id") id: number
   ): Promise<QuickEvent | undefined> {
-    console.log("ON SUBSCRIBE");
     if (quickEvent === undefined) {
       return QuickEvent.findOne(id);
     }
@@ -86,7 +94,8 @@ export class QuickEventResolver {
   @Mutation(() => QuickEvent, { nullable: true })
   async updateQuickEvent(
     @Arg("id") id: number,
-    @Arg("input") input: QuickEventInput
+    @Arg("input") input: QuickEventInput,
+    @PubSub() pubSub: PubSubEngine
   ): Promise<QuickEvent | null> {
     const { raw } = await getConnection()
       .createQueryBuilder()
@@ -97,6 +106,8 @@ export class QuickEventResolver {
       })
       .returning("*")
       .execute();
+
+    await pubSub.publish(`QUICK-EVENT-${id}`, raw[0]);
     return raw[0];
   }
 
@@ -115,7 +126,6 @@ export class QuickEventResolver {
   ): Promise<QuickEvent | undefined> {
     const event = await QuickEvent.findOne(id);
 
-    console.log(event?.users);
     let userString = "";
     if (event?.users) {
       let users = JSON.parse(event.users);
@@ -128,8 +138,6 @@ export class QuickEventResolver {
 
       users.push(input);
       userString = JSON.stringify(users);
-
-      console.log(JSON.parse(userString));
     }
 
     const { raw } = await getConnection()

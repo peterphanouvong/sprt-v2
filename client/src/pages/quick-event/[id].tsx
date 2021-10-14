@@ -10,32 +10,28 @@ import {
   Flex,
   Heading,
   IconButton,
-  Table,
-  Tbody,
-  Td,
   Text,
-  Th,
-  Thead,
-  Tr,
   useToast,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
-import { CSVLink } from "react-csv";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { CSVLink } from "react-csv";
 import { JoinQuickEventForm } from "../../components/JoinQuickEventForm";
 import { MobileLayout } from "../../components/MobileLayout";
+import { QuickEventTables } from "../../components/QuickEventTables";
+import { ViewAsAdminModal } from "../../components/ViewAsAdminModal";
 import {
   useNewQuickEventSubscription,
   useQuickEventQuery,
 } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useIsMobileScreen } from "../../utils/useIsMobileScreen";
-import { format } from "date-fns";
 
 const JoinQuickEvent = () => {
   const [page, setPage] = useState<"join" | "attendees">("join");
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   const router = useRouter();
   const toast = useToast();
@@ -52,7 +48,6 @@ const JoinQuickEvent = () => {
   });
 
   const getAttendees = (_, result) => {
-    console.log(result);
     return JSON.parse(result.newQuickEvent.users);
     // return result;
   };
@@ -89,9 +84,9 @@ const JoinQuickEvent = () => {
   );
 
   return (
-    <MobileLayout>
+    <Box maxW="1440px" margin="auto" padding={4}>
       {page === "join" ? (
-        <>
+        <MobileLayout>
           <Head>
             <title>Join {queryData.quickEvent?.title} | sprt</title>
           </Head>
@@ -150,7 +145,16 @@ const JoinQuickEvent = () => {
           </Heading>
 
           <JoinQuickEventForm quickEventId={intId} isFull={spotsLeft === 0} />
-        </>
+          {loggedIn ? (
+            <div>
+              <Text mt={4} variant="body-2" color="blue.500">
+                Viewing as Admin
+              </Text>
+            </div>
+          ) : (
+            <ViewAsAdminModal setLoggedIn={setLoggedIn} />
+          )}
+        </MobileLayout>
       ) : (
         <>
           <IconButton
@@ -161,92 +165,45 @@ const JoinQuickEvent = () => {
             onClick={() => setPage("join")}
             variant="outline"
           />
-          <Heading mt={4} as="h3" variant="h3">
-            Attendees
-          </Heading>
 
-          <CSVLink
-            filename={`${queryData.quickEvent?.title.replaceAll(
-              " ",
-              "_"
-            )}_attendees`}
-            data={JSON.parse(queryData.quickEvent?.users as string)}
-          >
-            <Button
-              size={isMobile ? "xs" : "sm"}
-              my={4}
-              colorScheme="gray"
-              rightIcon={<DownloadIcon />}
+          {loggedIn && (
+            <CSVLink
+              filename={`${queryData.quickEvent?.title.replaceAll(
+                " ",
+                "_"
+              )}_attendees`}
+              data={JSON.parse(queryData.quickEvent?.users as string)}
             >
-              Download list of attendees
-            </Button>
-          </CSVLink>
+              <Button
+                size={isMobile ? "xs" : "sm"}
+                my={4}
+                colorScheme="gray"
+                rightIcon={<DownloadIcon />}
+              >
+                Download list of attendees
+              </Button>
+            </CSVLink>
+          )}
 
-          <Box overflowX="auto">
-            <Table>
-              <Thead>
-                <Tr>
-                  <Th></Th>
-                  <Th>First</Th>
-                  <Th>Last</Th>
-                  <Th>Email</Th>
-                  <Th>Joined</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {(
-                  attendees || JSON.parse(queryData.quickEvent?.users as string)
-                )
-                  .sort(
-                    (a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)
-                  )
-                  .map(
-                    (
-                      user: {
-                        email: string;
-                        firstName: string;
-                        lastName: string;
-                        createdAt: string;
-                      },
-                      idx
-                    ) => {
-                      return (
-                        <>
-                          {idx === queryData.quickEvent?.capacity && (
-                            <Tr>
-                              <Th>Waitlist</Th>
-                              <Th></Th>
-                              <Th></Th>
-                              <Th></Th>
-                              <Th></Th>
-                            </Tr>
-                          )}
-                          <Tr key={user.email}>
-                            <Td>
-                              {idx >= queryData.quickEvent?.capacity!
-                                ? queryData.quickEvent?.capacity! - idx + 1
-                                : idx + 1}
-                            </Td>
-                            <Td>{user.firstName}</Td>
-                            <Td>{user.lastName}</Td>
-                            <Td>{user.email}</Td>
-                            <Td>
-                              {format(
-                                Date.parse(user.createdAt),
-                                "K:mmaaa dd/MM"
-                              )}
-                            </Td>
-                          </Tr>
-                        </>
-                      );
-                    }
-                  )}
-              </Tbody>
-            </Table>
-          </Box>
+          <QuickEventTables
+            isAdmin={loggedIn}
+            attendees={attendees}
+            queryData={queryData}
+            quickEventId={intId}
+          />
+
+          {loggedIn ? (
+            <div>
+              <Text mt={4} variant="body-2" color="blue.500">
+                Viewing as Admin
+              </Text>
+            </div>
+          ) : (
+            <ViewAsAdminModal setLoggedIn={setLoggedIn} />
+          )}
         </>
       )}
-    </MobileLayout>
+    </Box>
   );
 };
 
