@@ -86,7 +86,7 @@ const ViewAttendeesModalButton: React.FC<Props> = ({
             padding={4}
           >
             <Heading variant="h5" as="h5">
-              Event attendees
+              Login
             </Heading>
             <CloseButton onClick={onClose} />
           </Box>

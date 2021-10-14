@@ -357,15 +357,18 @@ export type QuickEvent = {
 };
 
 export type QuickEventInput = {
-  title: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   capacity?: Maybe<Scalars['Float']>;
+  users?: Maybe<Scalars['String']>;
 };
 
 export type QuickEventUserInput = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
   email: Scalars['String'];
+  beemId: Scalars['String'];
+  status: Scalars['String'];
   createdAt: Scalars['String'];
 };
 
@@ -567,6 +570,14 @@ export type UpdateEventMutationVariables = Exact<{
 
 
 export type UpdateEventMutation = { __typename?: 'Mutation', updateEvent?: Maybe<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime?: Maybe<string>, hostId: number, points: number, creatorTypeId: number, publicityTypeId: number, clubId?: Maybe<number>, createdAt: string, updatedAt: string, host: { __typename?: 'User', id: number, firstname: string, lastname: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, email: string, firstname: string, lastname: string, events?: Maybe<Array<{ __typename?: 'Event', id: number, title: string, description: string, location: string, capacity?: Maybe<number>, startTime: string, endTime?: Maybe<string>, host: { __typename?: 'User', id: number, username: string, email: string, createdAt: string, updatedAt: string }, attendees: Array<{ __typename?: 'User', id: number, username: string, firstname: string, lastname: string }> }>>, followingClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>>, adminClubs?: Maybe<Array<{ __typename?: 'Club', id: number, name: string, email: string }>> }>, club?: Maybe<{ __typename?: 'Club', id: number, name: string }> }> };
+
+export type UpdateQuickEventMutationVariables = Exact<{
+  updateQuickEventInput: QuickEventInput;
+  updateQuickEventId: Scalars['Float'];
+}>;
+
+
+export type UpdateQuickEventMutation = { __typename?: 'Mutation', updateQuickEvent?: Maybe<{ __typename?: 'QuickEvent', id: number, title: string, description?: Maybe<string>, capacity?: Maybe<number>, users: string, createdAt: string }> };
 
 export type UploadBannerImageMutationVariables = Exact<{
   clubname: Scalars['String'];
@@ -1048,6 +1059,22 @@ export const UpdateEventDocument = gql`
 
 export function useUpdateEventMutation() {
   return Urql.useMutation<UpdateEventMutation, UpdateEventMutationVariables>(UpdateEventDocument);
+};
+export const UpdateQuickEventDocument = gql`
+    mutation UpdateQuickEvent($updateQuickEventInput: QuickEventInput!, $updateQuickEventId: Float!) {
+  updateQuickEvent(input: $updateQuickEventInput, id: $updateQuickEventId) {
+    id
+    title
+    description
+    capacity
+    users
+    createdAt
+  }
+}
+    `;
+
+export function useUpdateQuickEventMutation() {
+  return Urql.useMutation<UpdateQuickEventMutation, UpdateQuickEventMutationVariables>(UpdateQuickEventDocument);
 };
 export const UploadBannerImageDocument = gql`
     mutation UploadBannerImage($clubname: String!, $file: Upload!) {

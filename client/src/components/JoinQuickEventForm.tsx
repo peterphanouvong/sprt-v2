@@ -24,6 +24,10 @@ const QuickEventSchema = Yup.object().shape({
     .trim("The last name cannot include leading and trailing spaces")
     .strict()
     .required("This field is required"),
+  beemId: Yup.string()
+    .trim("The first name cannot include leading and trailing spaces")
+    .strict()
+    .required("This field is required"),
 });
 
 const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
@@ -43,6 +47,8 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
         lastName: "",
         email: "",
         createdAt: new Date().toString(),
+        beemId: "",
+        status: "waitlist",
       }}
       validationSchema={QuickEventSchema}
       onSubmit={async (values) => {
@@ -56,7 +62,6 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
           });
           return;
         }
-        console.log(values);
         const { error } = await joinQuickEvent({
           joinQuickEventId: quickEventId,
           joinQuickEventInput: values,
@@ -106,6 +111,14 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
               name="email"
               label="Email"
               touched={props.touched.email as boolean}
+              required
+              disabled={hasJoined}
+            />
+            <InputField
+              name="beemId"
+              label="BeemID or PayID"
+              touched={props.touched.email as boolean}
+              placeholder="@myBeemAccount"
               required
               disabled={hasJoined}
             />
