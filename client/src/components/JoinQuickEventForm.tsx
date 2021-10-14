@@ -13,9 +13,7 @@ interface Props {
 }
 
 const QuickEventSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Email is invalid")
-    .required("This field is required"),
+  email: Yup.string().required("This field is required"),
   firstName: Yup.string()
     .trim("The first name cannot include leading and trailing spaces")
     .strict()
@@ -109,7 +107,7 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
             />
             <InputField
               name="email"
-              label="Email"
+              label="Phone number"
               touched={props.touched.email as boolean}
               required
               disabled={hasJoined}
