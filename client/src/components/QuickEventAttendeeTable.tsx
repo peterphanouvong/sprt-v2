@@ -191,9 +191,9 @@ const QuickEventAttendeeTable: React.FC<Props> = ({
               </Button>
               <Button
                 colorScheme='red'
-                onClick={async () => {
-                  await removeWaitlistAttendee(removedUser?.email);
-                  onclose;
+                onClick={() => {
+                  removeWaitlistAttendee(removedUser?.email);
+                  onClose();
                 }}
                 ml={3}
               >
