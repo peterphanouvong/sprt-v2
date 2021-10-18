@@ -132,7 +132,7 @@ export class QuickEventResolver {
 
       users.forEach((user: any) => {
         if (user.email === input.email) {
-          throw Error("An attendee with that email already exists");
+          throw Error("An attendee with that phone number already exists");
         }
       });
 

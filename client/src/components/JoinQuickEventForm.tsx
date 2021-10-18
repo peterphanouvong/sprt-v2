@@ -13,7 +13,7 @@ interface Props {
 }
 
 const QuickEventSchema = Yup.object().shape({
-  email: Yup.string().required("This field is required"),
+  phone: Yup.string().required("This field is required"),
   firstName: Yup.string()
     .trim("The first name cannot include leading and trailing spaces")
     .strict()
@@ -43,7 +43,7 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
       initialValues={{
         firstName: "",
         lastName: "",
-        email: "",
+        phone: "",
         createdAt: new Date().toString(),
         beemId: "",
         status: "waitlist",
@@ -62,7 +62,14 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
         }
         const { error } = await joinQuickEvent({
           joinQuickEventId: quickEventId,
-          joinQuickEventInput: values,
+          joinQuickEventInput: {
+              firstName: values.firstName,
+              lastName: values.lastName,
+              beemId: values.beemId,
+              email: values.phone,
+              createdAt: values.createdAt,
+              status: values.status,
+          },
         });
 
         if (error) {
@@ -84,7 +91,7 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
           });
 
           setHasJoined(true);
-          localStorage.setItem(String(quickEventId), values.email);
+          localStorage.setItem(String(quickEventId), values.phone);
         }
       }}
     >
@@ -106,16 +113,16 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
               disabled={hasJoined}
             />
             <InputField
-              name="email"
+              name="phone"
               label="Phone number"
-              touched={props.touched.email as boolean}
+              touched={props.touched.phone as boolean}
               required
               disabled={hasJoined}
             />
             <InputField
               name="beemId"
               label="BeemID or PayID"
-              touched={props.touched.email as boolean}
+              touched={props.touched.phone as boolean}
               placeholder="@myBeemAccount"
               required
               disabled={hasJoined}
