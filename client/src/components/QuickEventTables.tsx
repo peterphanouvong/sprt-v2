@@ -80,11 +80,11 @@ const QuickEventTables: React.FC<Props> = ({
     });
   };
 
-  const removeWaitListAttendee = (email: string) => {
+  const removeWaitListAttendee = async (email: string) => {
     console.log(email);
     console.log(attendees);
 
-    updateQuickEvent({
+    await updateQuickEvent({
       updateQuickEventId: quickEventId,
       updateQuickEventInput: {
         users: JSON.stringify(
