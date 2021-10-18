@@ -101,7 +101,7 @@ let QuickEventResolver = class QuickEventResolver {
             let users = JSON.parse(event.users);
             users.forEach((user) => {
                 if (user.email === input.email) {
-                    throw Error("An attendee with that email already exists");
+                    throw Error("An attendee with that phone number already exists");
                 }
             });
             users.push(input);

@@ -66,6 +66,7 @@ const QuickEventTables: React.FC<Props> = ({
           (attendees || JSON.parse(queryData.quickEvent?.users as string)).map(
             (u) => {
               if (u.email == email) {
+                console.log(u);
                 return {
                   ...u,
                   status: "waitlist",
@@ -78,9 +79,32 @@ const QuickEventTables: React.FC<Props> = ({
       },
     });
   };
+
+  const removeWaitListAttendee = (email: string) => {
+    console.log(email);
+    console.log(attendees);
+
+    updateQuickEvent({
+      updateQuickEventId: quickEventId,
+      updateQuickEventInput: {
+        users: JSON.stringify(
+          (
+            attendees || JSON.parse(queryData.quickEvent?.users as string)
+          ).filter((u) => {
+            if (u.email !== email) {
+              console.log(u);
+              return u;
+            }
+            // return u;
+          })
+        ),
+      },
+    });
+  };
+
   return (
     <>
-      <Heading mt={4} variant="h3">
+      <Heading mt={4} variant='h3'>
         Confirmed (
         {
           (
@@ -100,9 +124,10 @@ const QuickEventTables: React.FC<Props> = ({
         ).filter((u) => confirmedAttendees[u.email])}
         confirmAttendee={confirmAttendee}
         removeAttendee={removeAttendee}
+        removeWaitlistAttendee={removeWaitListAttendee}
       />
       <Divider my={6} />
-      <Heading mt={4} variant="h3">
+      <Heading mt={4} variant='h3'>
         Waitlist (
         {
           (
@@ -122,6 +147,7 @@ const QuickEventTables: React.FC<Props> = ({
         ).filter((u) => !confirmedAttendees[u.email])}
         confirmAttendee={confirmAttendee}
         removeAttendee={removeAttendee}
+        removeWaitlistAttendee={removeWaitListAttendee}
       />
     </>
   );
