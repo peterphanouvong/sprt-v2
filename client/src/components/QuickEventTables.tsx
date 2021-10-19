@@ -154,7 +154,6 @@ const QuickEventTables: React.FC<Props> = ({
         confirmAttendee={confirmAttendee}
         removeAttendee={removeAttendee}
         removeWaitlistAttendee={removeWaitListAttendee}
-        onDragEnd={onDragEnd}
       />
       <Divider my={6} />
       <Heading mt={4} variant='h3'>
@@ -195,7 +194,6 @@ const QuickEventTables: React.FC<Props> = ({
           confirmAttendee={confirmAttendee}
           removeAttendee={removeAttendee}
           removeWaitlistAttendee={removeWaitListAttendee}
-          onDragEnd={onDragEnd}
         />
       )}
     </>
