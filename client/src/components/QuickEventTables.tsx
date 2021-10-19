@@ -2,7 +2,6 @@ import { Divider, Heading } from "@chakra-ui/layout";
 import React, { useState } from "react";
 import { useUpdateQuickEventMutation } from "../generated/graphql";
 import { QuickEventAttendeeTable } from "./QuickEventAttendeeTable";
-import { DragDropContext } from "react-beautiful-dnd";
 import { QuickEventAttendeeTableAdminView } from "./QuickEventAttendeeTableAdminView";
 
 interface Props {
