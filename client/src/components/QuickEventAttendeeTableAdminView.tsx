@@ -13,10 +13,12 @@ import {
   AlertDialogHeader,
   AlertDialogBody,
   AlertDialogFooter,
+  IconButton,
 } from "@chakra-ui/react";
 import React from "react";
 import { format } from "date-fns";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 
 interface Props {
   users: any;
@@ -46,6 +48,10 @@ const QuickEventAttendeeTableAdminView: React.FC<Props> = ({
   const onClose = () => setisAlertOpen(false);
   const cancelRef = React.useRef() as React.MutableRefObject<HTMLInputElement>;
 
+  const [isSortDescending, setSortDescending] = React.useState<boolean | null>(
+    null
+  );
+
   const [removedUser, setRemovedUser] = React.useState<{
     email: string;
     firstName: string;
@@ -67,11 +73,33 @@ const QuickEventAttendeeTableAdminView: React.FC<Props> = ({
     setRemovedUser(user);
   };
 
+  const toggleSortDirection = () => {
+    setSortDescending(!isSortDescending);
+    console.log(users);
+    let sorted = users;
+    if (isSortDescending) {
+      sorted = users.sort(
+        (a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)
+      );
+    } else {
+      sorted = users.sort(
+        (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
+      );
+    }
+    console.log(sorted);
+    // setSortOrder(sorted);
+  };
+
   return users.length == 0 ? (
     <>nothing here...</>
   ) : (
     <>
-      <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
+      <DragDropContext
+        onDragEnd={(result) => {
+          onDragEnd(result);
+          setSortDescending(null);
+        }}
+      >
         <Droppable droppableId='droppable'>
           {(provided) => (
             <Box
@@ -85,12 +113,30 @@ const QuickEventAttendeeTableAdminView: React.FC<Props> = ({
                     <Th></Th>
                     <Th>First</Th>
                     <Th>Last</Th>
-                    <Th>Joined</Th>
+                    <Th>
+                      Joined{" "}
+                      <IconButton
+                        onClick={toggleSortDirection}
+                        variant='ghost'
+                        aria-label={
+                          isSortDescending
+                            ? "Sort descending"
+                            : "Sort ascending"
+                        }
+                        icon={
+                          isSortDescending ? (
+                            <ChevronDownIcon />
+                          ) : (
+                            <ChevronUpIcon />
+                          )
+                        }
+                      />
+                    </Th>
                     {isAdmin && (
                       <>
                         <Th>Phone</Th>
                         <Th>BeemID</Th>
-                        <Th>Status</Th>
+                        <Th>Status </Th>
                         <Th></Th>
                       </>
                     )}
@@ -98,10 +144,19 @@ const QuickEventAttendeeTableAdminView: React.FC<Props> = ({
                 </Thead>
                 <Tbody>
                   {users
-                    // .sort(
-                    //   (a, b) =>
-                    //     Date.parse(a.createdAt) - Date.parse(b.createdAt)
-                    // )
+                    .sort((a, b) => {
+                      if (isSortDescending === null) {
+                        return 0;
+                      } else if (isSortDescending) {
+                        return (
+                          Date.parse(a.createdAt) - Date.parse(b.createdAt)
+                        );
+                      } else {
+                        return (
+                          Date.parse(b.createdAt) - Date.parse(a.createdAt)
+                        );
+                      }
+                    })
                     .map(
                       (
                         user: {

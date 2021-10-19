@@ -108,8 +108,8 @@ const QuickEventTables: React.FC<Props> = ({
       return;
     }
 
-    console.log("on drag end");
-    console.log(result);
+    // console.log("on drag end");
+    // console.log(result);
 
     const waitlist = JSON.parse(queryData.quickEvent?.users as string).filter(
       (u) => u.status === "waitlist"
@@ -117,11 +117,11 @@ const QuickEventTables: React.FC<Props> = ({
     const confirmedUsers = JSON.parse(
       queryData.quickEvent?.users as string
     ).filter((u) => u.status === "confirmed");
-    console.log(waitlist);
+    // console.log(waitlist);
 
     const [moved] = waitlist.splice(result.source.index, 1);
     waitlist.splice(result.destination.index, 0, moved);
-    console.log(waitlist);
+    // console.log(waitlist);
 
     updateQuickEvent({
       updateQuickEventId: quickEventId,
