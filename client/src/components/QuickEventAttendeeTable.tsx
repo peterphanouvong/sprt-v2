@@ -88,7 +88,7 @@ const QuickEventAttendeeTable: React.FC<Props> = ({
           </Thead>
           <Tbody>
             {users
-              .sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt))
+              // .sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt))
               .map(
                 (
                   user: {

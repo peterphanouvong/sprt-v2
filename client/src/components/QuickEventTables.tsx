@@ -2,6 +2,8 @@ import { Divider, Heading } from "@chakra-ui/layout";
 import React, { useState } from "react";
 import { useUpdateQuickEventMutation } from "../generated/graphql";
 import { QuickEventAttendeeTable } from "./QuickEventAttendeeTable";
+import { DragDropContext } from "react-beautiful-dnd";
+import { QuickEventAttendeeTableAdminView } from "./QuickEventAttendeeTableAdminView";
 
 interface Props {
   attendees: any;
@@ -36,7 +38,6 @@ const QuickEventTables: React.FC<Props> = ({
   );
 
   const [, updateQuickEvent] = useUpdateQuickEventMutation();
-
   const confirmAttendee = (email: string) => {
     updateQuickEvent({
       updateQuickEventId: quickEventId,
@@ -102,6 +103,34 @@ const QuickEventTables: React.FC<Props> = ({
     });
   };
 
+  const onDragEnd = (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    console.log("on drag end");
+    console.log(result);
+
+    const waitlist = JSON.parse(queryData.quickEvent?.users as string).filter(
+      (u) => u.status === "waitlist"
+    );
+    const confirmedUsers = JSON.parse(
+      queryData.quickEvent?.users as string
+    ).filter((u) => u.status === "confirmed");
+    console.log(waitlist);
+
+    const [moved] = waitlist.splice(result.source.index, 1);
+    waitlist.splice(result.destination.index, 0, moved);
+    console.log(waitlist);
+
+    updateQuickEvent({
+      updateQuickEventId: quickEventId,
+      updateQuickEventInput: {
+        users: JSON.stringify([...confirmedUsers, ...waitlist]),
+      },
+    });
+  };
+
   return (
     <>
       <Heading mt={4} variant='h3'>
@@ -125,6 +154,7 @@ const QuickEventTables: React.FC<Props> = ({
         confirmAttendee={confirmAttendee}
         removeAttendee={removeAttendee}
         removeWaitlistAttendee={removeWaitListAttendee}
+        onDragEnd={onDragEnd}
       />
       <Divider my={6} />
       <Heading mt={4} variant='h3'>
@@ -136,19 +166,38 @@ const QuickEventTables: React.FC<Props> = ({
         }
         )
       </Heading>
-      <QuickEventAttendeeTable
-        quickEventId={quickEventId}
-        confirmedAttendees={confirmedAttendees}
-        setConfirmedAttendees={setConfirmedAttendees}
-        isAdmin={isAdmin}
-        isWaitlist={true}
-        users={(
-          attendees || JSON.parse(queryData.quickEvent?.users as string)
-        ).filter((u) => !confirmedAttendees[u.email])}
-        confirmAttendee={confirmAttendee}
-        removeAttendee={removeAttendee}
-        removeWaitlistAttendee={removeWaitListAttendee}
-      />
+
+      {isAdmin ? (
+        <QuickEventAttendeeTableAdminView
+          quickEventId={quickEventId}
+          confirmedAttendees={confirmedAttendees}
+          setConfirmedAttendees={setConfirmedAttendees}
+          isAdmin={isAdmin}
+          isWaitlist={true}
+          users={(
+            attendees || JSON.parse(queryData.quickEvent?.users as string)
+          ).filter((u) => !confirmedAttendees[u.email])}
+          confirmAttendee={confirmAttendee}
+          removeAttendee={removeAttendee}
+          removeWaitlistAttendee={removeWaitListAttendee}
+          onDragEnd={onDragEnd}
+        />
+      ) : (
+        <QuickEventAttendeeTable
+          quickEventId={quickEventId}
+          confirmedAttendees={confirmedAttendees}
+          setConfirmedAttendees={setConfirmedAttendees}
+          isAdmin={isAdmin}
+          isWaitlist={true}
+          users={(
+            attendees || JSON.parse(queryData.quickEvent?.users as string)
+          ).filter((u) => !confirmedAttendees[u.email])}
+          confirmAttendee={confirmAttendee}
+          removeAttendee={removeAttendee}
+          removeWaitlistAttendee={removeWaitListAttendee}
+          onDragEnd={onDragEnd}
+        />
+      )}
     </>
   );
 };
