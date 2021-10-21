@@ -1,12 +1,12 @@
-import { Container } from "@chakra-ui/layout";
+import { BoxProps, Container } from "@chakra-ui/layout";
 import React from "react";
 
-interface Props {}
+type Props = BoxProps;
 
-const MobileLayout: React.FC<Props> = ({ children }) => {
+const MobileLayout: React.FC<Props> = (props) => {
   return (
-    <Container maxW="lg" padding={6}>
-      {children}
+    <Container {...props} maxW="lg" padding={6}>
+      {props.children}
     </Container>
   );
 };

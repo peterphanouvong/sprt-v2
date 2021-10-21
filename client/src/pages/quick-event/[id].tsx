@@ -10,6 +10,7 @@ import {
   Flex,
   Heading,
   IconButton,
+  SimpleGrid,
   Text,
   useToast,
 } from "@chakra-ui/react";
@@ -18,6 +19,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { CSVLink } from "react-csv";
+import { CovidInfo } from "../../components/CovidInfo";
 import { DynamicEditor } from "../../components/DynamicEditor";
 import { JoinQuickEventForm } from "../../components/JoinQuickEventForm";
 import { MobileLayout } from "../../components/MobileLayout";
@@ -88,81 +90,87 @@ const JoinQuickEvent = () => {
   return (
     <Box maxW="1440px" margin="auto" padding={4}>
       {page === "join" ? (
-        <MobileLayout>
-          <Head>
-            <title>Join {queryData.quickEvent?.title} | sprt</title>
-          </Head>
-          <Heading as="h1" variant="h1">
-            {queryData.quickEvent?.title}
-          </Heading>
-          <DynamicEditor
-            name="description"
-            initialValue={parseRichText(
-              queryData.quickEvent?.description || ""
-            )}
-            readOnly={true}
-          />
+        <SimpleGrid columns={isMobile ? 1 : 2} spacing={10}>
+          <MobileLayout>
+            <Head>
+              <title>Join {queryData.quickEvent?.title} | sprt</title>
+            </Head>
+            <Heading as="h1" variant="h1">
+              {queryData.quickEvent?.title}
+            </Heading>
+            <DynamicEditor
+              name="description"
+              initialValue={parseRichText(
+                queryData.quickEvent?.description || ""
+              )}
+              readOnly={true}
+            />
+          </MobileLayout>
+          <MobileLayout top={4} position="sticky" height="100vh">
+            <Box textAlign="center" my={6}>
+              {queryData.quickEvent?.capacity ? (
+                <>
+                  <Heading variant="h3">{spotsLeft}</Heading>
+                  <Text variant="body-3">spot(s) left</Text>
+                </>
+              ) : (
+                <>
+                  <Heading>
+                    {attendees
+                      ? attendees.length
+                      : JSON.parse(queryData.quickEvent?.users as string)
+                          .length}
+                  </Heading>
+                  <Text variant="body-3">person(s) are going</Text>
+                </>
+              )}
+            </Box>
 
-          <Box textAlign="center" my={6}>
-            {queryData.quickEvent?.capacity ? (
-              <>
-                <Heading variant="h3">{spotsLeft}</Heading>
-                <Text variant="body-3">spot(s) left</Text>
-              </>
+            <Flex
+              flexDir={isMobile ? "column" : "row"}
+              alignItems="flex-start"
+              mt={4}
+            >
+              <Button
+                size={isMobile ? "xs" : "sm"}
+                colorScheme="gray"
+                variant="outline"
+                rightIcon={<CopyIcon />}
+                mr={isMobile ? 0 : 2}
+                mb={isMobile ? 1 : 0}
+                onClick={copyURLToClipboard}
+              >
+                Copy link to this event
+              </Button>
+              <Button
+                colorScheme="gray"
+                variant="outline"
+                rightIcon={<ChevronRightIcon />}
+                size={isMobile ? "xs" : "sm"}
+                onClick={() => setPage("attendees")}
+              >
+                See who's going
+              </Button>
+            </Flex>
+
+            <Heading mt={6} as="h4" variant="h4">
+              Join event
+            </Heading>
+
+            <JoinQuickEventForm quickEventId={intId} isFull={spotsLeft === 0} />
+            {loggedIn ? (
+              <div>
+                <Text mt={4} variant="body-2" color="blue.500">
+                  Viewing as Admin
+                </Text>
+              </div>
             ) : (
-              <>
-                <Heading>
-                  {attendees
-                    ? attendees.length
-                    : JSON.parse(queryData.quickEvent?.users as string).length}
-                </Heading>
-                <Text variant="body-3">person(s) are going</Text>
-              </>
+              <ViewAsAdminModal setLoggedIn={setLoggedIn} />
             )}
-          </Box>
 
-          <Flex
-            flexDir={isMobile ? "column" : "row"}
-            alignItems="flex-start"
-            mt={4}
-          >
-            <Button
-              size={isMobile ? "xs" : "sm"}
-              colorScheme="gray"
-              variant="outline"
-              rightIcon={<CopyIcon />}
-              mr={isMobile ? 0 : 2}
-              mb={isMobile ? 1 : 0}
-              onClick={copyURLToClipboard}
-            >
-              Copy link to this event
-            </Button>
-            <Button
-              colorScheme="gray"
-              variant="outline"
-              rightIcon={<ChevronRightIcon />}
-              size={isMobile ? "xs" : "sm"}
-              onClick={() => setPage("attendees")}
-            >
-              See who's going
-            </Button>
-          </Flex>
-
-          <Heading mt={6} as="h4" variant="h4">
-            Join event
-          </Heading>
-
-          <JoinQuickEventForm quickEventId={intId} isFull={spotsLeft === 0} />
-          {loggedIn ? (
-            <div>
-              <Text mt={4} variant="body-2" color="blue.500">
-                Viewing as Admin
-              </Text>
-            </div>
-          ) : (
-            <ViewAsAdminModal setLoggedIn={setLoggedIn} />
-          )}
-        </MobileLayout>
+            <CovidInfo />
+          </MobileLayout>
+        </SimpleGrid>
       ) : (
         <>
           <IconButton
