@@ -10,6 +10,7 @@ import {
   Flex,
   Heading,
   IconButton,
+  Spinner,
   Text,
   useToast,
 } from "@chakra-ui/react";
@@ -76,7 +77,21 @@ const JoinQuickEvent = () => {
     });
   };
 
-  if (!queryData) return <>popp</>;
+  if (!queryData)
+    return (
+      <>
+        <Spinner
+          size='lg'
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+            marginTop: "5%",
+          }}
+        />
+      </>
+    );
   const spotsLeft = Math.max(
     queryData.quickEvent?.capacity! -
       (attendees
