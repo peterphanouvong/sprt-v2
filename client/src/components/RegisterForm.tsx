@@ -60,7 +60,7 @@ const RegisterForm: React.FC<Props> = ({ onSubmit }) => {
               if (res.data?.register.errors) {
                 setErrors(toErrorMap(res.data.register.errors));
               } else if (res.data?.register.user) {
-                router.push("/feed");
+                router.push("/home");
               }
             }
       }

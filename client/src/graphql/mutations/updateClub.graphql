@@ -1,5 +1,0 @@
-mutation UpdateClub($input: ClubInput!, $clubId: Float!) {
-  updateClub(input: $input, clubId: $clubId) {
-    ...RegularClub
-  }
-}

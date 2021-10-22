@@ -1,3 +1,0 @@
-mutation AddRequestedMember($userId: Float!, $clubId: Float!) {
-  addRequestedMember(requestedMemberId: $userId, clubId: $clubId)
-}

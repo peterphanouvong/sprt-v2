@@ -1,5 +1,0 @@
-query Event($id: Int!) {
-  event(id: $id) {
-    ...DetailedEvent
-  }
-}

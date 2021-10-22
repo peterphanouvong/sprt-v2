@@ -1,3 +1,0 @@
-mutation FollowClub($followerId: Float!, $clubId: Float!) {
-  followClub(followerId: $followerId, clubId: $clubId)
-}

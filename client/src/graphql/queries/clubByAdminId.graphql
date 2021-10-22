@@ -1,5 +1,0 @@
-query ClubByAdminId($id: Float!) {
-  clubByAdminId(adminId: $id) {
-    ...RegularClub
-  }
-}

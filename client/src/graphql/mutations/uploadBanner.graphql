@@ -1,3 +1,0 @@
-mutation UploadBannerImage($clubname: String!, $file: Upload!) {
-  uploadBannerImage(clubname: $clubname, file: $file)
-}

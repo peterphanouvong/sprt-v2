@@ -46,7 +46,7 @@ const BaseNavbar: React.FC<Props> = ({}) => {
             </NextLink>
 
             <NextLink href="/register">
-              <Button variant="solid">Sign Up</Button>
+              <Button variant="solid">Sign up</Button>
             </NextLink>
           </ButtonGroup>
         )}
