@@ -7,8 +7,8 @@ import React from "react";
 import { useCreateQuickEventMutation } from "../generated/graphql";
 import { parseRichText } from "../utils/parseRichText";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
-import { DynamicEditor } from "./DynamicEditor";
-import { InputField } from "./InputField";
+import { BaseDynamicEditor } from "./BaseDynamicEditor";
+import { BaseInputField } from "./BaseInputField";
 
 interface Props {}
 
@@ -52,14 +52,14 @@ const QuickEventForm: React.FC<Props> = ({}) => {
       {(props) => (
         <Form>
           <VStack spacing={4} mt={8} alignItems="stretch">
-            <InputField
+            <BaseInputField
               label="Title"
               name="title"
               touched={props.touched.title as boolean}
               required
             />
 
-            <InputField
+            <BaseInputField
               label="Capacity"
               name="capacity"
               touched={props.touched.capacity as boolean}
@@ -68,7 +68,7 @@ const QuickEventForm: React.FC<Props> = ({}) => {
             />
 
             {/* <TextareaField label="Description" name="description" /> */}
-            <DynamicEditor
+            <BaseDynamicEditor
               label="Description"
               setFieldValue={props.setFieldValue}
               name="description"

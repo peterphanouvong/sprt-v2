@@ -12,15 +12,14 @@ import {
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 
-import { InputField } from "../components/InputField";
+import { BaseInputField } from "../components/BaseInputField";
 import { toErrorMap } from "../utils/toErrorMap";
 import { useLoginMutation } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import NextLink from "next/link";
-import { BackButton } from "../components/BackButton";
-import Logo from "../components/Logo";
+import { BaseBackButton } from "../components/BaseBackButton";
 import Head from "next/head";
-// import FacebookLogin from "react-facebook-login";
+import { BaseLogo } from "../components/BaseLogo";
 
 interface Props {}
 
@@ -36,9 +35,9 @@ const Login: React.FC<Props> = ({}) => {
       <Box>
         <Stack margin="auto" maxW={"500px"} padding={4}>
           <Box>
-            <BackButton />
+            <BaseBackButton />
             <Box mt={6} />
-            <Logo />
+            <BaseLogo />
           </Box>
           <Heading variant="h1">Welcome back</Heading>
           <Text paddingBottom={6} variant="body-2">
@@ -57,7 +56,7 @@ const Login: React.FC<Props> = ({}) => {
                 if (typeof router.query.next === "string") {
                   router.push(router.query.next);
                 } else {
-                  router.push("/feed");
+                  router.push("/home");
                 }
               }
             }}
@@ -65,7 +64,7 @@ const Login: React.FC<Props> = ({}) => {
             {(props) => (
               <Form>
                 <VStack spacing={4} align="stretch">
-                  <InputField
+                  <BaseInputField
                     name="usernameOrEmail"
                     label="Username or Email"
                     placeholder="username or email"
@@ -73,7 +72,7 @@ const Login: React.FC<Props> = ({}) => {
                     required
                   />
                   <VStack spacing={1} alignItems="start">
-                    <InputField
+                    <BaseInputField
                       name="password"
                       label="Password"
                       type="password"

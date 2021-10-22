@@ -1,6 +1,0 @@
-query PublicityTypes {
-  publicityTypes {
-    id
-    name
-  }
-}

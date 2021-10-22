@@ -1,5 +1,0 @@
-query Feed($id: Float!) {
-  feed(id: $id) {
-    ...RegularEvent
-  }
-}

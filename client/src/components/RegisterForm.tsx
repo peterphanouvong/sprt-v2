@@ -10,7 +10,7 @@ import {
 import { Formik, Form } from "formik";
 import React from "react";
 import { toErrorMap } from "../utils/toErrorMap";
-import { InputField } from "./InputField";
+import { BaseInputField } from "./BaseInputField";
 import * as Yup from "yup";
 import { useRegisterMutation } from "../generated/graphql";
 import NextLink from "next/link";
@@ -69,14 +69,14 @@ const RegisterForm: React.FC<Props> = ({ onSubmit }) => {
         <Form>
           <VStack spacing={4} align="stretch">
             <HStack alignItems="start" spacing={4}>
-              <InputField
+              <BaseInputField
                 name="firstname"
                 label="First name"
                 placeholder="Matt"
                 touched={props.touched.firstname as boolean}
                 required
               />
-              <InputField
+              <BaseInputField
                 name="lastname"
                 label="Last name"
                 placeholder="Anderson"
@@ -85,14 +85,14 @@ const RegisterForm: React.FC<Props> = ({ onSubmit }) => {
               />
             </HStack>
 
-            <InputField
+            <BaseInputField
               name="username"
               label="Username"
               placeholder="captain_america123"
               touched={props.touched.username as boolean}
               required
             />
-            <InputField
+            <BaseInputField
               name="email"
               label="Email"
               placeholder="matt@email.com"
@@ -100,7 +100,7 @@ const RegisterForm: React.FC<Props> = ({ onSubmit }) => {
               touched={props.touched.email as boolean}
               required
             />
-            <InputField
+            <BaseInputField
               name="password"
               label="Password"
               type="password"

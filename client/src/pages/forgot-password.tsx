@@ -12,8 +12,8 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
-import { InputField } from "../components/InputField";
-import { Wrapper } from "../components/Wrapper";
+import { BaseInputField } from "../components/BaseInputField";
+import { BaseWrapper } from "../components/BaseWrapper";
 import { useForgotPasswordMutation } from "../generated/graphql";
 import NextLink from "next/link";
 import { ArrowBackIcon } from "@chakra-ui/icons";
@@ -26,7 +26,7 @@ const ForgotPassword: React.FC<Props> = ({}) => {
 
   const [complete, setComplete] = useState(false);
   return (
-    <Wrapper variant="small">
+    <BaseWrapper variant="small">
       <Head>
         <title>Forgot Password | sprt</title>
       </Head>
@@ -64,7 +64,7 @@ const ForgotPassword: React.FC<Props> = ({}) => {
           ) : (
             <Form>
               <VStack spacing={4} align="stretch">
-                <InputField
+                <BaseInputField
                   name="email"
                   label="Email"
                   placeholder="email"
@@ -85,7 +85,7 @@ const ForgotPassword: React.FC<Props> = ({}) => {
           <NextLink href="/login">Back to login</NextLink>
         </Link>
       </Box>
-    </Wrapper>
+    </BaseWrapper>
   );
 };
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
-import { Layout } from "../components/Layout";
+import { BaseLayout } from "../components/BaseLayout";
 import {
   Box,
   Button,
@@ -42,7 +42,7 @@ const Index = () => {
       <Head>
         <title>sprt | Organise Sporting Events</title>
       </Head>
-      <Layout>
+      <BaseLayout>
         <Center mt={"15%"}>
           <Box
             maxW="64rem"
@@ -64,14 +64,9 @@ const Index = () => {
                 Get started for free
               </Button>
             </NextLink>
-            <NextLink href="/quick-event">
-              <Button mt={4} size={buttonSize} variant="outline">
-                Create a quick event
-              </Button>
-            </NextLink>
           </Box>
         </Center>
-      </Layout>
+      </BaseLayout>
     </>
   );
 };

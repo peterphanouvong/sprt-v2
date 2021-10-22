@@ -21,9 +21,8 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { CSVLink } from "react-csv";
 import { CovidInfo } from "../../components/CovidInfo";
-import { DynamicEditor } from "../../components/DynamicEditor";
-import { JoinQuickEventForm } from "../../components/JoinQuickEventForm";
-import { MobileLayout } from "../../components/MobileLayout";
+import { BaseDynamicEditor } from "../../components/BaseDynamicEditor";
+import { QuickEventJoinForm } from "../../components/QuickEventJoinForm";
 import { QuickEventTables } from "../../components/QuickEventTables";
 import { ViewAsAdminModal } from "../../components/ViewAsAdminModal";
 import {
@@ -33,6 +32,7 @@ import {
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { parseRichText } from "../../utils/parseRichText";
 import { useIsMobileScreen } from "../../utils/useIsMobileScreen";
+import { BaseWrapper } from "../../components/BaseWrapper";
 
 const JoinQuickEvent = () => {
   const [page, setPage] = useState<"join" | "attendees">("join");
@@ -106,22 +106,22 @@ const JoinQuickEvent = () => {
     <Box maxW="1440px" margin="auto" padding={4}>
       {page === "join" ? (
         <SimpleGrid columns={isMobile ? 1 : 2} spacing={10}>
-          <MobileLayout>
+          <BaseWrapper>
             <Head>
               <title>Join {queryData.quickEvent?.title} | sprt</title>
             </Head>
             <Heading as="h1" variant="h1">
               {queryData.quickEvent?.title}
             </Heading>
-            <DynamicEditor
+            <BaseDynamicEditor
               name="description"
               initialValue={parseRichText(
                 queryData.quickEvent?.description || ""
               )}
               readOnly={true}
             />
-          </MobileLayout>
-          <MobileLayout top={4} position="sticky" height="100vh">
+          </BaseWrapper>
+          <BaseWrapper top={4} position="sticky" height="100vh">
             <Box textAlign="center" my={6}>
               {queryData.quickEvent?.capacity ? (
                 <>
@@ -172,7 +172,7 @@ const JoinQuickEvent = () => {
               Join event
             </Heading>
 
-            <JoinQuickEventForm quickEventId={intId} isFull={spotsLeft === 0} />
+            <QuickEventJoinForm quickEventId={intId} isFull={spotsLeft === 0} />
             {loggedIn ? (
               <div>
                 <Text mt={4} variant="body-2" color="blue.500">
@@ -184,7 +184,7 @@ const JoinQuickEvent = () => {
             )}
 
             <CovidInfo />
-          </MobileLayout>
+          </BaseWrapper>
         </SimpleGrid>
       ) : (
         <>

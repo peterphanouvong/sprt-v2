@@ -3,8 +3,8 @@ import { NextPage } from "next";
 import { Form, Formik } from "formik";
 import { Box, Button, Heading, VStack } from "@chakra-ui/react";
 
-import { InputField } from "../../components/InputField";
-import { Wrapper } from "../../components/Wrapper";
+import { BaseInputField } from "../../components/BaseInputField";
+import { BaseWrapper } from "../../components/BaseWrapper";
 import { useChangePasswordMutation } from "../../generated/graphql";
 import { toErrorMap } from "../../utils/toErrorMap";
 import { useRouter } from "next/router";
@@ -19,7 +19,7 @@ const ChangePassword: NextPage<{ token: string }> = () => {
   const [tokenError, setTokenError] = useState("");
 
   return (
-    <Wrapper variant="small">
+    <BaseWrapper variant="small">
       <Head>
         <title>Change Password | sprt</title>
       </Head>
@@ -58,14 +58,14 @@ const ChangePassword: NextPage<{ token: string }> = () => {
         {(props) => (
           <Form>
             <VStack spacing={4} align="stretch">
-              <InputField
+              <BaseInputField
                 name="newPassword"
                 label="New password"
                 placeholder="new password"
                 type="password"
                 touched={props.touched.newPassword as boolean}
               />
-              <InputField
+              <BaseInputField
                 name="confirmPassword"
                 label="Confirm new password"
                 placeholder="new password"
@@ -80,7 +80,7 @@ const ChangePassword: NextPage<{ token: string }> = () => {
           </Form>
         )}
       </Formik>
-    </Wrapper>
+    </BaseWrapper>
   );
 };
 
