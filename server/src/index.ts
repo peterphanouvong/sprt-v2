@@ -14,32 +14,13 @@ import { SubscriptionServer } from "subscriptions-transport-ws";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
 import { COOKIE_NAME, __prod__ } from "./constants";
-import { Club } from "./entities/Club";
-import { ClubAdmin } from "./entities/ClubAdmin";
-import { ClubEvent } from "./entities/ClubEvent";
-import { ClubFollower } from "./entities/ClubFollower";
-import { ClubMember } from "./entities/ClubMember";
-import { ClubRequestedMember } from "./entities/ClubRequestedMember";
-import { ClubSport } from "./entities/ClubSport";
-import { CreatorType } from "./entities/CreatorType";
-import { Event } from "./entities/Event";
-import { EventAttendee } from "./entities/EventAttendee";
-import { Post } from "./entities/Post";
-import { PublicityType } from "./entities/PublicityType";
-import { QuickEvent } from "./entities/QuickEvent";
-import { Sport } from "./entities/Sport";
 import { User } from "./entities/User";
-import { ClubResolver } from "./resolvers/club";
-import { EventResolver } from "./resolvers/event";
-import { HelloResolver } from "./resolvers/hello";
-import { PostResolver } from "./resolvers/post";
-import { PublicityTypeResolver } from "./resolvers/publicityType";
 import { QuickEventResolver } from "./resolvers/quick-event";
 import { UploadResolver } from "./resolvers/upload";
 import { UserResolver } from "./resolvers/user";
-import { createClubLoader } from "./utils/createClubLoader";
-import { createEventLoader } from "./utils/createEventLoader";
-import { createUserLoader } from "./utils/createUserLoader";
+// import { createClubLoader } from "./utils/createClubLoader";
+// import { createEventLoader } from "./utils/createEventLoader";
+// import { createUserLoader } from "./utils/createUserLoader";
 
 const main = async () => {
   const conn = await createConnection({
@@ -47,37 +28,9 @@ const main = async () => {
     url: process.env.DATABASE_URL,
     logging: true,
     // synchronize: true,
-    entities: [
-      Post,
-      CreatorType,
-      User,
-      Event,
-      EventAttendee,
-      PublicityType,
-      Club,
-      ClubEvent,
-      ClubFollower,
-      ClubMember,
-      ClubAdmin,
-      ClubRequestedMember,
-      Sport,
-      ClubSport,
-      QuickEvent,
-    ],
+    entities: [User],
     migrations: [path.join(__dirname, "./migrations/*")],
   });
-
-  // await Post.delete({});
-  // await EventAttendee.delete({});
-  // await Event.delete({});
-  // await ClubEvent.delete({});
-  // await ClubFollower.delete({});
-  // await ClubMember.delete({});
-  // await ClubAdmin.delete({});
-  // await ClubRequestedMember.delete({});
-  // await Club.delete({});
-  // await User.delete({});
-  // await QuickEvent.delete({});
 
   await conn.runMigrations();
 
@@ -118,16 +71,7 @@ const main = async () => {
   );
 
   const schema = await buildSchema({
-    resolvers: [
-      HelloResolver,
-      PostResolver,
-      UserResolver,
-      EventResolver,
-      ClubResolver,
-      PublicityTypeResolver,
-      UploadResolver,
-      QuickEventResolver,
-    ],
+    resolvers: [UserResolver, UploadResolver, QuickEventResolver],
     validate: false,
   });
 
@@ -139,9 +83,9 @@ const main = async () => {
       req,
       res,
       redis,
-      userLoader: createUserLoader(),
-      clubLoader: createClubLoader(),
-      eventLoader: createEventLoader(),
+      // userLoader: createUserLoader(),
+      // clubLoader: createClubLoader(),
+      // eventLoader: createEventLoader(),
     }),
   });
 

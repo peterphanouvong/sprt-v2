@@ -1,7 +1,7 @@
-import { UsernamePasswordInput } from "src/resolvers/UsernamePasswordInput";
+import { UserRegisterInput } from "src/resolvers/UsernamePasswordInput";
 
-export const validateRegister = (options: UsernamePasswordInput) => {
-  if (options.username.length <= 2) {
+export const validateRegister = (options: UserRegisterInput) => {
+  if (options.clubName.length <= 2) {
     return [
       {
         field: "username",
@@ -28,7 +28,7 @@ export const validateRegister = (options: UsernamePasswordInput) => {
     ];
   }
 
-  if (options.username.includes("@")) {
+  if (options.clubName.includes("@")) {
     return [
       {
         field: "username",

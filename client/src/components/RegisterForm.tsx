@@ -1,12 +1,4 @@
-import {
-  VStack,
-  HStack,
-  Checkbox,
-  Link,
-  Button,
-  Box,
-  Text,
-} from "@chakra-ui/react";
+import { VStack, Checkbox, Link, Button, Box, Text } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import React from "react";
 import { toErrorMap } from "../utils/toErrorMap";
@@ -17,28 +9,18 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 
 const RegisterSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Email is invalid")
-    .required("This field is required"),
-  username: Yup.string()
+  clubName: Yup.string()
     .trim("The username cannot include leading and trailing spaces")
     .strict()
     .required("This field is required"),
-  firstname: Yup.string()
-    .trim("The first name cannot include leading and trailing spaces")
-    .strict()
-    .required("This field is required"),
-  lastname: Yup.string()
-    .trim("The last name cannot include leading and trailing spaces")
-    .strict()
+  email: Yup.string()
+    .email("Email is invalid")
     .required("This field is required"),
 });
 
-interface Props {
-  onSubmit?: () => void;
-}
+interface Props {}
 
-const RegisterForm: React.FC<Props> = ({ onSubmit }) => {
+const RegisterForm: React.FC<Props> = () => {
   const [{}, register] = useRegisterMutation();
   const router = useRouter();
 
@@ -46,50 +28,28 @@ const RegisterForm: React.FC<Props> = ({ onSubmit }) => {
     <Formik
       validationSchema={RegisterSchema}
       initialValues={{
-        firstname: "",
-        lastname: "",
-        username: "",
-        password: "",
+        clubName: "",
         email: "",
+        password: "",
       }}
-      onSubmit={
-        onSubmit
-          ? onSubmit
-          : async (values, { setErrors }) => {
-              const res = await register({ options: values });
-              if (res.data?.register.errors) {
-                setErrors(toErrorMap(res.data.register.errors));
-              } else if (res.data?.register.user) {
-                router.push("/home");
-              }
-            }
-      }
+      onSubmit={async (values, { setErrors }) => {
+        const res = await register({ options: values });
+        console.log(res);
+        if (res.data?.register.errors) {
+          setErrors(toErrorMap(res.data.register.errors));
+        } else if (res.data?.register.user) {
+          router.push("/home");
+        }
+      }}
     >
       {(props) => (
         <Form>
           <VStack spacing={4} align="stretch">
-            <HStack alignItems="start" spacing={4}>
-              <BaseInputField
-                name="firstname"
-                label="First name"
-                placeholder="Matt"
-                touched={props.touched.firstname as boolean}
-                required
-              />
-              <BaseInputField
-                name="lastname"
-                label="Last name"
-                placeholder="Anderson"
-                touched={props.touched.lastname as boolean}
-                required
-              />
-            </HStack>
-
             <BaseInputField
-              name="username"
-              label="Username"
-              placeholder="captain_america123"
-              touched={props.touched.username as boolean}
+              name="clubName"
+              label="Club name"
+              placeholder="Redfox VBC"
+              touched={props.touched.clubName as boolean}
               required
             />
             <BaseInputField

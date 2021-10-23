@@ -21,11 +21,11 @@ const BaseNavbar: React.FC<Props> = ({}) => {
         display="flex"
         alignItems="center"
         justifyContent="space-between"
-        paddingY={2}
+        paddingY={4}
       >
         <NextLink href="/home">
           <a>
-            <BaseLogo />
+            <BaseLogo size="sm" />
           </a>
         </NextLink>
 

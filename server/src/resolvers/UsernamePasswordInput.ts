@@ -9,7 +9,17 @@ export class UsernamePasswordInput {
   @Field(() => String)
   email: string;
   @Field(() => String)
-  username: string;
+  clubName: string;
+  @Field(() => String)
+  password: string;
+}
+
+@InputType()
+export class UserRegisterInput {
+  @Field(() => String)
+  email: string;
+  @Field(() => String)
+  clubName: string;
   @Field(() => String)
   password: string;
 }

@@ -16,18 +16,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserResolver = void 0;
-const User_1 = require("../entities/User");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const type_graphql_1 = require("type-graphql");
-const constants_1 = require("../constants");
-const UsernamePasswordInput_1 = require("./UsernamePasswordInput");
-const validateRegister_1 = require("../utils/validateRegister");
-const sendEmail_1 = require("../utils/sendEmail");
-const uuid_1 = require("uuid");
 const typeorm_1 = require("typeorm");
-const Club_1 = require("../entities/Club");
-const Event_1 = require("../entities/Event");
-const isAuth_1 = require("../middleware/isAuth");
+const uuid_1 = require("uuid");
+const constants_1 = require("../constants");
+const User_1 = require("../entities/User");
+const sendEmail_1 = require("../utils/sendEmail");
+const validateRegister_1 = require("../utils/validateRegister");
+const UsernamePasswordInput_1 = require("./UsernamePasswordInput");
 let FieldError = class FieldError {
 };
 __decorate([
@@ -55,41 +52,6 @@ UserResponse = __decorate([
     type_graphql_1.ObjectType()
 ], UserResponse);
 let UserResolver = class UserResolver {
-    async events(user, { eventLoader }) {
-        var _a;
-        const clubIds = await typeorm_1.getConnection().query(`
-        select array_agg("id")
-        from "event"
-        where "hostId" = ${user.id};
-      `);
-        return eventLoader.loadMany((_a = clubIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
-    }
-    async adminClubs(user, { clubLoader }) {
-        var _a;
-        const clubIds = await typeorm_1.getConnection().query(`
-       select array_agg("clubId")
-       from "club_admin"
-       where "adminId" = ${user.id};
-     `);
-        return clubLoader.loadMany((_a = clubIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
-    }
-    async followingClubs(user, { clubLoader }) {
-        var _a;
-        const clubIds = await typeorm_1.getConnection().query(`
-      select array_agg("clubId")
-      from "club_follower"
-      where "followerId" = ${user.id};
-    `);
-        return clubLoader.loadMany((_a = clubIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
-    }
-    email(user, { req }) {
-        if (req.session.userId === user.id) {
-            return user.email;
-        }
-        else {
-            return "";
-        }
-    }
     async register(options, { req }) {
         const errors = validateRegister_1.validateRegister(options);
         if (errors) {
@@ -103,9 +65,7 @@ let UserResolver = class UserResolver {
                 .insert()
                 .into(User_1.User)
                 .values({
-                firstname: options.firstname,
-                lastname: options.lastname,
-                username: options.username,
+                clubName: options.clubName,
                 email: options.email,
                 password: hashedPassword,
             })
@@ -127,8 +87,8 @@ let UserResolver = class UserResolver {
                 : {
                     errors: [
                         {
-                            field: "username",
-                            message: "that username is already in use",
+                            field: "clubName",
+                            message: "that club name is already in use",
                         },
                     ],
                 };
@@ -136,18 +96,18 @@ let UserResolver = class UserResolver {
         req.session.userId = user.id;
         return { user };
     }
-    async login(usernameOrEmail, password, { req }) {
+    async login(clubNameOrEmail, password, { req }) {
         const user = await User_1.User.findOne({
-            where: usernameOrEmail.includes("@")
-                ? { email: usernameOrEmail }
-                : { username: usernameOrEmail },
+            where: clubNameOrEmail.includes("@")
+                ? { email: clubNameOrEmail }
+                : { clubName: clubNameOrEmail },
         });
         if (!user) {
             return {
                 errors: [
                     {
-                        field: "usernameOrEmail",
-                        message: "That username or email doesn't exist.",
+                        field: "clubNameOrEmail",
+                        message: "That club name or email doesn't exist.",
                     },
                 ],
             };
@@ -232,66 +192,21 @@ let UserResolver = class UserResolver {
     async user(id) {
         return await User_1.User.findOne(id);
     }
-    async userByUsername(username) {
-        return await User_1.User.findOne({ username });
-    }
-    async myFeed({ req, eventLoader }) {
-        var _a;
-        const eventIds = await typeorm_1.getConnection().query(`
-    select array_agg(e.id)
-    from "event" e
-    inner join "club_follower" cf on cf."clubId" = e."clubId"
-    where (
-      cf."followerId" = ${req.session.userId}
-      or e."hostId" = ${req.session.userId}
-    );
-  `);
-        return eventLoader.loadMany((_a = eventIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
+    async userByClubName(clubName) {
+        return await User_1.User.findOne({ clubName });
     }
 };
 __decorate([
-    type_graphql_1.FieldResolver(() => [Event_1.Event]),
-    __param(0, type_graphql_1.Root()),
-    __param(1, type_graphql_1.Ctx()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [User_1.User, Object]),
-    __metadata("design:returntype", Promise)
-], UserResolver.prototype, "events", null);
-__decorate([
-    type_graphql_1.FieldResolver(() => [Club_1.Club]),
-    __param(0, type_graphql_1.Root()),
-    __param(1, type_graphql_1.Ctx()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [User_1.User, Object]),
-    __metadata("design:returntype", Promise)
-], UserResolver.prototype, "adminClubs", null);
-__decorate([
-    type_graphql_1.FieldResolver(() => [Club_1.Club]),
-    __param(0, type_graphql_1.Root()),
-    __param(1, type_graphql_1.Ctx()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [User_1.User, Object]),
-    __metadata("design:returntype", Promise)
-], UserResolver.prototype, "followingClubs", null);
-__decorate([
-    type_graphql_1.FieldResolver(() => String),
-    __param(0, type_graphql_1.Root()),
-    __param(1, type_graphql_1.Ctx()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [User_1.User, Object]),
-    __metadata("design:returntype", String)
-], UserResolver.prototype, "email", null);
-__decorate([
     type_graphql_1.Mutation(() => UserResponse),
-    __param(0, type_graphql_1.Arg("options", () => UsernamePasswordInput_1.UsernamePasswordInput)),
+    __param(0, type_graphql_1.Arg("options", () => UsernamePasswordInput_1.UserRegisterInput)),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [UsernamePasswordInput_1.UsernamePasswordInput, Object]),
+    __metadata("design:paramtypes", [UsernamePasswordInput_1.UserRegisterInput, Object]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "register", null);
 __decorate([
     type_graphql_1.Mutation(() => UserResponse),
-    __param(0, type_graphql_1.Arg("usernameOrEmail")),
+    __param(0, type_graphql_1.Arg("clubNameOrEmail")),
     __param(1, type_graphql_1.Arg("password")),
     __param(2, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
@@ -338,19 +253,11 @@ __decorate([
 ], UserResolver.prototype, "user", null);
 __decorate([
     type_graphql_1.Query(() => User_1.User, { nullable: true }),
-    __param(0, type_graphql_1.Arg("username")),
+    __param(0, type_graphql_1.Arg("clubName")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], UserResolver.prototype, "userByUsername", null);
-__decorate([
-    type_graphql_1.Query(() => [Event_1.Event]),
-    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
-    __param(0, type_graphql_1.Ctx()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], UserResolver.prototype, "myFeed", null);
+], UserResolver.prototype, "userByClubName", null);
 UserResolver = __decorate([
     type_graphql_1.Resolver(User_1.User)
 ], UserResolver);

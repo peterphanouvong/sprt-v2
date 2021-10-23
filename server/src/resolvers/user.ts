@@ -1,27 +1,21 @@
-import { User } from "../entities/User";
-import { MyContext } from "src/types";
 import bcrypt from "bcrypt";
+import { MyContext } from "src/types";
 import {
   Arg,
   Ctx,
   Field,
-  FieldResolver,
   Mutation,
   ObjectType,
   Query,
   Resolver,
-  Root,
-  UseMiddleware,
 } from "type-graphql";
-import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
-import { UsernamePasswordInput } from "./UsernamePasswordInput";
-import { validateRegister } from "../utils/validateRegister";
-import { sendEmail } from "../utils/sendEmail";
-import { v4 as uuid } from "uuid";
 import { getConnection } from "typeorm";
-import { Club } from "../entities/Club";
-import { Event } from "../entities/Event";
-import { isAuth } from "../middleware/isAuth";
+import { v4 as uuid } from "uuid";
+import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
+import { User } from "../entities/User";
+import { sendEmail } from "../utils/sendEmail";
+import { validateRegister } from "../utils/validateRegister";
+import { UserRegisterInput } from "./UsernamePasswordInput";
 
 @ObjectType()
 class FieldError {
@@ -44,55 +38,12 @@ class UserResponse {
 @Resolver(User)
 export class UserResolver {
   /**
-   * Field Resolvers
-   */
-
-  @FieldResolver(() => [Event])
-  async events(@Root() user: User, @Ctx() { eventLoader }: MyContext) {
-    const clubIds = await getConnection().query(`
-        select array_agg("id")
-        from "event"
-        where "hostId" = ${user.id};
-      `);
-    return eventLoader.loadMany(clubIds[0].array_agg ?? []);
-  }
-
-  @FieldResolver(() => [Club])
-  async adminClubs(@Root() user: User, @Ctx() { clubLoader }: MyContext) {
-    const clubIds = await getConnection().query(`
-       select array_agg("clubId")
-       from "club_admin"
-       where "adminId" = ${user.id};
-     `);
-    return clubLoader.loadMany(clubIds[0].array_agg ?? []);
-  }
-
-  @FieldResolver(() => [Club])
-  async followingClubs(@Root() user: User, @Ctx() { clubLoader }: MyContext) {
-    const clubIds = await getConnection().query(`
-      select array_agg("clubId")
-      from "club_follower"
-      where "followerId" = ${user.id};
-    `);
-    return clubLoader.loadMany(clubIds[0].array_agg ?? []);
-  }
-
-  @FieldResolver(() => String)
-  email(@Root() user: User, @Ctx() { req }: MyContext): string {
-    if (req.session.userId === user.id) {
-      return user.email;
-    } else {
-      return "";
-    }
-  }
-
-  /**
    * CRUD
    */
 
   @Mutation(() => UserResponse)
   async register(
-    @Arg("options", () => UsernamePasswordInput) options: UsernamePasswordInput,
+    @Arg("options", () => UserRegisterInput) options: UserRegisterInput,
     @Ctx() { req }: MyContext
   ) {
     const errors = validateRegister(options);
@@ -107,9 +58,7 @@ export class UserResolver {
         .insert()
         .into(User)
         .values({
-          firstname: options.firstname,
-          lastname: options.lastname,
-          username: options.username,
+          clubName: options.clubName,
           email: options.email,
           password: hashedPassword,
         })
@@ -118,8 +67,6 @@ export class UserResolver {
 
       user = res.raw[0];
     } catch (err) {
-      // if (err.code === "23505" || err.details.includes("already exists")) {
-      // duplicate username
       console.log(err);
       return err.detail.includes("email")
         ? {
@@ -133,12 +80,11 @@ export class UserResolver {
         : {
             errors: [
               {
-                field: "username",
-                message: "that username is already in use",
+                field: "clubName",
+                message: "that club name is already in use",
               },
             ],
           };
-      // }
     }
 
     // log in the user
@@ -149,21 +95,21 @@ export class UserResolver {
 
   @Mutation(() => UserResponse)
   async login(
-    @Arg("usernameOrEmail") usernameOrEmail: string,
+    @Arg("clubNameOrEmail") clubNameOrEmail: string,
     @Arg("password") password: string,
     @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
     const user = await User.findOne({
-      where: usernameOrEmail.includes("@")
-        ? { email: usernameOrEmail }
-        : { username: usernameOrEmail },
+      where: clubNameOrEmail.includes("@")
+        ? { email: clubNameOrEmail }
+        : { clubName: clubNameOrEmail },
     });
     if (!user) {
       return {
         errors: [
           {
-            field: "usernameOrEmail",
-            message: "That username or email doesn't exist.",
+            field: "clubNameOrEmail",
+            message: "That club name or email doesn't exist.",
           },
         ],
       };
@@ -297,28 +243,25 @@ export class UserResolver {
   }
 
   @Query(() => User, { nullable: true })
-  async userByUsername(
-    @Arg("username") username: string
+  async userByClubName(
+    @Arg("clubName") clubName: string
   ): Promise<User | undefined> {
-    return await User.findOne({ username });
+    return await User.findOne({ clubName });
   }
 
-  @Query(() => [Event])
-  @UseMiddleware(isAuth)
-  async myFeed(@Ctx() { req, eventLoader }: MyContext) {
-    const eventIds = await getConnection().query(`
-    select array_agg(e.id)
-    from "event" e
-    inner join "club_follower" cf on cf."clubId" = e."clubId"
-    where (
-      cf."followerId" = ${req.session.userId}
-      or e."hostId" = ${req.session.userId}
-    );
-  `);
+  // @Query(() => [Event])
+  // @UseMiddleware(isAuth)
+  // async myFeed(@Ctx() { req, eventLoader }: MyContext) {
+  //   const eventIds = await getConnection().query(`
+  //   select array_agg(e.id)
+  //   from "event" e
+  //   inner join "club_follower" cf on cf."clubId" = e."clubId"
+  //   where (
+  //     cf."followerId" = ${req.session.userId}
+  //     or e."hostId" = ${req.session.userId}
+  //   );
+  // `);
 
-    return eventLoader.loadMany(eventIds[0].array_agg ?? []);
-
-    // aim: show me events posted by the clubs that i follow
-    // show events that I have created too
-  }
+  //   return eventLoader.loadMany(eventIds[0].array_agg ?? []);
+  // }
 }

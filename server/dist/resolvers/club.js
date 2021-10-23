@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a, _b, _c, _d, _e;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClubResolver = void 0;
 const type_graphql_1 = require("type-graphql");
@@ -234,7 +235,7 @@ __decorate([
     __param(0, type_graphql_1.Root()),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Club_1.Club, Object]),
+    __metadata("design:paramtypes", [typeof (_a = typeof Club_1.Club !== "undefined" && Club_1.Club) === "function" ? _a : Object, Object]),
     __metadata("design:returntype", Promise)
 ], ClubResolver.prototype, "followers", null);
 __decorate([
@@ -242,7 +243,7 @@ __decorate([
     __param(0, type_graphql_1.Root()),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Club_1.Club, Object]),
+    __metadata("design:paramtypes", [typeof (_b = typeof Club_1.Club !== "undefined" && Club_1.Club) === "function" ? _b : Object, Object]),
     __metadata("design:returntype", Promise)
 ], ClubResolver.prototype, "admins", null);
 __decorate([
@@ -250,7 +251,7 @@ __decorate([
     __param(0, type_graphql_1.Root()),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Club_1.Club, Object]),
+    __metadata("design:paramtypes", [typeof (_c = typeof Club_1.Club !== "undefined" && Club_1.Club) === "function" ? _c : Object, Object]),
     __metadata("design:returntype", Promise)
 ], ClubResolver.prototype, "requestedMembers", null);
 __decorate([
@@ -258,7 +259,7 @@ __decorate([
     __param(0, type_graphql_1.Root()),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Club_1.Club, Object]),
+    __metadata("design:paramtypes", [typeof (_d = typeof Club_1.Club !== "undefined" && Club_1.Club) === "function" ? _d : Object, Object]),
     __metadata("design:returntype", Promise)
 ], ClubResolver.prototype, "members", null);
 __decorate([
@@ -266,7 +267,7 @@ __decorate([
     __param(0, type_graphql_1.Root()),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Club_1.Club, Object]),
+    __metadata("design:paramtypes", [typeof (_e = typeof Club_1.Club !== "undefined" && Club_1.Club) === "function" ? _e : Object, Object]),
     __metadata("design:returntype", Promise)
 ], ClubResolver.prototype, "events", null);
 __decorate([

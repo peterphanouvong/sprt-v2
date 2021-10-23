@@ -19,54 +19,16 @@ const subscriptions_transport_ws_1 = require("subscriptions-transport-ws");
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const constants_1 = require("./constants");
-const Club_1 = require("./entities/Club");
-const ClubAdmin_1 = require("./entities/ClubAdmin");
-const ClubEvent_1 = require("./entities/ClubEvent");
-const ClubFollower_1 = require("./entities/ClubFollower");
-const ClubMember_1 = require("./entities/ClubMember");
-const ClubRequestedMember_1 = require("./entities/ClubRequestedMember");
-const ClubSport_1 = require("./entities/ClubSport");
-const CreatorType_1 = require("./entities/CreatorType");
-const Event_1 = require("./entities/Event");
-const EventAttendee_1 = require("./entities/EventAttendee");
-const Post_1 = require("./entities/Post");
-const PublicityType_1 = require("./entities/PublicityType");
-const QuickEvent_1 = require("./entities/QuickEvent");
-const Sport_1 = require("./entities/Sport");
 const User_1 = require("./entities/User");
-const club_1 = require("./resolvers/club");
-const event_1 = require("./resolvers/event");
-const hello_1 = require("./resolvers/hello");
-const post_1 = require("./resolvers/post");
-const publicityType_1 = require("./resolvers/publicityType");
 const quick_event_1 = require("./resolvers/quick-event");
 const upload_1 = require("./resolvers/upload");
 const user_1 = require("./resolvers/user");
-const createClubLoader_1 = require("./utils/createClubLoader");
-const createEventLoader_1 = require("./utils/createEventLoader");
-const createUserLoader_1 = require("./utils/createUserLoader");
 const main = async () => {
     const conn = await typeorm_1.createConnection({
         type: "postgres",
         url: process.env.DATABASE_URL,
         logging: true,
-        entities: [
-            Post_1.Post,
-            CreatorType_1.CreatorType,
-            User_1.User,
-            Event_1.Event,
-            EventAttendee_1.EventAttendee,
-            PublicityType_1.PublicityType,
-            Club_1.Club,
-            ClubEvent_1.ClubEvent,
-            ClubFollower_1.ClubFollower,
-            ClubMember_1.ClubMember,
-            ClubAdmin_1.ClubAdmin,
-            ClubRequestedMember_1.ClubRequestedMember,
-            Sport_1.Sport,
-            ClubSport_1.ClubSport,
-            QuickEvent_1.QuickEvent,
-        ],
+        entities: [User_1.User],
         migrations: [path_1.default.join(__dirname, "./migrations/*")],
     });
     await conn.runMigrations();
@@ -100,16 +62,7 @@ const main = async () => {
         resave: false,
     }));
     const schema = await type_graphql_1.buildSchema({
-        resolvers: [
-            hello_1.HelloResolver,
-            post_1.PostResolver,
-            user_1.UserResolver,
-            event_1.EventResolver,
-            club_1.ClubResolver,
-            publicityType_1.PublicityTypeResolver,
-            upload_1.UploadResolver,
-            quick_event_1.QuickEventResolver,
-        ],
+        resolvers: [user_1.UserResolver, upload_1.UploadResolver, quick_event_1.QuickEventResolver],
         validate: false,
     });
     const apolloServer = new apollo_server_express_1.ApolloServer({
@@ -119,9 +72,6 @@ const main = async () => {
             req,
             res,
             redis,
-            userLoader: createUserLoader_1.createUserLoader(),
-            clubLoader: createClubLoader_1.createClubLoader(),
-            eventLoader: createEventLoader_1.createEventLoader(),
         }),
     });
     await apolloServer.start();

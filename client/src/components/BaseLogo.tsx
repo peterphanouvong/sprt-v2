@@ -15,7 +15,7 @@ const BaseLogo: React.FC<Props> = ({ color = "black", size = "md" }) => {
   let sizeMultiplier: number;
   switch (size) {
     case "sm":
-      sizeMultiplier = 0.65;
+      sizeMultiplier = 0.6;
       break;
     case "md":
       sizeMultiplier = 1;

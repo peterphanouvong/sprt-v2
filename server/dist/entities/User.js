@@ -12,14 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
-const Post_1 = require("./Post");
-const Event_1 = require("./Event");
-const ClubFollower_1 = require("./ClubFollower");
-const ClubMember_1 = require("./ClubMember");
-const ClubAdmin_1 = require("./ClubAdmin");
-const EventAttendee_1 = require("./EventAttendee");
-const ClubRequestedMember_1 = require("./ClubRequestedMember");
-const Club_1 = require("./Club");
 let User = class User extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -29,19 +21,19 @@ __decorate([
 ], User.prototype, "id", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column(),
+    typeorm_1.Column({ nullable: true }),
     __metadata("design:type", String)
 ], User.prototype, "firstname", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column(),
+    typeorm_1.Column({ nullable: true }),
     __metadata("design:type", String)
 ], User.prototype, "lastname", void 0);
 __decorate([
     type_graphql_1.Field(),
     typeorm_1.Column({ unique: true }),
     __metadata("design:type", String)
-], User.prototype, "username", void 0);
+], User.prototype, "clubName", void 0);
 __decorate([
     type_graphql_1.Field(),
     typeorm_1.Column({ unique: true }),
@@ -52,16 +44,6 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
 __decorate([
-    type_graphql_1.Field(() => Post_1.Post),
-    typeorm_1.OneToMany(() => Post_1.Post, (post) => post.creator),
-    __metadata("design:type", Array)
-], User.prototype, "posts", void 0);
-__decorate([
-    type_graphql_1.Field(() => [Event_1.Event], { nullable: true }),
-    typeorm_1.OneToMany(() => Event_1.Event, (event) => event.host),
-    __metadata("design:type", Array)
-], User.prototype, "events", void 0);
-__decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.CreateDateColumn(),
     __metadata("design:type", Date)
@@ -71,34 +53,6 @@ __decorate([
     typeorm_1.UpdateDateColumn(),
     __metadata("design:type", Date)
 ], User.prototype, "updatedAt", void 0);
-__decorate([
-    type_graphql_1.Field(() => [Club_1.Club], { nullable: true }),
-    __metadata("design:type", Array)
-], User.prototype, "followingClubs", void 0);
-__decorate([
-    type_graphql_1.Field(() => [Club_1.Club], { nullable: true }),
-    __metadata("design:type", Array)
-], User.prototype, "adminClubs", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => ClubFollower_1.ClubFollower, (cf) => cf.follower),
-    __metadata("design:type", Array)
-], User.prototype, "clubFollowerConnection", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => ClubMember_1.ClubMember, (cm) => cm.member),
-    __metadata("design:type", Array)
-], User.prototype, "clubMemberConnection", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => ClubAdmin_1.ClubAdmin, (ca) => ca.admin),
-    __metadata("design:type", Array)
-], User.prototype, "clubAdminConnection", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => EventAttendee_1.EventAttendee, (ca) => ca.attendee),
-    __metadata("design:type", Array)
-], User.prototype, "eventAttendeeConnection", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => ClubRequestedMember_1.ClubRequestedMember, (crm) => crm.requestedMember),
-    __metadata("design:type", Array)
-], User.prototype, "clubRequestedMemberConnection", void 0);
 User = __decorate([
     type_graphql_1.ObjectType(),
     typeorm_1.Entity()

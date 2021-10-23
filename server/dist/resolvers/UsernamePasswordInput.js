@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UsernamePasswordInput = void 0;
+exports.UserRegisterInput = exports.UsernamePasswordInput = void 0;
 const type_graphql_1 = require("type-graphql");
 let UsernamePasswordInput = class UsernamePasswordInput {
 };
@@ -28,7 +28,7 @@ __decorate([
 __decorate([
     type_graphql_1.Field(() => String),
     __metadata("design:type", String)
-], UsernamePasswordInput.prototype, "username", void 0);
+], UsernamePasswordInput.prototype, "clubName", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     __metadata("design:type", String)
@@ -37,4 +37,22 @@ UsernamePasswordInput = __decorate([
     type_graphql_1.InputType()
 ], UsernamePasswordInput);
 exports.UsernamePasswordInput = UsernamePasswordInput;
+let UserRegisterInput = class UserRegisterInput {
+};
+__decorate([
+    type_graphql_1.Field(() => String),
+    __metadata("design:type", String)
+], UserRegisterInput.prototype, "email", void 0);
+__decorate([
+    type_graphql_1.Field(() => String),
+    __metadata("design:type", String)
+], UserRegisterInput.prototype, "clubName", void 0);
+__decorate([
+    type_graphql_1.Field(() => String),
+    __metadata("design:type", String)
+], UserRegisterInput.prototype, "password", void 0);
+UserRegisterInput = __decorate([
+    type_graphql_1.InputType()
+], UserRegisterInput);
+exports.UserRegisterInput = UserRegisterInput;
 //# sourceMappingURL=UsernamePasswordInput.js.map

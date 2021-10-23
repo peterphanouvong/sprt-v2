@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventResolver = void 0;
 const type_graphql_1 = require("type-graphql");
@@ -171,7 +172,7 @@ __decorate([
     __param(0, type_graphql_1.Root()),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Event_1.Event, Object]),
+    __metadata("design:paramtypes", [typeof (_a = typeof Event_1.Event !== "undefined" && Event_1.Event) === "function" ? _a : Object, Object]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "attendees", null);
 __decorate([
@@ -179,7 +180,7 @@ __decorate([
     __param(0, type_graphql_1.Root()),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Event_1.Event, Object]),
+    __metadata("design:paramtypes", [typeof (_b = typeof Event_1.Event !== "undefined" && Event_1.Event) === "function" ? _b : Object, Object]),
     __metadata("design:returntype", void 0)
 ], EventResolver.prototype, "host", null);
 __decorate([
@@ -187,7 +188,7 @@ __decorate([
     __param(0, type_graphql_1.Root()),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Event_1.Event, Object]),
+    __metadata("design:paramtypes", [typeof (_c = typeof Event_1.Event !== "undefined" && Event_1.Event) === "function" ? _c : Object, Object]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "club", null);
 __decorate([
