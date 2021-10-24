@@ -34,7 +34,6 @@ const RegisterForm: React.FC<Props> = () => {
       }}
       onSubmit={async (values, { setErrors }) => {
         const res = await register({ options: values });
-        console.log(res);
         if (res.data?.register.errors) {
           setErrors(toErrorMap(res.data.register.errors));
         } else if (res.data?.register.user) {

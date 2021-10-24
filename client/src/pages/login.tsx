@@ -44,11 +44,11 @@ const Login: React.FC<Props> = ({}) => {
             Let's get you signed in.
           </Text>
           <Formik
-            initialValues={{ usernameOrEmail: "", password: "" }}
+            initialValues={{ clubNameOrEmail: "", password: "" }}
             onSubmit={async (values, { setErrors }) => {
               const res = await login({
                 password: values.password,
-                usernameOrEmail: values.usernameOrEmail,
+                clubNameOrEmail: values.clubNameOrEmail,
               });
               if (res.data?.login.errors) {
                 setErrors(toErrorMap(res.data.login.errors));
@@ -65,10 +65,10 @@ const Login: React.FC<Props> = ({}) => {
               <Form>
                 <VStack spacing={4} align="stretch">
                   <BaseInputField
-                    name="usernameOrEmail"
+                    name="clubNameOrEmail"
                     label="Username or Email"
                     placeholder="username or email"
-                    touched={props.touched.usernameOrEmail as boolean}
+                    touched={props.touched.clubNameOrEmail as boolean}
                     required
                   />
                   <VStack spacing={1} alignItems="start">
