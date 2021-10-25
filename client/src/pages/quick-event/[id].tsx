@@ -5,7 +5,6 @@ import {
   DownloadIcon,
 } from "@chakra-ui/icons";
 import {
-  Avatar,
   Box,
   Button,
   Flex,
@@ -36,6 +35,7 @@ import {
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { parseRichText } from "../../utils/parseRichText";
 import { useIsMobileScreen } from "../../utils/useIsMobileScreen";
+import defaultLogo from "../../images/sprt.svg";
 
 const JoinQuickEvent = () => {
   const [page, setPage] = useState<"join" | "attendees">("join");
@@ -105,6 +105,8 @@ const JoinQuickEvent = () => {
     0
   );
 
+  console.log(defaultLogo);
+
   return (
     <Box maxW='1440px' margin='auto' padding={4}>
       <Box padding={"5vw"} position='relative'>
@@ -112,14 +114,17 @@ const JoinQuickEvent = () => {
           <Image src='https://storage.cloud.google.com/qe_banner_images/banner/banner.jpg' />
         </AspectRatio>
         <Image
-          // size='2xl'
-          // name='Redfox Volleyball Club'
-          src='https://storage.cloud.google.com/qe_banner_images/logo/logo.jpg'
+          src={`https://storage.cloud.google.com/qe_banner_images/logo/qe-${intId}-logo.jpg`}
           position='absolute'
           borderRadius={"50%"}
           width={isMobile ? "15vw" : "10vw"}
+          height={isMobile ? "15vw" : "10vw"}
           bottom={isMobile ? "-2vw" : "0"}
           left={"10vw"}
+          objectFit='cover'
+          fallbackSrc={defaultLogo.src}
+          background='white'
+          border={"1px solid #E2E8F0"}
         />
       </Box>
       {page === "join" ? (

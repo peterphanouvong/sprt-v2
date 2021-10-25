@@ -2,21 +2,15 @@ import { Button } from "@chakra-ui/button";
 import { HStack, VStack } from "@chakra-ui/layout";
 import {
   FormControl,
-  FormHelperText,
   FormLabel,
   Input,
-  InputGroup,
-  useToast,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
-import React, { useCallback } from "react";
-import { useDropzone } from "react-dropzone";
-import {
-  useCreateQuickEventMutation,
-  useUploadImageMutation,
-} from "../generated/graphql";
+import React from "react";
+import { useCreateQuickEventMutation } from "../generated/graphql";
 import { parseRichText } from "../utils/parseRichText";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 import { DynamicEditor } from "./DynamicEditor";
@@ -35,8 +29,6 @@ const QuickEventForm: React.FC<Props> = ({}) => {
 
   const [, createQuickEvent] = useCreateQuickEventMutation();
 
-  // const [, uploadImage] = useUploadImageMutation();
-
   const processLogoImage = () => {
     //@ts-ignore
     const file = document.getElementById("Logo").files[0];
@@ -44,14 +36,6 @@ const QuickEventForm: React.FC<Props> = ({}) => {
     // uploadImage(file);
     setLogoFile(file);
   };
-
-  // const onDrop = useCallback((acceptedFiles) => {
-  //   console.log(acceptedFiles);
-  //   uploadImage(acceptedFiles);
-  //   // Do something with the files
-  // }, []);
-
-  // const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
     <>
@@ -73,8 +57,6 @@ const QuickEventForm: React.FC<Props> = ({}) => {
             },
           });
 
-          // onDrop(logoFile);
-
           if (error) {
             toast({
               description: error.message.substr(10),
@@ -91,7 +73,6 @@ const QuickEventForm: React.FC<Props> = ({}) => {
       >
         {(props) => (
           <Form>
-            {/* {console.log(props)} */}
             <VStack spacing={4} mt={8} alignItems='stretch'>
               <InputField
                 label='Title'
@@ -108,19 +89,12 @@ const QuickEventForm: React.FC<Props> = ({}) => {
                 width={20}
               />
 
-              {/* <TextareaField label="Description" name="description" /> */}
               <DynamicEditor
                 label='Description'
                 setFieldValue={props.setFieldValue}
                 name='description'
                 initialValue={props.values.description}
               />
-
-              {/* <DropzoneArea
-              acceptedFiles={["image/*"]}
-              dropzoneText={"Drag and drop an image here or click"}
-              onChange={(files) => console.log("Files:", files)}
-            /> */}
 
               <FormControl id='Logo' label='Logo'>
                 <FormLabel>
@@ -134,30 +108,8 @@ const QuickEventForm: React.FC<Props> = ({}) => {
                   type='file'
                   accept='image/*'
                   onChange={processLogoImage}
-                  // onInput={() => console.log("input")}
                 />
-                {/* <div {...getRootProps()}>
-                <input {...getInputProps()} />
-                {isDragActive ? (
-                  <p>Drop the files here ...</p>
-                ) : (
-                  <p>Drag 'n' drop some files here, or click to select files</p>
-                )}
-              </div> */}
-                {/* <FormHelperText>We'll never share your email.</FormHelperText> */}
               </FormControl>
-
-              {/* <InputGroup onClick={() => console.log("test")}>
-              <input type={"file"} hidden />
-              <div {...getRootProps()}>
-                <input {...getInputProps()} />
-                {isDragActive ? (
-                  <p>Drop the files here ...</p>
-                ) : (
-                  <p>Drag 'n' drop some files here, or click to select files</p>
-                )}
-              </div>
-            </InputGroup> */}
 
               <Button
                 isLoading={props.isSubmitting}

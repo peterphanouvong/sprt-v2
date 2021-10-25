@@ -91,11 +91,12 @@ export class QuickEventResolver {
   async uploadLogoImage(
     //1
     @Arg("file", () => GraphQLUpload)
-    object: FileUpload
+    object: FileUpload,
+    @Arg("eventId") eventId: Number
   ): Promise<boolean> {
     console.log("testing filename: ", object);
-    const { createReadStream, filename } = await object;
-    const newFilename = `logo/${filename}`;
+    const { createReadStream } = await object;
+    const newFilename = `logo/qe-${eventId}-logo.jpg`;
     await new Promise((res) =>
       createReadStream()
         .pipe(
@@ -125,7 +126,7 @@ export class QuickEventResolver {
     }).save();
     await pubSub.publish(`QUICK-EVENT-${event.id}`, event);
     if (input.logoImage) {
-      await this.uploadLogoImage(input.logoImage);
+      await this.uploadLogoImage(input.logoImage, event.id);
     }
     return QuickEvent.findOne(event.id);
   }
