@@ -205,7 +205,7 @@ const JoinQuickEvent = () => {
           </MobileLayout>
         </SimpleGrid>
       ) : (
-        <>
+        <Box maxW='1440px' margin='auto' padding={"5vw"}>
           <IconButton
             icon={<ChevronLeftIcon />}
             aria-label='back'
@@ -250,7 +250,7 @@ const JoinQuickEvent = () => {
           ) : (
             <ViewAsAdminModal setLoggedIn={setLoggedIn} />
           )}
-        </>
+        </Box>
       )}
     </Box>
   );
