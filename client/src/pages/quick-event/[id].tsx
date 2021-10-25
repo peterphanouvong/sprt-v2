@@ -5,6 +5,7 @@ import {
   DownloadIcon,
 } from "@chakra-ui/icons";
 import {
+  Avatar,
   Box,
   Button,
   Flex,
@@ -14,6 +15,8 @@ import {
   Spinner,
   Text,
   useToast,
+  Image,
+  AspectRatio,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
@@ -83,7 +86,7 @@ const JoinQuickEvent = () => {
     return (
       <>
         <Spinner
-          size="lg"
+          size='lg'
           style={{
             position: "absolute",
             left: "50%",
@@ -103,30 +106,45 @@ const JoinQuickEvent = () => {
   );
 
   return (
-    <Box maxW="1440px" margin="auto" padding={4}>
+    <Box maxW='1440px' margin='auto' padding={4}>
+      <Box padding={"5vw"} position='relative'>
+        <AspectRatio ratio={16 / 6}>
+          <Image src='https://storage.cloud.google.com/qe_banner_images/banner/banner.jpg' />
+        </AspectRatio>
+        <Image
+          // size='2xl'
+          // name='Redfox Volleyball Club'
+          src='https://storage.cloud.google.com/qe_banner_images/logo/logo.jpg'
+          position='absolute'
+          borderRadius={"50%"}
+          width={isMobile ? "15vw" : "10vw"}
+          bottom={isMobile ? "-2vw" : "0"}
+          left={"10vw"}
+        />
+      </Box>
       {page === "join" ? (
         <SimpleGrid columns={isMobile ? 1 : 2} spacing={10}>
           <MobileLayout>
             <Head>
               <title>Join {queryData.quickEvent?.title} | sprt</title>
             </Head>
-            <Heading as="h1" variant="h1">
+            <Heading as='h1' variant='h1'>
               {queryData.quickEvent?.title}
             </Heading>
             <DynamicEditor
-              name="description"
+              name='description'
               initialValue={parseRichText(
                 queryData.quickEvent?.description || ""
               )}
               readOnly={true}
             />
           </MobileLayout>
-          <MobileLayout top={4} position="sticky" height="100vh">
-            <Box textAlign="center" my={6}>
+          <MobileLayout top={4} position='sticky' height='100vh'>
+            <Box textAlign='center' my={6}>
               {queryData.quickEvent?.capacity ? (
                 <>
-                  <Heading variant="h3">{spotsLeft}</Heading>
-                  <Text variant="body-3">spot(s) left</Text>
+                  <Heading variant='h3'>{spotsLeft}</Heading>
+                  <Text variant='body-3'>spot(s) left</Text>
                 </>
               ) : (
                 <>
@@ -136,20 +154,20 @@ const JoinQuickEvent = () => {
                       : JSON.parse(queryData.quickEvent?.users as string)
                           .length}
                   </Heading>
-                  <Text variant="body-3">person(s) are going</Text>
+                  <Text variant='body-3'>person(s) are going</Text>
                 </>
               )}
             </Box>
 
             <Flex
               flexDir={isMobile ? "column" : "row"}
-              alignItems="flex-start"
+              alignItems='flex-start'
               mt={4}
             >
               <Button
                 size={isMobile ? "xs" : "sm"}
-                colorScheme="gray"
-                variant="outline"
+                colorScheme='gray'
+                variant='outline'
                 rightIcon={<CopyIcon />}
                 mr={isMobile ? 0 : 2}
                 mb={isMobile ? 1 : 0}
@@ -158,8 +176,8 @@ const JoinQuickEvent = () => {
                 Copy link to this event
               </Button>
               <Button
-                colorScheme="gray"
-                variant="outline"
+                colorScheme='gray'
+                variant='outline'
                 rightIcon={<ChevronRightIcon />}
                 size={isMobile ? "xs" : "sm"}
                 onClick={() => setPage("attendees")}
@@ -168,14 +186,14 @@ const JoinQuickEvent = () => {
               </Button>
             </Flex>
 
-            <Heading mt={6} as="h4" variant="h4">
+            <Heading mt={6} as='h4' variant='h4'>
               Join event
             </Heading>
 
             <JoinQuickEventForm quickEventId={intId} isFull={spotsLeft === 0} />
             {loggedIn ? (
               <div>
-                <Text mt={4} variant="body-2" color="blue.500">
+                <Text mt={4} variant='body-2' color='blue.500'>
                   Viewing as Admin
                 </Text>
               </div>
@@ -190,11 +208,11 @@ const JoinQuickEvent = () => {
         <>
           <IconButton
             icon={<ChevronLeftIcon />}
-            aria-label="back"
-            borderRadius="full"
-            colorScheme="gray"
+            aria-label='back'
+            borderRadius='full'
+            colorScheme='gray'
             onClick={() => setPage("join")}
-            variant="outline"
+            variant='outline'
           />
 
           {loggedIn && (
@@ -208,7 +226,7 @@ const JoinQuickEvent = () => {
               <Button
                 size={isMobile ? "xs" : "sm"}
                 my={4}
-                colorScheme="gray"
+                colorScheme='gray'
                 rightIcon={<DownloadIcon />}
               >
                 Download list of attendees
@@ -225,7 +243,7 @@ const JoinQuickEvent = () => {
 
           {loggedIn ? (
             <div>
-              <Text mt={4} variant="body-2" color="blue.500">
+              <Text mt={4} variant='body-2' color='blue.500'>
                 Viewing as Admin
               </Text>
             </div>
