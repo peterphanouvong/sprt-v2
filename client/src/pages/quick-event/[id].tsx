@@ -35,7 +35,6 @@ import {
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { parseRichText } from "../../utils/parseRichText";
 import { useIsMobileScreen } from "../../utils/useIsMobileScreen";
-import defaultBanner from "../../images/banner.jpg";
 import defaultLogo from "../../images/redfox-logo.jpg";
 
 const JoinQuickEvent = () => {
@@ -106,6 +105,15 @@ const JoinQuickEvent = () => {
     0
   );
 
+  const numInWaitlist =
+    (queryData.quickEvent?.capacity! -
+      (attendees
+        ? attendees.length
+        : JSON.parse(queryData.quickEvent?.users!).length)) *
+    -1;
+
+  console.log(numInWaitlist);
+
   return (
     <Box maxW='1440px' margin='auto' padding={4}>
       <Box padding={"5vw"} position='relative'>
@@ -153,8 +161,22 @@ const JoinQuickEvent = () => {
             <Box textAlign='center' my={6}>
               {queryData.quickEvent?.capacity ? (
                 <>
-                  <Heading variant='h3'>{spotsLeft}</Heading>
-                  <Text variant='body-3'>spot(s) left</Text>
+                  {spotsLeft !== 0 ? (
+                    <>
+                      <Heading variant='h3'>{spotsLeft}</Heading>
+                      <Text variant='body-3'>spot(s) left</Text>
+                    </>
+                  ) : (
+                    <>
+                      <Heading variant='h3'>{numInWaitlist}</Heading>
+                      {numInWaitlist === 1 ? (
+                        <Text variant='body-3'>person on the waitlist</Text>
+                      ) : (
+                        <Text variant='body-3'>people on the waitlist</Text>
+                      )}
+                      {/* <Text variant='body-3'>people on the waitlist</Text> */}
+                    </>
+                  )}
                 </>
               ) : (
                 <>
@@ -196,9 +218,15 @@ const JoinQuickEvent = () => {
               </Button>
             </Flex>
 
-            <Heading mt={6} as='h4' variant='h4'>
-              Join event
-            </Heading>
+            {spotsLeft === 0 ? (
+              <Heading mt={6} as='h4' variant='h4'>
+                Join waitlist
+              </Heading>
+            ) : (
+              <Heading mt={6} as='h4' variant='h4'>
+                Join event
+              </Heading>
+            )}
 
             <JoinQuickEventForm quickEventId={intId} isFull={spotsLeft === 0} />
             {loggedIn ? (
