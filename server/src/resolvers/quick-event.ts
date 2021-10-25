@@ -22,7 +22,7 @@ const storage = new Storage({
   projectId: "sprt-quick-event",
 });
 
-const bannerImagesBucket = storage.bucket("qe_banner_images");
+// const bannerImagesBucket = storage.bucket("qe_banner_images");
 // console.log(bannerImagesBucket);
 
 @InputType()

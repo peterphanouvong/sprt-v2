@@ -26,7 +26,6 @@ const storage = new Storage({
     keyFileName: posix_1.default.join(__dirname, "../../sprt-quick-event-08b7af871940.json"),
     projectId: "sprt-quick-event",
 });
-const bannerImagesBucket = storage.bucket("qe_banner_images");
 let QuickEventInput = class QuickEventInput {
 };
 __decorate([

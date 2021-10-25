@@ -18,7 +18,7 @@ import { useDropzone } from "react-dropzone";
 import { FaUpload } from "react-icons/fa";
 import {
   ClubByAdminIdQuery,
-  useUploadBannerImageMutation,
+  // useUploadBannerImageMutation,
 } from "../generated/graphql";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 
@@ -28,14 +28,14 @@ interface Props {
 
 const ClubBanner: React.FC<Props> = ({ club }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [, uploadBannerImage] = useUploadBannerImageMutation();
+  // const [, uploadBannerImage] = useUploadBannerImageMutation();
   const isMobile = useIsMobileScreen();
 
   const onDrop = useCallback(async ([file]) => {
     console.log(file);
-    await uploadBannerImage({ file, clubname: club.clubByAdminId.name }).catch(
-      console.error
-    );
+    // await uploadBannerImage({ file, clubname: club.clubByAdminId.name }).catch(
+    //   console.error
+    // );
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 

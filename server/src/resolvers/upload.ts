@@ -1,14 +1,14 @@
-import { FileUpload, GraphQLUpload, Upload } from "graphql-upload";
-import path from "path";
-import { Arg, Mutation, Resolver } from "type-graphql";
-const { Storage } = require("@google-cloud/storage");
+import { Upload } from "graphql-upload";
+// import path from "path";
+import { Resolver } from "type-graphql";
+// const { Storage } = require("@google-cloud/storage");
 
-const storage = new Storage({
-  keyFilename: path.join(__dirname, "../../sprt-5111-c956c44c12d4.json"),
-  projectId: "sprt-5111",
-});
+// const storage = new Storage({
+//   keyFilename: path.join(__dirname, "../../sprt-5111-c956c44c12d4.json"),
+//   projectId: "sprt-5111",
+// });
 
-const bucketName = "test-sprt-bucket";
+// const bucketName = "test-sprt-bucket";
 
 @Resolver(Upload)
 export class UploadResolver {
