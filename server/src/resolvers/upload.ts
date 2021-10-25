@@ -12,51 +12,48 @@ const bucketName = "test-sprt-bucket";
 
 @Resolver(Upload)
 export class UploadResolver {
-  @Mutation(() => Boolean)
-  async uploadImage(
-    //1
-    @Arg("file", () => GraphQLUpload)
-    { createReadStream, filename }: FileUpload
-  ): Promise<boolean> {
-    console.log(filename);
-    await new Promise((res) =>
-      createReadStream()
-        .pipe(
-          storage.bucket(bucketName).file(filename).createWriteStream({
-            resumable: false,
-            gzip: true,
-          })
-        )
-        .on("finish", res)
-    );
-
-    return true;
-  }
-
-  @Mutation(() => Boolean)
-  async uploadBannerImage(
-    //1
-    @Arg("file", () => GraphQLUpload)
-    { createReadStream, filename }: FileUpload,
-    @Arg("clubname") clubname: string
-  ): Promise<boolean> {
-    console.log(filename);
-    console.log(clubname);
-    const formattedName = clubname
-      .replace(" ", "_")
-      .concat("/", "banner_image.png");
-    console.log(formattedName);
-    await new Promise((res) =>
-      createReadStream()
-        .pipe(
-          storage.bucket(bucketName).file(formattedName).createWriteStream({
-            resumable: false,
-            gzip: true,
-          })
-        )
-        .on("finish", res)
-    );
-
-    return true;
-  }
+  // @Mutation(() => Boolean)
+  // async uploadImage(
+  //   //1
+  //   @Arg("file", () => GraphQLUpload)
+  //   { createReadStream, filename }: FileUpload
+  // ): Promise<boolean> {
+  //   console.log(filename);
+  //   await new Promise((res) =>
+  //     createReadStream()
+  //       .pipe(
+  //         storage.bucket(bucketName).file(filename).createWriteStream({
+  //           resumable: false,
+  //           gzip: true,
+  //         })
+  //       )
+  //       .on("finish", res)
+  //   );
+  //   return true;
+  // }
+  // @Mutation(() => Boolean)
+  // async uploadBannerImage(
+  //   //1
+  //   @Arg("file", () => GraphQLUpload)
+  //   { createReadStream, filename }: FileUpload,
+  //   @Arg("clubname") clubname: string
+  // ): Promise<boolean> {
+  //   console.log(filename);
+  //   console.log(clubname);
+  //   const formattedName = clubname
+  //     .replace(" ", "_")
+  //     .concat("/", "banner_image.png");
+  //   console.log(formattedName);
+  //   await new Promise((res) =>
+  //     createReadStream()
+  //       .pipe(
+  //         storage.bucket(bucketName).file(formattedName).createWriteStream({
+  //           resumable: false,
+  //           gzip: true,
+  //         })
+  //       )
+  //       .on("finish", res)
+  //   );
+  //   return true;
+  // }
 }
