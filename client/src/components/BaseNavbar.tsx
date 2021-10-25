@@ -1,11 +1,11 @@
-import React from "react";
-import { BaseLogo } from "./BaseLogo";
-import NextLink from "next/link";
-import { useIsLoggedIn } from "../utils/useIsLoggedIn";
-import { useLogoutMutation } from "../generated/graphql";
 import { Button, ButtonGroup } from "@chakra-ui/button";
+import { Box, Heading } from "@chakra-ui/react";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
-import { Box } from "@chakra-ui/react";
+import React from "react";
+import { BsFileEarmarkPlus, BsPlus } from "react-icons/bs";
+import { useLogoutMutation } from "../generated/graphql";
+import { useIsLoggedIn } from "../utils/useIsLoggedIn";
 
 interface Props {}
 
@@ -21,32 +21,65 @@ const BaseNavbar: React.FC<Props> = ({}) => {
         display="flex"
         alignItems="center"
         justifyContent="space-between"
-        paddingY={4}
+        padding={4}
       >
-        <NextLink href="/home">
-          <a>
-            <BaseLogo size="sm" />
-          </a>
-        </NextLink>
+        <Box display="flex" alignItems="center">
+          <NextLink href="/home">
+            <a>
+              <Heading variant="h5" as="h5">
+                sprt
+              </Heading>
+            </a>
+          </NextLink>
+          <Box mr={4} />
+          {isLoggedIn && (
+            <ButtonGroup>
+              <NextLink href="new-event">
+                <Button
+                  colorScheme="gray"
+                  variant="solid"
+                  size="sm"
+                  rightIcon={<BsPlus />}
+                >
+                  Create an event
+                </Button>
+              </NextLink>
+              <Button
+                size="sm"
+                variant="outline"
+                colorScheme="gray"
+                rightIcon={<BsFileEarmarkPlus />}
+              >
+                Create a template
+              </Button>
+            </ButtonGroup>
+          )}
+        </Box>
 
         {isLoggedIn ? (
           <Button
+            size="sm"
             variant="ghost"
+            colorScheme="gray"
             onClick={() => {
               router.push("/");
               logout();
             }}
           >
-            Logout
+            logout
           </Button>
         ) : (
           <ButtonGroup>
             <NextLink href="/login">
-              <Button variant="ghost">Login</Button>
+              <Button size="sm" variant="ghost">
+                login
+              </Button>
             </NextLink>
 
             <NextLink href="/register">
-              <Button variant="solid">Sign up</Button>
+              <Button size="sm" variant="solid">
+                sign up
+              </Button>
             </NextLink>
           </ButtonGroup>
         )}

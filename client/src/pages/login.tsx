@@ -1,126 +1,25 @@
-import React from "react";
-import { useRouter } from "next/router";
-import { Formik, Form } from "formik";
-import {
-  Box,
-  Button,
-  Heading,
-  Link,
-  Stack,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
-
-import { BaseInputField } from "../components/BaseInputField";
-import { toErrorMap } from "../utils/toErrorMap";
-import { useLoginMutation } from "../generated/graphql";
-import { createUrqlClient } from "../utils/createUrqlClient";
-import NextLink from "next/link";
-import { BaseBackButton } from "../components/BaseBackButton";
 import Head from "next/head";
-import { BaseLogo } from "../components/BaseLogo";
+import React from "react";
+import { LoginForm } from "../components/LoginForm";
+import { createUrqlClient } from "../utils/createUrqlClient";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
 
 interface Props {}
 
 const Login: React.FC<Props> = ({}) => {
-  const [{}, login] = useLoginMutation();
-
-  const router = useRouter();
+  const isMobile = useIsMobileScreen();
   return (
     <>
       <Head>
         <title>Log in | sprt</title>
       </Head>
-      <Box>
-        <Stack margin="auto" maxW={"500px"} padding={4}>
-          <Box>
-            <BaseBackButton />
-            <Box mt={6} />
-            <BaseLogo />
-          </Box>
-          <Heading variant="h1">Welcome back</Heading>
-          <Text paddingBottom={6} variant="body-2">
-            Let's get you signed in.
-          </Text>
-          <Formik
-            initialValues={{ clubNameOrEmail: "", password: "" }}
-            onSubmit={async (values, { setErrors }) => {
-              const res = await login({
-                password: values.password,
-                clubNameOrEmail: values.clubNameOrEmail,
-              });
-              if (res.data?.login.errors) {
-                setErrors(toErrorMap(res.data.login.errors));
-              } else if (res.data?.login.user) {
-                if (typeof router.query.next === "string") {
-                  router.push(router.query.next);
-                } else {
-                  router.push("/home");
-                }
-              }
-            }}
-          >
-            {(props) => (
-              <Form>
-                <VStack spacing={4} align="stretch">
-                  <BaseInputField
-                    name="clubNameOrEmail"
-                    label="Username or Email"
-                    placeholder="username or email"
-                    touched={props.touched.clubNameOrEmail as boolean}
-                    required
-                  />
-                  <VStack spacing={1} alignItems="start">
-                    <BaseInputField
-                      name="password"
-                      label="Password"
-                      type="password"
-                      placeholder="password"
-                      touched={props.touched.password as boolean}
-                      required
-                    />
-                    <NextLink href="/forgot-password">
-                      <Link fontSize="sm">
-                        <Text color="brand.500" variant="body-3">
-                          Forgot password?
-                        </Text>
-                      </Link>
-                    </NextLink>
-                  </VStack>
-                  <Button isLoading={props.isSubmitting} type="submit">
-                    Log in
-                  </Button>
-
-                  <Box>
-                    <Text display="inline" variant="body-3">
-                      Don't have an account yet?{" "}
-                    </Text>
-                    <NextLink href="/register">
-                      <Link>
-                        <Text
-                          display="inline"
-                          color="brand.500"
-                          variant="body-3"
-                        >
-                          Sign up.
-                        </Text>
-                      </Link>
-                    </NextLink>
-                  </Box>
-
-                  {/* <FacebookLogin
-                  appId='1088597931155576'
-                  autoLoad={true}
-                  fields='name,email,picture'
-                  // onClick={componentClicked}
-                  callback={responseFacebook}
-                /> */}
-                </VStack>
-              </Form>
-            )}
-          </Formik>
-        </Stack>
+      <Box height="100vh" display="flex">
+        <Box flex={2} pos="relative">
+          <LoginForm />
+        </Box>
+        <Box hidden={isMobile} flex={3} bg="brand.500"></Box>
       </Box>
     </>
   );

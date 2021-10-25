@@ -72,8 +72,8 @@ const RegisterForm: React.FC<Props> = () => {
               <Text display="inline" variant="body-3">
                 I have read and agree to the{" "}
               </Text>
-              <Link color="brand" href="#">
-                <Text display="inline" variant="body-3">
+              <Link href="#">
+                <Text color="brand.500" display="inline" variant="body-3">
                   Terms of Service.
                 </Text>
               </Link>
@@ -87,8 +87,8 @@ const RegisterForm: React.FC<Props> = () => {
                 Already have an account?{" "}
               </Text>
               <NextLink href="/login">
-                <Link color="brand">
-                  <Text display="inline" color="brand" variant="body-3">
+                <Link>
+                  <Text display="inline" color="brand.500" variant="body-3">
                     Login.
                   </Text>
                 </Link>
