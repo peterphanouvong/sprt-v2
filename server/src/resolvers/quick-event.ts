@@ -1,3 +1,4 @@
+import path from "path/posix";
 import {
   Arg,
   Field,
@@ -13,6 +14,16 @@ import {
 } from "type-graphql";
 import { getConnection } from "typeorm";
 import { QuickEvent } from "../entities/QuickEvent";
+import { FileUpload, GraphQLUpload } from "graphql-upload";
+const { Storage } = require("@google-cloud/storage");
+
+const storage = new Storage({
+  keyFileName: path.join(__dirname, "../../sprt-quick-event-08b7af871940.json"),
+  projectId: "sprt-quick-event",
+});
+
+// const bannerImagesBucket = storage.bucket("qe_banner_images");
+// console.log(bannerImagesBucket);
 
 @InputType()
 class QuickEventInput {
@@ -27,6 +38,12 @@ class QuickEventInput {
 
   @Field({ nullable: true })
   users: string;
+
+  @Field(() => GraphQLUpload, { nullable: true })
+  bannerImage: FileUpload;
+
+  @Field(() => GraphQLUpload, { nullable: true })
+  logoImage: FileUpload;
 }
 
 @InputType()
@@ -66,7 +83,62 @@ export class QuickEventResolver {
     if (quickEvent === undefined) {
       return QuickEvent.findOne(id);
     }
+
     return quickEvent;
+  }
+
+  @Mutation(() => Boolean)
+  async uploadLogoImage(
+    //1
+    @Arg("file", () => GraphQLUpload)
+    object: FileUpload,
+    @Arg("eventId") eventId: Number
+  ): Promise<boolean> {
+    console.log("testing filename: ", object);
+    const { createReadStream } = await object;
+    const newFilename = `logo/qe-${eventId}-logo.jpg`;
+    await new Promise((res) =>
+      createReadStream()
+        .pipe(
+          storage
+            .bucket("qe_banner_images")
+            .file(newFilename)
+            .createWriteStream({
+              resumable: false,
+              gzip: true,
+            })
+        )
+        .on("finish", res)
+    );
+
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  async uploadBannerImage(
+    //1
+    @Arg("file", () => GraphQLUpload)
+    object: FileUpload,
+    @Arg("eventId") eventId: Number
+  ): Promise<boolean> {
+    console.log("testing filename: ", object);
+    const { createReadStream } = await object;
+    const newFilename = `banner/qe-${eventId}-banner.jpg`;
+    await new Promise((res) =>
+      createReadStream()
+        .pipe(
+          storage
+            .bucket("qe_banner_images")
+            .file(newFilename)
+            .createWriteStream({
+              resumable: false,
+              gzip: true,
+            })
+        )
+        .on("finish", res)
+    );
+
+    return true;
   }
 
   // Create
@@ -75,10 +147,18 @@ export class QuickEventResolver {
     @Arg("input") input: QuickEventInput,
     @PubSub() pubSub: PubSubEngine
   ): Promise<QuickEvent | undefined> {
+    console.log(input);
     const event = await QuickEvent.create({
       ...input,
     }).save();
     await pubSub.publish(`QUICK-EVENT-${event.id}`, event);
+    if (input.logoImage) {
+      await this.uploadLogoImage(input.logoImage, event.id);
+    }
+
+    if (input.bannerImage) {
+      await this.uploadBannerImage(input.bannerImage, event.id);
+    }
     return QuickEvent.findOne(event.id);
   }
 

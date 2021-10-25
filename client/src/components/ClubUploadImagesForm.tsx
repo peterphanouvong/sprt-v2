@@ -7,23 +7,23 @@ import { useDropzone } from "react-dropzone";
 import { FaUpload } from "react-icons/fa";
 import {
   ClubByAdminIdQuery,
-  useUploadBannerImageMutation,
+  // useUploadBannerImageMutation,
 } from "../generated/graphql";
 
 interface Props {
   club: ClubByAdminIdQuery;
 }
 
-const ClubUploadImagesForm: React.FC<Props> = ({ club }) => {
-  const [, uploadBannerImage] = useUploadBannerImageMutation();
+const ClubUploadImagesForm: React.FC<Props> = ({}) => {
+  // const [, uploadBannerImage] = useUploadBannerImageMutation();
   const [bannerFile, setBannerFile] = React.useState<File>();
 
   const onDrop = useCallback(async ([file]) => {
     console.log(file);
     setBannerFile(file);
-    await uploadBannerImage({ file, clubname: club.clubByAdminId.name }).catch(
-      console.error
-    );
+    // await uploadBannerImage({ file, clubname: club.clubByAdminId.name }).catch(
+    //   console.error
+    // );
     console.log(bannerFile?.name);
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });

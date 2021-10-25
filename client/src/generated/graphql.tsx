@@ -99,11 +99,10 @@ export type Mutation = {
   createPost: Post;
   updatePost?: Maybe<Post>;
   deletePost: Scalars['Boolean'];
+  uploadImage: Scalars['Boolean'];
   createQuickEvent: QuickEvent;
   updateQuickEvent?: Maybe<QuickEvent>;
   joinQuickEvent: QuickEvent;
-  uploadImage: Scalars['Boolean'];
-  uploadBannerImage: Scalars['Boolean'];
   register: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
@@ -201,6 +200,11 @@ export type MutationDeletePostArgs = {
 };
 
 
+export type MutationUploadImageArgs = {
+  file: Scalars['Upload'];
+};
+
+
 export type MutationCreateQuickEventArgs = {
   input: QuickEventInput;
 };
@@ -215,17 +219,6 @@ export type MutationUpdateQuickEventArgs = {
 export type MutationJoinQuickEventArgs = {
   id: Scalars['Float'];
   input: QuickEventUserInput;
-};
-
-
-export type MutationUploadImageArgs = {
-  file: Scalars['Upload'];
-};
-
-
-export type MutationUploadBannerImageArgs = {
-  clubname: Scalars['String'];
-  file: Scalars['Upload'];
 };
 
 
@@ -354,6 +347,7 @@ export type QuickEvent = {
   users: Scalars['String'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
+  bannerImageUrl: Scalars['String'];
 };
 
 export type QuickEventInput = {
@@ -361,6 +355,8 @@ export type QuickEventInput = {
   description?: Maybe<Scalars['String']>;
   capacity?: Maybe<Scalars['Float']>;
   users?: Maybe<Scalars['String']>;
+  bannerImage?: Maybe<Scalars['Upload']>;
+  logoImage?: Maybe<Scalars['Upload']>;
 };
 
 export type QuickEventUserInput = {
@@ -578,14 +574,6 @@ export type UpdateQuickEventMutationVariables = Exact<{
 
 
 export type UpdateQuickEventMutation = { __typename?: 'Mutation', updateQuickEvent?: Maybe<{ __typename?: 'QuickEvent', id: number, title: string, description?: Maybe<string>, capacity?: Maybe<number>, users: string, createdAt: string }> };
-
-export type UploadBannerImageMutationVariables = Exact<{
-  clubname: Scalars['String'];
-  file: Scalars['Upload'];
-}>;
-
-
-export type UploadBannerImageMutation = { __typename?: 'Mutation', uploadBannerImage: boolean };
 
 export type UploadImageMutationVariables = Exact<{
   file: Scalars['Upload'];
@@ -1075,15 +1063,6 @@ export const UpdateQuickEventDocument = gql`
 
 export function useUpdateQuickEventMutation() {
   return Urql.useMutation<UpdateQuickEventMutation, UpdateQuickEventMutationVariables>(UpdateQuickEventDocument);
-};
-export const UploadBannerImageDocument = gql`
-    mutation UploadBannerImage($clubname: String!, $file: Upload!) {
-  uploadBannerImage(clubname: $clubname, file: $file)
-}
-    `;
-
-export function useUploadBannerImageMutation() {
-  return Urql.useMutation<UploadBannerImageMutation, UploadBannerImageMutationVariables>(UploadBannerImageDocument);
 };
 export const UploadImageDocument = gql`
     mutation UploadImage($file: Upload!) {

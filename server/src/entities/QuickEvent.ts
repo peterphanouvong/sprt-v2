@@ -42,4 +42,8 @@ export class QuickEvent extends BaseEntity {
   @Field(() => String)
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Field(() => String)
+  @Column({ nullable: true })
+  bannerImageUrl: string;
 }

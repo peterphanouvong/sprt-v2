@@ -49,6 +49,11 @@ __decorate([
     typeorm_1.UpdateDateColumn(),
     __metadata("design:type", Date)
 ], QuickEvent.prototype, "updatedAt", void 0);
+__decorate([
+    type_graphql_1.Field(() => String),
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], QuickEvent.prototype, "bannerImageUrl", void 0);
 QuickEvent = __decorate([
     type_graphql_1.ObjectType(),
     typeorm_1.Entity()
