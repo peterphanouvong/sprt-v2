@@ -35,7 +35,8 @@ import {
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { parseRichText } from "../../utils/parseRichText";
 import { useIsMobileScreen } from "../../utils/useIsMobileScreen";
-import defaultLogo from "../../images/sprt.svg";
+import defaultBanner from "../../images/banner.jpg";
+import defaultLogo from "../../images/redfox-logo.jpg";
 
 const JoinQuickEvent = () => {
   const [page, setPage] = useState<"join" | "attendees">("join");
@@ -105,16 +106,16 @@ const JoinQuickEvent = () => {
     0
   );
 
-  console.log(defaultLogo);
-
   return (
     <Box maxW='1440px' margin='auto' padding={4}>
       <Box padding={"5vw"} position='relative'>
         <AspectRatio ratio={16 / 6}>
           <Image
             src={`https://storage.cloud.google.com/qe_banner_images/banner/qe-${intId}-banner.jpg`}
-            fallbackSrc={defaultLogo.src}
-            border={"1px solid #E2E8F0"}
+            fallbackSrc={
+              "https://wallpaper-mania.com/wp-content/uploads/2018/09/High_resolution_wallpaper_background_ID_77700326382.jpg"
+            }
+            // border={"1px solid #E2E8F0"}
           />
         </AspectRatio>
         <Image
