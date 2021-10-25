@@ -114,6 +114,33 @@ export class QuickEventResolver {
     return true;
   }
 
+  @Mutation(() => Boolean)
+  async uploadBannerImage(
+    //1
+    @Arg("file", () => GraphQLUpload)
+    object: FileUpload,
+    @Arg("eventId") eventId: Number
+  ): Promise<boolean> {
+    console.log("testing filename: ", object);
+    const { createReadStream } = await object;
+    const newFilename = `banner/qe-${eventId}-banner.jpg`;
+    await new Promise((res) =>
+      createReadStream()
+        .pipe(
+          storage
+            .bucket("qe_banner_images")
+            .file(newFilename)
+            .createWriteStream({
+              resumable: false,
+              gzip: true,
+            })
+        )
+        .on("finish", res)
+    );
+
+    return true;
+  }
+
   // Create
   @Mutation(() => QuickEvent)
   async createQuickEvent(
@@ -127,6 +154,10 @@ export class QuickEventResolver {
     await pubSub.publish(`QUICK-EVENT-${event.id}`, event);
     if (input.logoImage) {
       await this.uploadLogoImage(input.logoImage, event.id);
+    }
+
+    if (input.bannerImage) {
+      await this.uploadBannerImage(input.bannerImage, event.id);
     }
     return QuickEvent.findOne(event.id);
   }

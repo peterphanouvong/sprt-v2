@@ -107,12 +107,30 @@ let QuickEventResolver = class QuickEventResolver {
             .on("finish", res));
         return true;
     }
+    async uploadBannerImage(object, eventId) {
+        console.log("testing filename: ", object);
+        const { createReadStream } = await object;
+        const newFilename = `banner/qe-${eventId}-banner.jpg`;
+        await new Promise((res) => createReadStream()
+            .pipe(storage
+            .bucket("qe_banner_images")
+            .file(newFilename)
+            .createWriteStream({
+            resumable: false,
+            gzip: true,
+        }))
+            .on("finish", res));
+        return true;
+    }
     async createQuickEvent(input, pubSub) {
         console.log(input);
         const event = await QuickEvent_1.QuickEvent.create(Object.assign({}, input)).save();
         await pubSub.publish(`QUICK-EVENT-${event.id}`, event);
         if (input.logoImage) {
             await this.uploadLogoImage(input.logoImage, event.id);
+        }
+        if (input.bannerImage) {
+            await this.uploadBannerImage(input.bannerImage, event.id);
         }
         return QuickEvent_1.QuickEvent.findOne(event.id);
     }
@@ -176,6 +194,14 @@ __decorate([
     __metadata("design:paramtypes", [Object, Number]),
     __metadata("design:returntype", Promise)
 ], QuickEventResolver.prototype, "uploadLogoImage", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg("file", () => graphql_upload_1.GraphQLUpload)),
+    __param(1, type_graphql_1.Arg("eventId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number]),
+    __metadata("design:returntype", Promise)
+], QuickEventResolver.prototype, "uploadBannerImage", null);
 __decorate([
     type_graphql_1.Mutation(() => QuickEvent_1.QuickEvent),
     __param(0, type_graphql_1.Arg("input")),

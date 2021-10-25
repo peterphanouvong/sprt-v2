@@ -111,7 +111,11 @@ const JoinQuickEvent = () => {
     <Box maxW='1440px' margin='auto' padding={4}>
       <Box padding={"5vw"} position='relative'>
         <AspectRatio ratio={16 / 6}>
-          <Image src='https://storage.cloud.google.com/qe_banner_images/banner/banner.jpg' />
+          <Image
+            src={`https://storage.cloud.google.com/qe_banner_images/banner/qe-${intId}-banner.jpg`}
+            fallbackSrc={defaultLogo.src}
+            border={"1px solid #E2E8F0"}
+          />
         </AspectRatio>
         <Image
           src={`https://storage.cloud.google.com/qe_banner_images/logo/qe-${intId}-logo.jpg`}

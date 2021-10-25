@@ -26,6 +26,7 @@ const QuickEventForm: React.FC<Props> = ({}) => {
   const router = useRouter();
 
   const [logoFile, setLogoFile] = React.useState<File>();
+  const [bannerFile, setBannerFile] = React.useState<File>();
 
   const [, createQuickEvent] = useCreateQuickEventMutation();
 
@@ -35,6 +36,13 @@ const QuickEventForm: React.FC<Props> = ({}) => {
     console.log(file);
     // uploadImage(file);
     setLogoFile(file);
+  };
+
+  const processBannerImage = () => {
+    //@ts-ignore
+    const file = document.getElementById("Banner").files[0];
+    console.log(file);
+    setBannerFile(file);
   };
 
   return (
@@ -54,6 +62,7 @@ const QuickEventForm: React.FC<Props> = ({}) => {
               ...values,
               description: JSON.stringify(values.description),
               logoImage: logoFile,
+              bannerImage: bannerFile,
             },
           });
 
@@ -108,6 +117,21 @@ const QuickEventForm: React.FC<Props> = ({}) => {
                   type='file'
                   accept='image/*'
                   onChange={processLogoImage}
+                />
+              </FormControl>
+
+              <FormControl id='Banner' label='Banner'>
+                <FormLabel>
+                  <HStack>
+                    <Text>Banner Upload</Text>
+                    <Text variant='meta'>(optional)</Text>
+                  </HStack>
+                </FormLabel>
+                <Input
+                  variant='unstyled'
+                  type='file'
+                  accept='image/*'
+                  onChange={processBannerImage}
                 />
               </FormControl>
 
