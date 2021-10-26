@@ -1,13 +1,13 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { ExploreProvider } from "../context/exploreContext";
+import { TemplateProvider } from "../context/templateContext";
 import theme from "../theme";
 
 function MyApp({ Component, pageProps }) {
   return (
     <ChakraProvider theme={theme} resetCSS>
-      <ExploreProvider>
+      <TemplateProvider>
         <Component {...pageProps} />
-      </ExploreProvider>
+      </TemplateProvider>
     </ChakraProvider>
   );
 }

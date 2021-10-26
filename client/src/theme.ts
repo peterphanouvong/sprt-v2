@@ -65,7 +65,7 @@ const theme = extendTheme(
     components: ["Button", "Progress", "Spinner"],
   }),
   withDefaultColorScheme({
-    colorScheme: "yellow",
+    colorScheme: "gray",
     components: ["Tabs", "Checkbox", "Radio"],
   })
 );

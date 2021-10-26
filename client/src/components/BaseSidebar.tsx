@@ -13,6 +13,7 @@ import {
   Button,
   VStack,
   Icon,
+  Divider,
 } from "@chakra-ui/react";
 import React from "react";
 import {
@@ -21,9 +22,12 @@ import {
   BsLightningFill,
   BsLightning,
   BsPeople,
+  BsFileEarmarkPlus,
+  BsCalendar,
 } from "react-icons/bs";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 
 interface Props {}
 
@@ -39,6 +43,7 @@ const BaseSidebar: React.FC<Props> = ({}) => {
       height="100vh"
       justifyContent="space-between"
       left="0"
+      minW="300px"
       padding={4}
       position="fixed"
       top="0"
@@ -51,43 +56,83 @@ const BaseSidebar: React.FC<Props> = ({}) => {
 };
 
 const SidebarTopper = () => {
+  const router = useRouter();
+
   return (
     <Flex flexDir="column">
-      <Heading mb={6} ml={2} as="h4" variant="h4">
+      <Heading mb={8} ml={2} mt={4} as="h4" variant="h4">
         <Icon as={BsLightningFill} /> sprt
       </Heading>
 
       <VStack alignItems="stretch">
         <NextLink href="/home">
           <Button
-            leftIcon={<BsHouse />}
-            variant="ghost"
+            color="gray.600"
             colorScheme="gray"
+            leftIcon={<BsHouse />}
             justifyContent="start"
             size="sm"
+            variant="ghost"
+            isActive={router.pathname === "/home"}
           >
             Home
           </Button>
         </NextLink>
 
         <Button
-          leftIcon={<BsLightning />}
-          variant="ghost"
+          color="gray.600"
           colorScheme="gray"
-          justifyContent="start"
-          size="sm"
-        >
-          Events
-        </Button>
-
-        <Button
           leftIcon={<BsPeople />}
-          variant="ghost"
-          colorScheme="gray"
           justifyContent="start"
           size="sm"
+          variant="ghost"
         >
           My Club
+        </Button>
+
+        <Divider />
+
+        <Text p={3} fontSize="xs" variant="caption" fontWeight="semibold">
+          Events
+        </Text>
+
+        <NextLink href="/events">
+          <Button
+            color="gray.600"
+            colorScheme="gray"
+            leftIcon={<BsLightning />}
+            justifyContent="start"
+            size="sm"
+            variant="ghost"
+            isActive={router.pathname === "/events"}
+          >
+            Event list
+          </Button>
+        </NextLink>
+
+        <NextLink href="/new-event">
+          <Button
+            color="gray.600"
+            colorScheme="gray"
+            leftIcon={<BsCalendar />}
+            justifyContent="start"
+            size="sm"
+            variant="ghost"
+            isActive={router.pathname === "/new-event"}
+          >
+            Create new event
+          </Button>
+        </NextLink>
+
+        <Button
+          color="gray.600"
+          colorScheme="gray"
+          leftIcon={<BsFileEarmarkPlus />}
+          justifyContent="start"
+          size="sm"
+          variant="ghost"
+        >
+          Create new template
         </Button>
       </VStack>
     </Flex>
@@ -107,21 +152,27 @@ const SidebarFooter = () => {
           <NextLink href="#">
             <a>
               <Flex alignItems="center">
-                <Avatar
-                  name={`${data.me?.clubName}`}
-                  mr={2}
-                  size="sm"
-                  // src="https://bit.ly/dan-abramov"
-                />
+                <Avatar name={`${data.me?.clubName}`} mr={4} size="sm" />
 
-                <Text
-                  _hover={{
-                    textDecoration: "underline",
-                  }}
-                  textTransform="capitalize"
-                >
-                  {data.me?.clubName}
-                </Text>
+                <Box display="flex" flexDirection="column">
+                  <Text
+                    _hover={{
+                      textDecoration: "underline",
+                    }}
+                    textTransform="capitalize"
+                    variant="body-3"
+                  >
+                    {data.me?.clubName}
+                  </Text>
+                  <Text
+                    _hover={{
+                      textDecoration: "underline",
+                    }}
+                    variant="meta"
+                  >
+                    {data.me?.email}
+                  </Text>
+                </Box>
               </Flex>
             </a>
           </NextLink>

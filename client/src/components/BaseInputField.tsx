@@ -43,6 +43,7 @@ const BaseInputField: React.FC<InputFieldProps> = ({
         {icon && <InputLeftElement pointerEvents="none" children={icon} />}
 
         <Input
+          borderRadius="3px"
           {...field}
           {...props}
           id={field.name}

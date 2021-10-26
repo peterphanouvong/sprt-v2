@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import React from "react";
 import { useIsLoggedIn } from "../utils/useIsLoggedIn";
-import { BaseContent } from "./BaseContent";
+import { BasePage } from "./BasePage";
 import { BaseNavbar } from "./BaseNavbar";
 import { BaseSidebar } from "./BaseSidebar";
 
@@ -14,7 +14,7 @@ const BaseLayout: React.FC<Props> = ({ children }) => {
       {isLoggedIn ? (
         <>
           <BaseSidebar />
-          <BaseContent>{children}</BaseContent>
+          <BasePage>{children}</BasePage>
         </>
       ) : (
         <>

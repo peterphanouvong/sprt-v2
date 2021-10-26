@@ -102,7 +102,7 @@ const RichTextEditor: React.FC<Props> = ({
             <BlockButton format="bulleted-list" icon={<Icon as={BsListUl} />} />
           </Toolbar>
           <Box
-            borderRadius="md"
+            borderRadius="sm"
             border={readOnly ? "none" : "1px solid"}
             borderColor={active ? "#3182ce" : "gray.200"}
             boxShadow={active ? "0 0 0 1px #3182ce" : ""}

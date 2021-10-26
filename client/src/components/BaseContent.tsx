@@ -1,10 +1,10 @@
-import { Box } from "@chakra-ui/react";
+import { Box, BoxProps } from "@chakra-ui/react";
 import React from "react";
 
-interface Props {}
+type Props = BoxProps;
 
 const BaseContent: React.FC<Props> = ({ children }) => {
-  return <Box ml="20vw">{children}</Box>;
+  return <Box padding={6}>{children}</Box>;
 };
 
 export { BaseContent };

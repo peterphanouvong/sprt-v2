@@ -1,4 +1,4 @@
-import { Text, Spinner } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import React from "react";
@@ -6,24 +6,20 @@ import { BaseContent } from "../components/BaseContent";
 import { BaseLayout } from "../components/BaseLayout";
 import { BasePageHeader } from "../components/BasePageHeader";
 import { BaseSection } from "../components/BaseSection";
-import { useMeQuery } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { useIsAuth } from "../utils/useIsAuth";
 
 interface Props {}
 
-const Home: React.FC<Props> = ({}) => {
+const Events: React.FC<Props> = ({}) => {
   useIsAuth();
-  const [{ data, fetching }] = useMeQuery();
-
-  if (fetching) return <Spinner />;
 
   return (
     <BaseLayout>
       <Head>
-        <title>Home | sprt</title>
+        <title>Events | sprt</title>
       </Head>
-      <BasePageHeader>{data?.me?.clubName}</BasePageHeader>
+      <BasePageHeader>Event list</BasePageHeader>
 
       <BaseContent>
         <BaseSection title="test test">
@@ -38,4 +34,4 @@ const Home: React.FC<Props> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: false })(Home);
+export default withUrqlClient(createUrqlClient, { ssr: false })(Events);
