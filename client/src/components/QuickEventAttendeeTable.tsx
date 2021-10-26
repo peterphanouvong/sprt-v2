@@ -13,6 +13,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
+  keyframes,
 } from "@chakra-ui/react";
 import React from "react";
 import { format } from "date-fns";
@@ -64,6 +65,11 @@ const QuickEventAttendeeTable: React.FC<Props> = ({
     setRemovedUser(user);
   };
 
+  const animate = keyframes`
+    0% { background-position: 0 0 }
+	  100% { background-position: -500px 0 }
+  `;
+
   return users.length == 0 ? (
     <>nothing here...</>
   ) : (
@@ -87,84 +93,111 @@ const QuickEventAttendeeTable: React.FC<Props> = ({
             </Tr>
           </Thead>
           <Tbody>
-            {users
-              // .sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt))
-              .map(
-                (
-                  user: {
-                    email: string;
-                    firstName: string;
-                    lastName: string;
-                    beemId: string;
-                    createdAt: string;
-                    status: string;
-                  },
-                  idx
-                ) => {
-                  return (
-                    <Tr key={user.email}>
-                      <Td>{idx + 1}</Td>
-                      <Td>{user.firstName}</Td>
-                      <Td>{user.lastName}</Td>
-                      <Td>
-                        {format(Date.parse(user.createdAt), "K:mmaaa dd/MM")}
-                      </Td>
-                      {isAdmin && (
-                        <>
-                          <Td>{user.email}</Td>
-                          <Td>{user.beemId}</Td>
-                          <Td>{user.status}</Td>
-                          {isWaitlist && (
-                            <Td>
-                              <Button
-                                colorScheme='green'
-                                onClick={() => {
-                                  confirmAttendee(user.email);
-                                  setConfirmedAttendees({
-                                    ...confirmedAttendees,
-                                    [user.email]: true,
-                                  });
-                                }}
-                              >
-                                Confirm
-                              </Button>
-                              <Button
-                                ml={4}
-                                colorScheme='red'
-                                onClick={() => {
-                                  // console.log("test");
-                                  // removeWaitlistAttendee(user.email);
-                                  removeFromWaitlistAlert(user);
-                                  // removeAttendee(user.email);
-                                }}
-                              >
-                                Remove
-                              </Button>
-                            </Td>
-                          )}
+            {users.map(
+              (
+                user: {
+                  email: string;
+                  firstName: string;
+                  lastName: string;
+                  beemId: string;
+                  createdAt: string;
+                  status: string;
+                },
+                idx
+              ) => {
+                return (
+                  <Tr key={user.email}>
+                    <Td>{idx + 1}</Td>
+                    {user.email === "0401379827" ||
+                    user.email === "0450769340" ||
+                    user.email === "0450769343" ? (
+                      <>
+                        <Td
+                          backgroundImage={
+                            "-webkit-linear-gradient(left, #f00, #ff2b00, #f50, #ff8000, #fa0, #ffd500, #ff0, #d4ff00, #af0, #80ff00, #5f0, #2bff00, #0f0, #00ff2a, #0f5, #00ff80, #0fa, #00ffd5, #0ff, #00d5ff, #0af, #0080ff, #05f, #002aff, #00f, #2b00ff, #50f, #8000ff, #a0f, #d400ff, #f0f, #ff00d4, #f0a, #ff0080, #f05, #ff002b, #f00)"
+                          }
+                          backgroundClip={"text"}
+                          textFillColor={"#0000"}
+                          animation={`${animate} 5s linear infinite alternate`}
+                          fontWeight='bold'
+                        >
+                          {user.firstName}
+                        </Td>
+                        <Td
+                          backgroundImage={
+                            "-webkit-linear-gradient(left, #f00, #ff2b00, #f50, #ff8000, #fa0, #ffd500, #ff0, #d4ff00, #af0, #80ff00, #5f0, #2bff00, #0f0, #00ff2a, #0f5, #00ff80, #0fa, #00ffd5, #0ff, #00d5ff, #0af, #0080ff, #05f, #002aff, #00f, #2b00ff, #50f, #8000ff, #a0f, #d400ff, #f0f, #ff00d4, #f0a, #ff0080, #f05, #ff002b, #f00)"
+                          }
+                          backgroundClip={"text"}
+                          textFillColor={"#0000"}
+                          animation={`${animate} 5s linear infinite alternate`}
+                          fontWeight='bold'
+                        >
+                          {user.lastName}
+                        </Td>
+                      </>
+                    ) : (
+                      <>
+                        <Td>{user.firstName}</Td>
+                        <Td>{user.lastName}</Td>
+                      </>
+                    )}
 
-                          {!isWaitlist && (
-                            <Td>
-                              <Button
-                                colorScheme='red'
-                                onClick={() => {
-                                  removeAttendee(user.email);
-                                  setConfirmedAttendees({
-                                    ...confirmedAttendees,
-                                    [user.email]: false,
-                                  });
-                                }}
-                              >
-                                Remove
-                              </Button>
-                            </Td>
-                          )}
-                        </>
-                      )}
-                    </Tr>
-                  );
-                }
-              )}
+                    <Td>
+                      {format(Date.parse(user.createdAt), "K:mmaaa dd/MM")}
+                    </Td>
+                    {isAdmin && (
+                      <>
+                        <Td>{user.email}</Td>
+                        <Td>{user.beemId}</Td>
+                        <Td>{user.status}</Td>
+                        {isWaitlist && (
+                          <Td>
+                            <Button
+                              colorScheme='green'
+                              onClick={() => {
+                                confirmAttendee(user.email);
+                                setConfirmedAttendees({
+                                  ...confirmedAttendees,
+                                  [user.email]: true,
+                                });
+                              }}
+                            >
+                              Confirm
+                            </Button>
+                            <Button
+                              ml={4}
+                              colorScheme='red'
+                              onClick={() => {
+                                removeFromWaitlistAlert(user);
+                              }}
+                            >
+                              Remove
+                            </Button>
+                          </Td>
+                        )}
+
+                        {!isWaitlist && (
+                          <Td>
+                            <Button
+                              colorScheme='red'
+                              onClick={() => {
+                                removeAttendee(user.email);
+                                setConfirmedAttendees({
+                                  ...confirmedAttendees,
+                                  [user.email]: false,
+                                });
+                              }}
+                            >
+                              Remove
+                            </Button>
+                          </Td>
+                        )}
+                      </>
+                    )}
+                  </Tr>
+                );
+              }
+            )}
           </Tbody>
         </Table>
       </Box>
