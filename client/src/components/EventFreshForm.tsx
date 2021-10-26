@@ -13,6 +13,8 @@ interface Props {
 const EventFreshForm: React.FC<Props> = ({ templateId }) => {
   const isMobile = useIsMobileScreen();
 
+  console.log(templateId);
+
   return (
     <Box flex={1}>
       <Formik

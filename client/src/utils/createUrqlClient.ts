@@ -9,16 +9,6 @@ import {
 } from "urql";
 import { pipe, tap } from "wonka";
 import {
-  AddAttendeeMutationVariables,
-  CreateEventMutation,
-  DeleteClubMutationVariables,
-  DeleteEventMutationVariables,
-  DeletePostMutationVariables,
-  Event,
-  EventsDocument,
-  FeedDocument,
-  FeedQuery,
-  FollowClubMutationVariables,
   JoinQuickEventMutation,
   LoginMutation,
   LogoutMutation,
@@ -141,111 +131,6 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                   return { quickEvent: res.joinQuickEvent };
                 }
               );
-            },
-            followClub: (_result, _args, cache, _info) => {
-              cache.invalidate({
-                __typename: "Club",
-                id: (_args as FollowClubMutationVariables).clubId,
-              });
-            },
-            unfollowClub: (_result, _args, cache, _info) => {
-              cache.invalidate({
-                __typename: "Club",
-                id: (_args as FollowClubMutationVariables).clubId,
-              });
-            },
-            addAttendee: (_result, args, cache, _info) => {
-              cache.invalidate({
-                __typename: "Event",
-                id: (args as AddAttendeeMutationVariables).eventId,
-              });
-            },
-            removeAttendee: (_result, args, cache, _info) => {
-              cache.invalidate({
-                __typename: "Event",
-                id: (args as AddAttendeeMutationVariables).eventId,
-              });
-            },
-
-            // createClub: (_result, args, cache, _info) => {
-            //   betterUpdateQuery<CreateClubMutation, ClubByAdminIdQuery>(
-            //     cache,
-            //     {
-            //       query: ClubByAdminIdDocument,
-            //       //@ts-ignore
-            //       variables: { id: _result.createClub.admins[0].id },
-            //     },
-            //     _result,
-            //     (result, data) => {
-            //       console.log(args);
-            //       console.log(result);
-            //       console.log(data);
-
-            //       return { clubByAdminId: result.createClub };
-            //     }
-            //   );
-            //   // cache.updateQuery({ query: ClubsDocument }, (data) => {
-            //   //   console.log("DATA", data);
-            //   //   //@ts-ignore
-            //   //   data.clubs.push(result.createClub);
-            //   //   return null;
-            //   // });
-            // },
-            deleteClub: (_result, args, cache, _info) => {
-              cache.invalidate({
-                __typename: "Club",
-                id: (args as DeleteClubMutationVariables).id,
-              });
-            },
-            createEvent: (_result, _args, cache, _info) => {
-              betterUpdateQuery<CreateEventMutation, MeQuery>(
-                cache,
-                { query: MeDocument },
-                _result,
-                (result, data) => {
-                  console.log(result, data);
-                  data.me?.events?.push(result.createEvent as Event);
-                  return data;
-                }
-              );
-
-              betterUpdateQuery<CreateEventMutation, FeedQuery>(
-                cache,
-                {
-                  query: FeedDocument,
-                  // @ts-ignore
-                  variables: { id: _result.createEvent?.hostId },
-                },
-                _result,
-                (result, data) => {
-                  console.log(result, data);
-                  if (data !== null) {
-                    data.feed.push(result.createEvent as Event);
-                  }
-                  return data;
-                }
-              );
-
-              cache.updateQuery({ query: EventsDocument }, (data) => {
-                if (data === null) {
-                  return data;
-                }
-                //@ts-ignore
-                data.events.push(result.createEvent);
-                return data;
-              });
-            },
-            deleteEvent: (_result, args, cache, _info) => {
-              cache.invalidate({
-                __typename: "Event",
-                id: (args as DeleteEventMutationVariables).id,
-              });
-            },
-            deletePost: (_result, args, cache, _info) => {
-              cache.invalidate({
-                __typename: "Post",
-                id: (args as DeletePostMutationVariables).id,
-              });
             },
             logout: (_result, _args, cache, _info) => {
               betterUpdateQuery<LogoutMutation, MeQuery>(
