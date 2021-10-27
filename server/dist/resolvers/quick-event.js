@@ -16,14 +16,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.QuickEventResolver = void 0;
-const posix_1 = __importDefault(require("path/posix"));
+const path_1 = __importDefault(require("path"));
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const QuickEvent_1 = require("../entities/QuickEvent");
 const graphql_upload_1 = require("graphql-upload");
 const { Storage } = require("@google-cloud/storage");
 const storage = new Storage({
-    keyFileName: posix_1.default.join(__dirname, "../../sprt-5111-a70dbe0842eb.json"),
+    keyFileName: path_1.default.join(__dirname, "../../sprt-5111-a70dbe0842eb.json"),
     projectId: "sprt-quick-event",
 });
 let QuickEventInput = class QuickEventInput {
