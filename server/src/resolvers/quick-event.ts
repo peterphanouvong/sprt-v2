@@ -18,7 +18,7 @@ import { FileUpload, GraphQLUpload } from "graphql-upload";
 const { Storage } = require("@google-cloud/storage");
 
 const storage = new Storage({
-  keyFileName: path.join(__dirname, "../../sprt-quick-event-08b7af871940.json"),
+  keyFileName: path.join(__dirname, "../../sprt-5111-a70dbe0842eb.json"),
   projectId: "sprt-quick-event",
 });
 

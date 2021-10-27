@@ -23,7 +23,7 @@ const QuickEvent_1 = require("../entities/QuickEvent");
 const graphql_upload_1 = require("graphql-upload");
 const { Storage } = require("@google-cloud/storage");
 const storage = new Storage({
-    keyFileName: posix_1.default.join(__dirname, "../../sprt-quick-event-08b7af871940.json"),
+    keyFileName: posix_1.default.join(__dirname, "../../sprt-5111-a70dbe0842eb.json"),
     projectId: "sprt-quick-event",
 });
 let QuickEventInput = class QuickEventInput {
