@@ -12,12 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
-const Post_1 = require("./Post");
-const Event_1 = require("./Event");
-const ClubFollower_1 = require("./ClubFollower");
-const ClubMember_1 = require("./ClubMember");
-const ClubAdmin_1 = require("./ClubAdmin");
-const EventAttendee_1 = require("./EventAttendee");
 let User = class User extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -27,9 +21,19 @@ __decorate([
 ], User.prototype, "id", void 0);
 __decorate([
     type_graphql_1.Field(),
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "firstname", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "lastname", void 0);
+__decorate([
+    type_graphql_1.Field(),
     typeorm_1.Column({ unique: true }),
     __metadata("design:type", String)
-], User.prototype, "username", void 0);
+], User.prototype, "clubName", void 0);
 __decorate([
     type_graphql_1.Field(),
     typeorm_1.Column({ unique: true }),
@@ -39,32 +43,6 @@ __decorate([
     typeorm_1.Column(),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
-__decorate([
-    type_graphql_1.Field(() => Post_1.Post),
-    typeorm_1.OneToMany(() => Post_1.Post, (post) => post.creator),
-    __metadata("design:type", Array)
-], User.prototype, "posts", void 0);
-__decorate([
-    type_graphql_1.Field(() => Event_1.Event),
-    typeorm_1.OneToMany(() => Event_1.Event, (event) => event.host),
-    __metadata("design:type", Array)
-], User.prototype, "events", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => ClubFollower_1.ClubFollower, (cf) => cf.follower),
-    __metadata("design:type", Array)
-], User.prototype, "following_clubs", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => ClubMember_1.ClubMember, (cm) => cm.member),
-    __metadata("design:type", Array)
-], User.prototype, "club_member", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => ClubAdmin_1.ClubAdmin, (ca) => ca.admin),
-    __metadata("design:type", Array)
-], User.prototype, "club_admin", void 0);
-__decorate([
-    typeorm_1.OneToMany(() => EventAttendee_1.EventAttendee, (ca) => ca.attendee),
-    __metadata("design:type", Array)
-], User.prototype, "eventAttendeeConn", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.CreateDateColumn(),

@@ -11,11 +11,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventResolver = void 0;
 const type_graphql_1 = require("type-graphql");
 const isAuth_1 = require("../middleware/isAuth");
 const Event_1 = require("../entities/Event");
+const User_1 = require("../entities/User");
+const EventAttendee_1 = require("../entities/EventAttendee");
+const typeorm_1 = require("typeorm");
+const Club_1 = require("../entities/Club");
+const ClubEvent_1 = require("../entities/ClubEvent");
 let EventInput = class EventInput {
 };
 __decorate([
@@ -33,32 +39,87 @@ __decorate([
 __decorate([
     type_graphql_1.Field(),
     __metadata("design:type", String)
-], EventInput.prototype, "datetime", void 0);
+], EventInput.prototype, "startTime", void 0);
+__decorate([
+    type_graphql_1.Field({ nullable: true }),
+    __metadata("design:type", String)
+], EventInput.prototype, "endTime", void 0);
+__decorate([
+    type_graphql_1.Field({ nullable: true }),
+    __metadata("design:type", Number)
+], EventInput.prototype, "capacity", void 0);
+__decorate([
+    type_graphql_1.Field({ defaultValue: 1 }),
+    __metadata("design:type", Number)
+], EventInput.prototype, "creatorTypeId", void 0);
+__decorate([
+    type_graphql_1.Field({ defaultValue: 1 }),
+    __metadata("design:type", Number)
+], EventInput.prototype, "publicityTypeId", void 0);
+__decorate([
+    type_graphql_1.Field(() => type_graphql_1.Int, { nullable: true }),
+    __metadata("design:type", Number)
+], EventInput.prototype, "clubId", void 0);
 EventInput = __decorate([
     type_graphql_1.InputType()
 ], EventInput);
 let EventResolver = class EventResolver {
-    async events() {
-        return Event_1.Event.find({ relations: ["host"] });
+    async attendees(event, { userLoader }) {
+        const eventAttendeeIds = await typeorm_1.getConnection().query(`
+      select "attendeeId" 
+      from "event_attendee"
+      where "eventId" = ${event.id};
+    `);
+        return userLoader.loadMany(eventAttendeeIds.map((e) => e.attendeeId));
     }
-    event(id) {
-        return Event_1.Event.findOne(id, { relations: ["host"] });
+    host(event, { userLoader }) {
+        return userLoader.load(event.hostId);
+    }
+    async club(event, { clubLoader }) {
+        if (event.clubId !== null) {
+            return clubLoader.load(event.clubId);
+        }
+        return null;
     }
     async createEvent({ req }, input) {
-        const { id } = await Event_1.Event.create(Object.assign(Object.assign({}, input), { hostId: req.session.userId })).save();
-        const event = await Event_1.Event.findOne(id, { relations: ["host"] });
-        return event;
+        const event = await Event_1.Event.create(Object.assign(Object.assign({}, input), { hostId: req.session.userId })).save();
+        if (input.clubId) {
+            this.addClubEvent(input.clubId, event.id);
+        }
+        return Event_1.Event.findOne(event.id);
+    }
+    async events() {
+        return Event_1.Event.find();
+    }
+    event(id) {
+        return Event_1.Event.findOne(id);
     }
     async updateEvent({ req }, id, input) {
-        const event = await Event_1.Event.findOne(id);
-        if (!event) {
-            return null;
+        const { raw } = await typeorm_1.getConnection()
+            .createQueryBuilder()
+            .update(Event_1.Event)
+            .set(Object.assign({}, input))
+            .where('id = :id and "hostId" = :hostId', {
+            id,
+            hostId: req.session.userId,
+        })
+            .returning("*")
+            .execute();
+        return raw[0];
+    }
+    async addClubEvent(clubId, eventId) {
+        try {
+            await ClubEvent_1.ClubEvent.insert({
+                clubId: clubId,
+                eventId: eventId,
+            });
         }
-        if (req.session.userId !== event.hostId) {
-            return null;
+        catch (error) {
+            if (error.detail.includes("already exists")) {
+                throw Error(`That club already has an event with the given eventId`);
+            }
         }
-        await Event_1.Event.update(id, Object.assign({}, input));
-        return Event_1.Event.findOne(id, { relations: ["host"] });
+        return true;
     }
     async deleteEvent(id, { req }) {
         const event = await Event_1.Event.findOne(id);
@@ -71,7 +132,74 @@ let EventResolver = class EventResolver {
         await Event_1.Event.delete({ id, hostId: req.session.userId });
         return true;
     }
+    async addAttendee({ req }, eventId) {
+        try {
+            await EventAttendee_1.EventAttendee.insert({
+                eventId: eventId,
+                attendeeId: req.session.userId,
+            });
+        }
+        catch (error) {
+            if (error.detail.includes("already exists")) {
+                throw Error(`That user is already attending the event!`);
+            }
+        }
+        return await User_1.User.findOne(req.session.userId);
+    }
+    async removeAttendee(eventId, attendeeId) {
+        await EventAttendee_1.EventAttendee.delete({
+            eventId: eventId,
+            attendeeId: attendeeId,
+        });
+        return true;
+    }
+    async feed(id, { eventLoader }) {
+        var _a;
+        const eventIds = await typeorm_1.getConnection().query(`
+    select array_agg(distinct(e.id))
+    from "event" e
+    left join "club_follower" cf on cf."clubId" = e."clubId"
+    where (
+      cf."followerId" = ${id}
+      or e."hostId" = ${id}
+    );
+  `);
+        return eventLoader.loadMany((_a = eventIds[0].array_agg) !== null && _a !== void 0 ? _a : []);
+    }
 };
+__decorate([
+    type_graphql_1.FieldResolver(() => [User_1.User]),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_a = typeof Event_1.Event !== "undefined" && Event_1.Event) === "function" ? _a : Object, Object]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "attendees", null);
+__decorate([
+    type_graphql_1.FieldResolver(() => User_1.User),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_b = typeof Event_1.Event !== "undefined" && Event_1.Event) === "function" ? _b : Object, Object]),
+    __metadata("design:returntype", void 0)
+], EventResolver.prototype, "host", null);
+__decorate([
+    type_graphql_1.FieldResolver(() => Club_1.Club, { nullable: true }),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [typeof (_c = typeof Event_1.Event !== "undefined" && Event_1.Event) === "function" ? _c : Object, Object]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "club", null);
+__decorate([
+    type_graphql_1.Mutation(() => Event_1.Event),
+    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
+    __param(0, type_graphql_1.Ctx()),
+    __param(1, type_graphql_1.Arg("input")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, EventInput]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "createEvent", null);
 __decorate([
     type_graphql_1.Query(() => [Event_1.Event]),
     __metadata("design:type", Function),
@@ -86,15 +214,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "event", null);
 __decorate([
-    type_graphql_1.Mutation(() => Event_1.Event),
-    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
-    __param(0, type_graphql_1.Ctx()),
-    __param(1, type_graphql_1.Arg("input")),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, EventInput]),
-    __metadata("design:returntype", Promise)
-], EventResolver.prototype, "createEvent", null);
-__decorate([
     type_graphql_1.Mutation(() => Event_1.Event, { nullable: true }),
     __param(0, type_graphql_1.Ctx()),
     __param(1, type_graphql_1.Arg("id")),
@@ -105,12 +224,47 @@ __decorate([
 ], EventResolver.prototype, "updateEvent", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg("clubId")),
+    __param(1, type_graphql_1.Arg("eventId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "addClubEvent", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
     __param(0, type_graphql_1.Arg("id")),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "deleteEvent", null);
+__decorate([
+    type_graphql_1.Mutation(() => User_1.User),
+    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
+    __param(0, type_graphql_1.Ctx()),
+    __param(1, type_graphql_1.Arg("eventId", () => type_graphql_1.Int)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "addAttendee", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg("eventId", () => type_graphql_1.Int)),
+    __param(1, type_graphql_1.Arg("attendeeId", () => type_graphql_1.Int)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "removeAttendee", null);
+__decorate([
+    type_graphql_1.Query(() => [Event_1.Event]),
+    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
+    __param(0, type_graphql_1.Arg("id")),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "feed", null);
 EventResolver = __decorate([
     type_graphql_1.Resolver(Event_1.Event)
 ], EventResolver);

@@ -1,32 +1,26 @@
-import "reflect-metadata";
-import express from "express";
-import "dotenv-safe/config";
-import Redis from "ioredis";
-import session from "express-session";
+import { ApolloServer } from "apollo-server-express";
 import connectRedis from "connect-redis";
 import cors from "cors";
-import { createConnection } from "typeorm";
-import { ApolloServer } from "apollo-server-express";
-import { buildSchema } from "type-graphql";
-
-import { COOKIE_NAME, __prod__ } from "./constants";
-import { HelloResolver } from "./resolvers/hello";
-import { PostResolver } from "./resolvers/post";
-import { UserResolver } from "./resolvers/user";
-import { EventResolver } from "./resolvers/event";
-
-import { Post } from "./entities/Post";
-import { User } from "./entities/User";
+import "dotenv-safe/config";
+import express from "express";
+import session from "express-session";
+import { execute, subscribe } from "graphql";
+import { graphqlUploadExpress } from "graphql-upload";
+import { createServer } from "http";
+import Redis from "ioredis";
 import path from "path";
-import { Event } from "./entities/Event";
-import { Club } from "./entities/Club";
-import { ClubEvent } from "./entities/ClubEvent";
-import { Sport } from "./entities/Sport";
-import { ClubSport } from "./entities/ClubSport";
-import { ClubFollower } from "./entities/ClubFollower";
-import { ClubMember } from "./entities/ClubMember";
-import { ClubAdmin } from "./entities/ClubAdmin";
-import { EventAttendee } from "./entities/EventAttendee";
+import "reflect-metadata";
+import { SubscriptionServer } from "subscriptions-transport-ws";
+import { buildSchema } from "type-graphql";
+import { createConnection } from "typeorm";
+import { COOKIE_NAME, __prod__ } from "./constants";
+import { User } from "./entities/User";
+import { QuickEventResolver } from "./resolvers/quick-event";
+import { UploadResolver } from "./resolvers/upload";
+import { UserResolver } from "./resolvers/user";
+// import { createClubLoader } from "./utils/createClubLoader";
+// import { createEventLoader } from "./utils/createEventLoader";
+// import { createUserLoader } from "./utils/createUserLoader";
 
 const main = async () => {
   const conn = await createConnection({
@@ -34,26 +28,11 @@ const main = async () => {
     url: process.env.DATABASE_URL,
     logging: true,
     // synchronize: true,
-    entities: [
-      Post,
-      User,
-      Event,
-      EventAttendee,
-      Club,
-      ClubEvent,
-      ClubFollower,
-      ClubMember,
-      ClubAdmin,
-      Sport,
-      ClubSport,
-    ],
+    entities: [User],
     migrations: [path.join(__dirname, "./migrations/*")],
   });
 
-  conn.runMigrations();
-
-  // Post.delete({});
-  // Event.delete({});
+  await conn.runMigrations();
 
   const app = express();
 
@@ -65,7 +44,7 @@ const main = async () => {
     cors({
       origin: [
         process.env.CORS_ORIGIN,
-        "https://sprt-test.vercel.app",
+        "https://www.sprt.rest",
         "https://studio.apollographql.com",
       ],
       credentials: true,
@@ -84,29 +63,54 @@ const main = async () => {
         httpOnly: true,
         sameSite: "lax", // csrf
         secure: __prod__, // cookie only works in https
-        domain: __prod__ ? ".sprt.fun" : undefined,
+        domain: __prod__ ? ".sprt.rest" : undefined,
       },
       secret: process.env.SESSION_SECRET,
       resave: false,
     })
   );
 
+  const schema = await buildSchema({
+    resolvers: [UserResolver, UploadResolver, QuickEventResolver],
+    validate: false,
+  });
+
   const apolloServer = new ApolloServer({
-    schema: await buildSchema({
-      resolvers: [HelloResolver, PostResolver, UserResolver, EventResolver],
-      validate: false,
+    // @ts-ignore
+    uploads: false,
+    schema,
+    context: ({ req, res }) => ({
+      req,
+      res,
+      redis,
+      // userLoader: createUserLoader(),
+      // clubLoader: createClubLoader(),
+      // eventLoader: createEventLoader(),
     }),
-    context: ({ req, res }) => ({ req, res, redis }),
   });
 
   await apolloServer.start();
+  app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 
   apolloServer.applyMiddleware({
     app,
     cors: false,
   });
 
-  app.listen(parseInt(process.env.PORT), () => {
+  const httpServer = createServer(app);
+
+  httpServer.listen(parseInt(process.env.PORT), () => {
+    new SubscriptionServer(
+      {
+        execute,
+        subscribe,
+        schema: schema,
+      },
+      {
+        server: httpServer,
+        path: "/subscriptions",
+      }
+    );
     console.log("server started on localhost:4000");
   });
 };

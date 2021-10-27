@@ -1,31 +1,26 @@
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
+import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";
 import router from "next/router";
 import {
   dedupExchange,
   Exchange,
-  fetchExchange,
-  // gql,
   stringifyVariables,
+  subscriptionExchange,
 } from "urql";
 import { pipe, tap } from "wonka";
 import {
-  // CreateEventMutation,
-  // CreatePostMutation,
-  DeletePostMutationVariables,
+  JoinQuickEventMutation,
   LoginMutation,
-  // EventsDocument,
-  // EventsQuery,
-  // LoginMutation,
   LogoutMutation,
   MeDocument,
   MeQuery,
+  QuickEventDocument,
+  QuickEventQuery,
   RegisterMutation,
-  // PostsDocument,
-  // PostsQuery,
-  // RegisterMutation,
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 import { isServer } from "./isServer";
+import { SubscriptionClient } from "subscriptions-transport-ws";
 
 const errorExchange: Exchange = ({ forward }) => (ops$) => {
   return pipe(
@@ -79,6 +74,18 @@ export const cursorPagination = (): Resolver => {
   };
 };
 
+let subscriptionClient;
+
+if (process.browser) {
+  subscriptionClient = new SubscriptionClient(
+    //@ts-ignore
+    process.env.NEXT_PUBLIC_SUBSCRIPTION_API_URL,
+    {
+      reconnect: true,
+    }
+  );
+}
+
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   let cookie = "";
   if (isServer()) {
@@ -86,6 +93,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   }
   return {
     url: process.env.NEXT_PUBLIC_API_URL as string,
+
     fetchOptions: {
       credentials: "include" as const,
       headers: cookie
@@ -96,6 +104,10 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
     },
     exchanges: [
       dedupExchange,
+      subscriptionExchange({
+        forwardSubscription: (operation) =>
+          subscriptionClient.request(operation),
+      }),
       cacheExchange({
         keys: {
           PaginatedPosts: () => null,
@@ -107,13 +119,20 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
-            deletePost: (_result, args, cache, info) => {
-              cache.invalidate({
-                __typename: "Post",
-                id: (args as DeletePostMutationVariables).id,
-              });
+            joinQuickEvent: (_result, _args, cache, _info) => {
+              betterUpdateQuery<JoinQuickEventMutation, QuickEventQuery>(
+                cache,
+                {
+                  query: QuickEventDocument,
+                  variables: { quickEventId: _args.id },
+                },
+                _result,
+                (res, _) => {
+                  return { quickEvent: res.joinQuickEvent };
+                }
+              );
             },
-            logout: (_result, args, cache, info) => {
+            logout: (_result, _args, cache, _info) => {
               betterUpdateQuery<LogoutMutation, MeQuery>(
                 cache,
                 { query: MeDocument },
@@ -121,13 +140,12 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 () => ({ me: null })
               );
             },
-            login: (_result, args, cache, info) => {
+            login: (_result, _args, cache, _info) => {
               betterUpdateQuery<LoginMutation, MeQuery>(
                 cache,
                 { query: MeDocument },
                 _result,
                 (result, query) => {
-                  console.log(query);
                   if (result.login.errors) {
                     return query;
                   } else {
@@ -138,7 +156,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 }
               );
             },
-            register: (_result, args, cache, info) => {
+            register: (_result, _args, cache, _info) => {
               betterUpdateQuery<RegisterMutation, MeQuery>(
                 cache,
                 { query: MeDocument },
@@ -159,7 +177,8 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
       }),
       errorExchange,
       ssrExchange,
-      fetchExchange,
+      // fetchExchange,
+      multipartFetchExchange,
     ],
   };
 };

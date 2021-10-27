@@ -1,0 +1,6 @@
+dump.rdb
+scripts/
+.env
+node_modules
+server/ormconfig.json
+sprt-5111-c956c44c12d4.json

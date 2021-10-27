@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateRegister = void 0;
 const validateRegister = (options) => {
-    if (options.username.length <= 2) {
+    if (options.clubName.length <= 2) {
         return [
             {
                 field: "username",
@@ -26,7 +26,7 @@ const validateRegister = (options) => {
             },
         ];
     }
-    if (options.username.includes("@")) {
+    if (options.clubName.includes("@")) {
         return [
             {
                 field: "username",

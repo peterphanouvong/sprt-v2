@@ -16,15 +16,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserResolver = void 0;
-const User_1 = require("../entities/User");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const type_graphql_1 = require("type-graphql");
-const constants_1 = require("../constants");
-const UsernamePasswordInput_1 = require("./UsernamePasswordInput");
-const validateRegister_1 = require("../utils/validateRegister");
-const sendEmail_1 = require("../utils/sendEmail");
-const uuid_1 = require("uuid");
 const typeorm_1 = require("typeorm");
+const uuid_1 = require("uuid");
+const constants_1 = require("../constants");
+const User_1 = require("../entities/User");
+const sendEmail_1 = require("../utils/sendEmail");
+const validateRegister_1 = require("../utils/validateRegister");
+const UsernamePasswordInput_1 = require("./UsernamePasswordInput");
 let FieldError = class FieldError {
 };
 __decorate([
@@ -52,13 +52,86 @@ UserResponse = __decorate([
     type_graphql_1.ObjectType()
 ], UserResponse);
 let UserResolver = class UserResolver {
-    email(user, { req }) {
-        if (req.session.userId === user.id) {
-            return user.email;
+    async register(options, { req }) {
+        const errors = validateRegister_1.validateRegister(options);
+        if (errors) {
+            return { errors };
         }
-        else {
-            return "";
+        const hashedPassword = await bcrypt_1.default.hash(options.password, 10);
+        let user;
+        try {
+            const res = await typeorm_1.getConnection()
+                .createQueryBuilder()
+                .insert()
+                .into(User_1.User)
+                .values({
+                clubName: options.clubName,
+                email: options.email,
+                password: hashedPassword,
+            })
+                .returning("*")
+                .execute();
+            user = res.raw[0];
         }
+        catch (err) {
+            console.log(err);
+            return err.detail.includes("email")
+                ? {
+                    errors: [
+                        {
+                            field: "email",
+                            message: "that email is already in use",
+                        },
+                    ],
+                }
+                : {
+                    errors: [
+                        {
+                            field: "clubName",
+                            message: "that club name is already in use",
+                        },
+                    ],
+                };
+        }
+        req.session.userId = user.id;
+        return { user };
+    }
+    async login(clubNameOrEmail, password, { req }) {
+        const user = await User_1.User.findOne({
+            where: clubNameOrEmail.includes("@")
+                ? { email: clubNameOrEmail }
+                : { clubName: clubNameOrEmail },
+        });
+        if (!user) {
+            return {
+                errors: [
+                    {
+                        field: "clubNameOrEmail",
+                        message: "That club name or email doesn't exist.",
+                    },
+                ],
+            };
+        }
+        const valid = await bcrypt_1.default.compare(password, user.password);
+        console.log(valid);
+        if (!valid) {
+            return {
+                errors: [{ field: "password", message: "Incorrect password." }],
+            };
+        }
+        req.session.userId = user.id;
+        return { user };
+    }
+    logout({ req, res }) {
+        return new Promise((resolve) => req.session.destroy((err) => {
+            res.clearCookie(constants_1.COOKIE_NAME);
+            if (err) {
+                console.log(err);
+                resolve(false);
+                return;
+            }
+            resolve(true);
+        }));
     }
     async changePassword(token, newPassword, { redis, req }) {
         if (newPassword.length <= 2) {
@@ -116,86 +189,37 @@ let UserResolver = class UserResolver {
         }
         return User_1.User.findOne(req.session.userId);
     }
-    async register(options, { req }) {
-        const errors = validateRegister_1.validateRegister(options);
-        if (errors) {
-            return { errors };
-        }
-        const hashedPassword = await bcrypt_1.default.hash(options.password, 10);
-        let user;
-        try {
-            const res = await typeorm_1.getConnection()
-                .createQueryBuilder()
-                .insert()
-                .into(User_1.User)
-                .values({
-                username: options.username,
-                email: options.email,
-                password: hashedPassword,
-            })
-                .returning("*")
-                .execute();
-            user = res.raw[0];
-        }
-        catch (err) {
-            return {
-                errors: [
-                    {
-                        field: "username",
-                        message: "that username has been taken",
-                    },
-                ],
-            };
-        }
-        req.session.userId = user.id;
-        return { user };
+    async user(id) {
+        return await User_1.User.findOne(id);
     }
-    async login(usernameOrEmail, password, { req }) {
-        const user = await User_1.User.findOne({
-            where: usernameOrEmail.includes("@")
-                ? { email: usernameOrEmail }
-                : { username: usernameOrEmail },
-        });
-        if (!user) {
-            return {
-                errors: [
-                    {
-                        field: "username",
-                        message: "that username or email doesn't exist",
-                    },
-                ],
-            };
-        }
-        const valid = await bcrypt_1.default.compare(password, user.password);
-        console.log(valid);
-        if (!valid) {
-            return {
-                errors: [{ field: "password", message: "incorrect password" }],
-            };
-        }
-        req.session.userId = user.id;
-        return { user };
-    }
-    logout({ req, res }) {
-        return new Promise((resolve) => req.session.destroy((err) => {
-            res.clearCookie(constants_1.COOKIE_NAME);
-            if (err) {
-                console.log(err);
-                resolve(false);
-                return;
-            }
-            resolve(true);
-        }));
+    async userByClubName(clubName) {
+        return await User_1.User.findOne({ clubName });
     }
 };
 __decorate([
-    type_graphql_1.FieldResolver(() => String),
-    __param(0, type_graphql_1.Root()),
+    type_graphql_1.Mutation(() => UserResponse),
+    __param(0, type_graphql_1.Arg("options", () => UsernamePasswordInput_1.UserRegisterInput)),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [User_1.User, Object]),
-    __metadata("design:returntype", String)
-], UserResolver.prototype, "email", null);
+    __metadata("design:paramtypes", [UsernamePasswordInput_1.UserRegisterInput, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "register", null);
+__decorate([
+    type_graphql_1.Mutation(() => UserResponse),
+    __param(0, type_graphql_1.Arg("clubNameOrEmail")),
+    __param(1, type_graphql_1.Arg("password")),
+    __param(2, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "login", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], UserResolver.prototype, "logout", null);
 __decorate([
     type_graphql_1.Mutation(() => UserResponse),
     __param(0, type_graphql_1.Arg("token")),
@@ -221,29 +245,19 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UserResolver.prototype, "me", null);
 __decorate([
-    type_graphql_1.Mutation(() => UserResponse),
-    __param(0, type_graphql_1.Arg("options", () => UsernamePasswordInput_1.UsernamePasswordInput)),
-    __param(1, type_graphql_1.Ctx()),
+    type_graphql_1.Query(() => User_1.User, { nullable: true }),
+    __param(0, type_graphql_1.Arg("id")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [UsernamePasswordInput_1.UsernamePasswordInput, Object]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
-], UserResolver.prototype, "register", null);
+], UserResolver.prototype, "user", null);
 __decorate([
-    type_graphql_1.Mutation(() => UserResponse),
-    __param(0, type_graphql_1.Arg("usernameOrEmail")),
-    __param(1, type_graphql_1.Arg("password")),
-    __param(2, type_graphql_1.Ctx()),
+    type_graphql_1.Query(() => User_1.User, { nullable: true }),
+    __param(0, type_graphql_1.Arg("clubName")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], UserResolver.prototype, "login", null);
-__decorate([
-    type_graphql_1.Mutation(() => Boolean),
-    __param(0, type_graphql_1.Ctx()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], UserResolver.prototype, "logout", null);
+], UserResolver.prototype, "userByClubName", null);
 UserResolver = __decorate([
     type_graphql_1.Resolver(User_1.User)
 ], UserResolver);

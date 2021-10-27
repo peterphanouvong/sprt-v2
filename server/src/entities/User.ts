@@ -6,25 +6,30 @@ import {
   UpdateDateColumn,
   Column,
   BaseEntity,
-  OneToMany,
 } from "typeorm";
-import { Post } from "./Post";
-import { Event } from "./Event";
-import { ClubFollower } from "./ClubFollower";
-import { ClubMember } from "./ClubMember";
-import { ClubAdmin } from "./ClubAdmin";
-import { EventAttendee } from "./EventAttendee";
 
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
+  /**
+   * Fields
+   */
+
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Field()
+  @Column({ nullable: true })
+  firstname: string;
+
+  @Field()
+  @Column({ nullable: true })
+  lastname: string;
+
+  @Field()
   @Column({ unique: true })
-  username!: string;
+  clubName!: string;
 
   @Field()
   @Column({ unique: true })
@@ -33,26 +38,7 @@ export class User extends BaseEntity {
   @Column()
   password!: string;
 
-  @Field(() => Post)
-  @OneToMany(() => Post, (post) => post.creator)
-  posts: Post[];
-
-  // host
-  @Field(() => Event)
-  @OneToMany(() => Event, (event) => event.host)
-  events: Event[];
-
-  @OneToMany(() => ClubFollower, (cf) => cf.follower)
-  following_clubs: ClubFollower[];
-
-  @OneToMany(() => ClubMember, (cm) => cm.member)
-  club_member: ClubMember[];
-
-  @OneToMany(() => ClubAdmin, (ca) => ca.admin)
-  club_admin: ClubAdmin[];
-
-  @OneToMany(() => EventAttendee, (ca) => ca.attendee)
-  eventAttendeeConn: EventAttendee[];
+  // quick events
 
   @Field(() => String)
   @CreateDateColumn()

@@ -1,23 +1,21 @@
-import { User } from "../entities/User";
-import { MyContext } from "src/types";
 import bcrypt from "bcrypt";
+import { MyContext } from "src/types";
 import {
   Arg,
   Ctx,
   Field,
-  FieldResolver,
   Mutation,
   ObjectType,
   Query,
   Resolver,
-  Root,
 } from "type-graphql";
-import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
-import { UsernamePasswordInput } from "./UsernamePasswordInput";
-import { validateRegister } from "../utils/validateRegister";
-import { sendEmail } from "../utils/sendEmail";
-import { v4 as uuid } from "uuid";
 import { getConnection } from "typeorm";
+import { v4 as uuid } from "uuid";
+import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
+import { User } from "../entities/User";
+import { sendEmail } from "../utils/sendEmail";
+import { validateRegister } from "../utils/validateRegister";
+import { UserRegisterInput } from "./UsernamePasswordInput";
 
 @ObjectType()
 class FieldError {
@@ -39,15 +37,115 @@ class UserResponse {
 
 @Resolver(User)
 export class UserResolver {
-  @FieldResolver(() => String)
-  email(@Root() user: User, @Ctx() { req }: MyContext): string {
-    if (req.session.userId === user.id) {
-      return user.email;
-    } else {
-      return "";
+  /**
+   * CRUD
+   */
+
+  @Mutation(() => UserResponse)
+  async register(
+    @Arg("options", () => UserRegisterInput) options: UserRegisterInput,
+    @Ctx() { req }: MyContext
+  ) {
+    const errors = validateRegister(options);
+    if (errors) {
+      return { errors };
     }
+    const hashedPassword = await bcrypt.hash(options.password, 10);
+    let user;
+    try {
+      const res = await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(User)
+        .values({
+          clubName: options.clubName,
+          email: options.email,
+          password: hashedPassword,
+        })
+        .returning("*")
+        .execute();
+
+      user = res.raw[0];
+    } catch (err) {
+      console.log(err);
+      return err.detail.includes("email")
+        ? {
+            errors: [
+              {
+                field: "email",
+                message: "that email is already in use",
+              },
+            ],
+          }
+        : {
+            errors: [
+              {
+                field: "clubName",
+                message: "that club name is already in use",
+              },
+            ],
+          };
+    }
+
+    // log in the user
+    req.session.userId = user.id;
+
+    return { user };
   }
 
+  @Mutation(() => UserResponse)
+  async login(
+    @Arg("clubNameOrEmail") clubNameOrEmail: string,
+    @Arg("password") password: string,
+    @Ctx() { req }: MyContext
+  ): Promise<UserResponse> {
+    const user = await User.findOne({
+      where: clubNameOrEmail.includes("@")
+        ? { email: clubNameOrEmail }
+        : { clubName: clubNameOrEmail },
+    });
+    if (!user) {
+      return {
+        errors: [
+          {
+            field: "clubNameOrEmail",
+            message: "That club name or email doesn't exist.",
+          },
+        ],
+      };
+    }
+    const valid = await bcrypt.compare(password, user.password);
+    console.log(valid);
+    if (!valid) {
+      return {
+        errors: [{ field: "password", message: "Incorrect password." }],
+      };
+    }
+
+    req.session.userId = user.id;
+
+    return { user };
+  }
+
+  @Mutation(() => Boolean)
+  logout(@Ctx() { req, res }: MyContext) {
+    return new Promise((resolve) =>
+      req.session.destroy((err) => {
+        res.clearCookie(COOKIE_NAME);
+        if (err) {
+          console.log(err);
+          resolve(false);
+          return;
+        }
+
+        resolve(true);
+      })
+    );
+  }
+
+  /**
+   * Other
+   */
   @Mutation(() => UserResponse)
   async changePassword(
     @Arg("token") token: string,
@@ -139,98 +237,31 @@ export class UserResolver {
     return User.findOne(req.session.userId);
   }
 
-  @Mutation(() => UserResponse)
-  async register(
-    @Arg("options", () => UsernamePasswordInput) options: UsernamePasswordInput,
-    @Ctx() { req }: MyContext
-  ) {
-    const errors = validateRegister(options);
-    if (errors) {
-      return { errors };
-    }
-    const hashedPassword = await bcrypt.hash(options.password, 10);
-    let user;
-    try {
-      const res = await getConnection()
-        .createQueryBuilder()
-        .insert()
-        .into(User)
-        .values({
-          username: options.username,
-          email: options.email,
-          password: hashedPassword,
-        })
-        .returning("*")
-        .execute();
-
-      user = res.raw[0];
-    } catch (err) {
-      // if (err.code === "23505" || err.details.includes("already exists")) {
-      // duplicate username
-      return {
-        errors: [
-          {
-            field: "username",
-            message: "that username has been taken",
-          },
-        ],
-      };
-      // }
-    }
-
-    // log in the user
-    req.session.userId = user.id;
-
-    return { user };
+  @Query(() => User, { nullable: true })
+  async user(@Arg("id") id: number): Promise<User | undefined> {
+    return await User.findOne(id);
   }
 
-  @Mutation(() => UserResponse)
-  async login(
-    @Arg("usernameOrEmail") usernameOrEmail: string,
-    @Arg("password") password: string,
-    @Ctx() { req }: MyContext
-  ): Promise<UserResponse> {
-    const user = await User.findOne({
-      where: usernameOrEmail.includes("@")
-        ? { email: usernameOrEmail }
-        : { username: usernameOrEmail },
-    });
-    if (!user) {
-      return {
-        errors: [
-          {
-            field: "username",
-            message: "that username or email doesn't exist",
-          },
-        ],
-      };
-    }
-    const valid = await bcrypt.compare(password, user.password);
-    console.log(valid);
-    if (!valid) {
-      return {
-        errors: [{ field: "password", message: "incorrect password" }],
-      };
-    }
-
-    req.session.userId = user.id;
-
-    return { user };
+  @Query(() => User, { nullable: true })
+  async userByClubName(
+    @Arg("clubName") clubName: string
+  ): Promise<User | undefined> {
+    return await User.findOne({ clubName });
   }
 
-  @Mutation(() => Boolean)
-  logout(@Ctx() { req, res }: MyContext) {
-    return new Promise((resolve) =>
-      req.session.destroy((err) => {
-        res.clearCookie(COOKIE_NAME);
-        if (err) {
-          console.log(err);
-          resolve(false);
-          return;
-        }
+  // @Query(() => [Event])
+  // @UseMiddleware(isAuth)
+  // async myFeed(@Ctx() { req, eventLoader }: MyContext) {
+  //   const eventIds = await getConnection().query(`
+  //   select array_agg(e.id)
+  //   from "event" e
+  //   inner join "club_follower" cf on cf."clubId" = e."clubId"
+  //   where (
+  //     cf."followerId" = ${req.session.userId}
+  //     or e."hostId" = ${req.session.userId}
+  //   );
+  // `);
 
-        resolve(true);
-      })
-    );
-  }
+  //   return eventLoader.loadMany(eventIds[0].array_agg ?? []);
+  // }
 }

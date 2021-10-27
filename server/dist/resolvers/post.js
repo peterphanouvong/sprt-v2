@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostResolver = void 0;
 const Post_1 = require("../entities/Post");
@@ -108,7 +109,7 @@ __decorate([
     type_graphql_1.FieldResolver(() => String),
     __param(0, type_graphql_1.Root()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Post_1.Post]),
+    __metadata("design:paramtypes", [typeof (_a = typeof Post_1.Post !== "undefined" && Post_1.Post) === "function" ? _a : Object]),
     __metadata("design:returntype", void 0)
 ], PostResolver.prototype, "descriptionSnippet", null);
 __decorate([

@@ -1,0 +1,14 @@
+mutation JoinQuickEvent(
+  $joinQuickEventId: Float!
+  $joinQuickEventInput: QuickEventUserInput!
+) {
+  joinQuickEvent(id: $joinQuickEventId, input: $joinQuickEventInput) {
+    id
+    title
+    description
+    capacity
+    users
+    updatedAt
+    createdAt
+  }
+}

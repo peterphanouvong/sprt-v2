@@ -1,0 +1,13 @@
+mutation UpdateQuickEvent(
+  $updateQuickEventInput: QuickEventInput!
+  $updateQuickEventId: Float!
+) {
+  updateQuickEvent(input: $updateQuickEventInput, id: $updateQuickEventId) {
+    id
+    title
+    description
+    capacity
+    users
+    createdAt
+  }
+}

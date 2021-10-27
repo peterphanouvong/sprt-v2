@@ -1,72 +1,41 @@
-import React, { useEffect, useState } from "react";
+import { Text, Spinner } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
+import Head from "next/head";
+import React from "react";
+import { BaseContent } from "../components/BaseContent";
+import { BaseLayout } from "../components/BaseLayout";
+import { BasePageHeader } from "../components/BasePageHeader";
+import { BaseSection } from "../components/BaseSection";
+import { useMeQuery } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
-import { Layout } from "../components/Layout";
-import { Event, useEventsQuery, useMeQuery } from "../generated/graphql";
-import { Box, Spinner, VStack } from "@chakra-ui/react";
-import { CreateEvent } from "../components/CreateEvent";
-import { EventCard } from "../components/EventCard";
+import { useIsAuth } from "../utils/useIsAuth";
 
 interface Props {}
 
 const Home: React.FC<Props> = ({}) => {
-  const [{ data, fetching }] = useEventsQuery();
-  const [{ data: meData }] = useMeQuery();
+  useIsAuth();
+  const [{ data, fetching }] = useMeQuery();
 
-  const [events, setEvents] = useState([]);
-
-  useEffect(() => {
-    if (data) {
-      console.log(data);
-      setEvents(data.events);
-    }
-  }, [data]);
-
-  const addEvent = (e: Event) => {
-    setEvents([e, ...events]);
-  };
-
-  const removeEvent = (id) => {
-    setEvents(events.filter((e) => e.id !== id));
-  };
-
-  const editEvent = (e: Event) => {
-    setEvents(
-      events.map((event) => {
-        if (e.id === event.id) return e;
-        return event;
-      })
-    );
-  };
-
-  if (!fetching && !events) {
-    return <div>No data...</div>;
-  }
-
-  if (!events) {
-    return <Spinner />;
-  }
+  if (fetching) return <Spinner />;
 
   return (
-    <Layout>
-      {meData?.me && <CreateEvent addEvent={addEvent} />}
-      <Box mt={4} />
-      <VStack spacing={4} align="stretch">
-        {events
-          .sort((a, b) => b.updatedAt - a.updatedAt)
-          .map((e) => {
-            return (
-              <EventCard
-                key={e.id}
-                event={e}
-                removeEvent={removeEvent}
-                editEvent={editEvent}
-              />
-            );
-          })}
-      </VStack>
-    </Layout>
+    <BaseLayout>
+      <Head>
+        <title>Home | sprt</title>
+      </Head>
+      <BasePageHeader>{data?.me?.clubName}</BasePageHeader>
+
+      <BaseContent>
+        <BaseSection title="test test">
+          <Text variant="body-3">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae
+            eveniet deleniti, error est qui consequuntur! Dolorum reprehenderit
+            odio cum magnam.
+          </Text>
+        </BaseSection>
+      </BaseContent>
+    </BaseLayout>
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Home);
+export default withUrqlClient(createUrqlClient, { ssr: false })(Home);

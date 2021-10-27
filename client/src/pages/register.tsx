@@ -1,98 +1,43 @@
-import React from "react";
-import { useRouter } from "next/router";
-import { Formik, Form } from "formik";
-import {
-  Box,
-  Button,
-  Divider,
-  Heading,
-  HStack,
-  Link,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Heading, Stack, Text } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
-import NextLink from "next/link";
-
-import { Wrapper } from "../components/Wrapper";
-import { InputField } from "../components/InputField";
-import { toErrorMap } from "../utils/toErrorMap";
-import { useRegisterMutation } from "../generated/graphql";
+import Head from "next/head";
+import React from "react";
+import { BaseLogo } from "../components/BaseLogo";
+import { RegisterForm } from "../components/RegisterForm";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import { useIsMobileScreen } from "../utils/useIsMobileScreen";
+import NextLink from "next/link";
 
 interface Props {}
 
 const Register: React.FC<Props> = ({}) => {
-  const [{}, register] = useRegisterMutation();
-
-  const router = useRouter();
+  const isMobile = useIsMobileScreen();
   return (
-    <Wrapper variant="small">
-      <Heading as="h1" fontSize="x-large" mb={4}>
-        Register updated
-      </Heading>
-      <Formik
-        initialValues={{ username: "", password: "", email: "" }}
-        onSubmit={async (values, { setErrors }) => {
-          console.log(values);
-          const res = await register({ options: values });
-          console.log(res);
-          if (res.data?.register.errors) {
-            setErrors(toErrorMap(res.data.register.errors));
-          } else if (res.data.register.user) {
-            router.push("/home");
-          }
-        }}
-      >
-        {(props) => (
-          <Form>
-            <VStack spacing={4} align="stretch">
-              <InputField
-                name="username"
-                label="Username"
-                placeholder="username"
-              />
-              <InputField
-                name="email"
-                label="Email"
-                placeholder="email"
-                type="email"
-              />
-              <InputField
-                name="password"
-                label="Password"
-                type="password"
-                placeholder="password"
-              />
-              <VStack align="stretch">
-                <Button
-                  colorScheme="orange"
-                  isLoading={props.isSubmitting}
-                  type="submit"
-                  width=""
-                >
-                  Register
-                </Button>
-                <HStack
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Divider orientation="horizontal" />
-                  <Text color="gray.400">or</Text>
-                  <Divider orientation="horizontal" />
-                </HStack>
-                <NextLink href="/login">
-                  <Button colorScheme="orange" variant="outline">
-                    Log in
-                  </Button>
-                </NextLink>
-              </VStack>
-            </VStack>
-          </Form>
-        )}
-      </Formik>
-    </Wrapper>
+    <>
+      <Head>
+        <title>Sign Up | sprt</title>
+      </Head>
+      <Box height="100vh" display="flex">
+        <Box flex={2}>
+          <Stack margin="auto" mt="20%" maxW={"500px"} padding={4}>
+            <Box>
+              <Box mt={6} />
+              <NextLink href="/">
+                <a>
+                  <BaseLogo size="sm" />
+                </a>
+              </NextLink>
+            </Box>
+            <Heading variant="h1">Sign up for free</Heading>
+            <Text paddingBottom={6} variant="body-2">
+              Yep, it's totally free! Let's get started.
+            </Text>
+            <RegisterForm />
+          </Stack>
+        </Box>
+        <Box hidden={isMobile} flex={3} bg="brand.500"></Box>
+      </Box>
+    </>
   );
 };
 
