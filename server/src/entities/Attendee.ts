@@ -1,50 +1,41 @@
 import { Field, Int, ObjectType } from "type-graphql";
 import {
+  BaseEntity,
+  Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  Column,
-  BaseEntity,
-  OneToMany,
 } from "typeorm";
-import { Event } from "./Event";
+import { EventAttendee } from "./EventAttendee";
 
 @ObjectType()
 @Entity()
-export class User extends BaseEntity {
-  /**
-   * Fields
-   */
-
+export class Attendee extends BaseEntity {
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Field()
+  @Field(() => String)
   @Column({ nullable: true })
-  firstname: string;
+  firstname!: string;
 
-  @Field()
+  @Field(() => String)
   @Column({ nullable: true })
-  lastname: string;
+  lastname!: string;
 
-  @Field()
+  @Field(() => String)
+  @Column({ nullable: true })
+  email?: string;
+
+  @Field(() => Number)
   @Column({ unique: true })
-  clubName!: string;
+  phoneNumber!: number;
 
-  @Field()
-  @Column({ unique: true })
-  email!: string;
-
+  @Field(() => String)
   @Column()
-  password!: string;
-
-  @Field(() => [Event], { nullable: true })
-  @OneToMany(() => Event, (event) => event.owner)
-  events: Event[];
-
-  // quick events
+  beemId!: string;
 
   @Field(() => String)
   @CreateDateColumn()
@@ -53,4 +44,7 @@ export class User extends BaseEntity {
   @Field(() => String)
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => EventAttendee, (ca) => ca.attendee)
+  eventConnection: EventAttendee[];
 }

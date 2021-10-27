@@ -19,7 +19,13 @@ const subscriptions_transport_ws_1 = require("subscriptions-transport-ws");
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const constants_1 = require("./constants");
+const Attendee_1 = require("./entities/Attendee");
+const Event_1 = require("./entities/Event");
+const EventAttendee_1 = require("./entities/EventAttendee");
+const EventTemplate_1 = require("./entities/EventTemplate");
+const SavedAttendee_1 = require("./entities/SavedAttendee");
 const User_1 = require("./entities/User");
+const event_1 = require("./resolvers/event");
 const quick_event_1 = require("./resolvers/quick-event");
 const upload_1 = require("./resolvers/upload");
 const user_1 = require("./resolvers/user");
@@ -28,7 +34,14 @@ const main = async () => {
         type: "postgres",
         url: process.env.DATABASE_URL,
         logging: true,
-        entities: [User_1.User],
+        entities: [
+            User_1.User,
+            Event_1.Event,
+            Attendee_1.Attendee,
+            EventAttendee_1.EventAttendee,
+            EventTemplate_1.EventTemplate,
+            SavedAttendee_1.SavedAttendee,
+        ],
         migrations: [path_1.default.join(__dirname, "./migrations/*")],
     });
     await conn.runMigrations();
@@ -62,7 +75,12 @@ const main = async () => {
         resave: false,
     }));
     const schema = await type_graphql_1.buildSchema({
-        resolvers: [user_1.UserResolver, upload_1.UploadResolver, quick_event_1.QuickEventResolver],
+        resolvers: [
+            user_1.UserResolver,
+            upload_1.UploadResolver,
+            quick_event_1.QuickEventResolver,
+            event_1.EventResolver,
+        ],
         validate: false,
     });
     const apolloServer = new apollo_server_express_1.ApolloServer({

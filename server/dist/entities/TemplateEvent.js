@@ -9,111 +9,105 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Event = void 0;
+exports.EventTemplate = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
-const Attendee_1 = require("./Attendee");
 const EventAttendee_1 = require("./EventAttendee");
-const User_1 = require("./User");
-let Event = class Event extends typeorm_1.BaseEntity {
+let EventTemplate = class EventTemplate extends typeorm_1.BaseEntity {
 };
 __decorate([
     type_graphql_1.Field(() => type_graphql_1.Int),
     typeorm_1.PrimaryGeneratedColumn(),
     __metadata("design:type", Number)
-], Event.prototype, "id", void 0);
+], EventTemplate.prototype, "id", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.Column(),
     __metadata("design:type", String)
-], Event.prototype, "title", void 0);
+], EventTemplate.prototype, "templateName", void 0);
+__decorate([
+    type_graphql_1.Field(() => String),
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], EventTemplate.prototype, "title", void 0);
 __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     typeorm_1.Column({ nullable: true }),
     __metadata("design:type", Date)
-], Event.prototype, "date", void 0);
+], EventTemplate.prototype, "date", void 0);
 __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     typeorm_1.Column({ nullable: true }),
     __metadata("design:type", String)
-], Event.prototype, "venue", void 0);
+], EventTemplate.prototype, "venue", void 0);
 __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     typeorm_1.Column({ nullable: true }),
     __metadata("design:type", String)
-], Event.prototype, "address", void 0);
+], EventTemplate.prototype, "address", void 0);
 __decorate([
     type_graphql_1.Field(() => Number, { nullable: true }),
     typeorm_1.Column({ nullable: true }),
     __metadata("design:type", Number)
-], Event.prototype, "price", void 0);
+], EventTemplate.prototype, "price", void 0);
 __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     typeorm_1.Column({ nullable: true }),
     __metadata("design:type", String)
-], Event.prototype, "description", void 0);
+], EventTemplate.prototype, "description", void 0);
 __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     typeorm_1.Column({ nullable: true }),
     __metadata("design:type", String)
-], Event.prototype, "youtubeLink", void 0);
+], EventTemplate.prototype, "youtubeLink", void 0);
 __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     typeorm_1.Column({ nullable: true }),
     __metadata("design:type", String)
-], Event.prototype, "logoImageLink", void 0);
+], EventTemplate.prototype, "logoImageLink", void 0);
 __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     typeorm_1.Column({ nullable: true }),
     __metadata("design:type", String)
-], Event.prototype, "bannerImageLink", void 0);
+], EventTemplate.prototype, "bannerImageLink", void 0);
 __decorate([
     type_graphql_1.Field(() => Number, { nullable: true }),
     typeorm_1.Column({ nullable: true }),
     __metadata("design:type", Number)
-], Event.prototype, "capacity", void 0);
+], EventTemplate.prototype, "capacity", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.Column(),
     __metadata("design:type", String)
-], Event.prototype, "clubBeemId", void 0);
+], EventTemplate.prototype, "clubBeemId", void 0);
 __decorate([
     type_graphql_1.Field(() => EventAttendee_1.EventAttendee),
     typeorm_1.ManyToOne(() => EventAttendee_1.EventAttendee, (ea) => ea.event),
     __metadata("design:type", Array)
-], Event.prototype, "attendeeConnection", void 0);
-__decorate([
-    type_graphql_1.Field(() => User_1.User),
-    typeorm_1.ManyToOne(() => User_1.User, (user) => user.events),
-    __metadata("design:type", User_1.User)
-], Event.prototype, "owner", void 0);
-__decorate([
-    type_graphql_1.Field(() => [Attendee_1.Attendee]),
-    __metadata("design:type", Array)
-], Event.prototype, "attendees", void 0);
+], EventTemplate.prototype, "attendeeConnection", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.CreateDateColumn(),
     __metadata("design:type", Date)
-], Event.prototype, "createdAt", void 0);
+], EventTemplate.prototype, "createdAt", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.UpdateDateColumn(),
     __metadata("design:type", Date)
-], Event.prototype, "updatedAt", void 0);
+], EventTemplate.prototype, "updatedAt", void 0);
 __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     typeorm_1.Column({ nullable: true }),
     __metadata("design:type", String)
-], Event.prototype, "level", void 0);
+], EventTemplate.prototype, "level", void 0);
 __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     typeorm_1.Column({ nullable: true }),
     __metadata("design:type", String)
-], Event.prototype, "mixed", void 0);
-Event = __decorate([
+], EventTemplate.prototype, "mixed", void 0);
+EventTemplate = __decorate([
     type_graphql_1.ObjectType(),
     typeorm_1.Entity()
-], Event);
-exports.Event = Event;
-//# sourceMappingURL=Event.js.map
+], EventTemplate);
+exports.EventTemplate = EventTemplate;
+//# sourceMappingURL=TemplateEvent.js.map

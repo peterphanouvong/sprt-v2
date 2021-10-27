@@ -12,9 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Event = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
-const Attendee_1 = require("./Attendee");
 const EventAttendee_1 = require("./EventAttendee");
-const User_1 = require("./User");
 let Event = class Event extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -22,6 +20,11 @@ __decorate([
     typeorm_1.PrimaryGeneratedColumn(),
     __metadata("design:type", Number)
 ], Event.prototype, "id", void 0);
+__decorate([
+    type_graphql_1.Field(() => String),
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], Event.prototype, "templateName", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.Column(),
@@ -83,15 +86,6 @@ __decorate([
     __metadata("design:type", Array)
 ], Event.prototype, "attendeeConnection", void 0);
 __decorate([
-    type_graphql_1.Field(() => User_1.User),
-    typeorm_1.ManyToOne(() => User_1.User, (user) => user.events),
-    __metadata("design:type", User_1.User)
-], Event.prototype, "owner", void 0);
-__decorate([
-    type_graphql_1.Field(() => [Attendee_1.Attendee]),
-    __metadata("design:type", Array)
-], Event.prototype, "attendees", void 0);
-__decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.CreateDateColumn(),
     __metadata("design:type", Date)
@@ -116,4 +110,4 @@ Event = __decorate([
     typeorm_1.Entity()
 ], Event);
 exports.Event = Event;
-//# sourceMappingURL=Event.js.map
+//# sourceMappingURL=TemplateEntity.js.map
