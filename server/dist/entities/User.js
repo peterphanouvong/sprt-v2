@@ -13,6 +13,7 @@ exports.User = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const Event_1 = require("./Event");
+const EventTemplate_1 = require("./EventTemplate");
 let User = class User extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -49,6 +50,11 @@ __decorate([
     typeorm_1.OneToMany(() => Event_1.Event, (event) => event.owner),
     __metadata("design:type", Array)
 ], User.prototype, "events", void 0);
+__decorate([
+    type_graphql_1.Field(() => [EventTemplate_1.EventTemplate], { nullable: true }),
+    typeorm_1.OneToMany(() => EventTemplate_1.EventTemplate, (eventTemplate) => eventTemplate.owner),
+    __metadata("design:type", Array)
+], User.prototype, "eventTemplates", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.CreateDateColumn(),

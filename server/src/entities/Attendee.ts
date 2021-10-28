@@ -6,12 +6,14 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
+  TableInheritance,
   UpdateDateColumn,
 } from "typeorm";
 import { EventAttendee } from "./EventAttendee";
 
 @ObjectType()
 @Entity()
+@TableInheritance({ column: { type: "varchar", name: "type" } })
 export class Attendee extends BaseEntity {
   @Field(() => Int)
   @PrimaryGeneratedColumn()
@@ -29,9 +31,9 @@ export class Attendee extends BaseEntity {
   @Column({ nullable: true })
   email?: string;
 
-  @Field(() => Number)
+  @Field(() => String)
   @Column({ unique: true })
-  phoneNumber!: number;
+  phoneNumber!: string;
 
   @Field(() => String)
   @Column()

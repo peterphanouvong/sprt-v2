@@ -25,7 +25,9 @@ const EventAttendee_1 = require("./entities/EventAttendee");
 const EventTemplate_1 = require("./entities/EventTemplate");
 const SavedAttendee_1 = require("./entities/SavedAttendee");
 const User_1 = require("./entities/User");
+const attendee_1 = require("./resolvers/attendee");
 const event_1 = require("./resolvers/event");
+const event_template_1 = require("./resolvers/event-template");
 const quick_event_1 = require("./resolvers/quick-event");
 const upload_1 = require("./resolvers/upload");
 const user_1 = require("./resolvers/user");
@@ -80,6 +82,8 @@ const main = async () => {
             upload_1.UploadResolver,
             quick_event_1.QuickEventResolver,
             event_1.EventResolver,
+            event_template_1.EventTemplateResolver,
+            attendee_1.AttendeeResolver,
         ],
         validate: false,
     });

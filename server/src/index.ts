@@ -20,13 +20,13 @@ import { EventAttendee } from "./entities/EventAttendee";
 import { EventTemplate } from "./entities/EventTemplate";
 import { SavedAttendee } from "./entities/SavedAttendee";
 import { User } from "./entities/User";
+import { AttendeeResolver } from "./resolvers/attendee";
 import { EventResolver } from "./resolvers/event";
+import { EventTemplateResolver } from "./resolvers/event-template";
 import { QuickEventResolver } from "./resolvers/quick-event";
 import { UploadResolver } from "./resolvers/upload";
 import { UserResolver } from "./resolvers/user";
 // import { createClubLoader } from "./utils/createClubLoader";
-// import { createEventLoader } from "./utils/createEventLoader";
-// import { createUserLoader } from "./utils/createUserLoader";
 
 const main = async () => {
   const conn = await createConnection({
@@ -89,6 +89,8 @@ const main = async () => {
       UploadResolver,
       QuickEventResolver,
       EventResolver,
+      EventTemplateResolver,
+      AttendeeResolver,
     ],
     validate: false,
   });

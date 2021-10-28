@@ -28,8 +28,13 @@ class EventInput {
 @Resolver(Event)
 export class EventResolver {
   @Query(() => Event)
-  event() {
-    return true;
+  event(@Arg("id") id: string): Promise<Event | undefined> {
+    return Event.findOne(id);
+  }
+
+  @Query(() => [Event])
+  events(): Promise<Event[] | undefined> {
+    return Event.find();
   }
 
   @Mutation(() => Event)

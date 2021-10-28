@@ -9,6 +9,7 @@ import {
   OneToMany,
 } from "typeorm";
 import { Event } from "./Event";
+import { EventTemplate } from "./EventTemplate";
 
 @ObjectType()
 @Entity()
@@ -43,6 +44,10 @@ export class User extends BaseEntity {
   @Field(() => [Event], { nullable: true })
   @OneToMany(() => Event, (event) => event.owner)
   events: Event[];
+
+  @Field(() => [EventTemplate], { nullable: true })
+  @OneToMany(() => EventTemplate, (eventTemplate) => eventTemplate.owner)
+  eventTemplates: EventTemplate[];
 
   // quick events
 

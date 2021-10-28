@@ -26,7 +26,7 @@ __decorate([
 ], SavedAttendee.prototype, "avatarImageLink", void 0);
 SavedAttendee = __decorate([
     type_graphql_1.ObjectType(),
-    typeorm_1.Entity()
+    typeorm_1.ChildEntity()
 ], SavedAttendee);
 exports.SavedAttendee = SavedAttendee;
 //# sourceMappingURL=SavedAttendee.js.map

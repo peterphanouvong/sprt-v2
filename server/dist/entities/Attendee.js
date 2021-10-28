@@ -36,9 +36,9 @@ __decorate([
     __metadata("design:type", String)
 ], Attendee.prototype, "email", void 0);
 __decorate([
-    type_graphql_1.Field(() => Number),
+    type_graphql_1.Field(() => String),
     typeorm_1.Column({ unique: true }),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], Attendee.prototype, "phoneNumber", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
@@ -61,7 +61,8 @@ __decorate([
 ], Attendee.prototype, "eventConnection", void 0);
 Attendee = __decorate([
     type_graphql_1.ObjectType(),
-    typeorm_1.Entity()
+    typeorm_1.Entity(),
+    typeorm_1.TableInheritance({ column: { type: "varchar", name: "type" } })
 ], Attendee);
 exports.Attendee = Attendee;
 //# sourceMappingURL=Attendee.js.map
