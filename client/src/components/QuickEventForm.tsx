@@ -55,7 +55,6 @@ const QuickEventForm: React.FC<Props> = ({}) => {
         }}
         onSubmit={async (values) => {
           console.log(values);
-          console.log(logoFile);
 
           const { error, data } = await createQuickEvent({
             createQuickEventInput: {

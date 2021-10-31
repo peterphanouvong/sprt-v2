@@ -52,6 +52,10 @@ __decorate([
     type_graphql_1.Field(() => graphql_upload_1.GraphQLUpload, { nullable: true }),
     __metadata("design:type", Object)
 ], QuickEventInput.prototype, "logoImage", void 0);
+__decorate([
+    type_graphql_1.Field(() => String, { nullable: true }),
+    __metadata("design:type", String)
+], QuickEventInput.prototype, "youtubeURL", void 0);
 QuickEventInput = __decorate([
     type_graphql_1.InputType()
 ], QuickEventInput);

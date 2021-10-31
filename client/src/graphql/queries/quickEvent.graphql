@@ -7,5 +7,6 @@ query QuickEvent($quickEventId: Int!) {
     users
     createdAt
     updatedAt
+    youtubeURL
   }
 }

@@ -44,6 +44,9 @@ class QuickEventInput {
 
   @Field(() => GraphQLUpload, { nullable: true })
   logoImage: FileUpload;
+
+  @Field(() => String, { nullable: true })
+  youtubeURL: string;
 }
 
 @InputType()

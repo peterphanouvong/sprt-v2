@@ -16,6 +16,7 @@ import {
   useToast,
   Image,
   AspectRatio,
+  Spacer,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
@@ -36,6 +37,7 @@ import { createUrqlClient } from "../../utils/createUrqlClient";
 import { parseRichText } from "../../utils/parseRichText";
 import { useIsMobileScreen } from "../../utils/useIsMobileScreen";
 import defaultLogo from "../../images/redfox-logo.jpg";
+import { QuickEventYoutubeLinkModal } from "../../components/QuickEventYoutubeLinkModal";
 
 const JoinQuickEvent = () => {
   const [page, setPage] = useState<"join" | "attendees">("join");
@@ -112,7 +114,11 @@ const JoinQuickEvent = () => {
         : JSON.parse(queryData.quickEvent?.users!).length)) *
     -1;
 
-  console.log(numInWaitlist);
+  console.log(queryData);
+  const embeddedLink =
+    "http://www.youtube.com/embed/" +
+    queryData.quickEvent?.youtubeURL?.split("?v=")[1].split("&ab_channel=")[0];
+  console.log(embeddedLink);
 
   return (
     <Box maxW='1440px' margin='auto' padding={4}>
@@ -159,34 +165,40 @@ const JoinQuickEvent = () => {
           </MobileLayout>
           <MobileLayout top={4} position='sticky' height='100vh'>
             <Box textAlign='center' my={6}>
-              {queryData.quickEvent?.capacity ? (
+              {queryData.quickEvent?.youtubeURL ? (
+                <></>
+              ) : (
                 <>
-                  {spotsLeft !== 0 ? (
+                  {queryData.quickEvent?.capacity ? (
                     <>
-                      <Heading variant='h3'>{spotsLeft}</Heading>
-                      <Text variant='body-3'>spot(s) left</Text>
+                      {spotsLeft !== 0 ? (
+                        <>
+                          <Heading variant='h3'>{spotsLeft}</Heading>
+                          <Text variant='body-3'>spot(s) left</Text>
+                        </>
+                      ) : (
+                        <>
+                          <Heading variant='h3'>{numInWaitlist}</Heading>
+                          {numInWaitlist === 1 ? (
+                            <Text variant='body-3'>person on the waitlist</Text>
+                          ) : (
+                            <Text variant='body-3'>people on the waitlist</Text>
+                          )}
+                          {/* <Text variant='body-3'>people on the waitlist</Text> */}
+                        </>
+                      )}
                     </>
                   ) : (
                     <>
-                      <Heading variant='h3'>{numInWaitlist}</Heading>
-                      {numInWaitlist === 1 ? (
-                        <Text variant='body-3'>person on the waitlist</Text>
-                      ) : (
-                        <Text variant='body-3'>people on the waitlist</Text>
-                      )}
-                      {/* <Text variant='body-3'>people on the waitlist</Text> */}
+                      <Heading>
+                        {attendees
+                          ? attendees.length
+                          : JSON.parse(queryData.quickEvent?.users as string)
+                              .length}
+                      </Heading>
+                      <Text variant='body-3'>person(s) are going</Text>
                     </>
                   )}
-                </>
-              ) : (
-                <>
-                  <Heading>
-                    {attendees
-                      ? attendees.length
-                      : JSON.parse(queryData.quickEvent?.users as string)
-                          .length}
-                  </Heading>
-                  <Text variant='body-3'>person(s) are going</Text>
                 </>
               )}
             </Box>
@@ -214,7 +226,10 @@ const JoinQuickEvent = () => {
                 size={isMobile ? "xs" : "sm"}
                 onClick={() => setPage("attendees")}
               >
-                See who's going
+                {queryData.quickEvent?.youtubeURL
+                  ? "See who went"
+                  : "See who's going"}
+                {/* See who's going */}
               </Button>
             </Flex>
 
@@ -224,17 +239,46 @@ const JoinQuickEvent = () => {
               </Heading>
             ) : (
               <Heading mt={6} as='h4' variant='h4'>
-                Join event
+                {queryData.quickEvent?.youtubeURL
+                  ? "Event has ended"
+                  : "Join event"}
+                {/* Join event */}
               </Heading>
             )}
 
-            <JoinQuickEventForm quickEventId={intId} isFull={spotsLeft === 0} />
+            {queryData.quickEvent?.youtubeURL ? (
+              <Box mt={4}>
+                <iframe
+                  width='100%'
+                  height='261'
+                  // aspect-ratio='16 / 9'
+                  src={embeddedLink}
+                  title='YouTube video player'
+                  frameBorder='0'
+                  allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                  allowFullScreen
+                ></iframe>
+              </Box>
+            ) : (
+              <JoinQuickEventForm
+                quickEventId={intId}
+                isFull={spotsLeft === 0}
+              />
+            )}
+
             {loggedIn ? (
-              <div>
+              <Flex mt={4}>
                 <Text mt={4} variant='body-2' color='blue.500'>
                   Viewing as Admin
                 </Text>
-              </div>
+                <Spacer />
+                <QuickEventYoutubeLinkModal
+                  eventId={intId}
+                  youtubeLinkInitial={
+                    queryData.quickEvent?.youtubeURL as string
+                  }
+                />
+              </Flex>
             ) : (
               <ViewAsAdminModal setLoggedIn={setLoggedIn} />
             )}
