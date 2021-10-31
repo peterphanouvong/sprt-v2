@@ -12,77 +12,71 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EventResolver = void 0;
+exports.EventTemplateResolver = void 0;
 const type_graphql_1 = require("type-graphql");
-const Event_1 = require("../entities/Event");
-let EventInput = class EventInput {
+const EventTemplate_1 = require("../entities/EventTemplate");
+let EventTemplateInput = class EventTemplateInput {
 };
 __decorate([
     type_graphql_1.Field(() => String),
     __metadata("design:type", String)
-], EventInput.prototype, "title", void 0);
+], EventTemplateInput.prototype, "title", void 0);
 __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     __metadata("design:type", String)
-], EventInput.prototype, "description", void 0);
+], EventTemplateInput.prototype, "description", void 0);
 __decorate([
     type_graphql_1.Field(() => Number, { nullable: true }),
     __metadata("design:type", Number)
-], EventInput.prototype, "capacity", void 0);
+], EventTemplateInput.prototype, "capacity", void 0);
 __decorate([
     type_graphql_1.Field(() => String),
     __metadata("design:type", String)
-], EventInput.prototype, "clubBeemId", void 0);
+], EventTemplateInput.prototype, "clubBeemId", void 0);
 __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     __metadata("design:type", String)
-], EventInput.prototype, "venue", void 0);
+], EventTemplateInput.prototype, "venue", void 0);
 __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     __metadata("design:type", String)
-], EventInput.prototype, "address", void 0);
+], EventTemplateInput.prototype, "address", void 0);
 __decorate([
     type_graphql_1.Field(() => Number, { nullable: true }),
     __metadata("design:type", Number)
-], EventInput.prototype, "price", void 0);
-EventInput = __decorate([
+], EventTemplateInput.prototype, "price", void 0);
+__decorate([
+    type_graphql_1.Field(() => String),
+    __metadata("design:type", String)
+], EventTemplateInput.prototype, "templateName", void 0);
+EventTemplateInput = __decorate([
     type_graphql_1.InputType()
-], EventInput);
-let EventResolver = class EventResolver {
-    event(id) {
-        return Event_1.Event.findOne(id);
+], EventTemplateInput);
+let EventTemplateResolver = class EventTemplateResolver {
+    eventTemplates() {
+        return EventTemplate_1.EventTemplate.find();
     }
-    events() {
-        return Event_1.Event.find();
-    }
-    async createEvent(input) {
-        const event = await Event_1.Event.create(input).save();
-        console.log(event);
-        return event;
+    async createEventTemplate(input) {
+        const eventTemplate = await EventTemplate_1.EventTemplate.create(input).save();
+        console.log(eventTemplate);
+        return eventTemplate;
     }
 };
 __decorate([
-    type_graphql_1.Query(() => Event_1.Event),
-    __param(0, type_graphql_1.Arg("id")),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], EventResolver.prototype, "event", null);
-__decorate([
-    type_graphql_1.Query(() => [Event_1.Event]),
+    type_graphql_1.Query(() => [EventTemplate_1.EventTemplate]),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], EventResolver.prototype, "events", null);
+], EventTemplateResolver.prototype, "eventTemplates", null);
 __decorate([
-    type_graphql_1.Mutation(() => Event_1.Event),
+    type_graphql_1.Mutation(() => EventTemplate_1.EventTemplate),
     __param(0, type_graphql_1.Arg("input")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [EventInput]),
+    __metadata("design:paramtypes", [EventTemplateInput]),
     __metadata("design:returntype", Promise)
-], EventResolver.prototype, "createEvent", null);
-EventResolver = __decorate([
-    type_graphql_1.Resolver(Event_1.Event)
-], EventResolver);
-exports.EventResolver = EventResolver;
-//# sourceMappingURL=event.js.map
+], EventTemplateResolver.prototype, "createEventTemplate", null);
+EventTemplateResolver = __decorate([
+    type_graphql_1.Resolver(EventTemplate_1.EventTemplate)
+], EventTemplateResolver);
+exports.EventTemplateResolver = EventTemplateResolver;
+//# sourceMappingURL=event-template.js.map

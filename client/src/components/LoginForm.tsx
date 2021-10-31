@@ -60,8 +60,8 @@ const LoginForm: React.FC<Props> = ({}) => {
             <VStack spacing={4} align="stretch">
               <BaseInputField
                 name="clubNameOrEmail"
-                label="Username or Email"
-                placeholder="username or email"
+                label="Club name or Email"
+                placeholder="Club name or email"
                 touched={props.touched.clubNameOrEmail as boolean}
                 required
               />

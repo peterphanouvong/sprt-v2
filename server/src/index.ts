@@ -14,13 +14,19 @@ import { SubscriptionServer } from "subscriptions-transport-ws";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
 import { COOKIE_NAME, __prod__ } from "./constants";
+import { Attendee } from "./entities/Attendee";
+import { Event } from "./entities/Event";
+import { EventAttendee } from "./entities/EventAttendee";
+import { EventTemplate } from "./entities/EventTemplate";
+import { SavedAttendee } from "./entities/SavedAttendee";
 import { User } from "./entities/User";
+import { AttendeeResolver } from "./resolvers/attendee";
+import { EventResolver } from "./resolvers/event";
+import { EventTemplateResolver } from "./resolvers/event-template";
 import { QuickEventResolver } from "./resolvers/quick-event";
 import { UploadResolver } from "./resolvers/upload";
 import { UserResolver } from "./resolvers/user";
 // import { createClubLoader } from "./utils/createClubLoader";
-// import { createEventLoader } from "./utils/createEventLoader";
-// import { createUserLoader } from "./utils/createUserLoader";
 
 const main = async () => {
   const conn = await createConnection({
@@ -28,7 +34,14 @@ const main = async () => {
     url: process.env.DATABASE_URL,
     logging: true,
     // synchronize: true,
-    entities: [User],
+    entities: [
+      User,
+      Event,
+      Attendee,
+      EventAttendee,
+      EventTemplate,
+      SavedAttendee,
+    ],
     migrations: [path.join(__dirname, "./migrations/*")],
   });
 
@@ -71,7 +84,14 @@ const main = async () => {
   );
 
   const schema = await buildSchema({
-    resolvers: [UserResolver, UploadResolver, QuickEventResolver],
+    resolvers: [
+      UserResolver,
+      UploadResolver,
+      QuickEventResolver,
+      EventResolver,
+      EventTemplateResolver,
+      AttendeeResolver,
+    ],
     validate: false,
   });
 
