@@ -8,13 +8,15 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Attendee } from "./Attendee";
-import { EventAttendee } from "./EventAttendee";
 import { User } from "./User";
 
 @ObjectType()
 @Entity()
-export class Event extends BaseEntity {
+export class EventTemplate extends BaseEntity {
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  templateName: string;
+
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id!: number;
@@ -63,16 +65,9 @@ export class Event extends BaseEntity {
   @Column()
   clubBeemId: string;
 
-  @Field(() => EventAttendee)
-  @ManyToOne(() => EventAttendee, (ea) => ea.event)
-  attendeeConnection: EventAttendee[];
-
   @Field(() => User)
-  @ManyToOne(() => User, (user) => user.events)
+  @ManyToOne(() => User, (user) => user.eventTemplates)
   owner: User;
-
-  @Field(() => [Attendee])
-  attendees: Attendee[];
 
   @Field(() => String)
   @CreateDateColumn()
