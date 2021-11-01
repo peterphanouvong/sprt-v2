@@ -117,7 +117,10 @@ const JoinQuickEvent = () => {
   console.log(queryData);
   const embeddedLink =
     "http://www.youtube.com/embed/" +
-    queryData.quickEvent?.youtubeURL?.split("?v=")[1].split("&ab_channel=")[0];
+    queryData.quickEvent?.youtubeURL
+      ?.split("?v=")[1]
+      .split("&ab_channel=")[0]
+      .split("&t=")[0];
   console.log(embeddedLink);
 
   return (
