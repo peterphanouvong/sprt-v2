@@ -16,6 +16,99 @@ export type Scalars = {
   Upload: any;
 };
 
+export type Attendee = {
+  __typename?: 'Attendee';
+  id: Scalars['Int'];
+  firstname: Scalars['String'];
+  lastname: Scalars['String'];
+  email: Scalars['String'];
+  phoneNumber: Scalars['String'];
+  beemId: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+};
+
+export type AttendeeInput = {
+  firstname: Scalars['String'];
+  lastname: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+  phoneNumber: Scalars['String'];
+  beemId: Scalars['String'];
+};
+
+export type Event = {
+  __typename?: 'Event';
+  id: Scalars['Int'];
+  title: Scalars['String'];
+  date?: Maybe<Scalars['String']>;
+  venue?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['Float']>;
+  description?: Maybe<Scalars['String']>;
+  youtubeLink?: Maybe<Scalars['String']>;
+  logoImageLink?: Maybe<Scalars['String']>;
+  bannerImageLink?: Maybe<Scalars['String']>;
+  capacity?: Maybe<Scalars['Float']>;
+  clubBeemId: Scalars['String'];
+  attendeeConnection: EventAttendee;
+  owner: User;
+  attendees: Array<Attendee>;
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+  level?: Maybe<Scalars['String']>;
+  mixed?: Maybe<Scalars['String']>;
+};
+
+export type EventAttendee = {
+  __typename?: 'EventAttendee';
+  eventId: Scalars['Float'];
+  attendeeId: Scalars['Float'];
+};
+
+export type EventInput = {
+  title: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  date?: Maybe<Scalars['String']>;
+  capacity?: Maybe<Scalars['Float']>;
+  clubBeemId: Scalars['String'];
+  venue?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['Float']>;
+};
+
+export type EventTemplate = {
+  __typename?: 'EventTemplate';
+  templateName?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+  title: Scalars['String'];
+  date?: Maybe<Scalars['String']>;
+  venue?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['Float']>;
+  description?: Maybe<Scalars['String']>;
+  youtubeLink?: Maybe<Scalars['String']>;
+  logoImageLink?: Maybe<Scalars['String']>;
+  bannerImageLink?: Maybe<Scalars['String']>;
+  capacity?: Maybe<Scalars['Float']>;
+  clubBeemId: Scalars['String'];
+  owner: User;
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+  level?: Maybe<Scalars['String']>;
+  mixed?: Maybe<Scalars['String']>;
+};
+
+export type EventTemplateInput = {
+  title: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  capacity?: Maybe<Scalars['Float']>;
+  clubBeemId: Scalars['String'];
+  venue?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['Float']>;
+  templateName: Scalars['String'];
+};
+
 export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
@@ -24,6 +117,9 @@ export type FieldError = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createAttendee: Attendee;
+  createEvent: Event;
+  createEventTemplate: EventTemplate;
   createQuickEvent: QuickEvent;
   updateQuickEvent?: Maybe<QuickEvent>;
   joinQuickEvent: QuickEvent;
@@ -34,6 +130,21 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   changePassword: UserResponse;
   forgotPassword: Scalars['Boolean'];
+};
+
+
+export type MutationCreateAttendeeArgs = {
+  input: AttendeeInput;
+};
+
+
+export type MutationCreateEventArgs = {
+  input: EventInput;
+};
+
+
+export type MutationCreateEventTemplateArgs = {
+  input: EventTemplateInput;
 };
 
 
@@ -88,10 +199,19 @@ export type MutationForgotPasswordArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  attendees: Array<Attendee>;
+  event: Event;
+  events: Array<Event>;
+  eventTemplates: Array<EventTemplate>;
   quickEvent?: Maybe<QuickEvent>;
   me?: Maybe<User>;
   user?: Maybe<User>;
   userByClubName?: Maybe<User>;
+};
+
+
+export type QueryEventArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -154,6 +274,8 @@ export type User = {
   lastname: Scalars['String'];
   clubName: Scalars['String'];
   email: Scalars['String'];
+  events?: Maybe<Array<Event>>;
+  eventTemplates?: Maybe<Array<EventTemplate>>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
 };
@@ -183,6 +305,13 @@ export type ChangePasswordMutationVariables = Exact<{
 
 
 export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string }>>, user?: Maybe<{ __typename?: 'User', id: number, clubName: string, email: string }> } };
+
+export type CreateEventMutationVariables = Exact<{
+  input: EventInput;
+}>;
+
+
+export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'Event', id: number, title: string, venue?: Maybe<string>, date?: Maybe<string>, address?: Maybe<string>, price?: Maybe<number>, description?: Maybe<string>, youtubeLink?: Maybe<string>, bannerImageLink?: Maybe<string>, logoImageLink?: Maybe<string>, capacity?: Maybe<number>, clubBeemId: string, createdAt: string, updatedAt: string } };
 
 export type CreateQuickEventMutationVariables = Exact<{
   createQuickEventInput: QuickEventInput;
@@ -287,6 +416,30 @@ export const ChangePasswordDocument = gql`
 
 export function useChangePasswordMutation() {
   return Urql.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument);
+};
+export const CreateEventDocument = gql`
+    mutation CreateEvent($input: EventInput!) {
+  createEvent(input: $input) {
+    id
+    title
+    venue
+    date
+    address
+    price
+    description
+    youtubeLink
+    bannerImageLink
+    logoImageLink
+    capacity
+    clubBeemId
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+export function useCreateEventMutation() {
+  return Urql.useMutation<CreateEventMutation, CreateEventMutationVariables>(CreateEventDocument);
 };
 export const CreateQuickEventDocument = gql`
     mutation CreateQuickEvent($createQuickEventInput: QuickEventInput!) {

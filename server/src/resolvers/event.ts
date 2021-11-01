@@ -9,6 +9,9 @@ class EventInput {
   @Field(() => String, { nullable: true })
   description: string;
 
+  @Field(() => String, { nullable: true })
+  date: string;
+
   @Field(() => Number, { nullable: true })
   capacity: number;
 

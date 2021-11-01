@@ -26,6 +26,10 @@ __decorate([
     __metadata("design:type", String)
 ], EventInput.prototype, "description", void 0);
 __decorate([
+    type_graphql_1.Field(() => String, { nullable: true }),
+    __metadata("design:type", String)
+], EventInput.prototype, "date", void 0);
+__decorate([
     type_graphql_1.Field(() => Number, { nullable: true }),
     __metadata("design:type", Number)
 ], EventInput.prototype, "capacity", void 0);

@@ -6,6 +6,7 @@ export const Button = {
     },
   },
   baseStyle: {
-    borderRadius: "2px", // <-- border radius is same for all variants and sizes
+    borderRadius: "3px", // <-- border radius is same for all variants and sizes
+    fontWeight: "normal",
   },
 };
