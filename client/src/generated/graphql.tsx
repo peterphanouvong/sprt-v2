@@ -99,7 +99,8 @@ export type Mutation = {
   createPost: Post;
   updatePost?: Maybe<Post>;
   deletePost: Scalars['Boolean'];
-  uploadImage: Scalars['Boolean'];
+  uploadLogoImage: Scalars['Boolean'];
+  uploadBannerImage: Scalars['Boolean'];
   createQuickEvent: QuickEvent;
   updateQuickEvent?: Maybe<QuickEvent>;
   joinQuickEvent: QuickEvent;
@@ -200,7 +201,14 @@ export type MutationDeletePostArgs = {
 };
 
 
-export type MutationUploadImageArgs = {
+export type MutationUploadLogoImageArgs = {
+  eventId: Scalars['Float'];
+  file: Scalars['Upload'];
+};
+
+
+export type MutationUploadBannerImageArgs = {
+  eventId: Scalars['Float'];
   file: Scalars['Upload'];
 };
 
@@ -347,7 +355,7 @@ export type QuickEvent = {
   users: Scalars['String'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
-  bannerImageUrl: Scalars['String'];
+  youtubeURL?: Maybe<Scalars['String']>;
 };
 
 export type QuickEventInput = {
@@ -357,6 +365,7 @@ export type QuickEventInput = {
   users?: Maybe<Scalars['String']>;
   bannerImage?: Maybe<Scalars['Upload']>;
   logoImage?: Maybe<Scalars['Upload']>;
+  youtubeURL?: Maybe<Scalars['String']>;
 };
 
 export type QuickEventUserInput = {
@@ -575,12 +584,13 @@ export type UpdateQuickEventMutationVariables = Exact<{
 
 export type UpdateQuickEventMutation = { __typename?: 'Mutation', updateQuickEvent?: Maybe<{ __typename?: 'QuickEvent', id: number, title: string, description?: Maybe<string>, capacity?: Maybe<number>, users: string, createdAt: string }> };
 
-export type UploadImageMutationVariables = Exact<{
+export type UploadLogoImageMutationVariables = Exact<{
   file: Scalars['Upload'];
+  eventId: Scalars['Float'];
 }>;
 
 
-export type UploadImageMutation = { __typename?: 'Mutation', uploadImage: boolean };
+export type UploadLogoImageMutation = { __typename?: 'Mutation', uploadLogoImage: boolean };
 
 export type ClubQueryVariables = Exact<{
   clubId: Scalars['Float'];
@@ -655,7 +665,7 @@ export type QuickEventQueryVariables = Exact<{
 }>;
 
 
-export type QuickEventQuery = { __typename?: 'Query', quickEvent?: Maybe<{ __typename?: 'QuickEvent', id: number, title: string, description?: Maybe<string>, capacity?: Maybe<number>, users: string, createdAt: string, updatedAt: string }> };
+export type QuickEventQuery = { __typename?: 'Query', quickEvent?: Maybe<{ __typename?: 'QuickEvent', id: number, title: string, description?: Maybe<string>, capacity?: Maybe<number>, users: string, createdAt: string, updatedAt: string, youtubeURL?: Maybe<string> }> };
 
 export type UserByUsernameQueryVariables = Exact<{
   username: Scalars['String'];
@@ -1064,14 +1074,14 @@ export const UpdateQuickEventDocument = gql`
 export function useUpdateQuickEventMutation() {
   return Urql.useMutation<UpdateQuickEventMutation, UpdateQuickEventMutationVariables>(UpdateQuickEventDocument);
 };
-export const UploadImageDocument = gql`
-    mutation UploadImage($file: Upload!) {
-  uploadImage(file: $file)
+export const UploadLogoImageDocument = gql`
+    mutation UploadLogoImage($file: Upload!, $eventId: Float!) {
+  uploadLogoImage(file: $file, eventId: $eventId)
 }
     `;
 
-export function useUploadImageMutation() {
-  return Urql.useMutation<UploadImageMutation, UploadImageMutationVariables>(UploadImageDocument);
+export function useUploadLogoImageMutation() {
+  return Urql.useMutation<UploadLogoImageMutation, UploadLogoImageMutationVariables>(UploadLogoImageDocument);
 };
 export const ClubDocument = gql`
     query Club($clubId: Float!) {
@@ -1236,6 +1246,7 @@ export const QuickEventDocument = gql`
     users
     createdAt
     updatedAt
+    youtubeURL
   }
 }
     `;
