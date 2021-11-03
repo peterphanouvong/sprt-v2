@@ -1,0 +1,5 @@
+mutation MarkEventAsComplete($id: Float!) {
+  markEventAsComplete(id: $id) {
+    ...RegularEvent
+  }
+}

@@ -127,10 +127,12 @@ export type FieldError = {
 export type Mutation = {
   __typename?: 'Mutation';
   createAttendee: Attendee;
+  attendeeExists: Scalars['Boolean'];
   createEvent: Event;
   updateEvent: Event;
   addNewAttendee: Scalars['Boolean'];
   addExistingAttendee: Scalars['Boolean'];
+  markEventAsComplete: Event;
   deleteEvent: Scalars['Boolean'];
   createEventTemplate: EventTemplate;
   createQuickEvent: QuickEvent;
@@ -148,6 +150,11 @@ export type Mutation = {
 
 export type MutationCreateAttendeeArgs = {
   input: AttendeeInput;
+};
+
+
+export type MutationAttendeeExistsArgs = {
+  phoneNumber: Scalars['String'];
 };
 
 
@@ -170,6 +177,11 @@ export type MutationAddNewAttendeeArgs = {
 
 export type MutationAddExistingAttendeeArgs = {
   attendeeId: Scalars['Float'];
+  id: Scalars['Float'];
+};
+
+
+export type MutationMarkEventAsCompleteArgs = {
   id: Scalars['Float'];
 };
 
@@ -344,13 +356,20 @@ export type RegularUserFragment = { __typename?: 'User', id: number, clubName: s
 
 export type RegularUserResponseFragment = { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string }>>, user?: Maybe<{ __typename?: 'User', id: number, clubName: string, email: string }> };
 
-export type AddNewAttendeeMutationMutationVariables = Exact<{
+export type AddNewAttendeeMutationVariables = Exact<{
   input: AttendeeInput;
-  attendeeId: Scalars['Float'];
+  eventId: Scalars['Float'];
 }>;
 
 
-export type AddNewAttendeeMutationMutation = { __typename?: 'Mutation', addNewAttendee: boolean };
+export type AddNewAttendeeMutation = { __typename?: 'Mutation', addNewAttendee: boolean };
+
+export type AttendeeExistsMutationVariables = Exact<{
+  phoneNumber: Scalars['String'];
+}>;
+
+
+export type AttendeeExistsMutation = { __typename?: 'Mutation', attendeeExists: boolean };
 
 export type ChangePasswordMutationVariables = Exact<{
   newPassword: Scalars['String'];
@@ -408,6 +427,13 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
+
+export type MarkEventAsCompleteMutationVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type MarkEventAsCompleteMutation = { __typename?: 'Mutation', markEventAsComplete: { __typename?: 'Event', id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number } };
 
 export type RegisterMutationVariables = Exact<{
   options: UserRegisterInput;
@@ -501,14 +527,23 @@ export const RegularUserResponseFragmentDoc = gql`
 }
     ${RegularErrorFragmentDoc}
 ${RegularUserFragmentDoc}`;
-export const AddNewAttendeeMutationDocument = gql`
-    mutation AddNewAttendeeMutation($input: AttendeeInput!, $attendeeId: Float!) {
-  addNewAttendee(input: $input, id: $attendeeId)
+export const AddNewAttendeeDocument = gql`
+    mutation AddNewAttendee($input: AttendeeInput!, $eventId: Float!) {
+  addNewAttendee(input: $input, id: $eventId)
 }
     `;
 
-export function useAddNewAttendeeMutationMutation() {
-  return Urql.useMutation<AddNewAttendeeMutationMutation, AddNewAttendeeMutationMutationVariables>(AddNewAttendeeMutationDocument);
+export function useAddNewAttendeeMutation() {
+  return Urql.useMutation<AddNewAttendeeMutation, AddNewAttendeeMutationVariables>(AddNewAttendeeDocument);
+};
+export const AttendeeExistsDocument = gql`
+    mutation AttendeeExists($phoneNumber: String!) {
+  attendeeExists(phoneNumber: $phoneNumber)
+}
+    `;
+
+export function useAttendeeExistsMutation() {
+  return Urql.useMutation<AttendeeExistsMutation, AttendeeExistsMutationVariables>(AttendeeExistsDocument);
 };
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($newPassword: String!, $token: String!) {
@@ -603,6 +638,17 @@ export const LogoutDocument = gql`
 
 export function useLogoutMutation() {
   return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
+};
+export const MarkEventAsCompleteDocument = gql`
+    mutation MarkEventAsComplete($id: Float!) {
+  markEventAsComplete(id: $id) {
+    ...RegularEvent
+  }
+}
+    ${RegularEventFragmentDoc}`;
+
+export function useMarkEventAsCompleteMutation() {
+  return Urql.useMutation<MarkEventAsCompleteMutation, MarkEventAsCompleteMutationVariables>(MarkEventAsCompleteDocument);
 };
 export const RegisterDocument = gql`
     mutation Register($options: UserRegisterInput!) {

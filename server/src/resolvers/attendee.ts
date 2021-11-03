@@ -40,5 +40,16 @@ export class AttendeeResolver {
     return attendee;
   }
 
+  @Mutation(() => Boolean)
+  async attendeeExists(
+    @Arg("phoneNumber") phoneNumber: string
+  ): Promise<boolean> {
+    const res = await Attendee.findOne({ where: { phoneNumber } });
+    if (res) {
+      return true;
+    }
+    return false;
+  }
+
   // @FieldResolver()
 }

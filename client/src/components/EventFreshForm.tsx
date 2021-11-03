@@ -1,5 +1,6 @@
 import { Box, Button, Heading, VStack } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
+import { useRouter } from "next/router";
 import React from "react";
 import { useCreateEventMutation } from "../generated/graphql";
 import { parseRichText } from "../utils/parseRichText";
@@ -15,6 +16,7 @@ interface Props {
 const EventFreshForm: React.FC<Props> = ({ templateId }) => {
   const [, createEvent] = useCreateEventMutation();
   const isMobile = useIsMobileScreen();
+  const router = useRouter();
 
   console.log(templateId);
 
@@ -48,6 +50,11 @@ const EventFreshForm: React.FC<Props> = ({ templateId }) => {
               },
             });
 
+            if (res.error) {
+              alert(res.error);
+            } else {
+              router.push(`/events/${res.data?.createEvent.id}/sign-up`);
+            }
             console.log(res);
           }}
         >

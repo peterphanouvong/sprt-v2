@@ -4,10 +4,11 @@ import {
   IconButton,
   MenuList,
   MenuItem,
+  Link,
 } from "@chakra-ui/react";
 import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { Maybe } from "../generated/graphql";
+import { Maybe, useDeleteEventMutation } from "../generated/graphql";
 import { parseDatePretty } from "../utils/parseDate";
 import {
   BaseTable,
@@ -17,6 +18,7 @@ import {
   BaseTbody,
   BaseTd,
 } from "./BaseTable";
+import NextLink from "next/link";
 
 interface Props {
   pastEvents: {
@@ -31,6 +33,7 @@ interface Props {
 }
 
 const PastEventTable: React.FC<Props> = ({ pastEvents }) => {
+  const [, deleteEvent] = useDeleteEventMutation();
   return pastEvents.length > 0 ? (
     <BaseTable>
       <BaseThead>
@@ -45,7 +48,11 @@ const PastEventTable: React.FC<Props> = ({ pastEvents }) => {
       <BaseTbody>
         {pastEvents.map((event) => (
           <BaseTr key={event.id}>
-            <BaseTd>{event.title}</BaseTd>
+            <BaseTd>
+              <NextLink href={`/events/${event.id}/sign-up`}>
+                <Link>{event.title}</Link>
+              </NextLink>
+            </BaseTd>
             <BaseTd>{parseDatePretty(event.date)}</BaseTd>
             <BaseTd>
               {event.capacity
@@ -65,6 +72,15 @@ const PastEventTable: React.FC<Props> = ({ pastEvents }) => {
                 />
                 <MenuList>
                   <MenuItem>Do something</MenuItem>
+                  <MenuItem
+                    color="red.500"
+                    onClick={() => {
+                      console.log("Delete event" + event.id);
+                      deleteEvent({ id: event.id.toString() });
+                    }}
+                  >
+                    Delete
+                  </MenuItem>
                 </MenuList>
               </Menu>
             </BaseTd>

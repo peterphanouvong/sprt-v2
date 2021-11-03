@@ -53,6 +53,13 @@ let AttendeeResolver = class AttendeeResolver {
         console.log("attendee", attendee);
         return attendee;
     }
+    async attendeeExists(phoneNumber) {
+        const res = await Attendee_1.Attendee.findOne({ where: { phoneNumber } });
+        if (res) {
+            return true;
+        }
+        return false;
+    }
 };
 __decorate([
     type_graphql_1.Query(() => [Attendee_1.Attendee]),
@@ -74,6 +81,13 @@ __decorate([
     __metadata("design:paramtypes", [AttendeeInput]),
     __metadata("design:returntype", Promise)
 ], AttendeeResolver.prototype, "createAttendee", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg("phoneNumber")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AttendeeResolver.prototype, "attendeeExists", null);
 AttendeeResolver = __decorate([
     type_graphql_1.Resolver(Attendee_1.Attendee)
 ], AttendeeResolver);

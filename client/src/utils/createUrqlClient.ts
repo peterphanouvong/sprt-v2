@@ -17,6 +17,7 @@ import {
   LiveEventsQuery,
   LoginMutation,
   LogoutMutation,
+  MarkEventAsCompleteMutation,
   MeDocument,
   MeQuery,
   PastEventsDocument,
@@ -125,6 +126,41 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
+            markEventAsComplete: (_result, _args, cache, _info) => {
+              betterUpdateQuery<MarkEventAsCompleteMutation, LiveEventsQuery>(
+                cache,
+                {
+                  query: LiveEventsDocument,
+                },
+                _result,
+                (res, data) => {
+                  console.log("LOOK HERERERERERERE");
+                  console.log(
+                    data.liveEvents.filter(
+                      (x) => x.id !== res.markEventAsComplete.id
+                    )
+                  );
+                  return {
+                    liveEvents: data.liveEvents.filter(
+                      (x) => x.id !== res.markEventAsComplete.id
+                    ),
+                  };
+                }
+              );
+
+              betterUpdateQuery<MarkEventAsCompleteMutation, PastEventsQuery>(
+                cache,
+                {
+                  query: PastEventsDocument,
+                },
+                _result,
+                (res, data) => {
+                  return {
+                    pastEvents: [res.markEventAsComplete, ...data.pastEvents],
+                  };
+                }
+              );
+            },
             deleteEvent: (_result, args, cache, _info) => {
               cache.invalidate({
                 __typename: "Event",
@@ -140,17 +176,6 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 _result,
                 (res, data) => {
                   return { liveEvents: [res.createEvent, ...data.liveEvents] };
-                }
-              );
-
-              betterUpdateQuery<CreateEventMutation, PastEventsQuery>(
-                cache,
-                {
-                  query: PastEventsDocument,
-                },
-                _result,
-                (res, data) => {
-                  return { pastEvents: [res.createEvent, ...data.pastEvents] };
                 }
               );
             },

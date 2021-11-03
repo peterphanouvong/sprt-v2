@@ -2,12 +2,16 @@ import { Button, Checkbox, Text, VStack } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React from "react";
 import * as Yup from "yup";
-import { useAttendeeQuery } from "../generated/graphql";
+import {
+  useAddNewAttendeeMutation,
+  useAttendeeExistsMutation,
+} from "../generated/graphql";
 import { BaseInputField } from "./BaseInputField";
 
 interface Props {
   eventId: number;
   isFull: boolean;
+  setHasSignedUp: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const EventSchema = Yup.object().shape({
@@ -26,23 +30,48 @@ const EventSchema = Yup.object().shape({
     .required("This field is required"),
 });
 
-const EventSignUpForm: React.FC<Props> = ({ eventId, isFull }) => {
-  console.log("isFull", isFull);
-  console.log("eventId", eventId);
+const EventSignUpForm: React.FC<Props> = ({
+  eventId,
+  isFull,
+  setHasSignedUp,
+}) => {
+  const [, attendeeExists] = useAttendeeExistsMutation();
+  const [, addNewAttendee] = useAddNewAttendeeMutation();
 
-  const [{}] = useAttendeeQuery();
+  console.log(isFull);
   return (
     <Formik
       initialValues={{
         firstName: "",
         lastName: "",
         phone: "",
-        createdAt: new Date().toString(),
         beemId: "",
         status: "waitlist",
       }}
       validationSchema={EventSchema}
-      onSubmit={async (values) => {}}
+      onSubmit={async (values) => {
+        console.log("values", values);
+        const exists = await attendeeExists({ phoneNumber: values.phone });
+
+        if (exists.data?.attendeeExists) {
+          alert("this guy already exists in the db");
+        } else {
+          const res = await addNewAttendee({
+            eventId: eventId,
+            input: {
+              firstname: values.firstName,
+              lastname: values.lastName,
+              beemId: values.beemId,
+              phoneNumber: values.phone,
+            },
+          });
+
+          setHasSignedUp(true);
+          localStorage.setItem(`event:${eventId}`, "true");
+
+          console.log(res);
+        }
+      }}
     >
       {(props) => (
         <Form>
@@ -73,7 +102,7 @@ const EventSignUpForm: React.FC<Props> = ({ eventId, isFull }) => {
               required
             />
 
-            <Checkbox colorScheme="blue">
+            <Checkbox colorScheme="brand">
               <Text variant="body-2">I am fully vaccinated</Text>
             </Checkbox>
 

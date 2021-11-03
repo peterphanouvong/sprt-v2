@@ -9,7 +9,11 @@ import {
 import NextLink from "next/link";
 import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { Maybe, useDeleteEventMutation } from "../generated/graphql";
+import {
+  Maybe,
+  useDeleteEventMutation,
+  useMarkEventAsCompleteMutation,
+} from "../generated/graphql";
 import { parseDatePretty } from "../utils/parseDate";
 import {
   BaseTable,
@@ -34,6 +38,7 @@ interface Props {
 
 const LiveEventTable: React.FC<Props> = ({ liveEvents }) => {
   const [, deleteEvent] = useDeleteEventMutation();
+  const [, markEventAsComplete] = useMarkEventAsCompleteMutation();
 
   return liveEvents.length > 0 ? (
     <BaseTable>
@@ -72,7 +77,18 @@ const LiveEventTable: React.FC<Props> = ({ liveEvents }) => {
                   rounded="full"
                 />
                 <MenuList>
-                  <MenuItem>Mark as complete</MenuItem>
+                  <MenuItem
+                    onClick={async () => {
+                      const res = await markEventAsComplete({ id: event.id });
+                      if (res.data?.markEventAsComplete) {
+                        alert("Nice it worked!");
+                      } else {
+                        alert("Something went wrong");
+                      }
+                    }}
+                  >
+                    Mark as complete
+                  </MenuItem>
                   <MenuItem
                     color="red.500"
                     onClick={() => {
