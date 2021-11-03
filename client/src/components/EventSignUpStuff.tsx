@@ -1,4 +1,4 @@
-import { Box, Alert, AlertIcon, Code } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box } from "@chakra-ui/react";
 import React from "react";
 import { BaseCard } from "./BaseCard";
 import { BaseSection } from "./BaseSection";
@@ -28,14 +28,6 @@ const EventSignUpStuff: React.FC<Props> = ({ id }) => {
   ) : (
     <BaseCard padding={6}>
       <BaseSection title="Sign up">
-        <Code>
-          // TODO: Create the sign up form
-          <br />
-          // TODO: Create the attendee list
-          <br />
-          // TODO: Create an upload recording form
-        </Code>
-
         <EventSignUpForm
           eventId={parseInt(id)}
           isFull={false}

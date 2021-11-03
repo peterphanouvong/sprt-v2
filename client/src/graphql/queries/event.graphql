@@ -1,5 +1,15 @@
 query Event($id: String!) {
   event(id: $id) {
     ...RegularEvent
+    attendees {
+      id
+      firstname
+      lastname
+      email
+      phoneNumber
+      beemId
+      createdAt
+      updatedAt
+    }
   }
 }

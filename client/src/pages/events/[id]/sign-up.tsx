@@ -1,20 +1,16 @@
-import { Alert, AlertIcon, Code, Grid, Spinner } from "@chakra-ui/react";
-import { Box } from "@chakra-ui/layout";
+import { Grid, Spinner } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
-import { BaseCard } from "../../../components/BaseCard";
 import { BaseContent } from "../../../components/BaseContent";
 import { BaseLayout } from "../../../components/BaseLayout";
 import { BasePageHeader } from "../../../components/BasePageHeader";
-import { BaseSection } from "../../../components/BaseSection";
 import { EventPageSideNav } from "../../../components/EventPageSideNav";
-import { EventSignUpForm } from "../../../components/EventSignUpForm";
+import { EventSignUpStuff } from "../../../components/EventSignUpStuff";
 import { useEventQuery } from "../../../generated/graphql";
 import { createUrqlClient } from "../../../utils/createUrqlClient";
 import { useIsAuth } from "../../../utils/useIsAuth";
-import { EventSignUpStuff } from "../../../components/EventSignUpStuff";
 
 interface Props {}
 

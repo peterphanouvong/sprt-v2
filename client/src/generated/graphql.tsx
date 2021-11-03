@@ -462,7 +462,7 @@ export type EventQueryVariables = Exact<{
 }>;
 
 
-export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number } };
+export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number, attendees: Array<{ __typename?: 'Attendee', id: number, firstname: string, lastname: string, email: string, phoneNumber: string, beemId: string, createdAt: string, updatedAt: string }> } };
 
 export type LiveEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -699,6 +699,16 @@ export const EventDocument = gql`
     query Event($id: String!) {
   event(id: $id) {
     ...RegularEvent
+    attendees {
+      id
+      firstname
+      lastname
+      email
+      phoneNumber
+      beemId
+      createdAt
+      updatedAt
+    }
   }
 }
     ${RegularEventFragmentDoc}`;
