@@ -2,7 +2,7 @@ import { Attendee } from "../entities/Attendee";
 import { Query, Mutation, Arg, Resolver, Field, InputType } from "type-graphql";
 
 @InputType()
-class AttendeeInput {
+export class AttendeeInput {
   @Field(() => String)
   firstname!: string;
 
@@ -26,12 +26,17 @@ export class AttendeeResolver {
     return Attendee.find();
   }
 
+  @Query(() => Attendee)
+  attendee(@Arg("id") id: string): Promise<Attendee | undefined> {
+    return Attendee.findOne(id);
+  }
+
   @Mutation(() => Attendee)
   async createAttendee(
     @Arg("input") input: AttendeeInput
   ): Promise<Attendee | undefined> {
     const attendee = await Attendee.create(input).save();
-    console.log(attendee);
+    console.log("attendee", attendee);
     return attendee;
   }
 

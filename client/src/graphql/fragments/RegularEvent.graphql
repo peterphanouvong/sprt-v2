@@ -1,0 +1,8 @@
+fragment RegularEvent on Event {
+  id
+  title
+  date
+  capacity
+  numWaitlist
+  numConfirmed
+}

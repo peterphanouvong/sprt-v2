@@ -28,10 +28,25 @@ __decorate([
     __metadata("design:type", String)
 ], Event.prototype, "title", void 0);
 __decorate([
+    type_graphql_1.Field(() => Boolean, { defaultValue: false }),
+    typeorm_1.Column({ default: false }),
+    __metadata("design:type", Boolean)
+], Event.prototype, "isCompleted", void 0);
+__decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     typeorm_1.Column({ nullable: true }),
     __metadata("design:type", Date)
 ], Event.prototype, "date", void 0);
+__decorate([
+    type_graphql_1.Field(() => String, { nullable: true }),
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], Event.prototype, "startTime", void 0);
+__decorate([
+    type_graphql_1.Field(() => String, { nullable: true }),
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], Event.prototype, "endTime", void 0);
 __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     typeorm_1.Column({ nullable: true }),
@@ -78,12 +93,12 @@ __decorate([
     __metadata("design:type", String)
 ], Event.prototype, "clubBeemId", void 0);
 __decorate([
-    type_graphql_1.Field(() => EventAttendee_1.EventAttendee),
+    type_graphql_1.Field(() => [EventAttendee_1.EventAttendee]),
     typeorm_1.ManyToOne(() => EventAttendee_1.EventAttendee, (ea) => ea.event),
     __metadata("design:type", Array)
 ], Event.prototype, "attendeeConnection", void 0);
 __decorate([
-    type_graphql_1.Field(() => User_1.User),
+    type_graphql_1.Field(() => [User_1.User]),
     typeorm_1.ManyToOne(() => User_1.User, (user) => user.events),
     __metadata("design:type", User_1.User)
 ], Event.prototype, "owner", void 0);

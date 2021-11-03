@@ -1,0 +1,5 @@
+query PastEvents {
+  pastEvents {
+    ...RegularEvent
+  }
+}

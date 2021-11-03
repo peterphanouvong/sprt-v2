@@ -1,6 +1,7 @@
 import { cacheExchange, Resolver } from "@urql/exchange-graphcache";
 import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";
 import router from "next/router";
+import { SubscriptionClient } from "subscriptions-transport-ws";
 import {
   dedupExchange,
   Exchange,
@@ -9,18 +10,23 @@ import {
 } from "urql";
 import { pipe, tap } from "wonka";
 import {
+  CreateEventMutation,
+  DeleteEventMutationVariables,
   JoinQuickEventMutation,
+  LiveEventsDocument,
+  LiveEventsQuery,
   LoginMutation,
   LogoutMutation,
   MeDocument,
   MeQuery,
+  PastEventsDocument,
+  PastEventsQuery,
   QuickEventDocument,
   QuickEventQuery,
   RegisterMutation,
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 import { isServer } from "./isServer";
-import { SubscriptionClient } from "subscriptions-transport-ws";
 
 const errorExchange: Exchange = ({ forward }) => (ops$) => {
   return pipe(
@@ -119,6 +125,35 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
+            deleteEvent: (_result, args, cache, _info) => {
+              cache.invalidate({
+                __typename: "Event",
+                id: (args as DeleteEventMutationVariables).id,
+              });
+            },
+            createEvent: (_result, _args, cache, _info) => {
+              betterUpdateQuery<CreateEventMutation, LiveEventsQuery>(
+                cache,
+                {
+                  query: LiveEventsDocument,
+                },
+                _result,
+                (res, data) => {
+                  return { liveEvents: [res.createEvent, ...data.liveEvents] };
+                }
+              );
+
+              betterUpdateQuery<CreateEventMutation, PastEventsQuery>(
+                cache,
+                {
+                  query: PastEventsDocument,
+                },
+                _result,
+                (res, data) => {
+                  return { pastEvents: [res.createEvent, ...data.pastEvents] };
+                }
+              );
+            },
             joinQuickEvent: (_result, _args, cache, _info) => {
               betterUpdateQuery<JoinQuickEventMutation, QuickEventQuery>(
                 cache,

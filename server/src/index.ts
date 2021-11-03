@@ -26,6 +26,7 @@ import { EventTemplateResolver } from "./resolvers/event-template";
 import { QuickEventResolver } from "./resolvers/quick-event";
 import { UploadResolver } from "./resolvers/upload";
 import { UserResolver } from "./resolvers/user";
+import { createAttendeeLoader } from "./utils/createAttendeeLoader";
 // import { createClubLoader } from "./utils/createClubLoader";
 
 const main = async () => {
@@ -44,6 +45,9 @@ const main = async () => {
     ],
     migrations: [path.join(__dirname, "./migrations/*")],
   });
+
+  // await Event.delete({});
+  // await EventAttendee.delete({});
 
   await conn.runMigrations();
 
@@ -103,7 +107,7 @@ const main = async () => {
       req,
       res,
       redis,
-      // userLoader: createUserLoader(),
+      attendeeLoader: createAttendeeLoader(),
       // clubLoader: createClubLoader(),
       // eventLoader: createEventLoader(),
     }),

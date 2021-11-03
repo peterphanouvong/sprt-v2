@@ -12,7 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AttendeeResolver = void 0;
+exports.AttendeeResolver = exports.AttendeeInput = void 0;
 const Attendee_1 = require("../entities/Attendee");
 const type_graphql_1 = require("type-graphql");
 let AttendeeInput = class AttendeeInput {
@@ -40,13 +40,17 @@ __decorate([
 AttendeeInput = __decorate([
     type_graphql_1.InputType()
 ], AttendeeInput);
+exports.AttendeeInput = AttendeeInput;
 let AttendeeResolver = class AttendeeResolver {
     attendees() {
         return Attendee_1.Attendee.find();
     }
+    attendee(id) {
+        return Attendee_1.Attendee.findOne(id);
+    }
     async createAttendee(input) {
         const attendee = await Attendee_1.Attendee.create(input).save();
-        console.log(attendee);
+        console.log("attendee", attendee);
         return attendee;
     }
 };
@@ -56,6 +60,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], AttendeeResolver.prototype, "attendees", null);
+__decorate([
+    type_graphql_1.Query(() => Attendee_1.Attendee),
+    __param(0, type_graphql_1.Arg("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AttendeeResolver.prototype, "attendee", null);
 __decorate([
     type_graphql_1.Mutation(() => Attendee_1.Attendee),
     __param(0, type_graphql_1.Arg("input")),

@@ -40,7 +40,10 @@ export type Event = {
   __typename?: 'Event';
   id: Scalars['Int'];
   title: Scalars['String'];
+  isCompleted?: Maybe<Scalars['Boolean']>;
   date?: Maybe<Scalars['String']>;
+  startTime?: Maybe<Scalars['String']>;
+  endTime?: Maybe<Scalars['String']>;
   venue?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   price?: Maybe<Scalars['Float']>;
@@ -50,27 +53,33 @@ export type Event = {
   bannerImageLink?: Maybe<Scalars['String']>;
   capacity?: Maybe<Scalars['Float']>;
   clubBeemId: Scalars['String'];
-  attendeeConnection: EventAttendee;
-  owner: User;
+  attendeeConnection: Array<EventAttendee>;
+  owner: Array<User>;
   attendees: Array<Attendee>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   level?: Maybe<Scalars['String']>;
   mixed?: Maybe<Scalars['String']>;
+  numConfirmed: Scalars['Int'];
+  numWaitlist: Scalars['Int'];
 };
 
 export type EventAttendee = {
   __typename?: 'EventAttendee';
   eventId: Scalars['Float'];
   attendeeId: Scalars['Float'];
+  isConfirmed?: Maybe<Scalars['Boolean']>;
 };
 
 export type EventInput = {
-  title: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  isCompleted?: Maybe<Scalars['Boolean']>;
   description?: Maybe<Scalars['String']>;
   date?: Maybe<Scalars['String']>;
+  startTime?: Maybe<Scalars['String']>;
+  endTime?: Maybe<Scalars['String']>;
   capacity?: Maybe<Scalars['Float']>;
-  clubBeemId: Scalars['String'];
+  clubBeemId?: Maybe<Scalars['String']>;
   venue?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   price?: Maybe<Scalars['Float']>;
@@ -119,6 +128,10 @@ export type Mutation = {
   __typename?: 'Mutation';
   createAttendee: Attendee;
   createEvent: Event;
+  updateEvent: Event;
+  addNewAttendee: Scalars['Boolean'];
+  addExistingAttendee: Scalars['Boolean'];
+  deleteEvent: Scalars['Boolean'];
   createEventTemplate: EventTemplate;
   createQuickEvent: QuickEvent;
   updateQuickEvent?: Maybe<QuickEvent>;
@@ -140,6 +153,29 @@ export type MutationCreateAttendeeArgs = {
 
 export type MutationCreateEventArgs = {
   input: EventInput;
+};
+
+
+export type MutationUpdateEventArgs = {
+  input: EventInput;
+  id: Scalars['String'];
+};
+
+
+export type MutationAddNewAttendeeArgs = {
+  input: AttendeeInput;
+  id: Scalars['Float'];
+};
+
+
+export type MutationAddExistingAttendeeArgs = {
+  attendeeId: Scalars['Float'];
+  id: Scalars['Float'];
+};
+
+
+export type MutationDeleteEventArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -200,13 +236,21 @@ export type MutationForgotPasswordArgs = {
 export type Query = {
   __typename?: 'Query';
   attendees: Array<Attendee>;
+  attendee: Attendee;
   event: Event;
   events: Array<Event>;
+  liveEvents: Array<Event>;
+  pastEvents: Array<Event>;
   eventTemplates: Array<EventTemplate>;
   quickEvent?: Maybe<QuickEvent>;
   me?: Maybe<User>;
   user?: Maybe<User>;
   userByClubName?: Maybe<User>;
+};
+
+
+export type QueryAttendeeArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -294,9 +338,19 @@ export type UserResponse = {
 
 export type RegularErrorFragment = { __typename?: 'FieldError', message: string, field: string };
 
+export type RegularEventFragment = { __typename?: 'Event', id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number };
+
 export type RegularUserFragment = { __typename?: 'User', id: number, clubName: string, email: string };
 
 export type RegularUserResponseFragment = { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string }>>, user?: Maybe<{ __typename?: 'User', id: number, clubName: string, email: string }> };
+
+export type AddNewAttendeeMutationMutationVariables = Exact<{
+  input: AttendeeInput;
+  attendeeId: Scalars['Float'];
+}>;
+
+
+export type AddNewAttendeeMutationMutation = { __typename?: 'Mutation', addNewAttendee: boolean };
 
 export type ChangePasswordMutationVariables = Exact<{
   newPassword: Scalars['String'];
@@ -311,7 +365,7 @@ export type CreateEventMutationVariables = Exact<{
 }>;
 
 
-export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'Event', id: number, title: string, venue?: Maybe<string>, date?: Maybe<string>, address?: Maybe<string>, price?: Maybe<number>, description?: Maybe<string>, youtubeLink?: Maybe<string>, bannerImageLink?: Maybe<string>, logoImageLink?: Maybe<string>, capacity?: Maybe<number>, clubBeemId: string, createdAt: string, updatedAt: string } };
+export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'Event', id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number } };
 
 export type CreateQuickEventMutationVariables = Exact<{
   createQuickEventInput: QuickEventInput;
@@ -319,6 +373,13 @@ export type CreateQuickEventMutationVariables = Exact<{
 
 
 export type CreateQuickEventMutation = { __typename?: 'Mutation', createQuickEvent: { __typename?: 'QuickEvent', id: number, title: string, description?: Maybe<string>, capacity?: Maybe<number>, users: string, createdAt: string, updatedAt: string } };
+
+export type DeleteEventMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteEventMutation = { __typename?: 'Mutation', deleteEvent: boolean };
 
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
@@ -363,10 +424,34 @@ export type UpdateQuickEventMutationVariables = Exact<{
 
 export type UpdateQuickEventMutation = { __typename?: 'Mutation', updateQuickEvent?: Maybe<{ __typename?: 'QuickEvent', id: number, title: string, description?: Maybe<string>, capacity?: Maybe<number>, users: string, createdAt: string }> };
 
+export type AttendeeQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type AttendeeQuery = { __typename?: 'Query', attendee: { __typename?: 'Attendee', id: number, firstname: string, lastname: string, email: string, beemId: string, phoneNumber: string, createdAt: string, updatedAt: string } };
+
+export type EventQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number } };
+
+export type LiveEventsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LiveEventsQuery = { __typename?: 'Query', liveEvents: Array<{ __typename?: 'Event', id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number }> };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, clubName: string, email: string }> };
+
+export type PastEventsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PastEventsQuery = { __typename?: 'Query', pastEvents: Array<{ __typename?: 'Event', id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number }> };
 
 export type QuickEventQueryVariables = Exact<{
   quickEventId: Scalars['Int'];
@@ -382,6 +467,16 @@ export type NewQuickEventSubscriptionVariables = Exact<{
 
 export type NewQuickEventSubscription = { __typename?: 'Subscription', newQuickEvent: { __typename?: 'QuickEvent', id: number, title: string, description?: Maybe<string>, capacity?: Maybe<number>, users: string, createdAt: string, updatedAt: string } };
 
+export const RegularEventFragmentDoc = gql`
+    fragment RegularEvent on Event {
+  id
+  title
+  date
+  capacity
+  numWaitlist
+  numConfirmed
+}
+    `;
 export const RegularErrorFragmentDoc = gql`
     fragment RegularError on FieldError {
   message
@@ -406,6 +501,15 @@ export const RegularUserResponseFragmentDoc = gql`
 }
     ${RegularErrorFragmentDoc}
 ${RegularUserFragmentDoc}`;
+export const AddNewAttendeeMutationDocument = gql`
+    mutation AddNewAttendeeMutation($input: AttendeeInput!, $attendeeId: Float!) {
+  addNewAttendee(input: $input, id: $attendeeId)
+}
+    `;
+
+export function useAddNewAttendeeMutationMutation() {
+  return Urql.useMutation<AddNewAttendeeMutationMutation, AddNewAttendeeMutationMutationVariables>(AddNewAttendeeMutationDocument);
+};
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($newPassword: String!, $token: String!) {
   changePassword(newPassword: $newPassword, token: $token) {
@@ -420,23 +524,10 @@ export function useChangePasswordMutation() {
 export const CreateEventDocument = gql`
     mutation CreateEvent($input: EventInput!) {
   createEvent(input: $input) {
-    id
-    title
-    venue
-    date
-    address
-    price
-    description
-    youtubeLink
-    bannerImageLink
-    logoImageLink
-    capacity
-    clubBeemId
-    createdAt
-    updatedAt
+    ...RegularEvent
   }
 }
-    `;
+    ${RegularEventFragmentDoc}`;
 
 export function useCreateEventMutation() {
   return Urql.useMutation<CreateEventMutation, CreateEventMutationVariables>(CreateEventDocument);
@@ -457,6 +548,15 @@ export const CreateQuickEventDocument = gql`
 
 export function useCreateQuickEventMutation() {
   return Urql.useMutation<CreateQuickEventMutation, CreateQuickEventMutationVariables>(CreateQuickEventDocument);
+};
+export const DeleteEventDocument = gql`
+    mutation DeleteEvent($id: String!) {
+  deleteEvent(id: $id)
+}
+    `;
+
+export function useDeleteEventMutation() {
+  return Urql.useMutation<DeleteEventMutation, DeleteEventMutationVariables>(DeleteEventDocument);
 };
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {
@@ -531,6 +631,46 @@ export const UpdateQuickEventDocument = gql`
 export function useUpdateQuickEventMutation() {
   return Urql.useMutation<UpdateQuickEventMutation, UpdateQuickEventMutationVariables>(UpdateQuickEventDocument);
 };
+export const AttendeeDocument = gql`
+    query Attendee($id: String!) {
+  attendee(id: $id) {
+    id
+    firstname
+    lastname
+    email
+    beemId
+    phoneNumber
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+export function useAttendeeQuery(options: Omit<Urql.UseQueryArgs<AttendeeQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<AttendeeQuery>({ query: AttendeeDocument, ...options });
+};
+export const EventDocument = gql`
+    query Event($id: String!) {
+  event(id: $id) {
+    ...RegularEvent
+  }
+}
+    ${RegularEventFragmentDoc}`;
+
+export function useEventQuery(options: Omit<Urql.UseQueryArgs<EventQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<EventQuery>({ query: EventDocument, ...options });
+};
+export const LiveEventsDocument = gql`
+    query LiveEvents {
+  liveEvents {
+    ...RegularEvent
+  }
+}
+    ${RegularEventFragmentDoc}`;
+
+export function useLiveEventsQuery(options: Omit<Urql.UseQueryArgs<LiveEventsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<LiveEventsQuery>({ query: LiveEventsDocument, ...options });
+};
 export const MeDocument = gql`
     query Me {
   me {
@@ -541,6 +681,17 @@ export const MeDocument = gql`
 
 export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
+};
+export const PastEventsDocument = gql`
+    query PastEvents {
+  pastEvents {
+    ...RegularEvent
+  }
+}
+    ${RegularEventFragmentDoc}`;
+
+export function usePastEventsQuery(options: Omit<Urql.UseQueryArgs<PastEventsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<PastEventsQuery>({ query: PastEventsDocument, ...options });
 };
 export const QuickEventDocument = gql`
     query QuickEvent($quickEventId: Int!) {

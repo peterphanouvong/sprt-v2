@@ -31,6 +31,7 @@ const event_template_1 = require("./resolvers/event-template");
 const quick_event_1 = require("./resolvers/quick-event");
 const upload_1 = require("./resolvers/upload");
 const user_1 = require("./resolvers/user");
+const createAttendeeLoader_1 = require("./utils/createAttendeeLoader");
 const main = async () => {
     const conn = await typeorm_1.createConnection({
         type: "postgres",
@@ -94,6 +95,7 @@ const main = async () => {
             req,
             res,
             redis,
+            attendeeLoader: createAttendeeLoader_1.createAttendeeLoader(),
         }),
     });
     await apolloServer.start();
