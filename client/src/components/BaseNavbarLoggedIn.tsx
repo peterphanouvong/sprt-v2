@@ -49,15 +49,19 @@ const BaseNavbarLoggedIn: React.FC<Props> = ({}) => {
 
           <Box display='flex' alignItems='center'>
             <NextLink href='/new-event'>
-              <Button size='sm' variant='outline' colorScheme='gray'>
-                Create event
-              </Button>
+              <a>
+                <Button size='sm' variant='outline' colorScheme='gray'>
+                  Create event
+                </Button>
+              </a>
             </NextLink>
 
             <Box mr={2} />
-            <Button size='sm' variant='ghost' colorScheme='gray'>
-              Settings
-            </Button>
+            <a>
+              <Button size='sm' variant='ghost' colorScheme='gray'>
+                Settings
+              </Button>
+            </a>
             <Box mr={2} />
             <ProfileAvatar />
           </Box>
@@ -91,9 +95,11 @@ const SubMenuItem = ({ item }) => {
       paddingBottom={1}
     >
       <NextLink href={item.link}>
-        <Button variant='ghost' colorScheme='gray' size='sm'>
-          {item.name}
-        </Button>
+        <a>
+          <Button variant='ghost' colorScheme='gray' size='sm'>
+            {item.name}
+          </Button>
+        </a>
       </NextLink>
     </ListItem>
   );

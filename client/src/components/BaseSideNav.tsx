@@ -28,6 +28,7 @@ const BaseSideNav: React.FC<Props> = ({ navItems }) => {
 
 const NavItem = ({ title, link, disabled }) => {
   const router = useRouter();
+  console.log(router);
   return (
     <NextLink href={link}>
       <Text
@@ -36,8 +37,8 @@ const NavItem = ({ title, link, disabled }) => {
         height="auto"
         flexDirection="column"
         alignItems="start"
-        fontWeight={router.pathname === link ? "medium" : "normal"}
-        color={router.pathname === link ? "black" : "gray.500"}
+        fontWeight={router.asPath === link ? "medium" : "normal"}
+        color={router.asPath === link ? "black" : "gray.500"}
         borderRadius="sm"
         disabled={disabled}
         transition="0.3s ease"

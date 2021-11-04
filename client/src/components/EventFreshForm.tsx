@@ -1,5 +1,6 @@
-import { Box, Button, Heading, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, VStack } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
+import { useRouter } from "next/router";
 import React from "react";
 import { useCreateEventMutation } from "../generated/graphql";
 import { parseRichText } from "../utils/parseRichText";
@@ -15,6 +16,7 @@ interface Props {
 const EventFreshForm: React.FC<Props> = ({ templateId }) => {
   const [, createEvent] = useCreateEventMutation();
   const isMobile = useIsMobileScreen();
+  const router = useRouter();
 
   console.log(templateId);
 
@@ -32,7 +34,10 @@ const EventFreshForm: React.FC<Props> = ({ templateId }) => {
             address: "",
             price: "",
             description: parseRichText(""),
+            startTime: "",
+            endTime: "",
             capacity: "",
+            youtubeLink: ""
           }}
           onSubmit={async (values) => {
             console.log(values);
@@ -44,10 +49,16 @@ const EventFreshForm: React.FC<Props> = ({ templateId }) => {
                 capacity: parseInt(values.capacity),
                 price: parseFloat(values.price),
                 description: JSON.stringify(values.description),
-                clubBeemId: "@clubBeemId",
-              },
+                clubBeemId: "@clubBeemId"
+              }
             });
 
+            if (res.error) {
+              console.log(res);
+              alert(res.error);
+            } else {
+              router.push(`/events/${res.data?.createEvent.id}`);
+            }
             console.log(res);
           }}
         >
@@ -83,6 +94,25 @@ const EventFreshForm: React.FC<Props> = ({ templateId }) => {
                   type="date"
                   required
                 />
+                <Flex width="90%">
+                  <BaseInputField
+                    label="Start"
+                    name="startTime"
+                    touched={props.touched.startTime as boolean}
+                    type="time"
+                    required
+                  />
+
+                  <Box mr={4} />
+
+                  <BaseInputField
+                    label="End"
+                    name="endTime"
+                    touched={props.touched.endTime as boolean}
+                    type="time"
+                    required
+                  />
+                </Flex>
                 <BaseInputField
                   label="Price"
                   name="price"
@@ -105,6 +135,13 @@ const EventFreshForm: React.FC<Props> = ({ templateId }) => {
                   setFieldValue={props.setFieldValue}
                   name="description"
                   initialValue={props.values.description}
+                />
+
+                <BaseInputField
+                  label="Youtube Link"
+                  name="youtubeLink"
+                  touched={props.touched.youtubeLink as boolean}
+                  width="40%"
                 />
 
                 <Button

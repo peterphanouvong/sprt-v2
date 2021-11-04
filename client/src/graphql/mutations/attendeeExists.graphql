@@ -1,0 +1,3 @@
+mutation AttendeeExists($phoneNumber: String!) {
+  attendeeExists(phoneNumber: $phoneNumber)
+}

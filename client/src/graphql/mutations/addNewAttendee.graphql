@@ -1,0 +1,3 @@
+mutation AddNewAttendee($input: AttendeeInput!, $eventId: Float!) {
+  addNewAttendee(input: $input, id: $eventId)
+}

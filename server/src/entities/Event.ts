@@ -23,9 +23,21 @@ export class Event extends BaseEntity {
   @Column()
   title!: string;
 
+  @Field(() => Boolean, { defaultValue: false })
+  @Column({ default: false })
+  isCompleted: boolean;
+
   @Field(() => String, { nullable: true })
   @Column({ nullable: true })
   date: Date;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  startTime: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  endTime: string;
 
   @Field(() => String, { nullable: true })
   @Column({ nullable: true })
@@ -63,11 +75,11 @@ export class Event extends BaseEntity {
   @Column()
   clubBeemId: string;
 
-  @Field(() => EventAttendee)
+  @Field(() => [EventAttendee])
   @ManyToOne(() => EventAttendee, (ea) => ea.event)
   attendeeConnection: EventAttendee[];
 
-  @Field(() => User)
+  @Field(() => [User])
   @ManyToOne(() => User, (user) => user.events)
   owner: User;
 

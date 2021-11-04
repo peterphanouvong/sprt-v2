@@ -1,0 +1,12 @@
+query Attendee($id: String!) {
+  attendee(id: $id) {
+    id
+    firstname
+    lastname
+    email
+    beemId
+    phoneNumber
+    createdAt
+    updatedAt
+  }
+}
