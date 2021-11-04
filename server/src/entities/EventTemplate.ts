@@ -31,6 +31,14 @@ export class EventTemplate extends BaseEntity {
 
   @Field(() => String, { nullable: true })
   @Column({ nullable: true })
+  startTime: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  endTime: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
   venue: string;
 
   @Field(() => String, { nullable: true })
@@ -61,8 +69,8 @@ export class EventTemplate extends BaseEntity {
   @Column({ nullable: true })
   capacity: number;
 
-  @Field(() => String)
-  @Column()
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
   clubBeemId: string;
 
   @Field(() => User)
