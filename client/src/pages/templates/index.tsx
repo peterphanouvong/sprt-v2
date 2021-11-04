@@ -1,4 +1,4 @@
-import { Button, Flex, Grid, Spacer } from "@chakra-ui/react";
+import { Button, Flex, Spacer } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import React from "react";

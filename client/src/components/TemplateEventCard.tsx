@@ -1,23 +1,22 @@
 import {
-  HamburgerIcon,
   AddIcon,
-  ExternalLinkIcon,
-  RepeatIcon,
   EditIcon,
+  ExternalLinkIcon,
+  HamburgerIcon,
+  RepeatIcon,
 } from "@chakra-ui/icons";
 import { Box, Heading, Text } from "@chakra-ui/layout";
 import {
+  IconButton,
   Menu,
   MenuButton,
-  IconButton,
-  MenuList,
   MenuItem,
+  MenuList,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { EventTemplate } from "../generated/graphql";
 import { convertEpochToDate } from "../utils/parseDate";
-import { BaseCard } from "./BaseCard";
 
 interface Props {
   template: EventTemplate;
@@ -36,7 +35,7 @@ export const TemplateEventCard: React.FC<Props> = ({ template }) => {
       textAlign='center'
       position='relative'
     >
-      <Menu placement='top-end' strategy='absolute' top='0px' right='0px'>
+      <Menu placement='top-end' strategy='absolute'>
         <MenuButton
           as={IconButton}
           aria-label='Options'

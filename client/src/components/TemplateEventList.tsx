@@ -1,4 +1,4 @@
-import { Heading, SimpleGrid } from "@chakra-ui/layout";
+import { SimpleGrid } from "@chakra-ui/layout";
 import React from "react";
 import { EventTemplate, useEventTemplatesQuery } from "../generated/graphql";
 import { TemplateEventCard } from "./TemplateEventCard";
