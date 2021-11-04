@@ -22,7 +22,7 @@ interface Props {
 }
 
 const EventAttendeeTable: React.FC<Props> = ({ attendees }) => {
-  return (
+  return attendees.length > 0 ? (
     <BaseTable>
       <BaseThead>
         <BaseTr>
@@ -57,6 +57,8 @@ const EventAttendeeTable: React.FC<Props> = ({ attendees }) => {
         ))}
       </BaseTbody>
     </BaseTable>
+  ) : (
+    <div>No attendees yet</div>
   );
 };
 

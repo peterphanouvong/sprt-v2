@@ -26,15 +26,13 @@ const EventSignUpStuff: React.FC<Props> = ({ id }) => {
       </Alert>
     </Box>
   ) : (
-    <BaseCard padding={6}>
-      <BaseSection title="Sign up">
-        <EventSignUpForm
-          eventId={parseInt(id)}
-          isFull={false}
-          setHasSignedUp={setHasSignedUp}
-        />
-      </BaseSection>
-    </BaseCard>
+    <BaseSection title="Sign up">
+      <EventSignUpForm
+        eventId={parseInt(id)}
+        isFull={false}
+        setHasSignedUp={setHasSignedUp}
+      />
+    </BaseSection>
   );
 };
 

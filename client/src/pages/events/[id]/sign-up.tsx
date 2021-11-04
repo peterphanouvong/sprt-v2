@@ -11,7 +11,8 @@ import { EventSignUpStuff } from "../../../components/EventSignUpStuff";
 import { useEventQuery } from "../../../generated/graphql";
 import { createUrqlClient } from "../../../utils/createUrqlClient";
 import { useIsAuth } from "../../../utils/useIsAuth";
-
+import { Event } from "../../../generated/graphql";
+import { EventPageOverview } from "../../../components/EventPageOverview";
 interface Props {}
 
 const EventSignUp: React.FC<Props> = ({}) => {
@@ -38,6 +39,8 @@ const EventSignUp: React.FC<Props> = ({}) => {
         <title>EventSignUp | sprt</title>
       </Head>
       <BasePageHeader>{data?.event.title}</BasePageHeader>
+
+      <EventPageOverview event={data?.event as Event} />
 
       <BaseContent flex={1}>
         <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">

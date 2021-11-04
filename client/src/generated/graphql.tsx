@@ -21,7 +21,7 @@ export type Attendee = {
   id: Scalars['Int'];
   firstname: Scalars['String'];
   lastname: Scalars['String'];
-  email: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
   phoneNumber: Scalars['String'];
   beemId: Scalars['String'];
   createdAt: Scalars['String'];
@@ -83,6 +83,7 @@ export type EventInput = {
   venue?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   price?: Maybe<Scalars['Float']>;
+  youtubeLink?: Maybe<Scalars['String']>;
 };
 
 export type EventTemplate = {
@@ -455,14 +456,14 @@ export type AttendeeQueryVariables = Exact<{
 }>;
 
 
-export type AttendeeQuery = { __typename?: 'Query', attendee: { __typename?: 'Attendee', id: number, firstname: string, lastname: string, email: string, beemId: string, phoneNumber: string, createdAt: string, updatedAt: string } };
+export type AttendeeQuery = { __typename?: 'Query', attendee: { __typename?: 'Attendee', id: number, firstname: string, lastname: string, email?: Maybe<string>, beemId: string, phoneNumber: string, createdAt: string, updatedAt: string } };
 
 export type EventQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number, attendees: Array<{ __typename?: 'Attendee', id: number, firstname: string, lastname: string, email: string, phoneNumber: string, beemId: string, createdAt: string, updatedAt: string }> } };
+export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', venue?: Maybe<string>, address?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, clubBeemId: string, price?: Maybe<number>, youtubeLink?: Maybe<string>, id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number, attendees: Array<{ __typename?: 'Attendee', id: number, firstname: string, lastname: string, email?: Maybe<string>, phoneNumber: string, beemId: string, createdAt: string, updatedAt: string }> } };
 
 export type LiveEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -699,6 +700,13 @@ export const EventDocument = gql`
     query Event($id: String!) {
   event(id: $id) {
     ...RegularEvent
+    venue
+    address
+    startTime
+    endTime
+    clubBeemId
+    price
+    youtubeLink
     attendees {
       id
       firstname

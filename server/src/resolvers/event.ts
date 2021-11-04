@@ -51,6 +51,9 @@ class EventInput {
 
   @Field(() => Number, { nullable: true })
   price: number;
+
+  @Field(() => String, { nullable: true })
+  youtubeLink: string;
 }
 
 @Resolver(Event)

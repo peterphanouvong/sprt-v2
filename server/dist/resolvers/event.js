@@ -65,6 +65,10 @@ __decorate([
     type_graphql_1.Field(() => Number, { nullable: true }),
     __metadata("design:type", Number)
 ], EventInput.prototype, "price", void 0);
+__decorate([
+    type_graphql_1.Field(() => String, { nullable: true }),
+    __metadata("design:type", String)
+], EventInput.prototype, "youtubeLink", void 0);
 EventInput = __decorate([
     type_graphql_1.InputType()
 ], EventInput);

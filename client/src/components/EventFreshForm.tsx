@@ -1,4 +1,4 @@
-import { Box, Button, Heading, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, VStack } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import React from "react";
@@ -34,7 +34,10 @@ const EventFreshForm: React.FC<Props> = ({ templateId }) => {
             address: "",
             price: "",
             description: parseRichText(""),
+            startTime: "",
+            endTime: "",
             capacity: "",
+            youtubeLink: "",
           }}
           onSubmit={async (values) => {
             console.log(values);
@@ -53,7 +56,7 @@ const EventFreshForm: React.FC<Props> = ({ templateId }) => {
             if (res.error) {
               alert(res.error);
             } else {
-              router.push(`/events/${res.data?.createEvent.id}/sign-up`);
+              router.push(`/events/${res.data?.createEvent.id}`);
             }
             console.log(res);
           }}
@@ -90,13 +93,31 @@ const EventFreshForm: React.FC<Props> = ({ templateId }) => {
                   type="date"
                   required
                 />
+                <Flex width="90%">
+                  <BaseInputField
+                    label="Start"
+                    name="startTime"
+                    touched={props.touched.startTime as boolean}
+                    type="time"
+                    required
+                  />
+
+                  <Box mr={4} />
+
+                  <BaseInputField
+                    label="End"
+                    name="endTime"
+                    touched={props.touched.endTime as boolean}
+                    type="time"
+                    required
+                  />
+                </Flex>
                 <BaseInputField
                   label="Price"
                   name="price"
                   touched={props.touched.price as boolean}
                   type="number"
                   width="15%"
-                  required
                 />
 
                 <BaseInputField
@@ -112,6 +133,13 @@ const EventFreshForm: React.FC<Props> = ({ templateId }) => {
                   setFieldValue={props.setFieldValue}
                   name="description"
                   initialValue={props.values.description}
+                />
+
+                <BaseInputField
+                  label="Youtube Link"
+                  name="youtubeLink"
+                  touched={props.touched.youtubeLink as boolean}
+                  width="40%"
                 />
 
                 <Button
