@@ -25,8 +25,8 @@ const EventOverview: React.FC<Props> = ({}) => {
   const [{ data, fetching }] = useEventQuery({
     pause: id === undefined,
     variables: {
-      id: id as string,
-    },
+      id: id as string
+    }
   });
 
   if (fetching) {
@@ -49,15 +49,18 @@ const EventOverview: React.FC<Props> = ({}) => {
         <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
           <EventPageSideNav id={id as string} />
           <BaseSection title="Description">
-            <AspectRatio ratio={16 / 9}>
-              <iframe
-                title="naruto"
-                src={`//www.youtube.com/embed/${getYoutubeVideoId(
-                  data?.event.youtubeLink as string
-                )}`}
-                allowFullScreen
-              />
-            </AspectRatio>
+            {data?.event.youtubeLink && (
+              <AspectRatio ratio={16 / 9}>
+                <iframe
+                  title="naruto"
+                  src={`//www.youtube.com/embed/${getYoutubeVideoId(
+                    data?.event.youtubeLink as string
+                  )}`}
+                  allowFullScreen
+                />
+              </AspectRatio>
+            )}
+
             <NextLink href={`/events/${id}/sign-up`}>
               <Button mt={4}>Sign up!</Button>
             </NextLink>

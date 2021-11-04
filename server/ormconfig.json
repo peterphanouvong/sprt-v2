@@ -2,9 +2,9 @@
   "type": "postgres",
   "host": "localhost",
   "port": 5432,
-  "username": "peterphanouvong",
-  "password": "",
-  "database": "sprt2",
+  "username": "postgres",
+  "password": "postgres",
+  "database": "sprt",
   "entities": ["dist/entities/*.js"],
   "migrations": ["dist/migrations/*.js"]
 }

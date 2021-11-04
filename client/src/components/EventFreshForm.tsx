@@ -37,7 +37,7 @@ const EventFreshForm: React.FC<Props> = ({ templateId }) => {
             startTime: "",
             endTime: "",
             capacity: "",
-            youtubeLink: "",
+            youtubeLink: ""
           }}
           onSubmit={async (values) => {
             console.log(values);
@@ -49,11 +49,12 @@ const EventFreshForm: React.FC<Props> = ({ templateId }) => {
                 capacity: parseInt(values.capacity),
                 price: parseFloat(values.price),
                 description: JSON.stringify(values.description),
-                clubBeemId: "@clubBeemId",
-              },
+                clubBeemId: "@clubBeemId"
+              }
             });
 
             if (res.error) {
+              console.log(res);
               alert(res.error);
             } else {
               router.push(`/events/${res.data?.createEvent.id}`);
@@ -118,6 +119,7 @@ const EventFreshForm: React.FC<Props> = ({ templateId }) => {
                   touched={props.touched.price as boolean}
                   type="number"
                   width="15%"
+                  required
                 />
 
                 <BaseInputField
