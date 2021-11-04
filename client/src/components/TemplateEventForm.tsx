@@ -3,7 +3,8 @@ import { Form, Formik } from "formik";
 import React from "react";
 import {
   EventTemplate,
-  useUpdateEventTemplateMutation,
+  useCreateEventTemplateMutation,
+  useUpdateEventTemplateMutation
 } from "../generated/graphql";
 import { convertEpochToDate, formatDateForPostgres } from "../utils/parseDate";
 import { parseRichText } from "../utils/parseRichText";
@@ -12,64 +13,104 @@ import { BaseDynamicEditor } from "./BaseDynamicEditor";
 import { BaseInputField } from "./BaseInputField";
 
 interface Props {
-  template: EventTemplate;
+  template?: EventTemplate | undefined;
 }
 
 const TemplateEventForm: React.FC<Props> = ({ template }) => {
   const toast = useToast();
   const isMobile = useIsMobileScreen();
   const [, updateTemplate] = useUpdateEventTemplateMutation();
+  const [, createEventTemplate] = useCreateEventTemplateMutation();
 
-  const initialValues = {
-    templateName: template.templateName ? template.templateName : "",
-    title: template.title ? template.title : "",
-    description: template.description
-      ? parseRichText(template.description as string)
-      : parseRichText(""),
-    capacity: template.capacity ? template.capacity : "",
-    date: template.date ? convertEpochToDate(template.date) : "",
-    startTime: template.startTime ? template.startTime : "",
-    endTime: template.endTime ? template.endTime : "",
-    venue: template.venue ? template.venue : "",
-    address: template.address ? template.address : "",
-    price: template.price ? template.price : "",
-    youtubeLink: template.youtubeLink ? template.youtubeLink : "",
-    logoImageLink: template.logoImageLink ? template.logoImageLink : "",
-    bannerImageLink: template.bannerImageLink ? template.bannerImageLink : "",
-    clubBeemId: template.clubBeemId ? template.clubBeemId : "",
-  };
+  const initialValues =
+    template == undefined
+      ? {
+          templateName: "",
+          title: "",
+          description: parseRichText(""),
+          capacity: "",
+          date: "",
+          startTime: "",
+          endTime: "",
+          venue: "",
+          address: "",
+          price: "",
+          youtubeLink: "",
+          logoImageLink: "",
+          bannerImageLink: "",
+          clubBeemId: ""
+        }
+      : {
+          templateName: template.templateName ? template.templateName : "",
+          title: template.title ? template.title : "",
+          description: template.description
+            ? parseRichText(template.description as string)
+            : parseRichText(""),
+          capacity: template.capacity ? template.capacity : "",
+          date: template.date ? convertEpochToDate(template.date) : "",
+          startTime: template.startTime ? template.startTime : "",
+          endTime: template.endTime ? template.endTime : "",
+          venue: template.venue ? template.venue : "",
+          address: template.address ? template.address : "",
+          price: template.price ? template.price : "",
+          youtubeLink: template.youtubeLink ? template.youtubeLink : "",
+          logoImageLink: template.logoImageLink ? template.logoImageLink : "",
+          bannerImageLink: template.bannerImageLink
+            ? template.bannerImageLink
+            : "",
+          clubBeemId: template.clubBeemId ? template.clubBeemId : ""
+        };
 
   const onSubmit = async (values) => {
     console.log(values);
-    const { error, data } = await updateTemplate({
-      input: {
-        templateName: values.templateName as string,
-        title: values.title,
-        capacity: Number(values.capacity),
-        date: formatDateForPostgres(values.date),
-        startTime: values.startTime,
-        endTime: values.endTime,
-        venue: values.venue,
-        address: values.address,
-        price: Number(values.price),
-        youtubeLink: values.youtubeLink,
-        logoImageLink: values.logoImageLink,
-        bannerImageLink: values.bannerImageLink,
-        clubBeemId: values.clubBeemId,
-        description: JSON.stringify(values.description),
-      },
-      updateEventTemplateId: template.id,
-    });
-    console.log(data);
-
-    if (error) {
-      toast({
-        description: error.message.substr(10),
-        isClosable: true,
-        position: "top",
-        status: "error",
-        variant: "subtle",
+    if (template) {
+      const { error, data } = await updateTemplate({
+        input: {
+          templateName: values.templateName as string,
+          title: values.title,
+          capacity: Number(values.capacity),
+          date: formatDateForPostgres(values.date),
+          startTime: values.startTime,
+          endTime: values.endTime,
+          venue: values.venue,
+          address: values.address,
+          price: Number(values.price),
+          youtubeLink: values.youtubeLink,
+          logoImageLink: values.logoImageLink,
+          bannerImageLink: values.bannerImageLink,
+          clubBeemId: values.clubBeemId,
+          description: JSON.stringify(values.description)
+        },
+        updateEventTemplateId: template.id
       });
+      console.log(data);
+
+      if (error) {
+        toast({
+          description: error.message.substr(10),
+          isClosable: true,
+          position: "top",
+          status: "error",
+          variant: "subtle"
+        });
+      }
+    } else {
+      const { data, error } = await createEventTemplate({
+        input: {
+          ...values,
+          capacity: Number(values.capacity),
+          price: Number(values.price),
+          date: formatDateForPostgres(values.date),
+          description: JSON.stringify(values.description)
+        }
+      });
+
+      if (error) {
+        alert("something went wrong");
+      } else {
+        console.log("IT WORKD");
+        console.log(data);
+      }
     }
   };
 
@@ -80,71 +121,80 @@ const TemplateEventForm: React.FC<Props> = ({ template }) => {
     >
       {(props) => (
         <Form>
-          <VStack spacing={4} mt={8} alignItems='stretch'>
+          <VStack spacing={4} mt={6} alignItems="stretch">
             <BaseInputField
-              label='Template Name'
-              name='templateName'
+              label="Template Name"
+              name="templateName"
               touched={props.touched.templateName as boolean}
+              width="400px"
               required
             />
 
             <BaseInputField
-              label='Event Title'
-              name='title'
+              label="Event Title"
+              name="title"
               touched={props.touched.title as boolean}
+              width="400px"
               required
             />
 
             <BaseInputField
-              label='Date'
-              name='date'
+              label="Date"
+              name="date"
               touched={props.touched.date as boolean}
-              type='date'
+              width="200px"
+              type="date"
             />
 
             <BaseInputField
-              label='Capacity'
-              name='capacity'
+              label="Capacity"
+              name="capacity"
               touched={props.touched.capacity as boolean}
+              width={20}
             />
 
             <BaseInputField
-              label='Venue'
-              name='venue'
+              label="Venue"
+              name="venue"
               touched={props.touched.venue as boolean}
+              width="400px"
             />
 
             <BaseInputField
-              label='Address'
-              name='address'
+              label="Address"
+              name="address"
               touched={props.touched.address as boolean}
+              width="500px"
             />
 
             <BaseInputField
-              label='Price'
-              name='price'
+              label="Price"
+              name="price"
               touched={props.touched.price as boolean}
+              width={20}
             />
 
             <BaseInputField
-              label='Club Beem ID'
-              name='clubBeemId'
+              label="Club Beem ID"
+              name="clubBeemId"
               touched={props.touched.clubBeemId as boolean}
+              width="200px"
+              required
             />
 
             <BaseDynamicEditor
-              label='Description'
+              label="Description"
               setFieldValue={props.setFieldValue}
-              name='description'
+              name="description"
               initialValue={props.values.description}
             />
 
             <Button
               isLoading={props.isSubmitting}
               size={isMobile ? "md" : "lg"}
-              type='submit'
+              type="submit"
             >
-              Save Changes
+              {template ? "Save changes" : "Create template"}
             </Button>
           </VStack>
         </Form>

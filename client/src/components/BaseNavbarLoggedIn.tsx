@@ -6,7 +6,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Spinner,
+  Spinner
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -20,37 +20,38 @@ interface Props {}
 const subMenuItems = [
   { name: "Home", link: "/home" },
   { name: "Events", link: "/live-events" },
-  { name: "Templates", link: "/templates" },
+  { name: "Templates", link: "/templates" }
 ];
 
 const BaseNavbarLoggedIn: React.FC<Props> = ({}) => {
   return (
     <Box
-      position='fixed'
-      width='100%'
-      top='0'
-      left='0'
-      height='107px'
-      bgColor='white'
-      borderBottom='1px solid'
-      borderColor='gray.200'
+      position="fixed"
+      width="100%"
+      top="0"
+      left="0"
+      height="107px"
+      bgColor="white"
+      borderBottom="1px solid"
+      borderColor="gray.200"
+      zIndex="999"
     >
       <BaseContainer>
         <Box
           paddingY={4}
           paddingX={4}
-          display='flex'
-          justifyContent='space-between'
-          alignItems='center'
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
         >
-          <Box display='flex' alignItems='center'>
-            <BaseLogo size='sm' />
+          <Box display="flex" alignItems="center">
+            <BaseLogo size="sm" />
           </Box>
 
-          <Box display='flex' alignItems='center'>
-            <NextLink href='/new-event'>
+          <Box display="flex" alignItems="center">
+            <NextLink href="/new-event">
               <a>
-                <Button size='sm' variant='outline' colorScheme='gray'>
+                <Button size="sm" variant="outline" colorScheme="gray">
                   Create event
                 </Button>
               </a>
@@ -58,7 +59,7 @@ const BaseNavbarLoggedIn: React.FC<Props> = ({}) => {
 
             <Box mr={2} />
             <a>
-              <Button size='sm' variant='ghost' colorScheme='gray'>
+              <Button size="sm" variant="ghost" colorScheme="gray">
                 Settings
               </Button>
             </a>
@@ -75,7 +76,7 @@ const BaseNavbarLoggedIn: React.FC<Props> = ({}) => {
 
 const SubMenu = () => {
   return (
-    <UnorderedList ml={0} listStyleType='none' display='flex'>
+    <UnorderedList ml={0} listStyleType="none" display="flex">
       {subMenuItems.map((item) => (
         <SubMenuItem key={item.link} item={item} />
       ))}
@@ -86,17 +87,17 @@ const SubMenu = () => {
 const SubMenuItem = ({ item }) => {
   const router = useRouter();
 
-  const isActive = router.pathname === `/${item.link}`;
+  const isActive = router.pathname.includes(`${item.link}`);
 
   return (
     <ListItem
-      borderBottom='2px solid'
+      borderBottom="2px solid"
       borderColor={isActive ? "black" : "transparent"}
       paddingBottom={1}
     >
       <NextLink href={item.link}>
         <a>
-          <Button variant='ghost' colorScheme='gray' size='sm'>
+          <Button variant="ghost" colorScheme="gray" size="sm">
             {item.name}
           </Button>
         </a>
@@ -112,11 +113,11 @@ const ProfileAvatar = () => {
   if (fetching) return <Spinner />;
   if (!fetching && !data) return <>error</>;
   return (
-    <Box display='flex' alignItems='center' justifyContent='space-between'>
+    <Box display="flex" alignItems="center" justifyContent="space-between">
       {data && (
         <Menu>
           <MenuButton>
-            <Avatar name={`${data.me?.clubName}`} mr={4} size='sm' />
+            <Avatar name={`${data.me?.clubName}`} mr={4} size="sm" />
           </MenuButton>
           <MenuList>
             <MenuItem

@@ -1,4 +1,4 @@
-import { Flex, Spacer, Button, Spinner } from "@chakra-ui/react";
+import { Flex, Spacer, Button, Spinner, Heading } from "@chakra-ui/react";
 import Head from "next/head";
 import { withUrqlClient } from "next-urql";
 import React from "react";
@@ -10,6 +10,7 @@ import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useRouter } from "next/router";
 import { EventTemplate, useEventTemplateQuery } from "../../generated/graphql";
 import { TemplateEventForm } from "../../components/TemplateEventForm";
+import { BaseCard } from "../../components/BaseCard";
 
 export const TemplatePage = () => {
   const router = useRouter();
@@ -18,7 +19,7 @@ export const TemplatePage = () => {
     typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
 
   const [{ data }] = useEventTemplateQuery({
-    variables: { eventTemplateId: intId },
+    variables: { eventTemplateId: intId }
   });
 
   if (!data) {
@@ -30,24 +31,25 @@ export const TemplatePage = () => {
       <Head>
         <title>Templates | sprt</title>
       </Head>
-      <BasePageHeader>Templates</BasePageHeader>
+      <BasePageHeader>
+        {data?.eventTemplate.templateName as string}
+      </BasePageHeader>
 
       <BaseContent>
-        <Flex>
-          <BaseSection
-            title={data?.eventTemplate.templateName as string}
-          ></BaseSection>
-          <Spacer />
-          <Button
-            size='sm'
-            colorScheme='gray'
-            variant='outline'
-            // onClick={onClick}
-          >
-            Create Event From Template
-          </Button>
-        </Flex>
-        <TemplateEventForm template={data?.eventTemplate as EventTemplate} />
+        <Button
+          size="sm"
+          colorScheme="gray"
+          mb={4}
+          // onClick={onClick}
+        >
+          Create event from template
+        </Button>
+        <BaseCard padding={4}>
+          <Heading variant="h6" as="h6">
+            Template details
+          </Heading>
+          <TemplateEventForm template={data?.eventTemplate as EventTemplate} />
+        </BaseCard>
       </BaseContent>
     </BaseLayout>
   );

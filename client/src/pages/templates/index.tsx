@@ -1,11 +1,20 @@
-import { Button, Flex, Spacer } from "@chakra-ui/react";
+import { SearchIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Button,
+  Flex,
+  Input,
+  InputGroup,
+  InputLeftElement
+} from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import React from "react";
+import { BsPlus } from "react-icons/bs";
 import { BaseContent } from "../../components/BaseContent";
 import { BaseLayout } from "../../components/BaseLayout";
 import { BasePageHeader } from "../../components/BasePageHeader";
-import { BaseSection } from "../../components/BaseSection";
+import { TemplateCreateButton } from "../../components/TemplateCreateButton";
 import { TemplateEventList } from "../../components/TemplateEventList";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useIsAuth } from "../../utils/useIsAuth";
@@ -26,21 +35,17 @@ const Templates: React.FC<Props> = ({}) => {
       </Head>
       <BasePageHeader>Templates</BasePageHeader>
 
-      <BaseContent>
-        {/* <Grid templateColumns='1fr 3fr' gridGap={4} alignItems='start'>
-          <EventListSideNav />
-        </Grid> */}
+      <BaseContent bg="transparent">
         <Flex>
-          <BaseSection title='Templates'></BaseSection>
-          <Spacer />
-          <Button
-            size='sm'
-            colorScheme='gray'
-            variant='outline'
-            onClick={onClick}
-          >
-            Create Template
-          </Button>
+          <InputGroup flex={6}>
+            <InputLeftElement
+              pointerEvents="none"
+              children={<SearchIcon color="gray.300" />}
+            />
+            <Input bgColor="white" placeholder="Search" />
+          </InputGroup>
+          <Box mr={4} />
+          <TemplateCreateButton />
         </Flex>
         <TemplateEventList />
       </BaseContent>
