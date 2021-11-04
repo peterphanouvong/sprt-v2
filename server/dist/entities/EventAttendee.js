@@ -18,14 +18,19 @@ let EventAttendee = class EventAttendee extends typeorm_1.BaseEntity {
 };
 __decorate([
     typeorm_1.PrimaryColumn(),
-    type_graphql_1.Field(),
+    type_graphql_1.Field(() => Number),
     __metadata("design:type", Number)
 ], EventAttendee.prototype, "eventId", void 0);
 __decorate([
     typeorm_1.PrimaryColumn(),
-    type_graphql_1.Field(),
+    type_graphql_1.Field(() => Number),
     __metadata("design:type", Number)
 ], EventAttendee.prototype, "attendeeId", void 0);
+__decorate([
+    typeorm_1.Column({ default: false }),
+    type_graphql_1.Field(() => Boolean, { defaultValue: false }),
+    __metadata("design:type", Boolean)
+], EventAttendee.prototype, "isConfirmed", void 0);
 __decorate([
     typeorm_1.ManyToOne(() => Event_1.Event, (event) => event.attendeeConnection, {
         onDelete: "CASCADE",

@@ -4,7 +4,17 @@ import React from "react";
 interface Props {}
 
 const BasePage: React.FC<Props> = ({ children }) => {
-  return <Box ml="20vw">{children}</Box>;
+  return (
+    <Box
+      minH="100vh"
+      bgColor="gray.50"
+      pt="107px"
+      display="flex"
+      flexDirection="column"
+    >
+      {children}
+    </Box>
+  );
 };
 
 export { BasePage };

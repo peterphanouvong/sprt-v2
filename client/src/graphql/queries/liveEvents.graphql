@@ -1,0 +1,5 @@
+query LiveEvents {
+  liveEvents {
+    ...RegularEvent
+  }
+}

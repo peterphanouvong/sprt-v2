@@ -1,5 +1,5 @@
 import { Field, ObjectType } from "type-graphql";
-import { BaseEntity, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { Event } from "./Event";
 import { Attendee } from "./Attendee";
 
@@ -7,12 +7,16 @@ import { Attendee } from "./Attendee";
 @Entity()
 export class EventAttendee extends BaseEntity {
   @PrimaryColumn()
-  @Field()
+  @Field(() => Number)
   eventId: number;
 
   @PrimaryColumn()
-  @Field()
+  @Field(() => Number)
   attendeeId: number;
+
+  @Column({ default: false })
+  @Field(() => Boolean, { defaultValue: false })
+  isConfirmed: boolean;
 
   @ManyToOne(() => Event, (event) => event.attendeeConnection, {
     onDelete: "CASCADE",

@@ -27,7 +27,7 @@ export class Attendee extends BaseEntity {
   @Column({ nullable: true })
   lastname!: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true })
   email?: string;
 

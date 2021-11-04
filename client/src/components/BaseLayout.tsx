@@ -3,7 +3,7 @@ import React from "react";
 import { useIsLoggedIn } from "../utils/useIsLoggedIn";
 import { BasePage } from "./BasePage";
 import { BaseNavbar } from "./BaseNavbar";
-import { BaseSidebar } from "./BaseSidebar";
+import { BaseNavbarLoggedIn } from "./BaseNavbarLoggedIn";
 
 interface Props {}
 
@@ -13,7 +13,7 @@ const BaseLayout: React.FC<Props> = ({ children }) => {
     <Box margin="auto">
       {isLoggedIn ? (
         <>
-          <BaseSidebar />
+          <BaseNavbarLoggedIn />
           <BasePage>{children}</BasePage>
         </>
       ) : (

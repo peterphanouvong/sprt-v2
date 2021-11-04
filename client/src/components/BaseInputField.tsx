@@ -31,9 +31,9 @@ const BaseInputField: React.FC<InputFieldProps> = ({
   return (
     <FormControl isInvalid={!!error && touched}>
       {label && (
-        <FormLabel htmlFor={field.name}>
+        <FormLabel mb={1} htmlFor={field.name}>
           <HStack>
-            <Text>{label}</Text>
+            <Text variant="body-3">{label}</Text>
 
             {!props.required && <Text variant="meta">(optional)</Text>}
           </HStack>

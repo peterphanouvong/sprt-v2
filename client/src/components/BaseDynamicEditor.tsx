@@ -49,9 +49,9 @@ const BaseDynamicEditor: React.FC<Props> = ({
   return (
     <Box hidden={hidden}>
       {label && (
-        <FormLabel htmlFor={props.name}>
+        <FormLabel mb={1} htmlFor={props.name}>
           <HStack>
-            <Text>{label}</Text>
+            <Text variant="body-3">{label}</Text>
 
             {!props.required && (
               <Text hidden={readOnly} variant="meta">

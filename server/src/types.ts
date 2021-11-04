@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Redis } from "ioredis";
+import { createAttendeeLoader } from "./utils/createAttendeeLoader";
 // import { createClubLoader } from "./utils/createClubLoader";
 // import { createEventLoader } from "./utils/createEventLoader";
 // import { createUserLoader } from "./utils/createUserLoader";
@@ -21,7 +22,7 @@ export type MyContext = {
   req: Request & { session: Express.Session };
   res: Response;
   redis: Redis;
-  // userLoader: ReturnType<typeof createUserLoader>;
+  attendeeLoader: ReturnType<typeof createAttendeeLoader>;
   // clubLoader: ReturnType<typeof createClubLoader>;
   // eventLoader: ReturnType<typeof createEventLoader>;
 };

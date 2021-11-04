@@ -9,7 +9,7 @@ export const parseDate = (dateString: string | null | undefined) => {
 export const parseDatePretty = (dateString: string | null | undefined) => {
   if (dateString === null || dateString === undefined) return null;
   const date = new Date(parseInt(dateString));
-  return format(date, "eee, LLL d @ h:mm aaa");
+  return format(date, "eee, LLL d");
 };
 
 export const formatDateForPostgres = (dateString: string) => {
