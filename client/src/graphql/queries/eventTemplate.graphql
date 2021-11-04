@@ -1,0 +1,5 @@
+query EventTemplate($eventTemplateId: Float!) {
+  eventTemplate(id: $eventTemplateId) {
+    ...RegularEventTemplate
+  }
+}

@@ -1,0 +1,26 @@
+fragment RegularEventTemplate on EventTemplate {
+  templateName
+  id
+  title
+  date
+  startTime
+  endTime
+  venue
+  address
+  price
+  description
+  youtubeLink
+  logoImageLink
+  bannerImageLink
+  capacity
+  clubBeemId
+  #   owner {
+  #     id
+  #     firstname
+  #     lastname
+  #   }
+  createdAt
+  updatedAt
+  level
+  mixed
+}

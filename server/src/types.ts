@@ -3,7 +3,7 @@ import { Redis } from "ioredis";
 import { createAttendeeLoader } from "./utils/createAttendeeLoader";
 // import { createClubLoader } from "./utils/createClubLoader";
 // import { createEventLoader } from "./utils/createEventLoader";
-// import { createUserLoader } from "./utils/createUserLoader";
+import { createUserLoader } from "./utils/createUserLoader";
 
 declare global {
   namespace Express {

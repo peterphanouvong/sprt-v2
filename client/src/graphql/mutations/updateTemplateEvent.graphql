@@ -1,0 +1,8 @@
+mutation UpdateEventTemplate(
+  $input: EventTemplateInput!
+  $updateEventTemplateId: Float!
+) {
+  updateEventTemplate(input: $input, id: $updateEventTemplateId) {
+    ...RegularEventTemplate
+  }
+}

@@ -39,6 +39,16 @@ __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     typeorm_1.Column({ nullable: true }),
     __metadata("design:type", String)
+], EventTemplate.prototype, "startTime", void 0);
+__decorate([
+    type_graphql_1.Field(() => String, { nullable: true }),
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], EventTemplate.prototype, "endTime", void 0);
+__decorate([
+    type_graphql_1.Field(() => String, { nullable: true }),
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
 ], EventTemplate.prototype, "venue", void 0);
 __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
@@ -76,8 +86,8 @@ __decorate([
     __metadata("design:type", Number)
 ], EventTemplate.prototype, "capacity", void 0);
 __decorate([
-    type_graphql_1.Field(() => String),
-    typeorm_1.Column(),
+    type_graphql_1.Field(() => String, { nullable: true }),
+    typeorm_1.Column({ nullable: true }),
     __metadata("design:type", String)
 ], EventTemplate.prototype, "clubBeemId", void 0);
 __decorate([
