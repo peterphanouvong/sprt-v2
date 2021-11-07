@@ -8,7 +8,7 @@ interface Props {
 
 const NewEventSideNav: React.FC<Props> = ({
   isFromTemplate,
-  hasChosenTemplate = false
+  hasChosenTemplate = false,
 }) => {
   return (
     <BaseSideNav
@@ -19,13 +19,13 @@ const NewEventSideNav: React.FC<Props> = ({
               { title: "Choose template", link: `/new-event/choose-template` },
               {
                 title: "Event details",
-                link: `/new-event/event-details`,
-                disabled: hasChosenTemplate
-              }
+                link: `/new-event/from-template`,
+                disabled: !hasChosenTemplate,
+              },
             ]
           : [
               { title: "Choose path", link: `/new-event` },
-              { title: "Event details", link: `/new-event/event-details` }
+              { title: "Event details", link: `/new-event/event-details` },
             ]
       }
     />

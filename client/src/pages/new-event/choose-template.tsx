@@ -32,7 +32,7 @@ const EventChooseTemplate: React.FC<Props> = ({}) => {
             <Button onClick={() => setHasChosenTemplate(true)}>
               choose template
             </Button>
-            <EventTemplateList />
+            {/* <EventTemplateList  /> */}
           </div>
         </Grid>
       </BaseContent>

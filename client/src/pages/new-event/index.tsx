@@ -1,14 +1,13 @@
 import { Box, Button, Flex, Grid, Heading, Text } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
+import NextLink from "next/link";
 import React from "react";
 import { BaseContent } from "../../components/BaseContent";
 import { BaseLayout } from "../../components/BaseLayout";
 import { BasePageHeader } from "../../components/BasePageHeader";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useIsAuth } from "../../utils/useIsAuth";
-import NextLink from "next/link";
-import { NewEventSideNav } from "../../components/NewEventSideNav";
 
 interface Props {}
 
@@ -25,7 +24,9 @@ const NewEvent: React.FC<Props> = ({}) => {
 
       <BaseContent>
         <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
-          <NewEventSideNav isFromTemplate={false} />
+          <Text variant="body-3" fontWeight="medium">
+            Choose path
+          </Text>
 
           <Flex flexDir="column" alignItems="stretch">
             <NextLink href="/new-event/choose-template">
