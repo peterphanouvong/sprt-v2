@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { EventTemplate } from "../generated/graphql";
 import { convertEpochToDate } from "../utils/parseDate";
+import NextLink from "next/link";
 
 interface Props {
   template: EventTemplate;
@@ -29,9 +30,11 @@ export const TemplateEventCard: React.FC<Props> = ({ template }) => {
       <Text variant="body-3">{template.venue}</Text>
 
       <ButtonGroup position="absolute" bottom={4}>
-        <Button variant="solid" size="sm" colorScheme="gray">
-          Create event from template
-        </Button>
+        <NextLink href={`/new-event/from-template/${1}`}>
+          <Button variant="solid" size="sm" colorScheme="gray">
+            Create event from template
+          </Button>
+        </NextLink>
         <Button
           onClick={() => router.push(`/templates/${template.id}`)}
           variant="outline"

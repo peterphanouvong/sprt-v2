@@ -3,14 +3,11 @@ import React, { useContext } from "react";
 import { TemplateContext } from "../context/templateContext";
 import { BaseCard } from "./BaseCard";
 
-interface Props {
-  navigateToEdit: () => void;
-}
+interface Props {}
 
-const EventTemplateList: React.FC<Props> = ({ navigateToEdit }) => {
-  const { setSelectedTemplateId, selectedTemplateId } = useContext(
-    TemplateContext
-  );
+const EventTemplateList: React.FC<Props> = () => {
+  const { setSelectedTemplateId, selectedTemplateId } =
+    useContext(TemplateContext);
 
   return (
     <Box>
@@ -28,12 +25,7 @@ const EventTemplateList: React.FC<Props> = ({ navigateToEdit }) => {
         </RadioGroup>
       </BaseCard>
 
-      <Button
-        onClick={() => {
-          navigateToEdit();
-        }}
-        mt={4}
-      >
+      <Button onClick={() => {}} mt={4}>
         Confirm template selection
       </Button>
     </Box>
