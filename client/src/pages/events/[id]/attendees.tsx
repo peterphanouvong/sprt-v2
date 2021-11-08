@@ -18,7 +18,7 @@ import { Event } from "../../../generated/graphql";
 interface Props {}
 
 const EventAttendees: React.FC<Props> = ({}) => {
-  useIsAuth();
+  // useIsAuth();
   const router = useRouter();
   const { id } = router.query;
 
@@ -46,9 +46,9 @@ const EventAttendees: React.FC<Props> = ({}) => {
       <EventPageOverview event={data?.event as Event} />
 
       <BaseContent flex={1}>
-        <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
+        <Grid templateColumns='1fr 3fr' gridGap={4} alignItems='start'>
           <EventPageSideNav id={id as string} />
-          <BaseSection title="Attendees">
+          <BaseSection title='Attendees'>
             <EventAttendeeTable
               attendees={data?.event.attendees as Attendee[]}
             />

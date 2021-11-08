@@ -18,15 +18,15 @@ import NextLink from "next/link";
 interface Props {}
 
 const EventOverview: React.FC<Props> = ({}) => {
-  useIsAuth();
+  // useIsAuth();
   const router = useRouter();
   const { id } = router.query;
 
   const [{ data, fetching }] = useEventQuery({
     pause: id === undefined,
     variables: {
-      id: id as string
-    }
+      id: id as string,
+    },
   });
 
   if (fetching) {
@@ -46,13 +46,13 @@ const EventOverview: React.FC<Props> = ({}) => {
       <EventPageOverview event={data?.event as Event} />
 
       <BaseContent flex={1}>
-        <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
+        <Grid templateColumns='1fr 3fr' gridGap={4} alignItems='start'>
           <EventPageSideNav id={id as string} />
-          <BaseSection title="Description">
+          <BaseSection title='Description'>
             {data?.event.youtubeLink && (
               <AspectRatio ratio={16 / 9}>
                 <iframe
-                  title="naruto"
+                  title='naruto'
                   src={`//www.youtube.com/embed/${getYoutubeVideoId(
                     data?.event.youtubeLink as string
                   )}`}

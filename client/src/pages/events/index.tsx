@@ -13,7 +13,7 @@ import { useIsAuth } from "../../utils/useIsAuth";
 interface Props {}
 
 const Events: React.FC<Props> = ({}) => {
-  useIsAuth();
+  // useIsAuth();
 
   return (
     <BaseLayout>
@@ -23,9 +23,9 @@ const Events: React.FC<Props> = ({}) => {
       <BasePageHeader>Events</BasePageHeader>
 
       <BaseContent>
-        <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
+        <Grid templateColumns='1fr 3fr' gridGap={4} alignItems='start'>
           <EventListSideNav />
-          <BaseSection title="Event list"></BaseSection>
+          <BaseSection title='Event list'></BaseSection>
         </Grid>
       </BaseContent>
     </BaseLayout>

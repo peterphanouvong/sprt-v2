@@ -13,10 +13,11 @@ import { createUrqlClient } from "../../../utils/createUrqlClient";
 import { useIsAuth } from "../../../utils/useIsAuth";
 import { Event } from "../../../generated/graphql";
 import { EventPageOverview } from "../../../components/EventPageOverview";
+
 interface Props {}
 
 const EventSignUp: React.FC<Props> = ({}) => {
-  useIsAuth();
+  // useIsAuth();
   const router = useRouter();
   const { id } = router.query;
 
@@ -43,7 +44,7 @@ const EventSignUp: React.FC<Props> = ({}) => {
       <EventPageOverview event={data?.event as Event} />
 
       <BaseContent flex={1}>
-        <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
+        <Grid templateColumns='1fr 3fr' gridGap={4} alignItems='start'>
           <EventPageSideNav id={id as string} />
           <EventSignUpStuff id={id as string} />
         </Grid>

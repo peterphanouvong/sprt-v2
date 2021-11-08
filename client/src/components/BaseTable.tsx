@@ -2,7 +2,9 @@ import { BoxProps } from "@chakra-ui/layout";
 import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table";
 import React from "react";
 
-interface Props {}
+interface Props {
+  innerRef?;
+}
 
 const BaseTable: React.FC<Props> = (props) => {
   return <Table mt={4}>{props.children}</Table>;
@@ -10,7 +12,7 @@ const BaseTable: React.FC<Props> = (props) => {
 
 const BaseThead: React.FC<Props> = ({ children }) => {
   return (
-    <Thead bgColor="gray.50" border="1px solid" borderColor="gray.200">
+    <Thead bgColor='gray.50' border='1px solid' borderColor='gray.200'>
       {children}
     </Thead>
   );
@@ -22,14 +24,14 @@ const BaseTbody: React.FC<Props> = ({ children }) => {
 const BaseTh: React.FC<BoxProps> = ({ ...props }) => {
   return (
     <Th
-      lineHeight="auto"
-      border="none"
-      fontSize="0.8rem"
-      textTransform="uppercase"
-      fontWeight="normal"
+      lineHeight='auto'
+      border='none'
+      fontSize='0.8rem'
+      textTransform='uppercase'
+      fontWeight='normal'
       px={4}
       py={3}
-      height="auto"
+      height='auto'
       {...props}
     >
       {props.children}
@@ -37,6 +39,7 @@ const BaseTh: React.FC<BoxProps> = ({ ...props }) => {
   );
 };
 const BaseTr: React.FC<Props> = ({ children }) => {
+  // console.log(innerRef);
   return <Tr>{children}</Tr>;
 };
 const BaseTd: React.FC<BoxProps> = ({ children, ...props }) => {
