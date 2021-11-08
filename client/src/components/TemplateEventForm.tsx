@@ -1,10 +1,10 @@
-import { Button, useToast, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, useToast, VStack } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React from "react";
 import {
   EventTemplate,
   useCreateEventTemplateMutation,
-  useUpdateEventTemplateMutation
+  useUpdateEventTemplateMutation,
 } from "../generated/graphql";
 import { convertEpochToDate, formatDateForPostgres } from "../utils/parseDate";
 import { parseRichText } from "../utils/parseRichText";
@@ -14,9 +14,10 @@ import { BaseInputField } from "./BaseInputField";
 
 interface Props {
   template?: EventTemplate | undefined;
+  onClose?: () => void;
 }
 
-const TemplateEventForm: React.FC<Props> = ({ template }) => {
+const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
   const toast = useToast();
   const isMobile = useIsMobileScreen();
   const [, updateTemplate] = useUpdateEventTemplateMutation();
@@ -38,7 +39,7 @@ const TemplateEventForm: React.FC<Props> = ({ template }) => {
           youtubeLink: "",
           logoImageLink: "",
           bannerImageLink: "",
-          clubBeemId: ""
+          clubBeemId: "",
         }
       : {
           templateName: template.templateName ? template.templateName : "",
@@ -58,7 +59,7 @@ const TemplateEventForm: React.FC<Props> = ({ template }) => {
           bannerImageLink: template.bannerImageLink
             ? template.bannerImageLink
             : "",
-          clubBeemId: template.clubBeemId ? template.clubBeemId : ""
+          clubBeemId: template.clubBeemId ? template.clubBeemId : "",
         };
 
   const onSubmit = async (values) => {
@@ -68,20 +69,20 @@ const TemplateEventForm: React.FC<Props> = ({ template }) => {
         input: {
           templateName: values.templateName as string,
           title: values.title,
-          capacity: Number(values.capacity),
+          capacity: parseInt(values.capacity),
           date: formatDateForPostgres(values.date),
           startTime: values.startTime,
           endTime: values.endTime,
           venue: values.venue,
           address: values.address,
-          price: Number(values.price),
+          price: parseFloat(values.price),
           youtubeLink: values.youtubeLink,
           logoImageLink: values.logoImageLink,
           bannerImageLink: values.bannerImageLink,
           clubBeemId: values.clubBeemId,
-          description: JSON.stringify(values.description)
+          description: JSON.stringify(values.description),
         },
-        updateEventTemplateId: template.id
+        updateEventTemplateId: template.id,
       });
       console.log(data);
 
@@ -91,18 +92,18 @@ const TemplateEventForm: React.FC<Props> = ({ template }) => {
           isClosable: true,
           position: "top",
           status: "error",
-          variant: "subtle"
+          variant: "subtle",
         });
       }
     } else {
       const { data, error } = await createEventTemplate({
         input: {
           ...values,
-          capacity: Number(values.capacity),
-          price: Number(values.price),
+          capacity: parseInt(values.capacity),
+          price: parseFloat(values.price),
           date: formatDateForPostgres(values.date),
-          description: JSON.stringify(values.description)
-        }
+          description: JSON.stringify(values.description),
+        },
       });
 
       if (error) {
@@ -110,6 +111,10 @@ const TemplateEventForm: React.FC<Props> = ({ template }) => {
       } else {
         console.log("IT WORKD");
         console.log(data);
+      }
+
+      if (onClose) {
+        onClose();
       }
     }
   };
@@ -135,22 +140,6 @@ const TemplateEventForm: React.FC<Props> = ({ template }) => {
               name="title"
               touched={props.touched.title as boolean}
               width="400px"
-              required
-            />
-
-            <BaseInputField
-              label="Date"
-              name="date"
-              touched={props.touched.date as boolean}
-              width="200px"
-              type="date"
-            />
-
-            <BaseInputField
-              label="Capacity"
-              name="capacity"
-              touched={props.touched.capacity as boolean}
-              width={20}
             />
 
             <BaseInputField
@@ -168,6 +157,32 @@ const TemplateEventForm: React.FC<Props> = ({ template }) => {
             />
 
             <BaseInputField
+              label="Date"
+              name="date"
+              touched={props.touched.date as boolean}
+              width="200px"
+              type="date"
+            />
+
+            <Flex width="90%">
+              <BaseInputField
+                label="Start"
+                name="startTime"
+                touched={props.touched.startTime as boolean}
+                type="time"
+              />
+
+              <Box mr={4} />
+
+              <BaseInputField
+                label="End"
+                name="endTime"
+                touched={props.touched.endTime as boolean}
+                type="time"
+              />
+            </Flex>
+
+            <BaseInputField
               label="Price"
               name="price"
               touched={props.touched.price as boolean}
@@ -179,7 +194,13 @@ const TemplateEventForm: React.FC<Props> = ({ template }) => {
               name="clubBeemId"
               touched={props.touched.clubBeemId as boolean}
               width="200px"
-              required
+            />
+
+            <BaseInputField
+              label="Capacity"
+              name="capacity"
+              touched={props.touched.capacity as boolean}
+              width={20}
             />
 
             <BaseDynamicEditor
@@ -187,6 +208,13 @@ const TemplateEventForm: React.FC<Props> = ({ template }) => {
               setFieldValue={props.setFieldValue}
               name="description"
               initialValue={props.values.description}
+            />
+
+            <BaseInputField
+              label="Youtube Link"
+              name="youtubeLink"
+              touched={props.touched.youtubeLink as boolean}
+              width="40%"
             />
 
             <Button

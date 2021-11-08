@@ -11,7 +11,10 @@ import {
 import { pipe, tap } from "wonka";
 import {
   CreateEventMutation,
+  CreateEventTemplateMutation,
   DeleteEventMutationVariables,
+  EventTemplatesDocument,
+  EventTemplatesQuery,
   JoinQuickEventMutation,
   LiveEventsDocument,
   LiveEventsQuery,
@@ -126,6 +129,26 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
         },
         updates: {
           Mutation: {
+            createEventTemplate: (_result, _args, cache, _info) => {
+              betterUpdateQuery<
+                CreateEventTemplateMutation,
+                EventTemplatesQuery
+              >(
+                cache,
+                {
+                  query: EventTemplatesDocument,
+                },
+                _result,
+                (res, data) => {
+                  return {
+                    eventTemplates: [
+                      res.createEventTemplate,
+                      ...data.eventTemplates,
+                    ],
+                  };
+                }
+              );
+            },
             markEventAsComplete: (_result, _args, cache, _info) => {
               betterUpdateQuery<MarkEventAsCompleteMutation, LiveEventsQuery>(
                 cache,

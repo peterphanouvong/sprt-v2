@@ -1,14 +1,10 @@
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Button,
+  Box,
   Heading,
-  Box
+  Modal,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
 } from "@chakra-ui/react";
 import React from "react";
 import { TemplateEventForm } from "./TemplateEventForm";
@@ -35,7 +31,7 @@ const TemplateCreateModal: React.FC<Props> = ({ isOpen, onClose }) => {
             Create an event template
           </Heading>
           <Box maxH="70vh" overflow="auto">
-            <TemplateEventForm />
+            <TemplateEventForm onClose={onClose} />
           </Box>
         </Box>
       </ModalContent>
