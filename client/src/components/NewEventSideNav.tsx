@@ -3,13 +3,9 @@ import { BaseSideNav } from "./BaseSideNav";
 
 interface Props {
   isFromTemplate: boolean;
-  hasChosenTemplate?: boolean;
 }
 
-const NewEventSideNav: React.FC<Props> = ({
-  isFromTemplate,
-  hasChosenTemplate = false,
-}) => {
+const NewEventSideNav: React.FC<Props> = ({ isFromTemplate }) => {
   return (
     <BaseSideNav
       navItems={
@@ -20,7 +16,7 @@ const NewEventSideNav: React.FC<Props> = ({
               {
                 title: "Event details",
                 link: `/new-event/from-template`,
-                disabled: !hasChosenTemplate,
+                disabled: false,
               },
             ]
           : [

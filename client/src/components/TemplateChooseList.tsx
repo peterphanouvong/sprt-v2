@@ -25,11 +25,14 @@ const TemplateChooseList: React.FC<Props> = () => {
       <RadioGroup
         colorScheme="brand"
         onChange={setSelectedTemplateId}
-        value={selectedTemplateId}
+        defaultValue={"1"}
+        value={selectedTemplateId?.toString()}
       >
         <Stack direction="column">
           {data?.eventTemplates.map((template) => (
-            <Radio value={template.id}>{template.templateName}</Radio>
+            <Radio key={template.id} value={template.id.toString()}>
+              {template.templateName}
+            </Radio>
           ))}
         </Stack>
       </RadioGroup>

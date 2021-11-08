@@ -1,4 +1,4 @@
-import { Button, Grid } from "@chakra-ui/react";
+import { Grid } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import React from "react";
@@ -6,15 +6,15 @@ import { BaseContent } from "../../components/BaseContent";
 import { BaseLayout } from "../../components/BaseLayout";
 import { BasePageHeader } from "../../components/BasePageHeader";
 import { NewEventSideNav } from "../../components/NewEventSideNav";
+import { TemplateChooseList } from "../../components/TemplateChooseList";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useIsAuth } from "../../utils/useIsAuth";
-import { TemplateChooseList } from "../../components/TemplateChooseList";
 
 interface Props {}
 
 const EventChooseTemplate: React.FC<Props> = ({}) => {
   useIsAuth();
-  const [hasChosenTemplate, setHasChosenTemplate] = React.useState(false);
+  // const [hasChosenTemplate, setHasChosenTemplate] = React.useState(false);
 
   return (
     <BaseLayout>
@@ -26,12 +26,9 @@ const EventChooseTemplate: React.FC<Props> = ({}) => {
         <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
           <NewEventSideNav
             isFromTemplate={true}
-            hasChosenTemplate={hasChosenTemplate}
+            // hasChosenTemplate={hasChosenTemplate}
           />
           <div>
-            <Button onClick={() => setHasChosenTemplate(true)}>
-              choose template
-            </Button>
             <TemplateChooseList />
           </div>
         </Grid>
