@@ -23,7 +23,7 @@ const EventDetails: React.FC<Props> = ({}) => {
 
       <BasePageHeader>Event details</BasePageHeader>
       <BaseContent>
-        <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
+        <Grid templateColumns='1fr 3fr' gridGap={4} alignItems='start'>
           <NewEventSideNav isFromTemplate={false} />
           <EventFreshForm />
         </Grid>

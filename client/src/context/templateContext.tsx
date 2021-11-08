@@ -13,7 +13,7 @@ const TemplateContext = React.createContext<IContext>({
 interface Props {}
 
 const TemplateProvider: React.FC<Props> = ({ children }) => {
-  const [selectedTemplateId, _setSelectedTemplateId] = useState();
+  const [selectedTemplateId, _setSelectedTemplateId] = useState<string>("-1");
 
   const setSelectedTemplateId = (id: any) => {
     _setSelectedTemplateId(id);

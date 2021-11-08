@@ -13,7 +13,7 @@ interface Props {
 
 const BaseSideNav: React.FC<Props> = ({ navItems }) => {
   return (
-    <VStack spacing={2} alignItems="stretch">
+    <VStack spacing={2} alignItems='stretch'>
       {navItems.map((n) => (
         <NavItem
           key={n.link}
@@ -28,20 +28,20 @@ const BaseSideNav: React.FC<Props> = ({ navItems }) => {
 
 const NavItem = ({ title, link, disabled }) => {
   const router = useRouter();
-  console.log(router);
+  // console.log(router);
   return (
     <NextLink href={!disabled ? link : "#"}>
       <Text
         py={1}
-        colorScheme="gray"
-        height="auto"
-        flexDirection="column"
-        alignItems="start"
+        colorScheme='gray'
+        height='auto'
+        flexDirection='column'
+        alignItems='start'
         fontWeight={router.asPath === link ? "medium" : "normal"}
         color={router.asPath === link ? "black" : "gray.500"}
-        borderRadius="sm"
+        borderRadius='sm'
         disabled={disabled}
-        transition="0.3s ease"
+        transition='0.3s ease'
         _hover={
           disabled
             ? { cursor: "not-allowed" }
@@ -50,7 +50,7 @@ const NavItem = ({ title, link, disabled }) => {
                 cursor: "pointer",
               }
         }
-        variant="body-3"
+        variant='body-3'
       >
         {title}
       </Text>

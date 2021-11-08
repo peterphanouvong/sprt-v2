@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
+import { TemplateContext } from "../context/templateContext";
+import { useEventTemplateQuery } from "../generated/graphql";
 import { BaseSideNav } from "./BaseSideNav";
 
 interface Props {
@@ -6,22 +8,36 @@ interface Props {
 }
 
 const NewEventSideNav: React.FC<Props> = ({ isFromTemplate }) => {
+  // const [{ data }] = useEventTemplateQuery({ variables = {} });
+
+  // console.log(data);
+
+  const { selectedTemplateId } = useContext(TemplateContext);
+
+  console.log(selectedTemplateId);
+
   return (
     <BaseSideNav
       navItems={
         isFromTemplate
           ? [
-              { title: "Choose path", link: `/new-event` },
-              { title: "Choose template", link: `/new-event/choose-template` },
+              { title: "1. Choose path", link: `/new-event` },
               {
-                title: "Event details",
-                link: `/new-event/from-template`,
+                title: "2. Choose template",
+                link: `/new-event/choose-template`,
+              },
+              {
+                title: "3. Event details",
+                link: `/new-event/from-template/${selectedTemplateId}`,
                 disabled: false,
               },
             ]
           : [
-              { title: "Choose path", link: `/new-event` },
-              { title: "Event details", link: `/new-event/event-details` },
+              { title: "1. Choose path", link: `/new-event` },
+              {
+                title: "2. Event details",
+                link: `/new-event/event-details/`,
+              },
             ]
       }
     />
