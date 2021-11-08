@@ -4,6 +4,7 @@ import {
   CloseButton,
   Divider,
   Flex,
+  FormLabel,
   Heading,
   Input,
   Modal,
@@ -11,13 +12,11 @@ import {
   ModalContent,
   ModalOverlay,
   useDisclosure,
-  Text,
-  FormLabel,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
 import { useUpdateQuickEventMutation } from "../generated/graphql";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
-import { useRouter } from "next/router";
 
 interface Props {
   eventId: number;
