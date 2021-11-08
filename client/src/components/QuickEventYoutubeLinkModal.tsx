@@ -72,8 +72,8 @@ export const QuickEventYoutubeLinkModal: React.FC<Props> = ({
           </Box>
           <Divider />
           <ModalBody>
-            <Text>Upload a Youtube URL and mark this event as closed</Text>
-            <FormLabel mt={8}>URL</FormLabel>
+            {/* <Text>Upload a Youtube URL and mark this event as closed</Text> */}
+            <FormLabel mt={2}>URL</FormLabel>
             <Input
               ref={initialRef}
               onChange={(e: any) => setYoutubeURL(e.target.value)}
