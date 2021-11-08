@@ -17,6 +17,7 @@ import {
   Image,
   AspectRatio,
   Spacer,
+  Divider,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
@@ -166,44 +167,40 @@ const JoinQuickEvent = () => {
               readOnly={true}
             />
           </MobileLayout>
-          <MobileLayout top={4} position='sticky' height='100vh'>
+          <MobileLayout>
             <Box textAlign='center' my={6}>
-              {queryData.quickEvent?.youtubeURL ? (
-                <></>
-              ) : (
-                <>
-                  {queryData.quickEvent?.capacity ? (
-                    <>
-                      {spotsLeft !== 0 ? (
-                        <>
-                          <Heading variant='h3'>{spotsLeft}</Heading>
-                          <Text variant='body-3'>spot(s) left</Text>
-                        </>
-                      ) : (
-                        <>
-                          <Heading variant='h3'>{numInWaitlist}</Heading>
-                          {numInWaitlist === 1 ? (
-                            <Text variant='body-3'>person on the waitlist</Text>
-                          ) : (
-                            <Text variant='body-3'>people on the waitlist</Text>
-                          )}
-                          {/* <Text variant='body-3'>people on the waitlist</Text> */}
-                        </>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      <Heading>
-                        {attendees
-                          ? attendees.length
-                          : JSON.parse(queryData.quickEvent?.users as string)
-                              .length}
-                      </Heading>
-                      <Text variant='body-3'>person(s) are going</Text>
-                    </>
-                  )}
-                </>
-              )}
+              <>
+                {queryData.quickEvent?.capacity ? (
+                  <>
+                    {spotsLeft !== 0 ? (
+                      <>
+                        <Heading variant='h3'>{spotsLeft}</Heading>
+                        <Text variant='body-3'>spot(s) left</Text>
+                      </>
+                    ) : (
+                      <>
+                        <Heading variant='h3'>{numInWaitlist}</Heading>
+                        {numInWaitlist === 1 ? (
+                          <Text variant='body-3'>person on the waitlist</Text>
+                        ) : (
+                          <Text variant='body-3'>people on the waitlist</Text>
+                        )}
+                        {/* <Text variant='body-3'>people on the waitlist</Text> */}
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <Heading>
+                      {attendees
+                        ? attendees.length
+                        : JSON.parse(queryData.quickEvent?.users as string)
+                            .length}
+                    </Heading>
+                    <Text variant='body-3'>person(s) are going</Text>
+                  </>
+                )}
+              </>
             </Box>
 
             <Flex
@@ -229,10 +226,7 @@ const JoinQuickEvent = () => {
                 size={isMobile ? "xs" : "sm"}
                 onClick={() => setPage("attendees")}
               >
-                {queryData.quickEvent?.youtubeURL
-                  ? "See who went"
-                  : "See who's going"}
-                {/* See who's going */}
+                See who's going
               </Button>
             </Flex>
 
@@ -242,15 +236,16 @@ const JoinQuickEvent = () => {
               </Heading>
             ) : (
               <Heading mt={6} as='h4' variant='h4'>
-                {queryData.quickEvent?.youtubeURL
-                  ? "Event has ended"
-                  : "Join event"}
-                {/* Join event */}
+                Join event
               </Heading>
             )}
 
+            <JoinQuickEventForm quickEventId={intId} isFull={spotsLeft === 0} />
+
+            <Divider py={4} />
+
             {queryData.quickEvent?.youtubeURL ? (
-              <Box mt={4}>
+              <Box mt={8}>
                 <iframe
                   width='100%'
                   height='261'
@@ -263,10 +258,7 @@ const JoinQuickEvent = () => {
                 ></iframe>
               </Box>
             ) : (
-              <JoinQuickEventForm
-                quickEventId={intId}
-                isFull={spotsLeft === 0}
-              />
+              <></>
             )}
 
             {loggedIn ? (
