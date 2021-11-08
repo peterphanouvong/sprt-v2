@@ -62,6 +62,7 @@ const main = async () => {
       origin: [
         process.env.CORS_ORIGIN,
         "https://www.sprt.rest",
+        "https://www.sprt.fun",
         "https://studio.apollographql.com",
       ],
       credentials: true,
