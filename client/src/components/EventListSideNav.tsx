@@ -9,6 +9,7 @@ const EventListSideNav: React.FC<Props> = ({}) => {
       navItems={[
         { title: "Live events", link: "/live-events" },
         { title: "Past events", link: "/past-events" },
+        { title: "Create event", link: "/new-event" }
       ]}
     />
   );

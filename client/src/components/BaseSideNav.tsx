@@ -30,7 +30,7 @@ const NavItem = ({ title, link, disabled }) => {
   const router = useRouter();
   console.log(router);
   return (
-    <NextLink href={link}>
+    <NextLink href={!disabled ? link : "#"}>
       <Text
         py={1}
         colorScheme="gray"

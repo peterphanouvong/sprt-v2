@@ -416,6 +416,13 @@ export type CreateEventMutationVariables = Exact<{
 
 export type CreateEventMutation = { __typename?: 'Mutation', createEvent: { __typename?: 'Event', id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number } };
 
+export type CreateEventTemplateMutationVariables = Exact<{
+  input: EventTemplateInput;
+}>;
+
+
+export type CreateEventTemplateMutation = { __typename?: 'Mutation', createEventTemplate: { __typename?: 'EventTemplate', templateName?: Maybe<string>, id: number, title: string, date?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, venue?: Maybe<string>, address?: Maybe<string>, price?: Maybe<number>, description?: Maybe<string>, youtubeLink?: Maybe<string>, logoImageLink?: Maybe<string>, bannerImageLink?: Maybe<string>, capacity?: Maybe<number>, clubBeemId?: Maybe<string>, createdAt: string, updatedAt: string, level?: Maybe<string>, mixed?: Maybe<string> } };
+
 export type CreateQuickEventMutationVariables = Exact<{
   createQuickEventInput: QuickEventInput;
 }>;
@@ -639,6 +646,17 @@ export const CreateEventDocument = gql`
 
 export function useCreateEventMutation() {
   return Urql.useMutation<CreateEventMutation, CreateEventMutationVariables>(CreateEventDocument);
+};
+export const CreateEventTemplateDocument = gql`
+    mutation CreateEventTemplate($input: EventTemplateInput!) {
+  createEventTemplate(input: $input) {
+    ...RegularEventTemplate
+  }
+}
+    ${RegularEventTemplateFragmentDoc}`;
+
+export function useCreateEventTemplateMutation() {
+  return Urql.useMutation<CreateEventTemplateMutation, CreateEventTemplateMutationVariables>(CreateEventTemplateDocument);
 };
 export const CreateQuickEventDocument = gql`
     mutation CreateQuickEvent($createQuickEventInput: QuickEventInput!) {

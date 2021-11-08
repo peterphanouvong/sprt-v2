@@ -10,15 +10,24 @@ import { BaseDynamicEditor } from "./BaseDynamicEditor";
 import { BaseInputField } from "./BaseInputField";
 
 interface Props {
-  templateId?: string | undefined;
+  initialValues?: {
+    title: string | undefined;
+    venue: string | undefined | null;
+    date: string | undefined | null;
+    address: string | undefined | null;
+    price: string | undefined | null;
+    description: string | undefined | null;
+    startTime: string | undefined | null;
+    endTime: string | undefined | null;
+    capacity: string | undefined | null;
+    youtubeLink: string | undefined | null;
+  };
 }
 
-const EventFreshForm: React.FC<Props> = ({ templateId }) => {
+const EventFreshForm: React.FC<Props> = ({ initialValues }) => {
   const [, createEvent] = useCreateEventMutation();
   const isMobile = useIsMobileScreen();
   const router = useRouter();
-
-  console.log(templateId);
 
   return (
     <BaseCard padding={6}>
@@ -27,18 +36,22 @@ const EventFreshForm: React.FC<Props> = ({ templateId }) => {
       </Heading>
       <Box flex={1}>
         <Formik
-          initialValues={{
-            title: "",
-            venue: "",
-            date: "",
-            address: "",
-            price: "",
-            description: parseRichText(""),
-            startTime: "",
-            endTime: "",
-            capacity: "",
-            youtubeLink: ""
-          }}
+          initialValues={
+            initialValues
+              ? initialValues
+              : {
+                  title: "",
+                  venue: "",
+                  date: "",
+                  address: "",
+                  price: "",
+                  description: parseRichText(""),
+                  startTime: "",
+                  endTime: "",
+                  capacity: "",
+                  youtubeLink: "",
+                }
+          }
           onSubmit={async (values) => {
             console.log(values);
             console.log("submit");
@@ -46,11 +59,13 @@ const EventFreshForm: React.FC<Props> = ({ templateId }) => {
             const res = await createEvent({
               input: {
                 ...values,
-                capacity: parseInt(values.capacity),
-                price: parseFloat(values.price),
+                capacity: values.capacity
+                  ? parseInt(values.capacity)
+                  : undefined,
+                price: values.price ? parseFloat(values.price) : undefined,
                 description: JSON.stringify(values.description),
-                clubBeemId: "@clubBeemId"
-              }
+                clubBeemId: "@clubBeemId",
+              },
             });
 
             if (res.error) {
