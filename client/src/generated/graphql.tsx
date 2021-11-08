@@ -437,6 +437,13 @@ export type DeleteEventMutationVariables = Exact<{
 
 export type DeleteEventMutation = { __typename?: 'Mutation', deleteEvent: boolean };
 
+export type DeleteEventTemplateMutationVariables = Exact<{
+  templateId: Scalars['Float'];
+}>;
+
+
+export type DeleteEventTemplateMutation = { __typename?: 'Mutation', deleteEventTemplate: boolean };
+
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
 }>;
@@ -683,6 +690,15 @@ export const DeleteEventDocument = gql`
 
 export function useDeleteEventMutation() {
   return Urql.useMutation<DeleteEventMutation, DeleteEventMutationVariables>(DeleteEventDocument);
+};
+export const DeleteEventTemplateDocument = gql`
+    mutation DeleteEventTemplate($templateId: Float!) {
+  deleteEventTemplate(templateId: $templateId)
+}
+    `;
+
+export function useDeleteEventTemplateMutation() {
+  return Urql.useMutation<DeleteEventTemplateMutation, DeleteEventTemplateMutationVariables>(DeleteEventTemplateDocument);
 };
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {

@@ -1,16 +1,14 @@
 import { SearchIcon } from "@chakra-ui/icons";
 import {
   Box,
-  Button,
   Flex,
   Input,
   InputGroup,
-  InputLeftElement
+  InputLeftElement,
 } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import React from "react";
-import { BsPlus } from "react-icons/bs";
 import { BaseContent } from "../../components/BaseContent";
 import { BaseLayout } from "../../components/BaseLayout";
 import { BasePageHeader } from "../../components/BasePageHeader";
@@ -24,8 +22,11 @@ interface Props {}
 const Templates: React.FC<Props> = ({}) => {
   useIsAuth();
 
-  const onClick = () => {
-    console.log("click");
+  const [filterString, setFilterString] = React.useState<string>("");
+
+  const onChange = (event) => {
+    setFilterString(event.target.value);
+    // console.log(event.target.value);
   };
 
   return (
@@ -35,19 +36,19 @@ const Templates: React.FC<Props> = ({}) => {
       </Head>
       <BasePageHeader>Templates</BasePageHeader>
 
-      <BaseContent bg="transparent">
+      <BaseContent bg='transparent'>
         <Flex>
           <InputGroup flex={6}>
             <InputLeftElement
-              pointerEvents="none"
-              children={<SearchIcon color="gray.300" />}
+              pointerEvents='none'
+              children={<SearchIcon color='gray.300' />}
             />
-            <Input bgColor="white" placeholder="Search" />
+            <Input bgColor='white' placeholder='Search' onChange={onChange} />
           </InputGroup>
           <Box mr={4} />
           <TemplateCreateButton />
         </Flex>
-        <TemplateEventList />
+        <TemplateEventList filterString={filterString} />
       </BaseContent>
     </BaseLayout>
   );

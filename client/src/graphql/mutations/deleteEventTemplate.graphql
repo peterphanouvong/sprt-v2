@@ -1,0 +1,3 @@
+mutation DeleteEventTemplate($templateId: Float!) {
+  deleteEventTemplate(templateId: $templateId)
+}
