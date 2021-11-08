@@ -33,7 +33,7 @@ const EventEditTemplateContent: React.FC<Props> = ({ setContent, content }) => {
 
   return (
     <BaseContent>
-      <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
+      <Grid templateColumns='1fr 3fr' gridGap={4} alignItems='start'>
         <EventNavCard
           content={content}
           setContent={setContent}
@@ -72,6 +72,7 @@ const EventEditTemplateContent: React.FC<Props> = ({ setContent, content }) => {
                 ? data.eventTemplate.capacity.toString()
                 : undefined,
               youtubeLink: data?.eventTemplate.youtubeLink,
+              clubBeemId: data?.eventTemplate.clubBeemId,
             }}
           />
         </Box>

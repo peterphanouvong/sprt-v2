@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { TemplateContext } from "../context/templateContext";
-import { useEventTemplateQuery } from "../generated/graphql";
 import { BaseSideNav } from "./BaseSideNav";
 
 interface Props {
@@ -8,8 +7,6 @@ interface Props {
 }
 
 const NewEventSideNav: React.FC<Props> = ({ isFromTemplate }) => {
-  // const [{ data }] = useEventTemplateQuery({ variables = {} });
-
   // console.log(data);
 
   const { selectedTemplateId } = useContext(TemplateContext);

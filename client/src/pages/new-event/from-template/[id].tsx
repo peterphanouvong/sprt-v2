@@ -47,7 +47,7 @@ const Home: React.FC<Props> = ({}) => {
 
       <BasePageHeader>Event details</BasePageHeader>
       <BaseContent>
-        <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
+        <Grid templateColumns='1fr 3fr' gridGap={4} alignItems='start'>
           <NewEventSideNav isFromTemplate={true} />
           <EventFreshForm
             initialValues={{
@@ -67,6 +67,7 @@ const Home: React.FC<Props> = ({}) => {
                 ? data.eventTemplate.capacity.toString()
                 : undefined,
               youtubeLink: data?.eventTemplate.youtubeLink,
+              clubBeemId: data?.eventTemplate.clubBeemId,
             }}
           />
         </Grid>
