@@ -1,6 +1,13 @@
 import { Button } from "@chakra-ui/button";
 import { VStack } from "@chakra-ui/layout";
-import { Checkbox, Text, useToast } from "@chakra-ui/react";
+import {
+  Checkbox,
+  Flex,
+  FormLabel,
+  Switch,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import * as Yup from "yup";
@@ -24,8 +31,8 @@ const QuickEventSchema = Yup.object().shape({
     .required("This field is required"),
   beemId: Yup.string()
     .trim("The first name cannot include leading and trailing spaces")
-    .strict()
-    .required("This field is required"),
+    .strict(),
+  // .required("This field is required"),
 });
 
 const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
@@ -33,6 +40,7 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
   const toast = useToast();
   const isMobile = useIsMobileScreen();
 
+  const [isPayingCash, setIsPayingCash] = React.useState<boolean>(false);
   const [hasJoined, setHasJoined] = useState(
     !!localStorage.getItem(String(quickEventId))
   );
@@ -47,9 +55,11 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
         createdAt: new Date().toString(),
         beemId: "",
         status: "waitlist",
+        isPayingCash: false,
       }}
       validationSchema={QuickEventSchema}
       onSubmit={async (values) => {
+        console.log(values);
         if (!isVaccinated) {
           toast({
             description: "You must confirm that you're vaccinated to join.",
@@ -63,12 +73,13 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
         const { error } = await joinQuickEvent({
           joinQuickEventId: quickEventId,
           joinQuickEventInput: {
-              firstName: values.firstName,
-              lastName: values.lastName,
-              beemId: values.beemId,
-              email: values.phone,
-              createdAt: values.createdAt,
-              status: values.status,
+            firstName: values.firstName,
+            lastName: values.lastName,
+            beemId: values.beemId,
+            email: values.phone,
+            createdAt: values.createdAt,
+            status: values.status,
+            isPayingCash: isPayingCash,
           },
         });
 
@@ -97,36 +108,47 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
     >
       {(props) => (
         <Form>
-          <VStack spacing={4} mt={4} alignItems="stretch">
+          <VStack spacing={4} mt={4} alignItems='stretch'>
             <InputField
-              name="firstName"
-              label="First name"
+              name='firstName'
+              label='First name'
               touched={props.touched.firstName as boolean}
               required
               disabled={hasJoined}
             />
             <InputField
-              name="lastName"
-              label="Last name"
+              name='lastName'
+              label='Last name'
               touched={props.touched.lastName as boolean}
               required
               disabled={hasJoined}
             />
             <InputField
-              name="phone"
-              label="Phone number"
+              name='phone'
+              label='Phone number'
               touched={props.touched.phone as boolean}
               required
               disabled={hasJoined}
             />
-            <InputField
-              name="beemId"
-              label="BeemID or PayID"
-              touched={props.touched.phone as boolean}
-              placeholder="@myBeemAccount"
-              required
-              disabled={hasJoined}
-            />
+            <Flex alignItems='center' py={2}>
+              <FormLabel htmlFor='isPayingCash'>Paying by cash?</FormLabel>
+              <Switch
+                id='isPayingCash'
+                onChange={() => {
+                  setIsPayingCash(!isPayingCash);
+                }}
+              />
+            </Flex>
+            {!isPayingCash && (
+              <InputField
+                name='beemId'
+                label='BeemID or PayID'
+                touched={props.touched.phone as boolean}
+                placeholder='@myBeemAccount'
+                required
+                disabled={hasJoined}
+              />
+            )}
 
             {/* <Box>
               <FormLabel>
@@ -138,10 +160,10 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
             <Checkbox
               checked={isVaccinated}
               onChange={() => setIsVaccinated(!isVaccinated)}
-              colorScheme="blue"
+              colorScheme='blue'
               isDisabled={hasJoined}
             >
-              <Text variant="body-2">I am fully vaccinated</Text>
+              <Text variant='body-2'>I am fully vaccinated</Text>
             </Checkbox>
 
             <Button

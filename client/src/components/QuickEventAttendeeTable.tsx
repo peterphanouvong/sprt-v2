@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { format } from "date-fns";
+import { CheckIcon, CloseIcon, MinusIcon } from "@chakra-ui/icons";
 
 interface Props {
   users: any;
@@ -86,6 +87,7 @@ const QuickEventAttendeeTable: React.FC<Props> = ({
                 <>
                   <Th>Phone</Th>
                   <Th>BeemID</Th>
+                  <Th>Paying Cash</Th>
                   <Th>Status</Th>
                   <Th></Th>
                 </>
@@ -102,6 +104,7 @@ const QuickEventAttendeeTable: React.FC<Props> = ({
                   beemId: string;
                   createdAt: string;
                   status: string;
+                  isPayingCash: boolean;
                 },
                 idx
               ) => {
@@ -148,7 +151,12 @@ const QuickEventAttendeeTable: React.FC<Props> = ({
                     {isAdmin && (
                       <>
                         <Td>{user.email}</Td>
-                        <Td>{user.beemId}</Td>
+                        <Td textAlign='center'>
+                          {user.beemId === "" ? <MinusIcon /> : user.beemId}
+                        </Td>
+                        <Td textAlign='center'>
+                          {user.isPayingCash ? <CheckIcon /> : <CloseIcon />}
+                        </Td>
                         <Td>{user.status}</Td>
                         {isWaitlist && (
                           <Td>

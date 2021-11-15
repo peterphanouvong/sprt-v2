@@ -372,9 +372,10 @@ export type QuickEventUserInput = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
   email: Scalars['String'];
-  beemId: Scalars['String'];
+  beemId?: Maybe<Scalars['String']>;
   status: Scalars['String'];
   createdAt: Scalars['String'];
+  isPayingCash: Scalars['Boolean'];
 };
 
 export type Subscription = {
