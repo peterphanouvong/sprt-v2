@@ -74,7 +74,7 @@ __decorate([
     __metadata("design:type", String)
 ], QuickEventUserInput.prototype, "email", void 0);
 __decorate([
-    type_graphql_1.Field(),
+    type_graphql_1.Field({ nullable: true }),
     __metadata("design:type", String)
 ], QuickEventUserInput.prototype, "beemId", void 0);
 __decorate([
@@ -85,6 +85,10 @@ __decorate([
     type_graphql_1.Field(),
     __metadata("design:type", String)
 ], QuickEventUserInput.prototype, "createdAt", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    __metadata("design:type", Boolean)
+], QuickEventUserInput.prototype, "isPayingCash", void 0);
 QuickEventUserInput = __decorate([
     type_graphql_1.InputType()
 ], QuickEventUserInput);

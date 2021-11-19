@@ -18,7 +18,13 @@ import {
 import React from "react";
 import { format } from "date-fns";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  CloseIcon,
+  MinusIcon,
+} from "@chakra-ui/icons";
 
 interface Props {
   users: any;
@@ -136,6 +142,7 @@ const QuickEventAttendeeTableAdminView: React.FC<Props> = ({
                       <>
                         <Th>Phone</Th>
                         <Th>BeemID</Th>
+                        <Th>Paying Cash </Th>
                         <Th>Status </Th>
                         <Th></Th>
                       </>
@@ -166,9 +173,11 @@ const QuickEventAttendeeTableAdminView: React.FC<Props> = ({
                           beemId: string;
                           createdAt: string;
                           status: string;
+                          isPayingCash: boolean;
                         },
                         idx
                       ) => {
+                        console.log(user);
                         return (
                           <Draggable
                             key={user.email}
@@ -194,7 +203,20 @@ const QuickEventAttendeeTableAdminView: React.FC<Props> = ({
                                 {isAdmin && (
                                   <>
                                     <Td>{user.email}</Td>
-                                    <Td>{user.beemId}</Td>
+                                    <Td textAlign='center'>
+                                      {user.beemId === "" ? (
+                                        <MinusIcon />
+                                      ) : (
+                                        user.beemId
+                                      )}
+                                    </Td>
+                                    <Td textAlign='center'>
+                                      {user.isPayingCash ? (
+                                        <CheckIcon />
+                                      ) : (
+                                        <CloseIcon />
+                                      )}
+                                    </Td>
                                     <Td>{user.status}</Td>
                                     {isWaitlist && (
                                       <Td>

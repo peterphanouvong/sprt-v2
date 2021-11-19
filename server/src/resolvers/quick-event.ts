@@ -60,14 +60,17 @@ class QuickEventUserInput {
   @Field()
   email: string;
 
-  @Field()
-  beemId: string;
+  @Field({ nullable: true })
+  beemId?: string;
 
   @Field()
   status: string;
 
   @Field()
   createdAt: string;
+
+  @Field()
+  isPayingCash: boolean;
 }
 
 @Resolver(QuickEvent)
