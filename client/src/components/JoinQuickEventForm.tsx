@@ -41,9 +41,9 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
   const isMobile = useIsMobileScreen();
 
   const [isPayingCash, setIsPayingCash] = React.useState<boolean>(false);
-  const [hasJoined, setHasJoined] = useState(
-    !!localStorage.getItem(String(quickEventId))
-  );
+  // const [hasJoined, setHasJoined] = useState(
+  //   !!localStorage.getItem(String(quickEventId))
+  // );
 
   const [isVaccinated, setIsVaccinated] = useState(false);
   return (
@@ -168,16 +168,12 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
             </Checkbox>
 
             <Button
-              type={hasJoined ? "button" : "submit"}
-              colorScheme={hasJoined ? "green" : "blue"}
+              type={"submit"}
+              colorScheme={"blue"}
               size={isMobile ? "md" : "lg"}
               isLoading={props.isSubmitting}
             >
-              {hasJoined
-                ? "You're in"
-                : isFull
-                ? "Join waitlist"
-                : "Join event!"}
+              {isFull ? "Join waitlist" : "Join event!"}
             </Button>
           </VStack>
         </Form>
