@@ -78,6 +78,12 @@ let EventResolver = class EventResolver {
         console.log(event);
         return event;
     }
+    async _event(event, id) {
+        if (event === undefined) {
+            return Event_1.Event.findOne(id);
+        }
+        return event;
+    }
     async event(id) {
         return Event_1.Event.findOne(id);
     }
@@ -90,21 +96,24 @@ let EventResolver = class EventResolver {
     async pastEvents() {
         return Event_1.Event.find({ where: { isCompleted: true } });
     }
-    async updateEvent(id, input) {
+    async updateEvent(id, input, pubSub) {
         const event = await Event_1.Event.findOne(id);
         if (!event) {
             return undefined;
         }
         await Event_1.Event.merge(event, input).save();
+        await pubSub.publish(`EVENT-${id}`, event);
         return event;
     }
-    async addNewAttendee(id, input) {
+    async addNewAttendee(id, input, pubSub) {
         const createAttendee = new attendee_1.AttendeeResolver().createAttendee;
         const res = await createAttendee(input);
         await EventAttendee_1.EventAttendee.insert({
             eventId: id,
             attendeeId: res.id,
         });
+        const event = await Event_1.Event.findOne(id);
+        await pubSub.publish(`EVENT-${id}`, Object.assign(Object.assign({}, event), { attendees: [] }));
         return true;
     }
     async addExistingAttendee(id, attendeeId) {
@@ -160,6 +169,8 @@ let EventResolver = class EventResolver {
       from "event_attendee"
       where "eventId" = ${event.id};
     `);
+        console.log("attendeeLoader");
+        console.log(attendeeLoader);
         return attendeeLoader.loadMany(eventAttendeeIds.map((e) => e.attendeeId));
     }
 };
@@ -170,6 +181,16 @@ __decorate([
     __metadata("design:paramtypes", [EventInput]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "createEvent", null);
+__decorate([
+    type_graphql_1.Subscription(() => Event_1.Event, {
+        topics: ({ args }) => `EVENT-${args.id}`,
+    }),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Arg("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Number]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "_event", null);
 __decorate([
     type_graphql_1.Query(() => Event_1.Event),
     __param(0, type_graphql_1.Arg("id")),
@@ -199,16 +220,20 @@ __decorate([
     type_graphql_1.Mutation(() => Event_1.Event),
     __param(0, type_graphql_1.Arg("id")),
     __param(1, type_graphql_1.Arg("input")),
+    __param(2, type_graphql_1.PubSub()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, EventInput]),
+    __metadata("design:paramtypes", [String, EventInput,
+        type_graphql_1.PubSubEngine]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "updateEvent", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
     __param(0, type_graphql_1.Arg("id")),
     __param(1, type_graphql_1.Arg("input")),
+    __param(2, type_graphql_1.PubSub()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, attendee_1.AttendeeInput]),
+    __metadata("design:paramtypes", [Number, attendee_1.AttendeeInput,
+        type_graphql_1.PubSubEngine]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "addNewAttendee", null);
 __decorate([

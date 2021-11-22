@@ -7,9 +7,12 @@ import {
   InputType,
   Int,
   Mutation,
+  PubSub,
+  PubSubEngine,
   Query,
   Resolver,
   Root,
+  Subscription,
 } from "type-graphql";
 import { Event } from "../entities/Event";
 import { AttendeeInput, AttendeeResolver } from "./attendee";
@@ -73,6 +76,19 @@ export class EventResolver {
   }
 
   // read.
+  @Subscription(() => Event, {
+    topics: ({ args }) => `EVENT-${args.id}`,
+  })
+  async _event(
+    @Root() event: Event | undefined,
+    @Arg("id") id: number
+  ): Promise<Event | undefined> {
+    if (event === undefined) {
+      return Event.findOne(id);
+    }
+    return event;
+  }
+
   @Query(() => Event)
   async event(@Arg("id") id: string): Promise<Event | undefined> {
     return Event.findOne(id);
@@ -97,20 +113,23 @@ export class EventResolver {
   @Mutation(() => Event)
   async updateEvent(
     @Arg("id") id: string,
-    @Arg("input") input: EventInput
+    @Arg("input") input: EventInput,
+    @PubSub() pubSub: PubSubEngine
   ): Promise<Event | undefined> {
     const event = await Event.findOne(id);
     if (!event) {
       return undefined;
     }
     await Event.merge(event, input).save();
+    await pubSub.publish(`EVENT-${id}`, event);
     return event;
   }
 
   @Mutation(() => Boolean)
   async addNewAttendee(
     @Arg("id") id: number,
-    @Arg("input") input: AttendeeInput
+    @Arg("input") input: AttendeeInput,
+    @PubSub() pubSub: PubSubEngine
   ): Promise<boolean> {
     const createAttendee = new AttendeeResolver().createAttendee;
     const res = await createAttendee(input);
@@ -119,6 +138,10 @@ export class EventResolver {
       eventId: id,
       attendeeId: res!.id,
     });
+
+    const event = await Event.findOne(id);
+
+    await pubSub.publish(`EVENT-${id}`, { ...event, attendees: [] });
 
     return true;
   }
@@ -199,6 +222,8 @@ export class EventResolver {
       from "event_attendee"
       where "eventId" = ${event.id};
     `);
+    console.log("attendeeLoader");
+    console.log(attendeeLoader);
     return attendeeLoader.loadMany(
       eventAttendeeIds.map((e: { attendeeId: number }) => e.attendeeId)
     );
