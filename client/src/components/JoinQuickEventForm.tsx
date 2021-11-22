@@ -58,7 +58,7 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
         isPayingCash: false,
       }}
       validationSchema={QuickEventSchema}
-      onSubmit={async (values) => {
+      onSubmit={async (values, { resetForm }) => {
         console.log(values);
         if (!isVaccinated) {
           toast({
@@ -101,8 +101,9 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
             variant: "subtle",
           });
 
-          setHasJoined(true);
-          localStorage.setItem(String(quickEventId), values.phone);
+          // setHasJoined(true);
+          // localStorage.setItem(String(quickEventId), values.phone);
+          resetForm();
         }
       }}
     >
@@ -114,21 +115,21 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
               label='First name'
               touched={props.touched.firstName as boolean}
               required
-              disabled={hasJoined}
+              // disabled={hasJoined}
             />
             <InputField
               name='lastName'
               label='Last name'
               touched={props.touched.lastName as boolean}
               required
-              disabled={hasJoined}
+              // disabled={hasJoined}
             />
             <InputField
               name='phone'
               label='Phone number'
               touched={props.touched.phone as boolean}
               required
-              disabled={hasJoined}
+              // disabled={hasJoined}
             />
             <Flex alignItems='center' py={2}>
               <FormLabel htmlFor='isPayingCash'>Paying by cash?</FormLabel>
@@ -146,7 +147,7 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
                 touched={props.touched.phone as boolean}
                 placeholder='@myBeemAccount'
                 required
-                disabled={hasJoined}
+                // disabled={hasJoined}
               />
             )}
 
@@ -161,7 +162,7 @@ const JoinQuickEventForm: React.FC<Props> = ({ quickEventId, isFull }) => {
               checked={isVaccinated}
               onChange={() => setIsVaccinated(!isVaccinated)}
               colorScheme='blue'
-              isDisabled={hasJoined}
+              // isDisabled={hasJoined}
             >
               <Text variant='body-2'>I am fully vaccinated</Text>
             </Checkbox>
