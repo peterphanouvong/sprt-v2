@@ -74,7 +74,7 @@ const QuickEventForm: React.FC<Props> = ({}) => {
               variant: "subtle",
             });
           } else {
-            localStorage.setItem(`my-${data?.createQuickEvent.id}`, "true");
+            // localStorage.setItem(`my-${data?.createQuickEvent.id}`, "true");
             router.push(`/quick-event/${data?.createQuickEvent.id}`);
           }
         }}

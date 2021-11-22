@@ -108,21 +108,25 @@ const JoinQuickEvent = () => {
     0
   );
 
-  const numInWaitlist =
-    (queryData.quickEvent?.capacity! -
-      (attendees
-        ? attendees.length
-        : JSON.parse(queryData.quickEvent?.users!).length)) *
-    -1;
+  // const numInWaitlist =
+  //   (queryData.quickEvent?.capacity! -
+  //     (attendees
+  //       ? attendees.length
+  //       : JSON.parse(queryData.quickEvent?.users!).length)) *
+  //   -1;
 
   console.log(queryData);
+
+  const numConfirmed = JSON.parse(queryData.quickEvent?.users!).filter(
+    (u) => u.status === "confirmed"
+  ).length;
+
   const embeddedLink =
     "http://www.youtube.com/embed/" +
     queryData.quickEvent?.youtubeURL
       ?.split("?v=")[1]
       .split("&ab_channel=")[0]
       .split("&t=")[0];
-  console.log(embeddedLink);
 
   return (
     <Box maxW='1440px' margin='auto' padding={4}>
@@ -169,7 +173,14 @@ const JoinQuickEvent = () => {
           </MobileLayout>
           <MobileLayout>
             <Box textAlign='center' my={6}>
-              <>
+              <Heading variant='h3'>{numConfirmed}</Heading>
+              {numConfirmed === 1 ? (
+                <Text>person confirmed</Text>
+              ) : (
+                <Text>people confirmed</Text>
+              )}
+
+              {/* <>
                 {queryData.quickEvent?.capacity ? (
                   <>
                     {spotsLeft !== 0 ? (
@@ -185,7 +196,6 @@ const JoinQuickEvent = () => {
                         ) : (
                           <Text variant='body-3'>people on the waitlist</Text>
                         )}
-                        {/* <Text variant='body-3'>people on the waitlist</Text> */}
                       </>
                     )}
                   </>
@@ -200,7 +210,7 @@ const JoinQuickEvent = () => {
                     <Text variant='body-3'>person(s) are going</Text>
                   </>
                 )}
-              </>
+              </> */}
             </Box>
 
             <Flex
