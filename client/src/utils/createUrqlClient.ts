@@ -22,6 +22,7 @@ import {
   LoginMutation,
   LogoutMutation,
   MarkEventAsCompleteMutation,
+  MarkEventAsLiveMutation,
   MeDocument,
   MeQuery,
   PastEventsDocument,
@@ -189,6 +190,41 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 (res, data) => {
                   return {
                     pastEvents: [res.markEventAsComplete, ...data.pastEvents],
+                  };
+                }
+              );
+            },
+            markEventAsLive: (_result, _args, cache, _info) => {
+              betterUpdateQuery<MarkEventAsLiveMutation, PastEventsQuery>(
+                cache,
+                {
+                  query: PastEventsDocument,
+                },
+                _result,
+                (res, data) => {
+                  console.log(
+                    data.pastEvents.filter(
+                      (x) => x.id !== res.markEventAsLive.id
+                    )
+                  );
+                  return {
+                    pastEvents: data.pastEvents.filter(
+                      (x) => x.id !== res.markEventAsLive.id
+                    ),
+                  };
+                }
+              );
+
+              betterUpdateQuery<MarkEventAsLiveMutation, LiveEventsQuery>(
+                cache,
+                {
+                  query: LiveEventsDocument,
+                },
+                _result,
+                (res, data) => {
+                  console.log(data);
+                  return {
+                    liveEvents: [res.markEventAsLive, ...data.liveEvents],
                   };
                 }
               );

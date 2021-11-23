@@ -94,6 +94,14 @@ const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
           status: "error",
           variant: "subtle",
         });
+      } else {
+        toast({
+          description: "Changes saved",
+          isClosable: true,
+          position: "top",
+          status: "success",
+          variant: "subtle",
+        });
       }
     } else {
       const { data, error } = await createEventTemplate({
@@ -126,101 +134,101 @@ const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
     >
       {(props) => (
         <Form>
-          <VStack spacing={4} mt={6} alignItems="stretch">
+          <VStack spacing={4} mt={6} alignItems='stretch'>
             <BaseInputField
-              label="Template Name"
-              name="templateName"
+              label='Template Name'
+              name='templateName'
               touched={props.touched.templateName as boolean}
-              width="400px"
+              width='400px'
               required
             />
 
             <BaseInputField
-              label="Event Title"
-              name="title"
+              label='Event Title'
+              name='title'
               touched={props.touched.title as boolean}
-              width="400px"
+              width='400px'
             />
 
             <BaseInputField
-              label="Venue"
-              name="venue"
+              label='Venue'
+              name='venue'
               touched={props.touched.venue as boolean}
-              width="400px"
+              width='400px'
             />
 
             <BaseInputField
-              label="Address"
-              name="address"
+              label='Address'
+              name='address'
               touched={props.touched.address as boolean}
-              width="500px"
+              width='500px'
             />
 
             <BaseInputField
-              label="Date"
-              name="date"
+              label='Date'
+              name='date'
               touched={props.touched.date as boolean}
-              width="200px"
-              type="date"
+              width='200px'
+              type='date'
             />
 
-            <Flex width="90%">
+            <Flex width='90%'>
               <BaseInputField
-                label="Start"
-                name="startTime"
+                label='Start'
+                name='startTime'
                 touched={props.touched.startTime as boolean}
-                type="time"
+                type='time'
               />
 
               <Box mr={4} />
 
               <BaseInputField
-                label="End"
-                name="endTime"
+                label='End'
+                name='endTime'
                 touched={props.touched.endTime as boolean}
-                type="time"
+                type='time'
               />
             </Flex>
 
             <BaseInputField
-              label="Price"
-              name="price"
+              label='Price'
+              name='price'
               touched={props.touched.price as boolean}
               width={20}
             />
 
             <BaseInputField
-              label="Club Beem ID"
-              name="clubBeemId"
+              label='Club Beem ID'
+              name='clubBeemId'
               touched={props.touched.clubBeemId as boolean}
-              width="200px"
+              width='200px'
             />
 
             <BaseInputField
-              label="Capacity"
-              name="capacity"
+              label='Capacity'
+              name='capacity'
               touched={props.touched.capacity as boolean}
               width={20}
             />
 
             <BaseDynamicEditor
-              label="Description"
+              label='Description'
               setFieldValue={props.setFieldValue}
-              name="description"
+              name='description'
               initialValue={props.values.description}
             />
 
             <BaseInputField
-              label="Youtube Link"
-              name="youtubeLink"
+              label='Youtube Link'
+              name='youtubeLink'
               touched={props.touched.youtubeLink as boolean}
-              width="40%"
+              width='40%'
             />
 
             <Button
               isLoading={props.isSubmitting}
               size={isMobile ? "md" : "lg"}
-              type="submit"
+              type='submit'
             >
               {template ? "Save changes" : "Create template"}
             </Button>
@@ -228,59 +236,6 @@ const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
         </Form>
       )}
     </Formik>
-
-    // <FormControl>
-    //   <FormLabel>Template Name</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Event Title</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Date</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Start Time</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>End Time</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Capacity</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Venue</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Address</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Price</FormLabel>
-    //   <NumberInput
-    //     onChange={(v) => setPrice(v.replace(/^\$/, ""))}
-    //     value={price !== "" ? `$` + price : "$"}
-    //     max={50}
-    //   >
-    //     <NumberInputField />
-    //   </NumberInput>
-
-    //   <FormLabel>Club BeemId</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Address</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Description</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Youtube Link</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Logo Image</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Banner Image</FormLabel>
-    //   <Input></Input>
-    // </FormControl>
   );
 };
 

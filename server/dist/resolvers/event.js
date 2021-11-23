@@ -122,6 +122,14 @@ let EventResolver = class EventResolver {
         await Event_1.Event.merge(event, { isCompleted: true }).save();
         return event;
     }
+    async markEventAsLive(id) {
+        const event = await Event_1.Event.findOne(id);
+        if (!event) {
+            return undefined;
+        }
+        await Event_1.Event.merge(event, { isCompleted: false }).save();
+        return event;
+    }
     async deleteEvent(id) {
         await Event_1.Event.delete(id);
         return true;
@@ -226,6 +234,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "markEventAsComplete", null);
+__decorate([
+    type_graphql_1.Mutation(() => Event_1.Event),
+    __param(0, type_graphql_1.Arg("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "markEventAsLive", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
     __param(0, type_graphql_1.Arg("id")),

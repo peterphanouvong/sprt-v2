@@ -142,6 +142,7 @@ export type Mutation = {
   addNewAttendee: Scalars['Boolean'];
   addExistingAttendee: Scalars['Boolean'];
   markEventAsComplete: Event;
+  markEventAsLive: Event;
   deleteEvent: Scalars['Boolean'];
   createEventTemplate: EventTemplate;
   deleteEventTemplate: Scalars['Boolean'];
@@ -193,6 +194,11 @@ export type MutationAddExistingAttendeeArgs = {
 
 
 export type MutationMarkEventAsCompleteArgs = {
+  id: Scalars['Float'];
+};
+
+
+export type MutationMarkEventAsLiveArgs = {
   id: Scalars['Float'];
 };
 
@@ -479,6 +485,13 @@ export type MarkEventAsCompleteMutationVariables = Exact<{
 
 export type MarkEventAsCompleteMutation = { __typename?: 'Mutation', markEventAsComplete: { __typename?: 'Event', id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number } };
 
+export type MarkEventAsLiveMutationVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type MarkEventAsLiveMutation = { __typename?: 'Mutation', markEventAsLive: { __typename?: 'Event', id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number } };
+
 export type RegisterMutationVariables = Exact<{
   options: UserRegisterInput;
 }>;
@@ -756,6 +769,17 @@ export const MarkEventAsCompleteDocument = gql`
 
 export function useMarkEventAsCompleteMutation() {
   return Urql.useMutation<MarkEventAsCompleteMutation, MarkEventAsCompleteMutationVariables>(MarkEventAsCompleteDocument);
+};
+export const MarkEventAsLiveDocument = gql`
+    mutation MarkEventAsLive($id: Float!) {
+  markEventAsLive(id: $id) {
+    ...RegularEvent
+  }
+}
+    ${RegularEventFragmentDoc}`;
+
+export function useMarkEventAsLiveMutation() {
+  return Urql.useMutation<MarkEventAsLiveMutation, MarkEventAsLiveMutationVariables>(MarkEventAsLiveDocument);
 };
 export const RegisterDocument = gql`
     mutation Register($options: UserRegisterInput!) {
