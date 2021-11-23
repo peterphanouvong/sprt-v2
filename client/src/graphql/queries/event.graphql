@@ -8,5 +8,10 @@ query Event($id: String!) {
     clubBeemId
     price
     youtubeLink
+    owner {
+      id
+      email
+      clubName
+    }
   }
 }

@@ -68,16 +68,23 @@ export class EventResolver {
   // create.
   @Mutation(() => Event)
   async createEvent(
-    @Arg("input") input: EventInput
+    @Arg("input") input: EventInput,
+    @Ctx() { req }: MyContext
   ): Promise<Event | undefined> {
-    const event = await Event.create(input).save();
-    console.log(event);
-    return event;
+    const { id } = await Event.create({
+      ...input,
+      ownerId: req.session.userId,
+    }).save();
+
+    const event = await Event.findOne(id, { relations: ["owner"] });
+    console.log("event", event);
+
+    return Event.findOne(id, { relations: ["owner"] });
   }
 
   @Query(() => Event)
   async event(@Arg("id") id: string): Promise<Event | undefined> {
-    return Event.findOne(id);
+    return Event.findOne(id, { relations: ["owner"] });
   }
 
   @Query(() => [Event])
@@ -176,9 +183,6 @@ export class EventResolver {
 
   @FieldResolver(() => Int)
   async numConfirmed(@Root() event: Event): Promise<number> {
-    const res = event;
-    console.log("LOOK HERE", res);
-
     const test = await getConnection().query(`
       select count(*)
       from "attendee" a

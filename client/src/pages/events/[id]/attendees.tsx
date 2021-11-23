@@ -14,6 +14,7 @@ import {
   Attendee,
   useEventAttendeesSubscription,
   useEventQuery,
+  useMeQuery,
 } from "../../../generated/graphql";
 import { createUrqlClient } from "../../../utils/createUrqlClient";
 import { useIsAuth } from "../../../utils/useIsAuth";
@@ -25,6 +26,8 @@ const EventAttendees: React.FC<Props> = ({}) => {
   useIsAuth();
   const router = useRouter();
   const { id } = router.query;
+
+  const [{ data: me }] = useMeQuery();
 
   const [{ data, fetching }] = useEventQuery({
     pause: id === undefined,
@@ -40,6 +43,8 @@ const EventAttendees: React.FC<Props> = ({}) => {
     },
   });
 
+  console.log(me);
+  console.log(data);
   if (fetching) {
     return <Spinner />;
   }

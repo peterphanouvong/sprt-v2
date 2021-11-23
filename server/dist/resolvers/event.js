@@ -73,13 +73,14 @@ EventInput = __decorate([
     type_graphql_1.InputType()
 ], EventInput);
 let EventResolver = class EventResolver {
-    async createEvent(input) {
-        const event = await Event_1.Event.create(input).save();
-        console.log(event);
-        return event;
+    async createEvent(input, { req }) {
+        const { id } = await Event_1.Event.create(Object.assign(Object.assign({}, input), { ownerId: req.session.userId })).save();
+        const event = await Event_1.Event.findOne(id, { relations: ["owner"] });
+        console.log("event", event);
+        return Event_1.Event.findOne(id, { relations: ["owner"] });
     }
     async event(id) {
-        return Event_1.Event.findOne(id);
+        return Event_1.Event.findOne(id, { relations: ["owner"] });
     }
     async events() {
         return Event_1.Event.find();
@@ -135,8 +136,6 @@ let EventResolver = class EventResolver {
         return true;
     }
     async numConfirmed(event) {
-        const res = event;
-        console.log("LOOK HERE", res);
         const test = await typeorm_1.getConnection().query(`
       select count(*)
       from "attendee" a
@@ -188,8 +187,9 @@ let EventResolver = class EventResolver {
 __decorate([
     type_graphql_1.Mutation(() => Event_1.Event),
     __param(0, type_graphql_1.Arg("input")),
+    __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [EventInput]),
+    __metadata("design:paramtypes", [EventInput, Object]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "createEvent", null);
 __decorate([
