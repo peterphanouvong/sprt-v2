@@ -28,6 +28,7 @@ const EventAttendees: React.FC<Props> = ({}) => {
   const { id } = router.query;
 
   const [{ data: me }] = useMeQuery();
+  console.log(me);
 
   const [{ data, fetching }] = useEventQuery({
     pause: id === undefined,
@@ -43,8 +44,6 @@ const EventAttendees: React.FC<Props> = ({}) => {
     },
   });
 
-  console.log(me);
-  console.log(data);
   if (fetching) {
     return <Spinner />;
   }
@@ -68,6 +67,7 @@ const EventAttendees: React.FC<Props> = ({}) => {
             <EventAttendeeTable
               attendees={
                 (attendees?.eventAttendees as Attendee[]) ||
+                //@ts-ignore
                 data?.event.attendees
               }
             />
