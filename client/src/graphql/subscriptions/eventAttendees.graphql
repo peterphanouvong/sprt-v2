@@ -1,0 +1,12 @@
+subscription eventAttendees($id: Float!) {
+  eventAttendees(id: $id) {
+    id
+    firstname
+    lastname
+    email
+    phoneNumber
+    beemId
+    updatedAt
+    createdAt
+  }
+}

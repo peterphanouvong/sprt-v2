@@ -98,7 +98,12 @@ __decorate([
     __metadata("design:type", Array)
 ], Event.prototype, "attendeeConnection", void 0);
 __decorate([
-    type_graphql_1.Field(() => [User_1.User]),
+    type_graphql_1.Field(),
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], Event.prototype, "ownerId", void 0);
+__decorate([
+    type_graphql_1.Field(() => User_1.User),
     typeorm_1.ManyToOne(() => User_1.User, (user) => user.events),
     __metadata("design:type", User_1.User)
 ], Event.prototype, "owner", void 0);

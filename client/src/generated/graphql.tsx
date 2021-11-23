@@ -54,7 +54,8 @@ export type Event = {
   capacity?: Maybe<Scalars['Float']>;
   clubBeemId: Scalars['String'];
   attendeeConnection: Array<EventAttendee>;
-  owner: Array<User>;
+  ownerId: Scalars['Float'];
+  owner: User;
   attendees: Array<Attendee>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
@@ -342,7 +343,13 @@ export type QuickEventUserInput = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  eventAttendees: Array<Attendee>;
   newQuickEvent: QuickEvent;
+};
+
+
+export type SubscriptionEventAttendeesArgs = {
+  id: Scalars['Float'];
 };
 
 
@@ -514,7 +521,7 @@ export type EventQueryVariables = Exact<{
 }>;
 
 
-export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', venue?: Maybe<string>, address?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, clubBeemId: string, price?: Maybe<number>, youtubeLink?: Maybe<string>, id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number, attendees: Array<{ __typename?: 'Attendee', id: number, firstname: string, lastname: string, email?: Maybe<string>, phoneNumber: string, beemId: string, createdAt: string, updatedAt: string }> } };
+export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', venue?: Maybe<string>, address?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, clubBeemId: string, price?: Maybe<number>, youtubeLink?: Maybe<string>, id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number, owner: { __typename?: 'User', id: number, email: string, clubName: string } } };
 
 export type EventTemplateQueryVariables = Exact<{
   eventTemplateId: Scalars['Float'];
@@ -549,6 +556,13 @@ export type QuickEventQueryVariables = Exact<{
 
 
 export type QuickEventQuery = { __typename?: 'Query', quickEvent?: Maybe<{ __typename?: 'QuickEvent', id: number, title: string, description?: Maybe<string>, capacity?: Maybe<number>, users: string, createdAt: string, updatedAt: string }> };
+
+export type EventAttendeesSubscriptionVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type EventAttendeesSubscription = { __typename?: 'Subscription', eventAttendees: Array<{ __typename?: 'Attendee', id: number, firstname: string, lastname: string, email?: Maybe<string>, phoneNumber: string, beemId: string, updatedAt: string, createdAt: string }> };
 
 export type NewQuickEventSubscriptionVariables = Exact<{
   newQuickEventId: Scalars['Float'];
@@ -824,15 +838,10 @@ export const EventDocument = gql`
     clubBeemId
     price
     youtubeLink
-    attendees {
+    owner {
       id
-      firstname
-      lastname
       email
-      phoneNumber
-      beemId
-      createdAt
-      updatedAt
+      clubName
     }
   }
 }
@@ -912,6 +921,24 @@ export const QuickEventDocument = gql`
 
 export function useQuickEventQuery(options: Omit<Urql.UseQueryArgs<QuickEventQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<QuickEventQuery>({ query: QuickEventDocument, ...options });
+};
+export const EventAttendeesDocument = gql`
+    subscription eventAttendees($id: Float!) {
+  eventAttendees(id: $id) {
+    id
+    firstname
+    lastname
+    email
+    phoneNumber
+    beemId
+    updatedAt
+    createdAt
+  }
+}
+    `;
+
+export function useEventAttendeesSubscription<TData = EventAttendeesSubscription>(options: Omit<Urql.UseSubscriptionArgs<EventAttendeesSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<EventAttendeesSubscription, TData>) {
+  return Urql.useSubscription<EventAttendeesSubscription, TData, EventAttendeesSubscriptionVariables>({ query: EventAttendeesDocument, ...options }, handler);
 };
 export const NewQuickEventDocument = gql`
     subscription newQuickEvent($newQuickEventId: Float!) {

@@ -73,13 +73,14 @@ EventInput = __decorate([
     type_graphql_1.InputType()
 ], EventInput);
 let EventResolver = class EventResolver {
-    async createEvent(input) {
-        const event = await Event_1.Event.create(input).save();
-        console.log(event);
-        return event;
+    async createEvent(input, { req }) {
+        const { id } = await Event_1.Event.create(Object.assign(Object.assign({}, input), { ownerId: req.session.userId })).save();
+        const event = await Event_1.Event.findOne(id, { relations: ["owner"] });
+        console.log("event", event);
+        return Event_1.Event.findOne(id, { relations: ["owner"] });
     }
     async event(id) {
-        return Event_1.Event.findOne(id);
+        return Event_1.Event.findOne(id, { relations: ["owner"] });
     }
     async events() {
         return Event_1.Event.find();
@@ -90,21 +91,29 @@ let EventResolver = class EventResolver {
     async pastEvents() {
         return Event_1.Event.find({ where: { isCompleted: true } });
     }
-    async updateEvent(id, input) {
+    async updateEvent(id, input, pubSub) {
         const event = await Event_1.Event.findOne(id);
         if (!event) {
             return undefined;
         }
         await Event_1.Event.merge(event, input).save();
+        await pubSub.publish(`EVENT-${id}`, event);
         return event;
     }
-    async addNewAttendee(id, input) {
+    async addNewAttendee(id, input, { attendeeLoader }, pubSub) {
         const createAttendee = new attendee_1.AttendeeResolver().createAttendee;
         const res = await createAttendee(input);
         await EventAttendee_1.EventAttendee.insert({
             eventId: id,
             attendeeId: res.id,
         });
+        const eventAttendeeIds = await typeorm_1.getConnection().query(`
+      select "attendeeId" 
+      from "event_attendee"
+      where "eventId" = ${id};
+    `);
+        const attendees = attendeeLoader.loadMany(eventAttendeeIds.map((e) => e.attendeeId));
+        await pubSub.publish(`EVENT-${id}`, attendees);
         return true;
     }
     async addExistingAttendee(id, attendeeId) {
@@ -127,8 +136,6 @@ let EventResolver = class EventResolver {
         return true;
     }
     async numConfirmed(event) {
-        const res = event;
-        console.log("LOOK HERE", res);
         const test = await typeorm_1.getConnection().query(`
       select count(*)
       from "attendee" a
@@ -160,14 +167,29 @@ let EventResolver = class EventResolver {
       from "event_attendee"
       where "eventId" = ${event.id};
     `);
+        console.log("attendeeLoader");
+        console.log(attendeeLoader);
         return attendeeLoader.loadMany(eventAttendeeIds.map((e) => e.attendeeId));
+    }
+    async eventAttendees(attendees, id, { attendeeLoader }) {
+        console.log("ATTENDEE SUBSCRIPTION");
+        if (attendees === undefined) {
+            const eventAttendeeIds = await typeorm_1.getConnection().query(`
+      select "attendeeId" 
+      from "event_attendee"
+      where "eventId" = ${id};
+    `);
+            return attendeeLoader.loadMany(eventAttendeeIds.map((e) => e.attendeeId));
+        }
+        return attendees;
     }
 };
 __decorate([
     type_graphql_1.Mutation(() => Event_1.Event),
     __param(0, type_graphql_1.Arg("input")),
+    __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [EventInput]),
+    __metadata("design:paramtypes", [EventInput, Object]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "createEvent", null);
 __decorate([
@@ -199,16 +221,20 @@ __decorate([
     type_graphql_1.Mutation(() => Event_1.Event),
     __param(0, type_graphql_1.Arg("id")),
     __param(1, type_graphql_1.Arg("input")),
+    __param(2, type_graphql_1.PubSub()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, EventInput]),
+    __metadata("design:paramtypes", [String, EventInput,
+        type_graphql_1.PubSubEngine]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "updateEvent", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
     __param(0, type_graphql_1.Arg("id")),
     __param(1, type_graphql_1.Arg("input")),
+    __param(2, type_graphql_1.Ctx()),
+    __param(3, type_graphql_1.PubSub()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, attendee_1.AttendeeInput]),
+    __metadata("design:paramtypes", [Number, attendee_1.AttendeeInput, Object, type_graphql_1.PubSubEngine]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "addNewAttendee", null);
 __decorate([
@@ -255,6 +281,17 @@ __decorate([
     __metadata("design:paramtypes", [Event_1.Event, Object]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "attendees", null);
+__decorate([
+    type_graphql_1.Subscription(() => [Attendee_1.Attendee], {
+        topics: ({ args }) => `EVENT-${args.id}`,
+    }),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Arg("id")),
+    __param(2, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array, Number, Object]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "eventAttendees", null);
 EventResolver = __decorate([
     type_graphql_1.Resolver(Event_1.Event)
 ], EventResolver);
