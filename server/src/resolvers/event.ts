@@ -7,9 +7,12 @@ import {
   InputType,
   Int,
   Mutation,
+  PubSub,
+  PubSubEngine,
   Query,
   Resolver,
   Root,
+  Subscription,
 } from "type-graphql";
 import { Event } from "../entities/Event";
 import { AttendeeInput, AttendeeResolver } from "./attendee";
@@ -65,17 +68,23 @@ export class EventResolver {
   // create.
   @Mutation(() => Event)
   async createEvent(
-    @Arg("input") input: EventInput
+    @Arg("input") input: EventInput,
+    @Ctx() { req }: MyContext
   ): Promise<Event | undefined> {
-    const event = await Event.create(input).save();
-    console.log(event);
-    return event;
+    const { id } = await Event.create({
+      ...input,
+      ownerId: req.session.userId,
+    }).save();
+
+    const event = await Event.findOne(id, { relations: ["owner"] });
+    console.log("event", event);
+
+    return Event.findOne(id, { relations: ["owner"] });
   }
 
-  // read.
   @Query(() => Event)
   async event(@Arg("id") id: string): Promise<Event | undefined> {
-    return Event.findOne(id);
+    return Event.findOne(id, { relations: ["owner"] });
   }
 
   @Query(() => [Event])
@@ -97,20 +106,24 @@ export class EventResolver {
   @Mutation(() => Event)
   async updateEvent(
     @Arg("id") id: string,
-    @Arg("input") input: EventInput
+    @Arg("input") input: EventInput,
+    @PubSub() pubSub: PubSubEngine
   ): Promise<Event | undefined> {
     const event = await Event.findOne(id);
     if (!event) {
       return undefined;
     }
     await Event.merge(event, input).save();
+    await pubSub.publish(`EVENT-${id}`, event);
     return event;
   }
 
   @Mutation(() => Boolean)
   async addNewAttendee(
     @Arg("id") id: number,
-    @Arg("input") input: AttendeeInput
+    @Arg("input") input: AttendeeInput,
+    @Ctx() { attendeeLoader }: MyContext,
+    @PubSub() pubSub: PubSubEngine
   ): Promise<boolean> {
     const createAttendee = new AttendeeResolver().createAttendee;
     const res = await createAttendee(input);
@@ -120,6 +133,17 @@ export class EventResolver {
       attendeeId: res!.id,
     });
 
+    const eventAttendeeIds = await getConnection().query(`
+      select "attendeeId" 
+      from "event_attendee"
+      where "eventId" = ${id};
+    `);
+
+    const attendees = attendeeLoader.loadMany(
+      eventAttendeeIds.map((e: { attendeeId: number }) => e.attendeeId)
+    );
+
+    await pubSub.publish(`EVENT-${id}`, attendees);
     return true;
   }
 
@@ -169,9 +193,6 @@ export class EventResolver {
 
   @FieldResolver(() => Int)
   async numConfirmed(@Root() event: Event): Promise<number> {
-    const res = event;
-    console.log("LOOK HERE", res);
-
     const test = await getConnection().query(`
       select count(*)
       from "attendee" a
@@ -209,8 +230,34 @@ export class EventResolver {
       from "event_attendee"
       where "eventId" = ${event.id};
     `);
+    console.log("attendeeLoader");
+    console.log(attendeeLoader);
     return attendeeLoader.loadMany(
       eventAttendeeIds.map((e: { attendeeId: number }) => e.attendeeId)
     );
+  }
+
+  @Subscription(() => [Attendee], {
+    topics: ({ args }) => `EVENT-${args.id}`,
+  })
+  async eventAttendees(
+    @Root() attendees: [Attendee],
+    @Arg("id") id: number,
+    @Ctx() { attendeeLoader }: MyContext
+  ) {
+    console.log("ATTENDEE SUBSCRIPTION");
+    if (attendees === undefined) {
+      const eventAttendeeIds = await getConnection().query(`
+      select "attendeeId" 
+      from "event_attendee"
+      where "eventId" = ${id};
+    `);
+
+      return attendeeLoader.loadMany(
+        eventAttendeeIds.map((e: { attendeeId: number }) => e.attendeeId)
+      );
+    }
+
+    return attendees;
   }
 }

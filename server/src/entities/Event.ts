@@ -79,7 +79,11 @@ export class Event extends BaseEntity {
   @ManyToOne(() => EventAttendee, (ea) => ea.event)
   attendeeConnection: EventAttendee[];
 
-  @Field(() => [User])
+  @Field()
+  @Column()
+  ownerId: number;
+
+  @Field(() => User)
   @ManyToOne(() => User, (user) => user.events)
   owner: User;
 
