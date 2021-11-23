@@ -10,7 +10,11 @@ import { BaseSection } from "../../../components/BaseSection";
 import { EventAttendeeTable } from "../../../components/EventAttendeeTable";
 import { EventPageOverview } from "../../../components/EventPageOverview";
 import { EventPageSideNav } from "../../../components/EventPageSideNav";
-import { Attendee, useEventQuery } from "../../../generated/graphql";
+import {
+  Attendee,
+  useEventAttendeesSubscription,
+  useEventQuery,
+} from "../../../generated/graphql";
 import { createUrqlClient } from "../../../utils/createUrqlClient";
 import { useIsAuth } from "../../../utils/useIsAuth";
 import { Event } from "../../../generated/graphql";
@@ -26,6 +30,13 @@ const EventAttendees: React.FC<Props> = ({}) => {
     pause: id === undefined,
     variables: {
       id: id as string,
+    },
+  });
+
+  const [{ data: attendees }] = useEventAttendeesSubscription({
+    pause: id === undefined,
+    variables: {
+      id: parseInt(id as string),
     },
   });
 
@@ -50,7 +61,10 @@ const EventAttendees: React.FC<Props> = ({}) => {
           <EventPageSideNav id={id as string} />
           <BaseSection title="Attendees">
             <EventAttendeeTable
-              attendees={data?.event.attendees as Attendee[]}
+              attendees={
+                (attendees?.eventAttendees as Attendee[]) ||
+                data?.event.attendees
+              }
             />
           </BaseSection>
         </Grid>

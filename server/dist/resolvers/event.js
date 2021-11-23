@@ -78,12 +78,6 @@ let EventResolver = class EventResolver {
         console.log(event);
         return event;
     }
-    async _event(event, id) {
-        if (event === undefined) {
-            return Event_1.Event.findOne(id);
-        }
-        return event;
-    }
     async event(id) {
         return Event_1.Event.findOne(id);
     }
@@ -105,15 +99,20 @@ let EventResolver = class EventResolver {
         await pubSub.publish(`EVENT-${id}`, event);
         return event;
     }
-    async addNewAttendee(id, input, pubSub) {
+    async addNewAttendee(id, input, { attendeeLoader }, pubSub) {
         const createAttendee = new attendee_1.AttendeeResolver().createAttendee;
         const res = await createAttendee(input);
         await EventAttendee_1.EventAttendee.insert({
             eventId: id,
             attendeeId: res.id,
         });
-        const event = await Event_1.Event.findOne(id);
-        await pubSub.publish(`EVENT-${id}`, Object.assign(Object.assign({}, event), { attendees: [] }));
+        const eventAttendeeIds = await typeorm_1.getConnection().query(`
+      select "attendeeId" 
+      from "event_attendee"
+      where "eventId" = ${id};
+    `);
+        const attendees = attendeeLoader.loadMany(eventAttendeeIds.map((e) => e.attendeeId));
+        await pubSub.publish(`EVENT-${id}`, attendees);
         return true;
     }
     async addExistingAttendee(id, attendeeId) {
@@ -173,6 +172,18 @@ let EventResolver = class EventResolver {
         console.log(attendeeLoader);
         return attendeeLoader.loadMany(eventAttendeeIds.map((e) => e.attendeeId));
     }
+    async eventAttendees(attendees, id, { attendeeLoader }) {
+        console.log("ATTENDEE SUBSCRIPTION");
+        if (attendees === undefined) {
+            const eventAttendeeIds = await typeorm_1.getConnection().query(`
+      select "attendeeId" 
+      from "event_attendee"
+      where "eventId" = ${id};
+    `);
+            return attendeeLoader.loadMany(eventAttendeeIds.map((e) => e.attendeeId));
+        }
+        return attendees;
+    }
 };
 __decorate([
     type_graphql_1.Mutation(() => Event_1.Event),
@@ -181,16 +192,6 @@ __decorate([
     __metadata("design:paramtypes", [EventInput]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "createEvent", null);
-__decorate([
-    type_graphql_1.Subscription(() => Event_1.Event, {
-        topics: ({ args }) => `EVENT-${args.id}`,
-    }),
-    __param(0, type_graphql_1.Root()),
-    __param(1, type_graphql_1.Arg("id")),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Number]),
-    __metadata("design:returntype", Promise)
-], EventResolver.prototype, "_event", null);
 __decorate([
     type_graphql_1.Query(() => Event_1.Event),
     __param(0, type_graphql_1.Arg("id")),
@@ -230,10 +231,10 @@ __decorate([
     type_graphql_1.Mutation(() => Boolean),
     __param(0, type_graphql_1.Arg("id")),
     __param(1, type_graphql_1.Arg("input")),
-    __param(2, type_graphql_1.PubSub()),
+    __param(2, type_graphql_1.Ctx()),
+    __param(3, type_graphql_1.PubSub()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, attendee_1.AttendeeInput,
-        type_graphql_1.PubSubEngine]),
+    __metadata("design:paramtypes", [Number, attendee_1.AttendeeInput, Object, type_graphql_1.PubSubEngine]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "addNewAttendee", null);
 __decorate([
@@ -280,6 +281,17 @@ __decorate([
     __metadata("design:paramtypes", [Event_1.Event, Object]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "attendees", null);
+__decorate([
+    type_graphql_1.Subscription(() => [Attendee_1.Attendee], {
+        topics: ({ args }) => `EVENT-${args.id}`,
+    }),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Arg("id")),
+    __param(2, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array, Number, Object]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "eventAttendees", null);
 EventResolver = __decorate([
     type_graphql_1.Resolver(Event_1.Event)
 ], EventResolver);
