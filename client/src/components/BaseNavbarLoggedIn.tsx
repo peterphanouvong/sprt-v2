@@ -6,7 +6,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Spinner
+  Spinner,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -20,7 +20,7 @@ interface Props {}
 const subMenuItems = [
   { name: "Home", link: "/home" },
   { name: "Events", link: "/live-events" },
-  { name: "Templates", link: "/templates" }
+  { name: "Templates", link: "/templates" },
 ];
 
 const BaseNavbarLoggedIn: React.FC<Props> = ({}) => {
@@ -87,7 +87,9 @@ const SubMenu = () => {
 const SubMenuItem = ({ item }) => {
   const router = useRouter();
 
-  const isActive = router.pathname.includes(`${item.link}`);
+  const isActive =
+    router.pathname.includes(`${item.link}`) ||
+    (item.link === "/live-events" && router.pathname.includes("past-events"));
 
   return (
     <ListItem

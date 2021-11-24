@@ -4,9 +4,12 @@ import theme from "../theme";
 export default class Document extends NextDocument {
   render() {
     return (
-      <Html lang='en'>
+      <Html
+        style={{ width: "100%", height: "100%", overflowX: "hidden" }}
+        lang="en"
+      >
         <Head></Head>
-        <body>
+        <body style={{ width: "100%", height: "100%", overflowX: "hidden" }}>
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
           <Main />
           <NextScript />

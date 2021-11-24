@@ -1,5 +1,6 @@
 import { Link } from "@chakra-ui/layout";
 import {
+  Box,
   IconButton,
   Menu,
   MenuButton,
