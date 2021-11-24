@@ -1,6 +1,5 @@
 import { Link } from "@chakra-ui/layout";
 import {
-  Box,
   IconButton,
   Menu,
   MenuButton,
@@ -48,7 +47,7 @@ const LiveEventTable: React.FC<Props> = ({ liveEvents }) => {
             <BaseTh>Date</BaseTh>
             <BaseTh>Attendees</BaseTh>
             <BaseTh>Waitlist</BaseTh>
-            <BaseTh width='0'></BaseTh>
+            <BaseTh width="0"></BaseTh>
           </BaseTr>
         </BaseThead>
         <BaseTbody>
@@ -66,15 +65,15 @@ const LiveEventTable: React.FC<Props> = ({ liveEvents }) => {
                   : event.numConfirmed}
               </BaseTd>
               <BaseTd>{event.numWaitlist}</BaseTd>
-              <BaseTd width='0'>
+              <BaseTd width="0">
                 <Menu>
                   <MenuButton
                     as={IconButton}
-                    aria-label='Options'
+                    aria-label="Options"
                     icon={<BsThreeDotsVertical />}
-                    variant='ghost'
-                    colorScheme='gray'
-                    rounded='full'
+                    variant="ghost"
+                    colorScheme="gray"
+                    rounded="full"
                   />
                   <MenuList>
                     <MenuItem
