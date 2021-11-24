@@ -10,7 +10,7 @@ const EventPageSideNav: React.FC<Props> = ({ id }) => {
     <BaseSideNav
       navItems={[
         { title: "Description", link: `/events/${id}` },
-        { title: "Sign up", link: `/events/${id}/sign-up` },
+        { title: "Join event", link: `/events/${id}/join` },
         { title: "See who's going", link: `/events/${id}/attendees` },
       ]}
     />

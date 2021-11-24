@@ -14,19 +14,24 @@ import { createUrqlClient } from "../../../utils/createUrqlClient";
 import { useIsAuth } from "../../../utils/useIsAuth";
 import { getYoutubeVideoId } from "../../../utils/getYoutubeVideoId";
 import NextLink from "next/link";
+import { useIsMobileScreen } from "../../../utils/useIsMobileScreen";
+import { BaseBreadcrumbs } from "../../../components/BaseBreadcrumbs";
 
 interface Props {}
 
 const EventOverview: React.FC<Props> = ({}) => {
   useIsAuth();
+
+  const isMobile = useIsMobileScreen();
+
   const router = useRouter();
   const { id } = router.query;
 
   const [{ data, fetching }] = useEventQuery({
     pause: id === undefined,
     variables: {
-      id: id as string
-    }
+      id: id as string,
+    },
   });
 
   if (fetching) {
@@ -44,28 +49,56 @@ const EventOverview: React.FC<Props> = ({}) => {
       </Head>
       <BasePageHeader>{data?.event.title}</BasePageHeader>
       <EventPageOverview event={data?.event as Event} />
-
       <BaseContent flex={1}>
-        <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
-          <EventPageSideNav id={id as string} />
-          <BaseSection title="Description">
-            {data?.event.youtubeLink && (
-              <AspectRatio ratio={16 / 9}>
-                <iframe
-                  title="naruto"
-                  src={`//www.youtube.com/embed/${getYoutubeVideoId(
-                    data?.event.youtubeLink as string
-                  )}`}
-                  allowFullScreen
-                />
-              </AspectRatio>
-            )}
+        {isMobile ? (
+          <>
+            <BaseBreadcrumbs
+              crumbs={[
+                { href: `events/${id}`, title: "Description" },
+                { href: `/events/${id}/join`, title: "Join event" },
+                { href: `/events/${id}/attendees`, title: "See who's going" },
+              ]}
+            />
+            <BaseSection title="Description">
+              {data?.event.youtubeLink && (
+                <AspectRatio ratio={16 / 9}>
+                  <iframe
+                    title="naruto"
+                    src={`//www.youtube.com/embed/${getYoutubeVideoId(
+                      data?.event.youtubeLink as string
+                    )}`}
+                    allowFullScreen
+                  />
+                </AspectRatio>
+              )}
 
-            <NextLink href={`/events/${id}/sign-up`}>
-              <Button mt={4}>Sign up!</Button>
-            </NextLink>
-          </BaseSection>
-        </Grid>
+              <NextLink href={`/events/${id}/sign-up`}>
+                <Button mt={4}>Sign up!</Button>
+              </NextLink>
+            </BaseSection>
+          </>
+        ) : (
+          <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
+            <EventPageSideNav id={id as string} />
+            <BaseSection title="Description">
+              {data?.event.youtubeLink && (
+                <AspectRatio ratio={16 / 9}>
+                  <iframe
+                    title="naruto"
+                    src={`//www.youtube.com/embed/${getYoutubeVideoId(
+                      data?.event.youtubeLink as string
+                    )}`}
+                    allowFullScreen
+                  />
+                </AspectRatio>
+              )}
+
+              <NextLink href={`/events/${id}/sign-up`}>
+                <Button mt={4}>Sign up!</Button>
+              </NextLink>
+            </BaseSection>
+          </Grid>
+        )}
       </BaseContent>
     </BaseLayout>
   );
