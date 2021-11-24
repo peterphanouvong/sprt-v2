@@ -1,20 +1,16 @@
 import { Link } from "@chakra-ui/layout";
 import {
-  Box,
   IconButton,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  useToast,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import {
-  Maybe,
-  useDeleteEventMutation,
-  useMarkEventAsCompleteMutation,
-} from "../generated/graphql";
+import { Maybe, useMarkEventAsCompleteMutation } from "../generated/graphql";
 import { parseDatePretty } from "../utils/parseDate";
 import {
   BaseTable,
@@ -24,6 +20,7 @@ import {
   BaseThead,
   BaseTr,
 } from "./BaseTable";
+import { EventDeleteModal } from "./EventDeleteModal";
 
 interface Props {
   liveEvents: {
@@ -38,11 +35,11 @@ interface Props {
 }
 
 const LiveEventTable: React.FC<Props> = ({ liveEvents }) => {
-  const [, deleteEvent] = useDeleteEventMutation();
   const [, markEventAsComplete] = useMarkEventAsCompleteMutation();
+  const toast = useToast();
 
   return liveEvents.length > 0 ? (
-    <Box overflowX={"auto"}>
+    <>
       <BaseTable>
         <BaseThead>
           <BaseTr>
@@ -83,23 +80,27 @@ const LiveEventTable: React.FC<Props> = ({ liveEvents }) => {
                       onClick={async () => {
                         const res = await markEventAsComplete({ id: event.id });
                         if (res.data?.markEventAsComplete) {
-                          alert("Nice it worked!");
+                          toast({
+                            description: `${event.title} marked as complete`,
+                            isClosable: true,
+                            position: "top",
+                            status: "success",
+                            variant: "subtle",
+                          });
                         } else {
-                          alert("Something went wrong");
+                          toast({
+                            description: "Something went wrong",
+                            isClosable: true,
+                            position: "top",
+                            status: "error",
+                            variant: "subtle",
+                          });
                         }
                       }}
                     >
                       Mark as complete
                     </MenuItem>
-                    <MenuItem
-                      color="red.500"
-                      onClick={() => {
-                        console.log("Delete event" + event.id);
-                        deleteEvent({ id: event.id.toString() });
-                      }}
-                    >
-                      Delete
-                    </MenuItem>
+                    <EventDeleteModal event={event} />
                   </MenuList>
                 </Menu>
               </BaseTd>
@@ -107,7 +108,7 @@ const LiveEventTable: React.FC<Props> = ({ liveEvents }) => {
           ))}
         </BaseTbody>
       </BaseTable>
-    </Box>
+    </>
   ) : (
     <div>No live events</div>
   );

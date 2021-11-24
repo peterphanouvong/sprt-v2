@@ -170,6 +170,16 @@ export class EventResolver {
     return event;
   }
 
+  @Mutation(() => Event)
+  async markEventAsLive(@Arg("id") id: number): Promise<Event | undefined> {
+    const event = await Event.findOne(id);
+    if (!event) {
+      return undefined;
+    }
+    await Event.merge(event, { isCompleted: false }).save();
+    return event;
+  }
+
   // delete.
   @Mutation(() => Boolean)
   async deleteEvent(@Arg("id") id: string): Promise<boolean> {

@@ -94,6 +94,14 @@ const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
           status: "error",
           variant: "subtle",
         });
+      } else {
+        toast({
+          description: "Changes saved",
+          isClosable: true,
+          position: "top",
+          status: "success",
+          variant: "subtle",
+        });
       }
     } else {
       const { data, error } = await createEventTemplate({
@@ -228,59 +236,6 @@ const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
         </Form>
       )}
     </Formik>
-
-    // <FormControl>
-    //   <FormLabel>Template Name</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Event Title</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Date</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Start Time</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>End Time</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Capacity</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Venue</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Address</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Price</FormLabel>
-    //   <NumberInput
-    //     onChange={(v) => setPrice(v.replace(/^\$/, ""))}
-    //     value={price !== "" ? `$` + price : "$"}
-    //     max={50}
-    //   >
-    //     <NumberInputField />
-    //   </NumberInput>
-
-    //   <FormLabel>Club BeemId</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Address</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Description</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Youtube Link</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Logo Image</FormLabel>
-    //   <Input></Input>
-
-    //   <FormLabel>Banner Image</FormLabel>
-    //   <Input></Input>
-    // </FormControl>
   );
 };
 

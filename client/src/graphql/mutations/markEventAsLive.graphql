@@ -1,0 +1,5 @@
+mutation MarkEventAsLive($id: Float!) {
+  markEventAsLive(id: $id) {
+    ...RegularEvent
+  }
+}
