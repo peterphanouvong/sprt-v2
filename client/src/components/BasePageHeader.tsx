@@ -12,7 +12,7 @@ const BasePageHeader: React.FC<Props> = ({ children }) => {
       bgColor="white"
       borderBottom="1px solid"
       borderBottomColor="gray.200"
-      padding={6}
+      paddingY={6}
       variant="h2"
     >
       <BaseContainer padding={4}>{children}</BaseContainer>

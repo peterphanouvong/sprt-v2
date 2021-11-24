@@ -214,7 +214,7 @@ const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
               label="Youtube Link"
               name="youtubeLink"
               touched={props.touched.youtubeLink as boolean}
-              width="40%"
+              width="400px"
             />
 
             <Button
