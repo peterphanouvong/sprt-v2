@@ -32,7 +32,7 @@ const EventFreshForm: React.FC<Props> = ({ initialValues }) => {
 
   return (
     <BaseCard padding={6}>
-      <Heading variant='h5' mb={4}>
+      <Heading variant="h5" mb={4}>
         Event details
       </Heading>
       <Box flex={1}>
@@ -81,98 +81,98 @@ const EventFreshForm: React.FC<Props> = ({ initialValues }) => {
         >
           {(props) => (
             <Form>
-              <VStack spacing={4} alignItems='stretch'>
+              <VStack spacing={4} alignItems="stretch">
                 <BaseInputField
-                  label='Title'
-                  name='title'
+                  label="Title"
+                  name="title"
                   touched={props.touched.title as boolean}
-                  width='40%'
+                  width="400px"
                   required
                 />
                 <BaseInputField
-                  label='Venue'
-                  name='venue'
+                  label="Venue"
+                  name="venue"
                   touched={props.touched.venue as boolean}
-                  width='50%'
+                  width="400px"
                   required
                 />
                 <BaseInputField
-                  label='Address'
-                  name='address'
+                  label="Address"
+                  name="address"
                   touched={props.touched.address as boolean}
-                  width='70%'
+                  width="400px"
                   required
                 />
                 <BaseInputField
-                  label='Date'
-                  name='date'
+                  label="Date"
+                  name="date"
                   touched={props.touched.date as boolean}
-                  width='40%'
-                  type='date'
+                  width="200px"
+                  type="date"
                   required
                 />
-                <Flex width='90%'>
+                <Flex width="90%">
                   <BaseInputField
-                    label='Start'
-                    name='startTime'
+                    label="Start"
+                    name="startTime"
                     touched={props.touched.startTime as boolean}
-                    type='time'
+                    type="time"
                     required
                   />
 
                   <Box mr={4} />
 
                   <BaseInputField
-                    label='End'
-                    name='endTime'
+                    label="End"
+                    name="endTime"
                     touched={props.touched.endTime as boolean}
-                    type='time'
+                    type="time"
                     required
                   />
                 </Flex>
                 <BaseInputField
-                  label='Price'
-                  name='price'
+                  label="Price"
+                  name="price"
                   touched={props.touched.price as boolean}
-                  type='number'
-                  width='15%'
+                  type="number"
+                  width={20}
                   required
                 />
 
                 <BaseInputField
-                  label='Capacity'
-                  name='capacity'
+                  label="Capacity"
+                  name="capacity"
                   touched={props.touched.capacity as boolean}
-                  type='number'
-                  width='15%'
+                  type="number"
+                  width="200px"
                 />
 
                 <BaseInputField
-                  label='Club Beem Id'
-                  name='clubBeemId'
+                  label="Club Beem Id"
+                  name="clubBeemId"
                   touched={props.touched.clubBeemId as boolean}
-                  type='string'
-                  width='15%'
+                  type="string"
+                  width={20}
                 />
 
                 <BaseDynamicEditor
-                  label='Description'
+                  label="Description"
                   setFieldValue={props.setFieldValue}
-                  name='description'
+                  name="description"
                   initialValue={props.values.description}
                 />
 
                 <BaseInputField
-                  label='Youtube Link'
-                  name='youtubeLink'
+                  label="Youtube Link"
+                  name="youtubeLink"
                   touched={props.touched.youtubeLink as boolean}
-                  width='40%'
+                  width="400px"
                 />
 
                 <Button
                   isLoading={props.isSubmitting}
-                  size={isMobile ? "xs" : "lg"}
-                  type='submit'
+                  size={isMobile ? "md" : "lg"}
+                  type="submit"
                 >
                   Create event!
                 </Button>

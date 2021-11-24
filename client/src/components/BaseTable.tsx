@@ -5,7 +5,11 @@ import React from "react";
 interface Props {}
 
 const BaseTable: React.FC<Props> = (props) => {
-  return <Table mt={4}>{props.children}</Table>;
+  return (
+    <Table minW={"400px"} mt={4}>
+      {props.children}
+    </Table>
+  );
 };
 
 const BaseThead: React.FC<Props> = ({ children }) => {

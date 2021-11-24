@@ -44,6 +44,8 @@ const EventAttendees: React.FC<Props> = ({}) => {
     },
   });
 
+  console.log("data-event", data?.event);
+
   if (fetching) {
     return <Spinner />;
   }
