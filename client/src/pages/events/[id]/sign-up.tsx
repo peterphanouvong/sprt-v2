@@ -16,7 +16,7 @@ import { EventPageOverview } from "../../../components/EventPageOverview";
 interface Props {}
 
 const EventSignUp: React.FC<Props> = ({}) => {
-  useIsAuth();
+  // useIsAuth();
   const router = useRouter();
   const { id } = router.query;
 

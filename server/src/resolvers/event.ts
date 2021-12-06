@@ -237,6 +237,25 @@ export class EventResolver {
     );
   }
 
+  @FieldResolver(() => [EventAttendee])
+  async attendeeConnection(
+    @Root() event: Event,
+    @Ctx() { eventAttendeeLoader }: MyContext
+  ) {
+    // console.log(event);
+    const attendeeConnections = await getConnection().query(`
+      select "attendeeId", "isConfirmed"
+      from "event_attendee"
+      where "eventId" = ${event.id};
+    `);
+    console.log("Asdsad");
+    console.log(eventAttendeeLoader);
+    console.log(attendeeConnections);
+    return eventAttendeeLoader.loadMany(
+      attendeeConnections.map((e: { attendeeId: number }) => e.attendeeId)
+    );
+  }
+
   @Subscription(() => [Attendee], {
     topics: ({ args }) => `EVENT-${args.id}`,
   })

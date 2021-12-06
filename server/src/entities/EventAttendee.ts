@@ -18,6 +18,9 @@ export class EventAttendee extends BaseEntity {
   @Field(() => Boolean, { defaultValue: false })
   isConfirmed: boolean;
 
+  @Field(() => String)
+  joinTime: Date;
+
   @ManyToOne(() => Event, (event) => event.attendeeConnection, {
     onDelete: "CASCADE",
   })

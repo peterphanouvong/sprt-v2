@@ -1,4 +1,4 @@
-import { AspectRatio, Button, Grid, Spinner } from "@chakra-ui/react";
+import { AspectRatio, Button, Grid, Spinner, Text } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -14,20 +14,24 @@ import { createUrqlClient } from "../../../utils/createUrqlClient";
 import { useIsAuth } from "../../../utils/useIsAuth";
 import { getYoutubeVideoId } from "../../../utils/getYoutubeVideoId";
 import NextLink from "next/link";
+import { BaseDynamicEditor } from "../../../components/BaseDynamicEditor";
+import { parseRichText } from "../../../utils/parseRichText";
 
 interface Props {}
 
 const EventOverview: React.FC<Props> = ({}) => {
-  useIsAuth();
+  // useIsAuth();
   const router = useRouter();
   const { id } = router.query;
 
   const [{ data, fetching }] = useEventQuery({
     pause: id === undefined,
     variables: {
-      id: id as string
-    }
+      id: id as string,
+    },
   });
+
+  console.log(data);
 
   if (fetching) {
     return <Spinner />;
@@ -49,8 +53,14 @@ const EventOverview: React.FC<Props> = ({}) => {
         <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
           <EventPageSideNav id={id as string} />
           <BaseSection title="Description">
+            <BaseDynamicEditor
+              name="description"
+              initialValue={parseRichText(data?.event.description || "")}
+              required
+              readOnly
+            />
             {data?.event.youtubeLink && (
-              <AspectRatio ratio={16 / 9}>
+              <AspectRatio ratio={16 / 9} mt={8}>
                 <iframe
                   title="naruto"
                   src={`//www.youtube.com/embed/${getYoutubeVideoId(

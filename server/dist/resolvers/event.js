@@ -179,6 +179,17 @@ let EventResolver = class EventResolver {
         console.log(attendeeLoader);
         return attendeeLoader.loadMany(eventAttendeeIds.map((e) => e.attendeeId));
     }
+    async attendeeConnection(event, { eventAttendeeLoader }) {
+        const attendeeConnections = await typeorm_1.getConnection().query(`
+      select "attendeeId", "isConfirmed"
+      from "event_attendee"
+      where "eventId" = ${event.id};
+    `);
+        console.log("Asdsad");
+        console.log(eventAttendeeLoader);
+        console.log(attendeeConnections);
+        return eventAttendeeLoader.loadMany(attendeeConnections.map((e) => e.attendeeId));
+    }
     async eventAttendees(attendees, id, { attendeeLoader }) {
         console.log("ATTENDEE SUBSCRIPTION");
         if (attendees === undefined) {
@@ -296,6 +307,14 @@ __decorate([
     __metadata("design:paramtypes", [Event_1.Event, Object]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "attendees", null);
+__decorate([
+    type_graphql_1.FieldResolver(() => [EventAttendee_1.EventAttendee]),
+    __param(0, type_graphql_1.Root()),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Event_1.Event, Object]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "attendeeConnection", null);
 __decorate([
     type_graphql_1.Subscription(() => [Attendee_1.Attendee], {
         topics: ({ args }) => `EVENT-${args.id}`,

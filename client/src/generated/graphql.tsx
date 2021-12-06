@@ -70,6 +70,7 @@ export type EventAttendee = {
   eventId: Scalars['Float'];
   attendeeId: Scalars['Float'];
   isConfirmed?: Maybe<Scalars['Boolean']>;
+  joinTime: Scalars['String'];
 };
 
 export type EventInput = {
@@ -534,7 +535,7 @@ export type EventQueryVariables = Exact<{
 }>;
 
 
-export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', venue?: Maybe<string>, address?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, clubBeemId: string, price?: Maybe<number>, youtubeLink?: Maybe<string>, id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number, owner: { __typename?: 'User', id: number, email: string, clubName: string }, attendees: Array<{ __typename?: 'Attendee', id: number, firstname: string, lastname: string, email?: Maybe<string>, phoneNumber: string, beemId: string, updatedAt: string, createdAt: string }> } };
+export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', venue?: Maybe<string>, address?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, clubBeemId: string, price?: Maybe<number>, youtubeLink?: Maybe<string>, description?: Maybe<string>, id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number, owner: { __typename?: 'User', id: number, email: string, clubName: string }, attendees: Array<{ __typename?: 'Attendee', id: number, firstname: string, lastname: string, email?: Maybe<string>, phoneNumber: string, beemId: string, updatedAt: string, createdAt: string }> } };
 
 export type EventTemplateQueryVariables = Exact<{
   eventTemplateId: Scalars['Float'];
@@ -862,6 +863,7 @@ export const EventDocument = gql`
     clubBeemId
     price
     youtubeLink
+    description
     owner {
       id
       email
