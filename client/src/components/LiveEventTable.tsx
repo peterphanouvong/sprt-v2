@@ -56,7 +56,7 @@ const LiveEventTable: React.FC<Props> = ({ liveEvents }) => {
             {liveEvents.map((event) => (
               <BaseTr key={event.id}>
                 <BaseTd>
-                  <NextLink href={`/events/${event.id}/sign-up`}>
+                  <NextLink href={`/events/${event.id}/join`}>
                     <Link>{event.title}</Link>
                   </NextLink>
                 </BaseTd>

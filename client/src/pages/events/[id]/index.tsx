@@ -72,8 +72,8 @@ const EventOverview: React.FC<Props> = ({}) => {
                 </AspectRatio>
               )}
 
-              <NextLink href={`/events/${id}/sign-up`}>
-                <Button mt={4}>Sign up!</Button>
+              <NextLink href={`/events/${id}/join`}>
+                <Button mt={4}>Join this event</Button>
               </NextLink>
             </BaseSection>
           </>
@@ -93,8 +93,8 @@ const EventOverview: React.FC<Props> = ({}) => {
                 </AspectRatio>
               )}
 
-              <NextLink href={`/events/${id}/sign-up`}>
-                <Button mt={4}>Sign up!</Button>
+              <NextLink href={`/events/${id}/join`}>
+                <Button mt={4}>Join this event</Button>
               </NextLink>
             </BaseSection>
           </Grid>

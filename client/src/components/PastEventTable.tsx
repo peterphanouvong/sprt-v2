@@ -55,7 +55,7 @@ const PastEventTable: React.FC<Props> = ({ pastEvents }) => {
           {pastEvents.map((event) => (
             <BaseTr key={event.id}>
               <BaseTd>
-                <NextLink href={`/events/${event.id}/sign-up`}>
+                <NextLink href={`/events/${event.id}/join`}>
                   <Link>{event.title}</Link>
                 </NextLink>
               </BaseTd>
