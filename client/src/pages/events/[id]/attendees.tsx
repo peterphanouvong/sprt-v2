@@ -55,7 +55,13 @@ const EventAttendees: React.FC<Props> = ({}) => {
     },
   });
 
-  console.log("data-event", data?.event);
+  console.log("Asd", attendees);
+  // merging two lists with attendees and attendeeconnection
+  const attendeesData = data?.event.attendees.map((attendee, index) =>
+    Object.assign({}, attendee, data.event.attendeeConnection[index])
+  );
+
+  console.log(attendeesData);
 
   if (fetching) {
     return <Spinner />;
@@ -78,9 +84,7 @@ const EventAttendees: React.FC<Props> = ({}) => {
           <EventPageSideNav id={id as string} />
           <Box>
             <HStack alignItems="center">
-              <Heading as="h6" variant="h6">
-                Attendees
-              </Heading>
+              <Heading as="h6" variant="h6"></Heading>
               <Spacer />
               {data?.event.owner.id === me?.me?.id && (
                 <>
@@ -102,6 +106,9 @@ const EventAttendees: React.FC<Props> = ({}) => {
                   //@ts-ignore
                   data?.event.attendees
                 }
+                // @ts-ignore
+                // attendees={attendeesData}
+                eventId={data?.event.id as number}
               />
             ) : (
               <EventAttendeeTable

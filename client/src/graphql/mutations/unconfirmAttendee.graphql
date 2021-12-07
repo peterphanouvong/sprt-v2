@@ -1,0 +1,3 @@
+mutation UnconfirmAttendee($attendeeId: Float!, $eventId: Float!) {
+  unconfirmAttendee(attendeeId: $attendeeId, eventId: $eventId)
+}

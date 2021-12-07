@@ -116,11 +116,27 @@ let EventResolver = class EventResolver {
         await pubSub.publish(`EVENT-${id}`, attendees);
         return true;
     }
+    async removeAttendee(attendeeId, eventId) {
+        await EventAttendee_1.EventAttendee.delete({ attendeeId, eventId });
+        return true;
+    }
     async addExistingAttendee(id, attendeeId) {
         await EventAttendee_1.EventAttendee.insert({
             eventId: id,
             attendeeId: attendeeId,
         });
+        return true;
+    }
+    async confirmAttendee(eventId, attendeeId) {
+        console.log(eventId);
+        console.log(attendeeId);
+        await EventAttendee_1.EventAttendee.update({ eventId, attendeeId }, { isConfirmed: true });
+        return true;
+    }
+    async unconfirmAttendee(eventId, attendeeId) {
+        console.log(eventId);
+        console.log(attendeeId);
+        await EventAttendee_1.EventAttendee.update({ eventId, attendeeId }, { isConfirmed: false });
         return true;
     }
     async markEventAsComplete(id) {
@@ -179,16 +195,20 @@ let EventResolver = class EventResolver {
         console.log(attendeeLoader);
         return attendeeLoader.loadMany(eventAttendeeIds.map((e) => e.attendeeId));
     }
-    async attendeeConnection(event, { eventAttendeeLoader }) {
+    async attendeeConnection(event) {
         const attendeeConnections = await typeorm_1.getConnection().query(`
       select "attendeeId", "isConfirmed"
       from "event_attendee"
       where "eventId" = ${event.id};
     `);
         console.log("Asdsad");
-        console.log(eventAttendeeLoader);
         console.log(attendeeConnections);
-        return eventAttendeeLoader.loadMany(attendeeConnections.map((e) => e.attendeeId));
+        const eventAttendeeIds = attendeeConnections.map((e) => {
+            return { eventId: event.id, attendeeId: e.attendeeId };
+        });
+        console.log("asdasdasdasdsadsd");
+        console.log(eventAttendeeIds);
+        return await EventAttendee_1.EventAttendee.findByIds(eventAttendeeIds);
     }
     async eventAttendees(attendees, id, { attendeeLoader }) {
         console.log("ATTENDEE SUBSCRIPTION");
@@ -258,12 +278,36 @@ __decorate([
 ], EventResolver.prototype, "addNewAttendee", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg("attendeeId")),
+    __param(1, type_graphql_1.Arg("eventId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "removeAttendee", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
     __param(0, type_graphql_1.Arg("id")),
     __param(1, type_graphql_1.Arg("attendeeId")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, Number]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "addExistingAttendee", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg("eventId")),
+    __param(1, type_graphql_1.Arg("attendeeId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "confirmAttendee", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg("eventId")),
+    __param(1, type_graphql_1.Arg("attendeeId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "unconfirmAttendee", null);
 __decorate([
     type_graphql_1.Mutation(() => Event_1.Event),
     __param(0, type_graphql_1.Arg("id")),
@@ -310,9 +354,8 @@ __decorate([
 __decorate([
     type_graphql_1.FieldResolver(() => [EventAttendee_1.EventAttendee]),
     __param(0, type_graphql_1.Root()),
-    __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Event_1.Event, Object]),
+    __metadata("design:paramtypes", [Event_1.Event]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "attendeeConnection", null);
 __decorate([

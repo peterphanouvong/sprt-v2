@@ -15,17 +15,18 @@ const EventSignUpStuff: React.FC<Props> = ({ id }) => {
   );
   return hasSignedUp ? (
     <Box>
-      <Alert mb={2} status='success'>
+      <Alert mb={2} status="success">
         <AlertIcon />
         You've been added to the waitlist for this event!
       </Alert>
-      <Alert status='info'>
+      <Alert status="info">
         <AlertIcon />
+        {/* TODO: remove hard coding beem id*/}
         Please pay on beem to confirm your spot 😊 (__some_beem_id__)
       </Alert>
     </Box>
   ) : (
-    <BaseSection title='Sign up'>
+    <BaseSection title="Sign up">
       <EventSignUpForm
         eventId={parseInt(id)}
         isFull={false}
