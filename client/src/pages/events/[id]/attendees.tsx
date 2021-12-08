@@ -19,11 +19,16 @@ import {
 import { createUrqlClient } from "../../../utils/createUrqlClient";
 import { useIsAuth } from "../../../utils/useIsAuth";
 import { Event } from "../../../generated/graphql";
+import { useIsMobileScreen } from "../../../utils/useIsMobileScreen";
+import { BaseBreadcrumbs } from "../../../components/BaseBreadcrumbs";
 
 interface Props {}
 
 const EventAttendees: React.FC<Props> = ({}) => {
   useIsAuth();
+
+  const isMobile = useIsMobileScreen();
+
   const router = useRouter();
   const { id } = router.query;
 
@@ -63,18 +68,40 @@ const EventAttendees: React.FC<Props> = ({}) => {
       <EventPageOverview event={data?.event as Event} />
 
       <BaseContent flex={1}>
-        <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
-          <EventPageSideNav id={id as string} />
-          <BaseSection title="Attendees">
-            <EventAttendeeTable
-              attendees={
-                (attendees?.eventAttendees as Attendee[]) ||
-                //@ts-ignore
-                data?.event.attendees
-              }
+        {isMobile ? (
+          <>
+            <BaseBreadcrumbs
+              crumbs={[
+                { href: `/events/${id}`, title: "Description" },
+                { href: `/events/${id}/join`, title: "Join event" },
+                { href: `/events/${id}/attendees`, title: "See who's going" },
+              ]}
             />
-          </BaseSection>
-        </Grid>
+
+            <BaseSection title="Attendees">
+              <EventAttendeeTable
+                attendees={
+                  (attendees?.eventAttendees as Attendee[]) ||
+                  //@ts-ignore
+                  data?.event.attendees
+                }
+              />
+            </BaseSection>
+          </>
+        ) : (
+          <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
+            <EventPageSideNav id={id as string} />
+            <BaseSection title="Attendees">
+              <EventAttendeeTable
+                attendees={
+                  (attendees?.eventAttendees as Attendee[]) ||
+                  //@ts-ignore
+                  data?.event.attendees
+                }
+              />
+            </BaseSection>
+          </Grid>
+        )}
       </BaseContent>
     </BaseLayout>
   );
