@@ -1,9 +1,12 @@
-import { AspectRatio, Button, Grid, Spinner, Text } from "@chakra-ui/react";
+import { AspectRatio, Button, Grid, Spinner } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { BaseBreadcrumbs } from "../../../components/BaseBreadcrumbs";
 import { BaseContent } from "../../../components/BaseContent";
+import { BaseDynamicEditor } from "../../../components/BaseDynamicEditor";
 import { BaseLayout } from "../../../components/BaseLayout";
 import { BasePageHeader } from "../../../components/BasePageHeader";
 import { BaseSection } from "../../../components/BaseSection";
@@ -11,13 +14,10 @@ import { EventPageOverview } from "../../../components/EventPageOverview";
 import { EventPageSideNav } from "../../../components/EventPageSideNav";
 import { Event, useEventQuery } from "../../../generated/graphql";
 import { createUrqlClient } from "../../../utils/createUrqlClient";
-import { useIsAuth } from "../../../utils/useIsAuth";
 import { getYoutubeVideoId } from "../../../utils/getYoutubeVideoId";
-import NextLink from "next/link";
-import { BaseDynamicEditor } from "../../../components/BaseDynamicEditor";
 import { parseRichText } from "../../../utils/parseRichText";
+import { useIsAuth } from "../../../utils/useIsAuth";
 import { useIsMobileScreen } from "../../../utils/useIsMobileScreen";
-import { BaseBreadcrumbs } from "../../../components/BaseBreadcrumbs";
 
 interface Props {}
 
