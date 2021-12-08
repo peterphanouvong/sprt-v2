@@ -85,11 +85,15 @@ let EventResolver = class EventResolver {
     async events() {
         return Event_1.Event.find();
     }
-    async liveEvents() {
-        return Event_1.Event.find({ where: { isCompleted: false } });
+    async liveEvents({ req }) {
+        return Event_1.Event.find({
+            where: { isCompleted: false, ownerId: req.session.userId },
+        });
     }
-    async pastEvents() {
-        return Event_1.Event.find({ where: { isCompleted: true } });
+    async pastEvents({ req }) {
+        return Event_1.Event.find({
+            where: { isCompleted: true, ownerId: req.session.userId },
+        });
     }
     async updateEvent(id, input, pubSub) {
         const event = await Event_1.Event.findOne(id);
@@ -246,14 +250,16 @@ __decorate([
 ], EventResolver.prototype, "events", null);
 __decorate([
     type_graphql_1.Query(() => [Event_1.Event]),
+    __param(0, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "liveEvents", null);
 __decorate([
     type_graphql_1.Query(() => [Event_1.Event]),
+    __param(0, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "pastEvents", null);
 __decorate([

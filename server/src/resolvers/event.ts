@@ -93,13 +93,17 @@ export class EventResolver {
   }
 
   @Query(() => [Event])
-  async liveEvents(): Promise<Event[] | undefined> {
-    return Event.find({ where: { isCompleted: false } });
+  async liveEvents(@Ctx() { req }: MyContext): Promise<Event[] | undefined> {
+    return Event.find({
+      where: { isCompleted: false, ownerId: req.session.userId },
+    });
   }
 
   @Query(() => [Event])
-  async pastEvents(): Promise<Event[] | undefined> {
-    return Event.find({ where: { isCompleted: true } });
+  async pastEvents(@Ctx() { req }: MyContext): Promise<Event[] | undefined> {
+    return Event.find({
+      where: { isCompleted: true, ownerId: req.session.userId },
+    });
   }
 
   // update.

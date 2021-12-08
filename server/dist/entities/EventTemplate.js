@@ -96,6 +96,11 @@ __decorate([
     __metadata("design:type", User_1.User)
 ], EventTemplate.prototype, "owner", void 0);
 __decorate([
+    type_graphql_1.Field(() => Number),
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], EventTemplate.prototype, "ownerId", void 0);
+__decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.CreateDateColumn(),
     __metadata("design:type", Date)

@@ -1,4 +1,13 @@
-import { Arg, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
+import { MyContext } from "src/types";
+import {
+  Arg,
+  Ctx,
+  Field,
+  InputType,
+  Mutation,
+  Query,
+  Resolver,
+} from "type-graphql";
 import { getConnection } from "typeorm";
 import { EventTemplate } from "../entities/EventTemplate";
 
@@ -50,8 +59,10 @@ class EventTemplateInput {
 @Resolver(EventTemplate)
 export class EventTemplateResolver {
   @Query(() => [EventTemplate])
-  eventTemplates(): Promise<EventTemplate[] | undefined> {
-    return EventTemplate.find();
+  eventTemplates(
+    @Ctx() { req }: MyContext
+  ): Promise<EventTemplate[] | undefined> {
+    return EventTemplate.find({ where: { ownerId: req.session.userId } });
   }
 
   @Query(() => EventTemplate)
@@ -61,9 +72,13 @@ export class EventTemplateResolver {
 
   @Mutation(() => EventTemplate)
   async createEventTemplate(
-    @Arg("input") input: EventTemplateInput
+    @Arg("input") input: EventTemplateInput,
+    @Ctx() { req }: MyContext
   ): Promise<EventTemplate | undefined> {
     const eventTemplate = await EventTemplate.create(input).save();
+    await EventTemplate.update(eventTemplate.id, {
+      ownerId: req.session.userId,
+    });
     return eventTemplate;
   }
 
