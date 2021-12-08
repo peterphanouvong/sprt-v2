@@ -1,5 +1,6 @@
 import { Link } from "@chakra-ui/layout";
 import {
+  Box,
   IconButton,
   Menu,
   MenuButton,
@@ -40,74 +41,78 @@ const LiveEventTable: React.FC<Props> = ({ liveEvents }) => {
 
   return liveEvents.length > 0 ? (
     <>
-      <BaseTable>
-        <BaseThead>
-          <BaseTr>
-            <BaseTh>Title</BaseTh>
-            <BaseTh>Date</BaseTh>
-            <BaseTh>Attendees</BaseTh>
-            <BaseTh>Waitlist</BaseTh>
-            <BaseTh width="0"></BaseTh>
-          </BaseTr>
-        </BaseThead>
-        <BaseTbody>
-          {liveEvents.map((event) => (
-            <BaseTr key={event.id}>
-              <BaseTd>
-                <NextLink href={`/events/${event.id}/sign-up`}>
-                  <Link>{event.title}</Link>
-                </NextLink>
-              </BaseTd>
-              <BaseTd>{parseDatePretty(event.date)}</BaseTd>
-              <BaseTd>
-                {event.capacity
-                  ? event.numConfirmed + "/" + event.capacity
-                  : event.numConfirmed}
-              </BaseTd>
-              <BaseTd>{event.numWaitlist}</BaseTd>
-              <BaseTd width="0">
-                <Menu>
-                  <MenuButton
-                    as={IconButton}
-                    aria-label="Options"
-                    icon={<BsThreeDotsVertical />}
-                    variant="ghost"
-                    colorScheme="gray"
-                    rounded="full"
-                  />
-                  <MenuList>
-                    <MenuItem
-                      onClick={async () => {
-                        const res = await markEventAsComplete({ id: event.id });
-                        if (res.data?.markEventAsComplete) {
-                          toast({
-                            description: `${event.title} marked as complete`,
-                            isClosable: true,
-                            position: "top",
-                            status: "success",
-                            variant: "subtle",
-                          });
-                        } else {
-                          toast({
-                            description: "Something went wrong",
-                            isClosable: true,
-                            position: "top",
-                            status: "error",
-                            variant: "subtle",
-                          });
-                        }
-                      }}
-                    >
-                      Mark as complete
-                    </MenuItem>
-                    <EventDeleteModal event={event} />
-                  </MenuList>
-                </Menu>
-              </BaseTd>
+      <Box overflowX="auto">
+        <BaseTable>
+          <BaseThead>
+            <BaseTr>
+              <BaseTh>Title</BaseTh>
+              <BaseTh>Date</BaseTh>
+              <BaseTh>Attendees</BaseTh>
+              <BaseTh>Waitlist</BaseTh>
+              <BaseTh width="0"></BaseTh>
             </BaseTr>
-          ))}
-        </BaseTbody>
-      </BaseTable>
+          </BaseThead>
+          <BaseTbody>
+            {liveEvents.map((event) => (
+              <BaseTr key={event.id}>
+                <BaseTd>
+                  <NextLink href={`/events/${event.id}/join`}>
+                    <Link>{event.title}</Link>
+                  </NextLink>
+                </BaseTd>
+                <BaseTd>{parseDatePretty(event.date)}</BaseTd>
+                <BaseTd>
+                  {event.capacity
+                    ? event.numConfirmed + "/" + event.capacity
+                    : event.numConfirmed}
+                </BaseTd>
+                <BaseTd>{event.numWaitlist}</BaseTd>
+                <BaseTd width="0">
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      aria-label="Options"
+                      icon={<BsThreeDotsVertical />}
+                      variant="ghost"
+                      colorScheme="gray"
+                      rounded="full"
+                    />
+                    <MenuList>
+                      <MenuItem
+                        onClick={async () => {
+                          const res = await markEventAsComplete({
+                            id: event.id,
+                          });
+                          if (res.data?.markEventAsComplete) {
+                            toast({
+                              description: `${event.title} marked as complete`,
+                              isClosable: true,
+                              position: "top",
+                              status: "success",
+                              variant: "subtle",
+                            });
+                          } else {
+                            toast({
+                              description: "Something went wrong",
+                              isClosable: true,
+                              position: "top",
+                              status: "error",
+                              variant: "subtle",
+                            });
+                          }
+                        }}
+                      >
+                        Mark as complete
+                      </MenuItem>
+                      <EventDeleteModal event={event} />
+                    </MenuList>
+                  </Menu>
+                </BaseTd>
+              </BaseTr>
+            ))}
+          </BaseTbody>
+        </BaseTable>
+      </Box>
     </>
   ) : (
     <div>No live events</div>

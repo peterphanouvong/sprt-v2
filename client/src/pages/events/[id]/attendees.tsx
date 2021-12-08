@@ -29,11 +29,17 @@ import {
 } from "../../../generated/graphql";
 import { createUrqlClient } from "../../../utils/createUrqlClient";
 import { useIsAuth } from "../../../utils/useIsAuth";
+import { useIsMobileScreen } from "../../../utils/useIsMobileScreen";
+import { BaseBreadcrumbs } from "../../../components/BaseBreadcrumbs";
+import { BaseSection } from "../../../components/BaseSection";
 
 interface Props {}
 
 const EventAttendees: React.FC<Props> = ({}) => {
-  // useIsAuth();
+  useIsAuth();
+
+  const isMobile = useIsMobileScreen();
+
   const router = useRouter();
   const { id } = router.query;
   const [isViewAdmin, setIsViewAdmin] = React.useState<boolean>(false);
@@ -80,47 +86,102 @@ const EventAttendees: React.FC<Props> = ({}) => {
       <EventPageOverview event={data?.event as Event} />
 
       <BaseContent flex={1}>
-        <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
-          <EventPageSideNav id={id as string} />
-          <Box>
-            <HStack alignItems="center">
-              <Heading as="h6" variant="h6"></Heading>
-              <Spacer />
-              {data?.event.owner.id === me?.me?.id && (
-                <>
-                  <FormLabel htmlFor="admin-toggle">
-                    <Text variant="body-3">View as admin</Text>
-                  </FormLabel>
-                  <Switch
-                    id="admin-toggle"
-                    size="md"
-                    onChange={() => setIsViewAdmin(!isViewAdmin)}
+        {isMobile ? (
+          <>
+            <BaseBreadcrumbs
+              crumbs={[
+                { href: `/events/${id}`, title: "Description" },
+                { href: `/events/${id}/join`, title: "Join event" },
+                { href: `/events/${id}/attendees`, title: "See who's going" },
+              ]}
+            />
+
+            <BaseSection title="Attendees">
+              <Box>
+                <HStack alignItems="center">
+                  <Heading as="h6" variant="h6"></Heading>
+                  <Spacer />
+                  {data?.event.owner.id === me?.me?.id && (
+                    <>
+                      <FormLabel htmlFor="admin-toggle">
+                        <Text variant="body-3">View as admin</Text>
+                      </FormLabel>
+                      <Switch
+                        id="admin-toggle"
+                        size="md"
+                        onChange={() => setIsViewAdmin(!isViewAdmin)}
+                      />
+                    </>
+                  )}
+                </HStack>
+                {isViewAdmin ? (
+                  <EventAttendeeTableAdminView
+                    attendees={
+                      (attendees?.eventAttendees as Attendee[]) ||
+                      //@ts-ignore
+                      data?.event.attendees
+                    }
+                    // @ts-ignore
+                    // attendees={attendeesData}
+                    eventId={data?.event.id as number}
                   />
-                </>
-              )}
-            </HStack>
-            {isViewAdmin ? (
-              <EventAttendeeTableAdminView
-                attendees={
-                  (attendees?.eventAttendees as Attendee[]) ||
-                  //@ts-ignore
-                  data?.event.attendees
-                }
-                // @ts-ignore
-                // attendees={attendeesData}
-                eventId={data?.event.id as number}
-              />
-            ) : (
-              <EventAttendeeTable
-                attendees={
-                  (attendees?.eventAttendees as Attendee[]) ||
-                  //@ts-ignore
-                  data?.event.attendees
-                }
-              />
-            )}
-          </Box>
-        </Grid>
+                ) : (
+                  <EventAttendeeTable
+                    attendees={
+                      (attendees?.eventAttendees as Attendee[]) ||
+                      //@ts-ignore
+                      data?.event.attendees
+                    }
+                  />
+                )}
+              </Box>
+            </BaseSection>
+          </>
+        ) : (
+          <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
+            <EventPageSideNav id={id as string} />
+            <BaseSection title="Attendees">
+              <Box>
+                <HStack alignItems="center">
+                  <Heading as="h6" variant="h6"></Heading>
+                  <Spacer />
+                  {data?.event.owner.id === me?.me?.id && (
+                    <>
+                      <FormLabel htmlFor="admin-toggle">
+                        <Text variant="body-3">View as admin</Text>
+                      </FormLabel>
+                      <Switch
+                        id="admin-toggle"
+                        size="md"
+                        onChange={() => setIsViewAdmin(!isViewAdmin)}
+                      />
+                    </>
+                  )}
+                </HStack>
+                {isViewAdmin ? (
+                  <EventAttendeeTableAdminView
+                    attendees={
+                      (attendees?.eventAttendees as Attendee[]) ||
+                      //@ts-ignore
+                      data?.event.attendees
+                    }
+                    // @ts-ignore
+                    // attendees={attendeesData}
+                    eventId={data?.event.id as number}
+                  />
+                ) : (
+                  <EventAttendeeTable
+                    attendees={
+                      (attendees?.eventAttendees as Attendee[]) ||
+                      //@ts-ignore
+                      data?.event.attendees
+                    }
+                  />
+                )}
+              </Box>
+            </BaseSection>
+          </Grid>
+        )}
       </BaseContent>
     </BaseLayout>
   );

@@ -16,11 +16,16 @@ import { getYoutubeVideoId } from "../../../utils/getYoutubeVideoId";
 import NextLink from "next/link";
 import { BaseDynamicEditor } from "../../../components/BaseDynamicEditor";
 import { parseRichText } from "../../../utils/parseRichText";
+import { useIsMobileScreen } from "../../../utils/useIsMobileScreen";
+import { BaseBreadcrumbs } from "../../../components/BaseBreadcrumbs";
 
 interface Props {}
 
 const EventOverview: React.FC<Props> = ({}) => {
-  // useIsAuth();
+  useIsAuth();
+
+  const isMobile = useIsMobileScreen();
+
   const router = useRouter();
   const { id } = router.query;
 
@@ -48,34 +53,68 @@ const EventOverview: React.FC<Props> = ({}) => {
       </Head>
       <BasePageHeader>{data?.event.title}</BasePageHeader>
       <EventPageOverview event={data?.event as Event} />
-
       <BaseContent flex={1}>
-        <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
-          <EventPageSideNav id={id as string} />
-          <BaseSection title="Description">
-            <BaseDynamicEditor
-              name="description"
-              initialValue={parseRichText(data?.event.description || "")}
-              required
-              readOnly
+        {isMobile ? (
+          <>
+            <BaseBreadcrumbs
+              crumbs={[
+                { href: `events/${id}`, title: "Description" },
+                { href: `/events/${id}/join`, title: "Join event" },
+                { href: `/events/${id}/attendees`, title: "See who's going" },
+              ]}
             />
-            {data?.event.youtubeLink && (
-              <AspectRatio ratio={16 / 9} mt={8}>
-                <iframe
-                  title="naruto"
-                  src={`//www.youtube.com/embed/${getYoutubeVideoId(
-                    data?.event.youtubeLink as string
-                  )}`}
-                  allowFullScreen
-                />
-              </AspectRatio>
-            )}
+            <BaseSection title="Description">
+              <BaseDynamicEditor
+                name="description"
+                initialValue={parseRichText(data?.event.description || "")}
+                required
+                readOnly
+              />
+              {data?.event.youtubeLink && (
+                <AspectRatio ratio={16 / 9}>
+                  <iframe
+                    title="naruto"
+                    src={`//www.youtube.com/embed/${getYoutubeVideoId(
+                      data?.event.youtubeLink as string
+                    )}`}
+                    allowFullScreen
+                  />
+                </AspectRatio>
+              )}
 
-            <NextLink href={`/events/${id}/sign-up`}>
-              <Button mt={4}>Sign up!</Button>
-            </NextLink>
-          </BaseSection>
-        </Grid>
+              <NextLink href={`/events/${id}/join`}>
+                <Button mt={4}>Join this event</Button>
+              </NextLink>
+            </BaseSection>
+          </>
+        ) : (
+          <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
+            <EventPageSideNav id={id as string} />
+            <BaseSection title="Description">
+              <BaseDynamicEditor
+                name="description"
+                initialValue={parseRichText(data?.event.description || "")}
+                required
+                readOnly
+              />
+              {data?.event.youtubeLink && (
+                <AspectRatio ratio={16 / 9}>
+                  <iframe
+                    title="naruto"
+                    src={`//www.youtube.com/embed/${getYoutubeVideoId(
+                      data?.event.youtubeLink as string
+                    )}`}
+                    allowFullScreen
+                  />
+                </AspectRatio>
+              )}
+
+              <NextLink href={`/events/${id}/join`}>
+                <Button mt={4}>Join this event</Button>
+              </NextLink>
+            </BaseSection>
+          </Grid>
+        )}
       </BaseContent>
     </BaseLayout>
   );

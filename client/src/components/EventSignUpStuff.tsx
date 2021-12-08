@@ -26,7 +26,7 @@ const EventSignUpStuff: React.FC<Props> = ({ id }) => {
       </Alert>
     </Box>
   ) : (
-    <BaseSection title="Sign up">
+    <BaseSection title="Join event">
       <EventSignUpForm
         eventId={parseInt(id)}
         isFull={false}
