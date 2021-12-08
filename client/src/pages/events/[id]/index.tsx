@@ -1,9 +1,12 @@
 import { AspectRatio, Button, Grid, Spinner } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { BaseBreadcrumbs } from "../../../components/BaseBreadcrumbs";
 import { BaseContent } from "../../../components/BaseContent";
+import { BaseDynamicEditor } from "../../../components/BaseDynamicEditor";
 import { BaseLayout } from "../../../components/BaseLayout";
 import { BasePageHeader } from "../../../components/BasePageHeader";
 import { BaseSection } from "../../../components/BaseSection";
@@ -11,11 +14,10 @@ import { EventPageOverview } from "../../../components/EventPageOverview";
 import { EventPageSideNav } from "../../../components/EventPageSideNav";
 import { Event, useEventQuery } from "../../../generated/graphql";
 import { createUrqlClient } from "../../../utils/createUrqlClient";
-import { useIsAuth } from "../../../utils/useIsAuth";
 import { getYoutubeVideoId } from "../../../utils/getYoutubeVideoId";
-import NextLink from "next/link";
+import { parseRichText } from "../../../utils/parseRichText";
+import { useIsAuth } from "../../../utils/useIsAuth";
 import { useIsMobileScreen } from "../../../utils/useIsMobileScreen";
-import { BaseBreadcrumbs } from "../../../components/BaseBreadcrumbs";
 
 interface Props {}
 
@@ -33,6 +35,8 @@ const EventOverview: React.FC<Props> = ({}) => {
       id: id as string,
     },
   });
+
+  console.log(data);
 
   if (fetching) {
     return <Spinner />;
@@ -60,6 +64,12 @@ const EventOverview: React.FC<Props> = ({}) => {
               ]}
             />
             <BaseSection title="Description">
+              <BaseDynamicEditor
+                name="description"
+                initialValue={parseRichText(data?.event.description || "")}
+                required
+                readOnly
+              />
               {data?.event.youtubeLink && (
                 <AspectRatio ratio={16 / 9}>
                   <iframe
@@ -81,6 +91,12 @@ const EventOverview: React.FC<Props> = ({}) => {
           <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
             <EventPageSideNav id={id as string} />
             <BaseSection title="Description">
+              <BaseDynamicEditor
+                name="description"
+                initialValue={parseRichText(data?.event.description || "")}
+                required
+                readOnly
+              />
               {data?.event.youtubeLink && (
                 <AspectRatio ratio={16 / 9}>
                   <iframe

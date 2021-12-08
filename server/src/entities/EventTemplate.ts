@@ -77,6 +77,10 @@ export class EventTemplate extends BaseEntity {
   @ManyToOne(() => User, (user) => user.eventTemplates)
   owner: User;
 
+  @Field(() => Number)
+  @Column()
+  ownerId: number;
+
   @Field(() => String)
   @CreateDateColumn()
   createdAt: Date;

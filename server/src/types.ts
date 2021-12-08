@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { Redis } from "ioredis";
 import { createAttendeeLoader } from "./utils/createAttendeeLoader";
+import { createEventAttendeeLoader } from "./utils/createEventAttendeeLoader";
+
 // import { createClubLoader } from "./utils/createClubLoader";
 // import { createEventLoader } from "./utils/createEventLoader";
 // import { createUserLoader } from "./utils/createUserLoader";
@@ -23,6 +25,7 @@ export type MyContext = {
   res: Response;
   redis: Redis;
   attendeeLoader: ReturnType<typeof createAttendeeLoader>;
+  eventAttendeeLoader: ReturnType<typeof createEventAttendeeLoader>;
   // clubLoader: ReturnType<typeof createClubLoader>;
   // eventLoader: ReturnType<typeof createEventLoader>;
 };

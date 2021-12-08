@@ -70,6 +70,7 @@ export type EventAttendee = {
   eventId: Scalars['Float'];
   attendeeId: Scalars['Float'];
   isConfirmed?: Maybe<Scalars['Boolean']>;
+  joinTime: Scalars['String'];
 };
 
 export type EventInput = {
@@ -141,7 +142,10 @@ export type Mutation = {
   createEvent: Event;
   updateEvent: Event;
   addNewAttendee: Scalars['Boolean'];
+  removeAttendee: Scalars['Boolean'];
   addExistingAttendee: Scalars['Boolean'];
+  confirmAttendee: Scalars['Boolean'];
+  unconfirmAttendee: Scalars['Boolean'];
   markEventAsComplete: Event;
   markEventAsLive: Event;
   deleteEvent: Scalars['Boolean'];
@@ -188,9 +192,27 @@ export type MutationAddNewAttendeeArgs = {
 };
 
 
+export type MutationRemoveAttendeeArgs = {
+  eventId: Scalars['Float'];
+  attendeeId: Scalars['Float'];
+};
+
+
 export type MutationAddExistingAttendeeArgs = {
   attendeeId: Scalars['Float'];
   id: Scalars['Float'];
+};
+
+
+export type MutationConfirmAttendeeArgs = {
+  attendeeId: Scalars['Float'];
+  eventId: Scalars['Float'];
+};
+
+
+export type MutationUnconfirmAttendeeArgs = {
+  attendeeId: Scalars['Float'];
+  eventId: Scalars['Float'];
 };
 
 
@@ -422,6 +444,14 @@ export type ChangePasswordMutationVariables = Exact<{
 
 export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string }>>, user?: Maybe<{ __typename?: 'User', id: number, clubName: string, email: string }> } };
 
+export type ConfirmAttendeeMutationVariables = Exact<{
+  attendeeId: Scalars['Float'];
+  eventId: Scalars['Float'];
+}>;
+
+
+export type ConfirmAttendeeMutation = { __typename?: 'Mutation', confirmAttendee: boolean };
+
 export type CreateEventMutationVariables = Exact<{
   input: EventInput;
 }>;
@@ -506,6 +536,22 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string }>>, user?: Maybe<{ __typename?: 'User', id: number, clubName: string, email: string }> } };
 
+export type RemoveAttendeeMutationVariables = Exact<{
+  eventId: Scalars['Float'];
+  attendeeId: Scalars['Float'];
+}>;
+
+
+export type RemoveAttendeeMutation = { __typename?: 'Mutation', removeAttendee: boolean };
+
+export type UnconfirmAttendeeMutationVariables = Exact<{
+  attendeeId: Scalars['Float'];
+  eventId: Scalars['Float'];
+}>;
+
+
+export type UnconfirmAttendeeMutation = { __typename?: 'Mutation', unconfirmAttendee: boolean };
+
 export type UpdateQuickEventMutationVariables = Exact<{
   updateQuickEventInput: QuickEventInput;
   updateQuickEventId: Scalars['Float'];
@@ -534,7 +580,7 @@ export type EventQueryVariables = Exact<{
 }>;
 
 
-export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', venue?: Maybe<string>, address?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, clubBeemId: string, price?: Maybe<number>, youtubeLink?: Maybe<string>, id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number, owner: { __typename?: 'User', id: number, email: string, clubName: string }, attendees: Array<{ __typename?: 'Attendee', id: number, firstname: string, lastname: string, email?: Maybe<string>, phoneNumber: string, beemId: string, updatedAt: string, createdAt: string }> } };
+export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', venue?: Maybe<string>, address?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, clubBeemId: string, price?: Maybe<number>, youtubeLink?: Maybe<string>, description?: Maybe<string>, id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number, owner: { __typename?: 'User', id: number, email: string, clubName: string }, attendees: Array<{ __typename?: 'Attendee', id: number, firstname: string, lastname: string, email?: Maybe<string>, phoneNumber: string, beemId: string, updatedAt: string, createdAt: string }>, attendeeConnection: Array<{ __typename?: 'EventAttendee', attendeeId: number, isConfirmed?: Maybe<boolean> }> } };
 
 export type EventTemplateQueryVariables = Exact<{
   eventTemplateId: Scalars['Float'];
@@ -669,6 +715,15 @@ export const ChangePasswordDocument = gql`
 
 export function useChangePasswordMutation() {
   return Urql.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument);
+};
+export const ConfirmAttendeeDocument = gql`
+    mutation ConfirmAttendee($attendeeId: Float!, $eventId: Float!) {
+  confirmAttendee(attendeeId: $attendeeId, eventId: $eventId)
+}
+    `;
+
+export function useConfirmAttendeeMutation() {
+  return Urql.useMutation<ConfirmAttendeeMutation, ConfirmAttendeeMutationVariables>(ConfirmAttendeeDocument);
 };
 export const CreateEventDocument = gql`
     mutation CreateEvent($input: EventInput!) {
@@ -806,6 +861,24 @@ export const RegisterDocument = gql`
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
+export const RemoveAttendeeDocument = gql`
+    mutation RemoveAttendee($eventId: Float!, $attendeeId: Float!) {
+  removeAttendee(eventId: $eventId, attendeeId: $attendeeId)
+}
+    `;
+
+export function useRemoveAttendeeMutation() {
+  return Urql.useMutation<RemoveAttendeeMutation, RemoveAttendeeMutationVariables>(RemoveAttendeeDocument);
+};
+export const UnconfirmAttendeeDocument = gql`
+    mutation UnconfirmAttendee($attendeeId: Float!, $eventId: Float!) {
+  unconfirmAttendee(attendeeId: $attendeeId, eventId: $eventId)
+}
+    `;
+
+export function useUnconfirmAttendeeMutation() {
+  return Urql.useMutation<UnconfirmAttendeeMutation, UnconfirmAttendeeMutationVariables>(UnconfirmAttendeeDocument);
+};
 export const UpdateQuickEventDocument = gql`
     mutation UpdateQuickEvent($updateQuickEventInput: QuickEventInput!, $updateQuickEventId: Float!) {
   updateQuickEvent(input: $updateQuickEventInput, id: $updateQuickEventId) {
@@ -862,6 +935,7 @@ export const EventDocument = gql`
     clubBeemId
     price
     youtubeLink
+    description
     owner {
       id
       email
@@ -876,6 +950,10 @@ export const EventDocument = gql`
       beemId
       updatedAt
       createdAt
+    }
+    attendeeConnection {
+      attendeeId
+      isConfirmed
     }
   }
 }

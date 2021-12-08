@@ -39,6 +39,8 @@ const EventSignUpForm: React.FC<Props> = ({
   const [, addNewAttendee] = useAddNewAttendeeMutation();
 
   console.log(isFull);
+
+  // TODO: add cash option
   return (
     <Formik
       initialValues={{

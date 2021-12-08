@@ -21,6 +21,7 @@ const EventSignUpStuff: React.FC<Props> = ({ id }) => {
       </Alert>
       <Alert status="info">
         <AlertIcon />
+        {/* TODO: remove hard coding beem id*/}
         Please pay on beem to confirm your spot 😊 (__some_beem_id__)
       </Alert>
     </Box>

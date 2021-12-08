@@ -78,14 +78,17 @@ EventTemplateInput = __decorate([
     type_graphql_1.InputType()
 ], EventTemplateInput);
 let EventTemplateResolver = class EventTemplateResolver {
-    eventTemplates() {
-        return EventTemplate_1.EventTemplate.find();
+    eventTemplates({ req }) {
+        return EventTemplate_1.EventTemplate.find({ where: { ownerId: req.session.userId } });
     }
     eventTemplate(id) {
         return EventTemplate_1.EventTemplate.findOne({ id });
     }
-    async createEventTemplate(input) {
+    async createEventTemplate(input, { req }) {
         const eventTemplate = await EventTemplate_1.EventTemplate.create(input).save();
+        await EventTemplate_1.EventTemplate.update(eventTemplate.id, {
+            ownerId: req.session.userId,
+        });
         return eventTemplate;
     }
     async deleteEventTemplate(templateId) {
@@ -109,8 +112,9 @@ let EventTemplateResolver = class EventTemplateResolver {
 };
 __decorate([
     type_graphql_1.Query(() => [EventTemplate_1.EventTemplate]),
+    __param(0, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], EventTemplateResolver.prototype, "eventTemplates", null);
 __decorate([
@@ -123,8 +127,9 @@ __decorate([
 __decorate([
     type_graphql_1.Mutation(() => EventTemplate_1.EventTemplate),
     __param(0, type_graphql_1.Arg("input")),
+    __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [EventTemplateInput]),
+    __metadata("design:paramtypes", [EventTemplateInput, Object]),
     __metadata("design:returntype", Promise)
 ], EventTemplateResolver.prototype, "createEventTemplate", null);
 __decorate([

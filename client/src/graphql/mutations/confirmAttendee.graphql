@@ -1,0 +1,3 @@
+mutation ConfirmAttendee($attendeeId: Float!, $eventId: Float!) {
+  confirmAttendee(attendeeId: $attendeeId, eventId: $eventId)
+}

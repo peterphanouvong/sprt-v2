@@ -93,13 +93,17 @@ export class EventResolver {
   }
 
   @Query(() => [Event])
-  async liveEvents(): Promise<Event[] | undefined> {
-    return Event.find({ where: { isCompleted: false } });
+  async liveEvents(@Ctx() { req }: MyContext): Promise<Event[] | undefined> {
+    return Event.find({
+      where: { isCompleted: false, ownerId: req.session.userId },
+    });
   }
 
   @Query(() => [Event])
-  async pastEvents(): Promise<Event[] | undefined> {
-    return Event.find({ where: { isCompleted: true } });
+  async pastEvents(@Ctx() { req }: MyContext): Promise<Event[] | undefined> {
+    return Event.find({
+      where: { isCompleted: true, ownerId: req.session.userId },
+    });
   }
 
   // update.
@@ -148,6 +152,15 @@ export class EventResolver {
   }
 
   @Mutation(() => Boolean)
+  async removeAttendee(
+    @Arg("attendeeId") attendeeId: number,
+    @Arg("eventId") eventId: number
+  ): Promise<boolean> {
+    await EventAttendee.delete({ attendeeId, eventId });
+    return true;
+  }
+
+  @Mutation(() => Boolean)
   async addExistingAttendee(
     @Arg("id") id: number,
     @Arg("attendeeId") attendeeId: number
@@ -157,6 +170,28 @@ export class EventResolver {
       attendeeId: attendeeId,
     });
 
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  async confirmAttendee(
+    @Arg("eventId") eventId: number,
+    @Arg("attendeeId") attendeeId: number
+  ): Promise<boolean> {
+    console.log(eventId);
+    console.log(attendeeId);
+    await EventAttendee.update({ eventId, attendeeId }, { isConfirmed: true });
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  async unconfirmAttendee(
+    @Arg("eventId") eventId: number,
+    @Arg("attendeeId") attendeeId: number
+  ): Promise<boolean> {
+    console.log(eventId);
+    console.log(attendeeId);
+    await EventAttendee.update({ eventId, attendeeId }, { isConfirmed: false });
     return true;
   }
 
@@ -235,6 +270,36 @@ export class EventResolver {
     return attendeeLoader.loadMany(
       eventAttendeeIds.map((e: { attendeeId: number }) => e.attendeeId)
     );
+  }
+
+  @FieldResolver(() => [EventAttendee])
+  async attendeeConnection(@Root() event: Event) {
+    // console.log(event);
+    const attendeeConnections = await getConnection().query(`
+      select "attendeeId", "isConfirmed"
+      from "event_attendee"
+      where "eventId" = ${event.id};
+    `);
+    console.log("Asdsad");
+    // console.log(eventAttendeeLoader);
+    console.log(attendeeConnections);
+
+    const eventAttendeeIds = attendeeConnections.map(
+      (e: { attendeeId: number; isConfirmed: boolean }) => {
+        return { eventId: event.id, attendeeId: e.attendeeId };
+      }
+    );
+    console.log("asdasdasdasdsadsd");
+    console.log(eventAttendeeIds);
+    return await EventAttendee.findByIds(eventAttendeeIds);
+    // eventAttendees.forEach((u) => {
+    //   console.log("123");
+    //   console.log(u);
+    // });
+    // return eventAttendees;
+    // return eventAttendeeLoader.loadMany(
+    //   attendeeConnections.map((e: { attendeeId: number }) => e.attendeeId)
+    // );
   }
 
   @Subscription(() => [Attendee], {
