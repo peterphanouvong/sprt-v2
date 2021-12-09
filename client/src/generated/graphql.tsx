@@ -70,7 +70,8 @@ export type EventAttendee = {
   eventId: Scalars['Float'];
   attendeeId: Scalars['Float'];
   isConfirmed?: Maybe<Scalars['Boolean']>;
-  joinTime: Scalars['String'];
+  joinTime?: Maybe<Scalars['String']>;
+  attendee: Attendee;
 };
 
 export type EventInput = {
@@ -106,6 +107,7 @@ export type EventTemplate = {
   capacity?: Maybe<Scalars['Float']>;
   clubBeemId?: Maybe<Scalars['String']>;
   owner: User;
+  ownerId: Scalars['Float'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   level?: Maybe<Scalars['String']>;
@@ -149,6 +151,7 @@ export type Mutation = {
   markEventAsComplete: Event;
   markEventAsLive: Event;
   deleteEvent: Scalars['Boolean'];
+  eventAttendeesTrigger: Array<EventAttendee>;
   createEventTemplate: EventTemplate;
   deleteEventTemplate: Scalars['Boolean'];
   updateEventTemplate?: Maybe<EventTemplate>;
@@ -228,6 +231,11 @@ export type MutationMarkEventAsLiveArgs = {
 
 export type MutationDeleteEventArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationEventAttendeesTriggerArgs = {
+  id: Scalars['Float'];
 };
 
 
@@ -371,7 +379,7 @@ export type QuickEventUserInput = {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  eventAttendees: Array<Attendee>;
+  eventAttendees: Array<EventAttendee>;
   newQuickEvent: QuickEvent;
 };
 
@@ -486,6 +494,13 @@ export type DeleteEventTemplateMutationVariables = Exact<{
 
 
 export type DeleteEventTemplateMutation = { __typename?: 'Mutation', deleteEventTemplate: boolean };
+
+export type EventAttendeesTriggerMutationVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type EventAttendeesTriggerMutation = { __typename?: 'Mutation', eventAttendeesTrigger: Array<{ __typename?: 'EventAttendee', isConfirmed?: Maybe<boolean>, attendee: { __typename?: 'Attendee', id: number, lastname: string, firstname: string } }> };
 
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
@@ -621,7 +636,7 @@ export type EventAttendeesSubscriptionVariables = Exact<{
 }>;
 
 
-export type EventAttendeesSubscription = { __typename?: 'Subscription', eventAttendees: Array<{ __typename?: 'Attendee', id: number, firstname: string, lastname: string, email?: Maybe<string>, phoneNumber: string, beemId: string, updatedAt: string, createdAt: string }> };
+export type EventAttendeesSubscription = { __typename?: 'Subscription', eventAttendees: Array<{ __typename?: 'EventAttendee', eventId: number, attendeeId: number, isConfirmed?: Maybe<boolean>, attendee: { __typename?: 'Attendee', id: number, lastname: string, firstname: string, email?: Maybe<string>, beemId: string, phoneNumber: string, createdAt: string, updatedAt: string } }> };
 
 export type NewQuickEventSubscriptionVariables = Exact<{
   newQuickEventId: Scalars['Float'];
@@ -781,6 +796,22 @@ export const DeleteEventTemplateDocument = gql`
 
 export function useDeleteEventTemplateMutation() {
   return Urql.useMutation<DeleteEventTemplateMutation, DeleteEventTemplateMutationVariables>(DeleteEventTemplateDocument);
+};
+export const EventAttendeesTriggerDocument = gql`
+    mutation eventAttendeesTrigger($id: Float!) {
+  eventAttendeesTrigger(id: $id) {
+    isConfirmed
+    attendee {
+      id
+      lastname
+      firstname
+    }
+  }
+}
+    `;
+
+export function useEventAttendeesTriggerMutation() {
+  return Urql.useMutation<EventAttendeesTriggerMutation, EventAttendeesTriggerMutationVariables>(EventAttendeesTriggerDocument);
 };
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {
@@ -1037,14 +1068,19 @@ export function useQuickEventQuery(options: Omit<Urql.UseQueryArgs<QuickEventQue
 export const EventAttendeesDocument = gql`
     subscription eventAttendees($id: Float!) {
   eventAttendees(id: $id) {
-    id
-    firstname
-    lastname
-    email
-    phoneNumber
-    beemId
-    updatedAt
-    createdAt
+    eventId
+    attendeeId
+    isConfirmed
+    attendee {
+      id
+      lastname
+      firstname
+      email
+      beemId
+      phoneNumber
+      createdAt
+      updatedAt
+    }
   }
 }
     `;

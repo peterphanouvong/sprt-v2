@@ -18,7 +18,7 @@ export class EventAttendee extends BaseEntity {
   @Field(() => Boolean, { defaultValue: false })
   isConfirmed: boolean;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   joinTime: Date;
 
   @ManyToOne(() => Event, (event) => event.attendeeConnection, {
@@ -29,5 +29,6 @@ export class EventAttendee extends BaseEntity {
   @ManyToOne(() => Attendee, (attendee) => attendee.eventConnection, {
     onDelete: "CASCADE",
   })
+  @Field(() => Attendee)
   attendee: Attendee;
 }

@@ -110,15 +110,13 @@ export class EventResolver {
   @Mutation(() => Event)
   async updateEvent(
     @Arg("id") id: string,
-    @Arg("input") input: EventInput,
-    @PubSub() pubSub: PubSubEngine
+    @Arg("input") input: EventInput
   ): Promise<Event | undefined> {
     const event = await Event.findOne(id);
     if (!event) {
       return undefined;
     }
     await Event.merge(event, input).save();
-    await pubSub.publish(`EVENT-${id}`, event);
     return event;
   }
 
@@ -126,7 +124,6 @@ export class EventResolver {
   async addNewAttendee(
     @Arg("id") id: number,
     @Arg("input") input: AttendeeInput,
-    @Ctx() { attendeeLoader }: MyContext,
     @PubSub() pubSub: PubSubEngine
   ): Promise<boolean> {
     const createAttendee = new AttendeeResolver().createAttendee;
@@ -137,26 +134,28 @@ export class EventResolver {
       attendeeId: res!.id,
     });
 
-    const eventAttendeeIds = await getConnection().query(`
-      select "attendeeId" 
-      from "event_attendee"
-      where "eventId" = ${id};
-    `);
-
-    const attendees = attendeeLoader.loadMany(
-      eventAttendeeIds.map((e: { attendeeId: number }) => e.attendeeId)
+    pubSub.publish(
+      `EVENT-${id}`,
+      EventAttendee.find({ where: { eventId: id }, relations: ["attendee"] })
     );
 
-    await pubSub.publish(`EVENT-${id}`, attendees);
     return true;
   }
 
   @Mutation(() => Boolean)
   async removeAttendee(
     @Arg("attendeeId") attendeeId: number,
-    @Arg("eventId") eventId: number
+    @Arg("eventId") eventId: number,
+    @PubSub() pubSub: PubSubEngine
   ): Promise<boolean> {
     await EventAttendee.delete({ attendeeId, eventId });
+    pubSub.publish(
+      `EVENT-${eventId}`,
+      EventAttendee.find({
+        where: { eventId: eventId },
+        relations: ["attendee"],
+      })
+    );
     return true;
   }
 
@@ -176,22 +175,38 @@ export class EventResolver {
   @Mutation(() => Boolean)
   async confirmAttendee(
     @Arg("eventId") eventId: number,
-    @Arg("attendeeId") attendeeId: number
+    @Arg("attendeeId") attendeeId: number,
+    @PubSub() pubSub: PubSubEngine
   ): Promise<boolean> {
     console.log(eventId);
     console.log(attendeeId);
     await EventAttendee.update({ eventId, attendeeId }, { isConfirmed: true });
+    pubSub.publish(
+      `EVENT-${eventId}`,
+      EventAttendee.find({
+        where: { eventId: eventId },
+        relations: ["attendee"],
+      })
+    );
     return true;
   }
 
   @Mutation(() => Boolean)
   async unconfirmAttendee(
     @Arg("eventId") eventId: number,
-    @Arg("attendeeId") attendeeId: number
+    @Arg("attendeeId") attendeeId: number,
+    @PubSub() pubSub: PubSubEngine
   ): Promise<boolean> {
     console.log(eventId);
     console.log(attendeeId);
     await EventAttendee.update({ eventId, attendeeId }, { isConfirmed: false });
+    pubSub.publish(
+      `EVENT-${eventId}`,
+      EventAttendee.find({
+        where: { eventId: eventId },
+        relations: ["attendee"],
+      })
+    );
     return true;
   }
 
@@ -274,55 +289,43 @@ export class EventResolver {
 
   @FieldResolver(() => [EventAttendee])
   async attendeeConnection(@Root() event: Event) {
-    // console.log(event);
     const attendeeConnections = await getConnection().query(`
       select "attendeeId", "isConfirmed"
       from "event_attendee"
       where "eventId" = ${event.id};
     `);
-    console.log("Asdsad");
-    // console.log(eventAttendeeLoader);
-    console.log(attendeeConnections);
 
     const eventAttendeeIds = attendeeConnections.map(
       (e: { attendeeId: number; isConfirmed: boolean }) => {
         return { eventId: event.id, attendeeId: e.attendeeId };
       }
     );
-    console.log("asdasdasdasdsadsd");
-    console.log(eventAttendeeIds);
     return await EventAttendee.findByIds(eventAttendeeIds);
-    // eventAttendees.forEach((u) => {
-    //   console.log("123");
-    //   console.log(u);
-    // });
-    // return eventAttendees;
-    // return eventAttendeeLoader.loadMany(
-    //   attendeeConnections.map((e: { attendeeId: number }) => e.attendeeId)
-    // );
   }
 
-  @Subscription(() => [Attendee], {
+  @Subscription(() => [EventAttendee], {
     topics: ({ args }) => `EVENT-${args.id}`,
   })
   async eventAttendees(
-    @Root() attendees: [Attendee],
-    @Arg("id") id: number,
-    @Ctx() { attendeeLoader }: MyContext
+    @Root() eventAttendees: [EventAttendee],
+    @Arg("id") id: number
   ) {
-    console.log("ATTENDEE SUBSCRIPTION");
-    if (attendees === undefined) {
-      const eventAttendeeIds = await getConnection().query(`
-      select "attendeeId" 
-      from "event_attendee"
-      where "eventId" = ${id};
-    `);
+    console.log(id);
+    return eventAttendees;
+  }
 
-      return attendeeLoader.loadMany(
-        eventAttendeeIds.map((e: { attendeeId: number }) => e.attendeeId)
-      );
-    }
-
-    return attendees;
+  @Mutation(() => [EventAttendee])
+  async eventAttendeesTrigger(
+    @Arg("id") id: number,
+    @PubSub() pubSub: PubSubEngine
+  ) {
+    pubSub.publish(
+      `EVENT-${id}`,
+      EventAttendee.find({ where: { eventId: id }, relations: ["attendee"] })
+    );
+    return EventAttendee.find({
+      where: { eventId: id },
+      relations: ["attendee"],
+    });
   }
 }
