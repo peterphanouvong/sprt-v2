@@ -57,12 +57,18 @@ const EventJoin: React.FC<Props> = ({}) => {
                 { href: `/events/${id}/attendees`, title: "See who's going" },
               ]}
             />
-            <EventSignUpStuff id={id as string} />
+            <EventSignUpStuff
+              id={id as string}
+              clubBeemId={data!.event.clubBeemId}
+            />
           </>
         ) : (
           <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
             <EventPageSideNav id={id as string} />
-            <EventSignUpStuff id={id as string} />
+            <EventSignUpStuff
+              id={id as string}
+              clubBeemId={data!.event.clubBeemId}
+            />
           </Grid>
         )}
       </BaseContent>

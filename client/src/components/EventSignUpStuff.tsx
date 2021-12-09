@@ -5,9 +5,10 @@ import { EventSignUpForm } from "./EventSignUpForm";
 
 interface Props {
   id: string;
+  clubBeemId: string;
 }
 
-const EventSignUpStuff: React.FC<Props> = ({ id }) => {
+const EventSignUpStuff: React.FC<Props> = ({ id, clubBeemId }) => {
   const [hasSignedUp, setHasSignedUp] = React.useState(
     typeof window !== "undefined"
       ? localStorage.getItem(`event:${id}`) == "true"
@@ -22,7 +23,7 @@ const EventSignUpStuff: React.FC<Props> = ({ id }) => {
       <Alert status="info">
         <AlertIcon />
         {/* TODO: remove hard coding beem id*/}
-        Please pay on beem to confirm your spot 😊 (__some_beem_id__)
+        Please pay on beem to confirm your spot 😊 ({clubBeemId})
       </Alert>
     </Box>
   ) : (
