@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { BooleanSchema } from "yup";
 import {
   Attendee,
   useConfirmAttendeeMutation,
@@ -39,11 +40,13 @@ interface Props {
   // }[];
   attendees: Attendee[];
   eventId: number;
+  isWaitlist: boolean;
 }
 
 const EventAttendeeTableAdminView: React.FC<Props> = ({
   attendees,
   eventId,
+  isWaitlist,
 }) => {
   const [, confirmAttendee] = useConfirmAttendeeMutation();
   const [, unconfirmAttendee] = useUnconfirmAttendeeMutation();
@@ -71,7 +74,6 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
 
   return attendees.length > 0 ? (
     <>
-      <Heading variant="h4">Confirmed</Heading>
       <BaseTable>
         <BaseThead>
           <BaseTr>
@@ -105,66 +107,27 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
                     rounded="full"
                   />
                   <MenuList>
-                    <MenuItem
-                      color="red.500"
-                      onClick={() => removeConfirmedAttendee(attendee)}
-                    >
-                      Unconfirm
-                    </MenuItem>
-                  </MenuList>
-                </Menu>
-              </BaseTd>
-            </BaseTr>
-          ))}
-        </BaseTbody>
-      </BaseTable>
-
-      <Heading variant="h4" mt={4}>
-        Waitlist
-      </Heading>
-      <BaseTable>
-        <BaseThead>
-          <BaseTr>
-            <BaseTh>Position</BaseTh>
-            <BaseTh>Name</BaseTh>
-            <BaseTh>Phone Number</BaseTh>
-            <BaseTh>BeemID</BaseTh>
-            <BaseTh>Joined At</BaseTh>
-
-            <BaseTh width={0}></BaseTh>
-          </BaseTr>
-        </BaseThead>
-        <BaseTbody>
-          {attendees.map((attendee, index) => (
-            <BaseTr key={index}>
-              <BaseTd>{index + 1}</BaseTd>
-              <BaseTd>
-                {attendee.firstname} {attendee.lastname}
-              </BaseTd>
-              <BaseTd>{attendee.phoneNumber}</BaseTd>
-              <BaseTd>{attendee.beemId}</BaseTd>
-              <BaseTd>{convertEpochToDate(attendee.createdAt)}</BaseTd>
-              <BaseTd width={0}>
-                <Menu>
-                  <MenuButton
-                    as={IconButton}
-                    aria-label="Options"
-                    icon={<BsThreeDotsVertical />}
-                    variant="ghost"
-                    colorScheme="gray"
-                    rounded="full"
-                  />
-                  <MenuList>
-                    <MenuItem
-                      color="green.500"
-                      onClick={() => confirmWaitlistAttendee(attendee)}
-                    >
-                      Confirm
-                    </MenuItem>
-                    <EventAttendeeDeleteModal
-                      attendee={attendee}
-                      eventId={eventId}
-                    />
+                    {isWaitlist ? (
+                      <>
+                        <MenuItem
+                          color="green.500"
+                          onClick={() => confirmWaitlistAttendee(attendee)}
+                        >
+                          Confirm
+                        </MenuItem>
+                        <EventAttendeeDeleteModal
+                          attendee={attendee}
+                          eventId={eventId}
+                        />
+                      </>
+                    ) : (
+                      <MenuItem
+                        color="red.500"
+                        onClick={() => removeConfirmedAttendee(attendee)}
+                      >
+                        Unconfirm
+                      </MenuItem>
+                    )}
                   </MenuList>
                 </Menu>
               </BaseTd>

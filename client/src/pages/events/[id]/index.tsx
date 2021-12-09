@@ -94,12 +94,17 @@ const EventOverview: React.FC<Props> = ({}) => {
           <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
             <EventPageSideNav id={id as string} />
             <BaseSection title="Description">
-              <BaseDynamicEditor
-                name="description"
-                initialValue={parseRichText(data?.event.description || "")}
-                required
-                readOnly
-              />
+              {data?.event.description !==
+              '[{"type":"paragraph","children":[{"text":""}]}]' ? (
+                <BaseDynamicEditor
+                  name="description"
+                  initialValue={parseRichText(data?.event.description || "")}
+                  required
+                  readOnly
+                />
+              ) : (
+                <Text variant="body-2">No description for this event.</Text>
+              )}
               {data?.event.youtubeLink && (
                 <AspectRatio ratio={16 / 9}>
                   <iframe
