@@ -32,7 +32,7 @@ __decorate([
     __metadata("design:type", Boolean)
 ], EventAttendee.prototype, "isConfirmed", void 0);
 __decorate([
-    type_graphql_1.Field(() => String),
+    type_graphql_1.Field(() => String, { nullable: true }),
     __metadata("design:type", Date)
 ], EventAttendee.prototype, "joinTime", void 0);
 __decorate([
@@ -45,6 +45,7 @@ __decorate([
     typeorm_1.ManyToOne(() => Attendee_1.Attendee, (attendee) => attendee.eventConnection, {
         onDelete: "CASCADE",
     }),
+    type_graphql_1.Field(() => Attendee_1.Attendee),
     __metadata("design:type", Attendee_1.Attendee)
 ], EventAttendee.prototype, "attendee", void 0);
 EventAttendee = __decorate([

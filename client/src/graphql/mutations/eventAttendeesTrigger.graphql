@@ -1,0 +1,10 @@
+mutation eventAttendeesTrigger($id: Float!) {
+  eventAttendeesTrigger(id: $id) {
+    isConfirmed
+    attendee {
+      id
+      lastname
+      firstname
+    }
+  }
+}
