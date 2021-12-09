@@ -9,7 +9,7 @@ import {
 import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import {
-  Attendee,
+  EventAttendee,
   useConfirmAttendeeMutation,
   useUnconfirmAttendeeMutation,
 } from "../generated/graphql";
@@ -25,39 +25,16 @@ import {
 import { EventAttendeeDeleteModal } from "./EventAttendeeDeleteModal";
 
 interface Props {
-  // attendees: {
-  //   __typename?: "Attendee" | undefined;
-  //   id: number;
-  //   firstname: string;
-  //   lastname: string;
-  //   email?: string | undefined;
-  //   phoneNumber: string;
-  //   beemId: string;
-  //   createdAt: string;
-  //   updatedAt: string;
-  //   isConfirmed: boolean;
-  // }[];
-  attendees: Attendee[];
+  eventAttendees: EventAttendee[];
   eventId: number;
 }
 
 const EventAttendeeTableAdminView: React.FC<Props> = ({
-  attendees,
+  eventAttendees,
   eventId,
 }) => {
   const [, confirmAttendee] = useConfirmAttendeeMutation();
   const [, unconfirmAttendee] = useUnconfirmAttendeeMutation();
-
-  console.log(attendees);
-  // const confirmedAttendees = attendees.filter(
-  //   (attendee) => attendee.isConfirmed
-  // );
-
-  // const waitlistAttendees = attendees.filter(
-  //   (attendee) => !attendee.isConfirmed
-  // );
-
-  // console.log(waitlistAttendees);
 
   const confirmWaitlistAttendee = (attendee) => {
     console.log(attendee);
@@ -69,7 +46,7 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
     unconfirmAttendee({ attendeeId: attendee.id, eventId });
   };
 
-  return attendees.length > 0 ? (
+  return eventAttendees.length > 0 ? (
     <>
       <Heading variant="h4">Confirmed</Heading>
       <BaseTable>
@@ -85,37 +62,44 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
           </BaseTr>
         </BaseThead>
         <BaseTbody>
-          {attendees.map((attendee, index) => (
-            <BaseTr key={index}>
-              <BaseTd>{index + 1}</BaseTd>
-              <BaseTd>
-                {attendee.firstname} {attendee.lastname}
-              </BaseTd>
-              <BaseTd>{attendee.phoneNumber}</BaseTd>
-              <BaseTd>{attendee.beemId}</BaseTd>
-              <BaseTd>{convertEpochToDate(attendee.createdAt)}</BaseTd>
-              <BaseTd width={0}>
-                <Menu>
-                  <MenuButton
-                    as={IconButton}
-                    aria-label="Options"
-                    icon={<BsThreeDotsVertical />}
-                    variant="ghost"
-                    colorScheme="gray"
-                    rounded="full"
-                  />
-                  <MenuList>
-                    <MenuItem
-                      color="red.500"
-                      onClick={() => removeConfirmedAttendee(attendee)}
-                    >
-                      Unconfirm
-                    </MenuItem>
-                  </MenuList>
-                </Menu>
-              </BaseTd>
-            </BaseTr>
-          ))}
+          {eventAttendees
+            .filter((eventAttendee) => eventAttendee.isConfirmed)
+            .map((eventAttendee, index) => (
+              <BaseTr key={index}>
+                <BaseTd>{index + 1}</BaseTd>
+                <BaseTd>
+                  {eventAttendee.attendee.firstname}{" "}
+                  {eventAttendee.attendee.lastname}
+                </BaseTd>
+                <BaseTd>{eventAttendee.attendee.phoneNumber}</BaseTd>
+                <BaseTd>{eventAttendee.attendee.beemId}</BaseTd>
+                <BaseTd>
+                  {convertEpochToDate(eventAttendee.attendee.createdAt)}
+                </BaseTd>
+                <BaseTd width={0}>
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      aria-label="Options"
+                      icon={<BsThreeDotsVertical />}
+                      variant="ghost"
+                      colorScheme="gray"
+                      rounded="full"
+                    />
+                    <MenuList>
+                      <MenuItem
+                        color="red.500"
+                        onClick={() =>
+                          removeConfirmedAttendee(eventAttendee.attendee)
+                        }
+                      >
+                        Unconfirm
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
+                </BaseTd>
+              </BaseTr>
+            ))}
         </BaseTbody>
       </BaseTable>
 
@@ -135,41 +119,48 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
           </BaseTr>
         </BaseThead>
         <BaseTbody>
-          {attendees.map((attendee, index) => (
-            <BaseTr key={index}>
-              <BaseTd>{index + 1}</BaseTd>
-              <BaseTd>
-                {attendee.firstname} {attendee.lastname}
-              </BaseTd>
-              <BaseTd>{attendee.phoneNumber}</BaseTd>
-              <BaseTd>{attendee.beemId}</BaseTd>
-              <BaseTd>{convertEpochToDate(attendee.createdAt)}</BaseTd>
-              <BaseTd width={0}>
-                <Menu>
-                  <MenuButton
-                    as={IconButton}
-                    aria-label="Options"
-                    icon={<BsThreeDotsVertical />}
-                    variant="ghost"
-                    colorScheme="gray"
-                    rounded="full"
-                  />
-                  <MenuList>
-                    <MenuItem
-                      color="green.500"
-                      onClick={() => confirmWaitlistAttendee(attendee)}
-                    >
-                      Confirm
-                    </MenuItem>
-                    <EventAttendeeDeleteModal
-                      attendee={attendee}
-                      eventId={eventId}
+          {eventAttendees
+            .filter((eventAttendee) => !eventAttendee.isConfirmed)
+            .map((eventAttendee, index) => (
+              <BaseTr key={index}>
+                <BaseTd>{index + 1}</BaseTd>
+                <BaseTd>
+                  {eventAttendee.attendee.firstname}{" "}
+                  {eventAttendee.attendee.lastname}
+                </BaseTd>
+                <BaseTd>{eventAttendee.attendee.phoneNumber}</BaseTd>
+                <BaseTd>{eventAttendee.attendee.beemId}</BaseTd>
+                <BaseTd>
+                  {convertEpochToDate(eventAttendee.attendee.createdAt)}
+                </BaseTd>
+                <BaseTd width={0}>
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      aria-label="Options"
+                      icon={<BsThreeDotsVertical />}
+                      variant="ghost"
+                      colorScheme="gray"
+                      rounded="full"
                     />
-                  </MenuList>
-                </Menu>
-              </BaseTd>
-            </BaseTr>
-          ))}
+                    <MenuList>
+                      <MenuItem
+                        color="green.500"
+                        onClick={() =>
+                          confirmWaitlistAttendee(eventAttendee.attendee)
+                        }
+                      >
+                        Confirm
+                      </MenuItem>
+                      <EventAttendeeDeleteModal
+                        attendee={eventAttendee.attendee}
+                        eventId={eventId}
+                      />
+                    </MenuList>
+                  </Menu>
+                </BaseTd>
+              </BaseTr>
+            ))}
         </BaseTbody>
       </BaseTable>
     </>

@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { Attendee } from "../generated/graphql";
+import { EventAttendee } from "../generated/graphql";
 import {
   BaseTable,
   BaseTbody,
@@ -20,11 +20,11 @@ import {
 } from "./BaseTable";
 
 interface Props {
-  attendees: Attendee[];
+  eventAttendees: EventAttendee[];
 }
 
-const EventAttendeeTable: React.FC<Props> = ({ attendees }) => {
-  return attendees.length > 0 ? (
+const EventAttendeeTable: React.FC<Props> = ({ eventAttendees }) => {
+  return eventAttendees.length > 0 ? (
     <>
       <Heading variant="h4">Confirmed</Heading>
       <Box overflowX="auto">
@@ -37,29 +37,32 @@ const EventAttendeeTable: React.FC<Props> = ({ attendees }) => {
             </BaseTr>
           </BaseThead>
           <BaseTbody>
-            {attendees.map((attendee, index) => (
-              <BaseTr key={index}>
-                <BaseTd>{index + 1}</BaseTd>
-                <BaseTd>
-                  {attendee.firstname} {attendee.lastname}
-                </BaseTd>
-                <BaseTd width={0}>
-                  <Menu>
-                    <MenuButton
-                      as={IconButton}
-                      aria-label="Options"
-                      icon={<BsThreeDotsVertical />}
-                      variant="ghost"
-                      colorScheme="gray"
-                      rounded="full"
-                    />
-                    <MenuList>
-                      <MenuItem>Do something</MenuItem>
-                    </MenuList>
-                  </Menu>
-                </BaseTd>
-              </BaseTr>
-            ))}
+            {eventAttendees
+              .filter((eventAttendee) => eventAttendee.isConfirmed)
+              .map((eventAttendee, index) => (
+                <BaseTr key={index}>
+                  <BaseTd>{index + 1}</BaseTd>
+                  <BaseTd>
+                    {eventAttendee.attendee.firstname}{" "}
+                    {eventAttendee.attendee.lastname}
+                  </BaseTd>
+                  <BaseTd width={0}>
+                    <Menu>
+                      <MenuButton
+                        as={IconButton}
+                        aria-label="Options"
+                        icon={<BsThreeDotsVertical />}
+                        variant="ghost"
+                        colorScheme="gray"
+                        rounded="full"
+                      />
+                      <MenuList>
+                        <MenuItem>Do something</MenuItem>
+                      </MenuList>
+                    </Menu>
+                  </BaseTd>
+                </BaseTr>
+              ))}
           </BaseTbody>
         </BaseTable>
       </Box>
@@ -77,29 +80,32 @@ const EventAttendeeTable: React.FC<Props> = ({ attendees }) => {
             </BaseTr>
           </BaseThead>
           <BaseTbody>
-            {attendees.map((attendee, index) => (
-              <BaseTr key={index}>
-                <BaseTd>{index + 1}</BaseTd>
-                <BaseTd>
-                  {attendee.firstname} {attendee.lastname}
-                </BaseTd>
-                <BaseTd width={0}>
-                  <Menu>
-                    <MenuButton
-                      as={IconButton}
-                      aria-label="Options"
-                      icon={<BsThreeDotsVertical />}
-                      variant="ghost"
-                      colorScheme="gray"
-                      rounded="full"
-                    />
-                    <MenuList>
-                      <MenuItem>Do something</MenuItem>
-                    </MenuList>
-                  </Menu>
-                </BaseTd>
-              </BaseTr>
-            ))}
+            {eventAttendees
+              .filter((eventAttendee) => !eventAttendee.isConfirmed)
+              .map((eventAttendee, index) => (
+                <BaseTr key={index}>
+                  <BaseTd>{index + 1}</BaseTd>
+                  <BaseTd>
+                    {eventAttendee.attendee.firstname}{" "}
+                    {eventAttendee.attendee.lastname}
+                  </BaseTd>
+                  <BaseTd width={0}>
+                    <Menu>
+                      <MenuButton
+                        as={IconButton}
+                        aria-label="Options"
+                        icon={<BsThreeDotsVertical />}
+                        variant="ghost"
+                        colorScheme="gray"
+                        rounded="full"
+                      />
+                      <MenuList>
+                        <MenuItem>Do something</MenuItem>
+                      </MenuList>
+                    </Menu>
+                  </BaseTd>
+                </BaseTr>
+              ))}
           </BaseTbody>
         </BaseTable>
       </Box>

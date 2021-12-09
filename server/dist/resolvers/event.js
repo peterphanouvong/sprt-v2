@@ -95,33 +95,30 @@ let EventResolver = class EventResolver {
             where: { isCompleted: true, ownerId: req.session.userId },
         });
     }
-    async updateEvent(id, input, pubSub) {
+    async updateEvent(id, input) {
         const event = await Event_1.Event.findOne(id);
         if (!event) {
             return undefined;
         }
         await Event_1.Event.merge(event, input).save();
-        await pubSub.publish(`EVENT-${id}`, event);
         return event;
     }
-    async addNewAttendee(id, input, { attendeeLoader }, pubSub) {
+    async addNewAttendee(id, input, pubSub) {
         const createAttendee = new attendee_1.AttendeeResolver().createAttendee;
         const res = await createAttendee(input);
         await EventAttendee_1.EventAttendee.insert({
             eventId: id,
             attendeeId: res.id,
         });
-        const eventAttendeeIds = await typeorm_1.getConnection().query(`
-      select "attendeeId" 
-      from "event_attendee"
-      where "eventId" = ${id};
-    `);
-        const attendees = attendeeLoader.loadMany(eventAttendeeIds.map((e) => e.attendeeId));
-        await pubSub.publish(`EVENT-${id}`, attendees);
+        pubSub.publish(`EVENT-${id}`, EventAttendee_1.EventAttendee.find({ where: { eventId: id }, relations: ["attendee"] }));
         return true;
     }
-    async removeAttendee(attendeeId, eventId) {
+    async removeAttendee(attendeeId, eventId, pubSub) {
         await EventAttendee_1.EventAttendee.delete({ attendeeId, eventId });
+        pubSub.publish(`EVENT-${eventId}`, EventAttendee_1.EventAttendee.find({
+            where: { eventId: eventId },
+            relations: ["attendee"],
+        }));
         return true;
     }
     async addExistingAttendee(id, attendeeId) {
@@ -131,16 +128,24 @@ let EventResolver = class EventResolver {
         });
         return true;
     }
-    async confirmAttendee(eventId, attendeeId) {
+    async confirmAttendee(eventId, attendeeId, pubSub) {
         console.log(eventId);
         console.log(attendeeId);
         await EventAttendee_1.EventAttendee.update({ eventId, attendeeId }, { isConfirmed: true });
+        pubSub.publish(`EVENT-${eventId}`, EventAttendee_1.EventAttendee.find({
+            where: { eventId: eventId },
+            relations: ["attendee"],
+        }));
         return true;
     }
-    async unconfirmAttendee(eventId, attendeeId) {
+    async unconfirmAttendee(eventId, attendeeId, pubSub) {
         console.log(eventId);
         console.log(attendeeId);
         await EventAttendee_1.EventAttendee.update({ eventId, attendeeId }, { isConfirmed: false });
+        pubSub.publish(`EVENT-${eventId}`, EventAttendee_1.EventAttendee.find({
+            where: { eventId: eventId },
+            relations: ["attendee"],
+        }));
         return true;
     }
     async markEventAsComplete(id) {
@@ -205,26 +210,21 @@ let EventResolver = class EventResolver {
       from "event_attendee"
       where "eventId" = ${event.id};
     `);
-        console.log("Asdsad");
-        console.log(attendeeConnections);
         const eventAttendeeIds = attendeeConnections.map((e) => {
             return { eventId: event.id, attendeeId: e.attendeeId };
         });
-        console.log("asdasdasdasdsadsd");
-        console.log(eventAttendeeIds);
         return await EventAttendee_1.EventAttendee.findByIds(eventAttendeeIds);
     }
-    async eventAttendees(attendees, id, { attendeeLoader }) {
-        console.log("ATTENDEE SUBSCRIPTION");
-        if (attendees === undefined) {
-            const eventAttendeeIds = await typeorm_1.getConnection().query(`
-      select "attendeeId" 
-      from "event_attendee"
-      where "eventId" = ${id};
-    `);
-            return attendeeLoader.loadMany(eventAttendeeIds.map((e) => e.attendeeId));
-        }
-        return attendees;
+    async eventAttendees(eventAttendees, id) {
+        console.log(id);
+        return eventAttendees;
+    }
+    async eventAttendeesTrigger(id, pubSub) {
+        pubSub.publish(`EVENT-${id}`, EventAttendee_1.EventAttendee.find({ where: { eventId: id }, relations: ["attendee"] }));
+        return EventAttendee_1.EventAttendee.find({
+            where: { eventId: id },
+            relations: ["attendee"],
+        });
     }
 };
 __decorate([
@@ -266,28 +266,27 @@ __decorate([
     type_graphql_1.Mutation(() => Event_1.Event),
     __param(0, type_graphql_1.Arg("id")),
     __param(1, type_graphql_1.Arg("input")),
-    __param(2, type_graphql_1.PubSub()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, EventInput,
-        type_graphql_1.PubSubEngine]),
+    __metadata("design:paramtypes", [String, EventInput]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "updateEvent", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
     __param(0, type_graphql_1.Arg("id")),
     __param(1, type_graphql_1.Arg("input")),
-    __param(2, type_graphql_1.Ctx()),
-    __param(3, type_graphql_1.PubSub()),
+    __param(2, type_graphql_1.PubSub()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, attendee_1.AttendeeInput, Object, type_graphql_1.PubSubEngine]),
+    __metadata("design:paramtypes", [Number, attendee_1.AttendeeInput,
+        type_graphql_1.PubSubEngine]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "addNewAttendee", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
     __param(0, type_graphql_1.Arg("attendeeId")),
     __param(1, type_graphql_1.Arg("eventId")),
+    __param(2, type_graphql_1.PubSub()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:paramtypes", [Number, Number, type_graphql_1.PubSubEngine]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "removeAttendee", null);
 __decorate([
@@ -302,16 +301,18 @@ __decorate([
     type_graphql_1.Mutation(() => Boolean),
     __param(0, type_graphql_1.Arg("eventId")),
     __param(1, type_graphql_1.Arg("attendeeId")),
+    __param(2, type_graphql_1.PubSub()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:paramtypes", [Number, Number, type_graphql_1.PubSubEngine]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "confirmAttendee", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
     __param(0, type_graphql_1.Arg("eventId")),
     __param(1, type_graphql_1.Arg("attendeeId")),
+    __param(2, type_graphql_1.PubSub()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:paramtypes", [Number, Number, type_graphql_1.PubSubEngine]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "unconfirmAttendee", null);
 __decorate([
@@ -365,16 +366,23 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "attendeeConnection", null);
 __decorate([
-    type_graphql_1.Subscription(() => [Attendee_1.Attendee], {
+    type_graphql_1.Subscription(() => [EventAttendee_1.EventAttendee], {
         topics: ({ args }) => `EVENT-${args.id}`,
     }),
     __param(0, type_graphql_1.Root()),
     __param(1, type_graphql_1.Arg("id")),
-    __param(2, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Array, Number, Object]),
+    __metadata("design:paramtypes", [Array, Number]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "eventAttendees", null);
+__decorate([
+    type_graphql_1.Mutation(() => [EventAttendee_1.EventAttendee]),
+    __param(0, type_graphql_1.Arg("id")),
+    __param(1, type_graphql_1.PubSub()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, type_graphql_1.PubSubEngine]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "eventAttendeesTrigger", null);
 EventResolver = __decorate([
     type_graphql_1.Resolver(Event_1.Event)
 ], EventResolver);
