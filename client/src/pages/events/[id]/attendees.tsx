@@ -28,7 +28,6 @@ import {
   useMeQuery,
 } from "../../../generated/graphql";
 import { createUrqlClient } from "../../../utils/createUrqlClient";
-import { useIsAuth } from "../../../utils/useIsAuth";
 import { useIsMobileScreen } from "../../../utils/useIsMobileScreen";
 import { BaseBreadcrumbs } from "../../../components/BaseBreadcrumbs";
 import { BaseSection } from "../../../components/BaseSection";
@@ -36,8 +35,6 @@ import { BaseSection } from "../../../components/BaseSection";
 interface Props {}
 
 const EventAttendees: React.FC<Props> = ({}) => {
-  useIsAuth();
-
   const isMobile = useIsMobileScreen();
 
   const router = useRouter();

@@ -1,4 +1,4 @@
-import { AspectRatio, Button, Grid, Spinner } from "@chakra-ui/react";
+import { AspectRatio, Button, Grid, Spinner, Text } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import NextLink from "next/link";
@@ -16,14 +16,11 @@ import { Event, useEventQuery } from "../../../generated/graphql";
 import { createUrqlClient } from "../../../utils/createUrqlClient";
 import { getYoutubeVideoId } from "../../../utils/getYoutubeVideoId";
 import { parseRichText } from "../../../utils/parseRichText";
-import { useIsAuth } from "../../../utils/useIsAuth";
 import { useIsMobileScreen } from "../../../utils/useIsMobileScreen";
 
 interface Props {}
 
 const EventOverview: React.FC<Props> = ({}) => {
-  useIsAuth();
-
   const isMobile = useIsMobileScreen();
 
   const router = useRouter();
@@ -64,12 +61,18 @@ const EventOverview: React.FC<Props> = ({}) => {
               ]}
             />
             <BaseSection title="Description">
-              <BaseDynamicEditor
-                name="description"
-                initialValue={parseRichText(data?.event.description || "")}
-                required
-                readOnly
-              />
+              {data?.event.description !==
+              '[{"type":"paragraph","children":[{"text":""}]}]' ? (
+                <BaseDynamicEditor
+                  name="description"
+                  initialValue={parseRichText(data?.event.description || "")}
+                  required
+                  readOnly
+                />
+              ) : (
+                <Text variant="body-2">No description for this event.</Text>
+              )}
+
               {data?.event.youtubeLink && (
                 <AspectRatio ratio={16 / 9}>
                   <iframe
