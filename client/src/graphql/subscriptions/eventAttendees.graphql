@@ -3,6 +3,7 @@ subscription eventAttendees($id: Float!) {
     eventId
     attendeeId
     isConfirmed
+    isPayingCash
     attendee {
       id
       lastname

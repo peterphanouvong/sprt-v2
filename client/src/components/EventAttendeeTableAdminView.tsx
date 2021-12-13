@@ -1,3 +1,4 @@
+import { CheckIcon, CloseIcon, MinusIcon } from "@chakra-ui/icons";
 import {
   IconButton,
   Menu,
@@ -12,7 +13,7 @@ import {
   useConfirmAttendeeMutation,
   useUnconfirmAttendeeMutation,
 } from "../generated/graphql";
-import { convertEpochToDate } from "../utils/parseDate";
+import { tableViewFormat } from "../utils/parseDate";
 import {
   BaseTable,
   BaseTbody,
@@ -47,6 +48,8 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
     unconfirmAttendee({ attendeeId: attendee.id, eventId });
   };
 
+  console.log(eventAttendees);
+
   return eventAttendees.length > 0 ? (
     <>
       <BaseTable>
@@ -56,6 +59,7 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
             <BaseTh>Name</BaseTh>
             <BaseTh>Phone Number</BaseTh>
             <BaseTh>BeemID</BaseTh>
+            <BaseTh>Paying Cash</BaseTh>
             <BaseTh>Joined At</BaseTh>
 
             <BaseTh width={0}></BaseTh>
@@ -70,9 +74,12 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
                 {eventAttendee.attendee.lastname}
               </BaseTd>
               <BaseTd>{eventAttendee.attendee.phoneNumber}</BaseTd>
-              <BaseTd>{eventAttendee.attendee.beemId}</BaseTd>
+              <BaseTd>{eventAttendee.attendee.beemId || <MinusIcon />}</BaseTd>
               <BaseTd>
-                {convertEpochToDate(eventAttendee.attendee.createdAt)}
+                {eventAttendee.isPayingCash ? <CheckIcon /> : <CloseIcon />}
+              </BaseTd>
+              <BaseTd>
+                {tableViewFormat(eventAttendee.attendee.createdAt)}
               </BaseTd>
               <BaseTd width={0}>
                 <Menu>

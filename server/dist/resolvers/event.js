@@ -104,11 +104,13 @@ let EventResolver = class EventResolver {
         return event;
     }
     async addNewAttendee(id, input, pubSub) {
+        console.log("MY INPUT: ", input);
         const createAttendee = new attendee_1.AttendeeResolver().createAttendee;
         const res = await createAttendee(input);
         await EventAttendee_1.EventAttendee.insert({
             eventId: id,
             attendeeId: res.id,
+            isPayingCash: input.isPayingCash,
         });
         pubSub.publish(`EVENT-${id}`, EventAttendee_1.EventAttendee.find({ where: { eventId: id }, relations: ["attendee"] }));
         return true;

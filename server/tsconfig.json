@@ -24,5 +24,9 @@
     "baseUrl": "."
   },
   "exclude": ["node_modules"],
-  "include": ["./src/**/*.ts"]
+  "include": [
+    "./src/**/*.ts",
+    "1638932679984-default-template.ts",
+    "1639364646975-isPayingCash.ts"
+  ]
 }

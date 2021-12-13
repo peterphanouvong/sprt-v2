@@ -17,6 +17,9 @@ export class AttendeeInput {
 
   @Field(() => String)
   beemId!: string;
+
+  @Field(() => Boolean, { defaultValue: false })
+  isPayingCash: boolean;
 }
 
 @Resolver(Attendee)

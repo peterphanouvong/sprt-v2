@@ -1,4 +1,12 @@
-import { Button, Checkbox, Text, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Checkbox,
+  Flex,
+  FormLabel,
+  Switch,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React from "react";
 import * as Yup from "yup";
@@ -26,8 +34,8 @@ const EventSchema = Yup.object().shape({
     .required("This field is required"),
   beemId: Yup.string()
     .trim("The first name cannot include leading and trailing spaces")
-    .strict()
-    .required("This field is required"),
+    .strict(),
+  // .required("This field is required"),
 });
 
 const EventSignUpForm: React.FC<Props> = ({
@@ -37,10 +45,10 @@ const EventSignUpForm: React.FC<Props> = ({
 }) => {
   const [, attendeeExists] = useAttendeeExistsMutation();
   const [, addNewAttendee] = useAddNewAttendeeMutation();
+  const [isPayingCash, setIsPayingCash] = React.useState<boolean>(false);
 
   console.log(isFull);
 
-  // TODO: add cash option
   return (
     <Formik
       initialValues={{
@@ -49,6 +57,7 @@ const EventSignUpForm: React.FC<Props> = ({
         phone: "",
         beemId: "",
         status: "waitlist",
+        isPayingCash: false,
       }}
       validationSchema={EventSchema}
       onSubmit={async (values) => {
@@ -65,6 +74,7 @@ const EventSignUpForm: React.FC<Props> = ({
               lastname: values.lastName,
               beemId: values.beemId,
               phoneNumber: values.phone,
+              isPayingCash: isPayingCash,
             },
           });
 
@@ -96,13 +106,26 @@ const EventSignUpForm: React.FC<Props> = ({
               touched={props.touched.phone as boolean}
               required
             />
-            <BaseInputField
-              name="beemId"
-              label="BeemID or PayID"
-              touched={props.touched.phone as boolean}
-              placeholder="@myBeemAccount"
-              required
-            />
+
+            <Flex alignItems="center" py={2}>
+              <FormLabel htmlFor="isPayingCash">Paying by cash?</FormLabel>
+              <Switch
+                id="isPayingCash"
+                onChange={() => {
+                  setIsPayingCash(!isPayingCash);
+                }}
+              />
+            </Flex>
+
+            {!isPayingCash && (
+              <BaseInputField
+                name="beemId"
+                label="BeemID or PayID"
+                touched={props.touched.phone as boolean}
+                placeholder="@myBeemAccount"
+                required
+              />
+            )}
 
             <Checkbox colorScheme="brand">
               <Text variant="body-2">I am fully vaccinated</Text>
