@@ -18,6 +18,10 @@ export class EventAttendee extends BaseEntity {
   @Field(() => Boolean, { defaultValue: false })
   isConfirmed: boolean;
 
+  @Column()
+  @Field(() => Boolean, { defaultValue: false })
+  isPayingCash: boolean;
+
   @Field(() => String, { nullable: true })
   joinTime: Date;
 

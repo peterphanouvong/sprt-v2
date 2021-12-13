@@ -34,6 +34,7 @@ export type AttendeeInput = {
   email?: Maybe<Scalars['String']>;
   phoneNumber: Scalars['String'];
   beemId: Scalars['String'];
+  isPayingCash?: Maybe<Scalars['Boolean']>;
 };
 
 export type Event = {
@@ -70,6 +71,7 @@ export type EventAttendee = {
   eventId: Scalars['Float'];
   attendeeId: Scalars['Float'];
   isConfirmed?: Maybe<Scalars['Boolean']>;
+  isPayingCash?: Maybe<Scalars['Boolean']>;
   joinTime?: Maybe<Scalars['String']>;
   attendee: Attendee;
 };
@@ -636,7 +638,7 @@ export type EventAttendeesSubscriptionVariables = Exact<{
 }>;
 
 
-export type EventAttendeesSubscription = { __typename?: 'Subscription', eventAttendees: Array<{ __typename?: 'EventAttendee', eventId: number, attendeeId: number, isConfirmed?: Maybe<boolean>, attendee: { __typename?: 'Attendee', id: number, lastname: string, firstname: string, email?: Maybe<string>, beemId: string, phoneNumber: string, createdAt: string, updatedAt: string } }> };
+export type EventAttendeesSubscription = { __typename?: 'Subscription', eventAttendees: Array<{ __typename?: 'EventAttendee', eventId: number, attendeeId: number, isConfirmed?: Maybe<boolean>, isPayingCash?: Maybe<boolean>, attendee: { __typename?: 'Attendee', id: number, lastname: string, firstname: string, email?: Maybe<string>, beemId: string, phoneNumber: string, createdAt: string, updatedAt: string } }> };
 
 export type NewQuickEventSubscriptionVariables = Exact<{
   newQuickEventId: Scalars['Float'];
@@ -1071,6 +1073,7 @@ export const EventAttendeesDocument = gql`
     eventId
     attendeeId
     isConfirmed
+    isPayingCash
     attendee {
       id
       lastname

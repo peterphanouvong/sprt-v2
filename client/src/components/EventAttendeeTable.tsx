@@ -1,10 +1,10 @@
 import {
+  Box,
+  IconButton,
   Menu,
   MenuButton,
-  IconButton,
-  MenuList,
   MenuItem,
-  Box,
+  MenuList,
 } from "@chakra-ui/react";
 import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -23,6 +23,7 @@ interface Props {
 }
 
 const EventAttendeeTable: React.FC<Props> = ({ eventAttendees }) => {
+  console.log(eventAttendees);
   return eventAttendees.length > 0 ? (
     <>
       <Box overflowX="auto">
@@ -36,7 +37,7 @@ const EventAttendeeTable: React.FC<Props> = ({ eventAttendees }) => {
           </BaseThead>
           <BaseTbody>
             {eventAttendees
-              .filter((eventAttendee) => !eventAttendee.isConfirmed)
+              // .filter((eventAttendee) => !eventAttendee.isConfirmed)
               .map((eventAttendee, index) => (
                 <BaseTr key={index}>
                   <BaseTd>{index + 1}</BaseTd>
@@ -66,7 +67,20 @@ const EventAttendeeTable: React.FC<Props> = ({ eventAttendees }) => {
       </Box>
     </>
   ) : (
-    <div>No attendees yet</div>
+    <Box overflowX="auto">
+      <BaseTable>
+        <BaseThead>
+          <BaseTr>
+            <BaseTh>Position</BaseTh>
+            <BaseTh>Name</BaseTh>
+            <BaseTh width={0}></BaseTh>
+          </BaseTr>
+        </BaseThead>
+        <BaseTbody>
+          <Box padding={2}>Nothing here</Box>
+        </BaseTbody>
+      </BaseTable>
+    </Box>
   );
 };
 

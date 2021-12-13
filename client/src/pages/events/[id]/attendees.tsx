@@ -36,7 +36,7 @@ const EventAttendees: React.FC<Props> = ({}) => {
 
   const router = useRouter();
   const { id } = router.query;
-  const [isViewAdmin, setIsViewAdmin] = React.useState<boolean>(false);
+  const [isViewAdmin, setIsViewAdmin] = React.useState<boolean>(true);
 
   const [{ data: me }] = useMeQuery();
 
@@ -106,6 +106,7 @@ const EventAttendees: React.FC<Props> = ({}) => {
                       <Switch
                         id="admin-toggle"
                         size="md"
+                        checked={isViewAdmin}
                         onChange={() => setIsViewAdmin(!isViewAdmin)}
                       />
                     </Flex>
@@ -118,7 +119,9 @@ const EventAttendees: React.FC<Props> = ({}) => {
                     </Text>
                     <EventAttendeeTableAdminView
                       isWaitlist={false}
-                      eventAttendees={attendeeData!.eventAttendees}
+                      eventAttendees={attendeeData!.eventAttendees.filter(
+                        (ea) => ea.isConfirmed
+                      )}
                       eventId={data?.event.id as number}
                     />
 
@@ -138,10 +141,10 @@ const EventAttendees: React.FC<Props> = ({}) => {
                     <Text variant="body-3" fontWeight="medium">
                       Confirmed
                     </Text>
-                    <EventAttendeeTableAdminView
-                      isWaitlist={false}
-                      eventAttendees={attendeeData!.eventAttendees}
-                      eventId={data?.event.id as number}
+                    <EventAttendeeTable
+                      eventAttendees={attendeeData!.eventAttendees.filter(
+                        (ea) => ea.isConfirmed
+                      )}
                     />
 
                     <Box mb={6}></Box>
@@ -150,7 +153,9 @@ const EventAttendees: React.FC<Props> = ({}) => {
                       Waitlist
                     </Text>
                     <EventAttendeeTable
-                      eventAttendees={attendeeData!.eventAttendees}
+                      eventAttendees={attendeeData!.eventAttendees.filter(
+                        (ea) => !ea.isConfirmed
+                      )}
                     />
                   </>
                 )}
@@ -174,6 +179,7 @@ const EventAttendees: React.FC<Props> = ({}) => {
                       <Switch
                         id="admin-toggle"
                         size="md"
+                        defaultChecked={true}
                         onChange={() => setIsViewAdmin(!isViewAdmin)}
                       />
                     </Flex>

@@ -126,12 +126,14 @@ export class EventResolver {
     @Arg("input") input: AttendeeInput,
     @PubSub() pubSub: PubSubEngine
   ): Promise<boolean> {
+    console.log("MY INPUT: ", input);
     const createAttendee = new AttendeeResolver().createAttendee;
     const res = await createAttendee(input);
 
     await EventAttendee.insert({
       eventId: id,
       attendeeId: res!.id,
+      isPayingCash: input.isPayingCash,
     });
 
     pubSub.publish(

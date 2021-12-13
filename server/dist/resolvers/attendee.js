@@ -37,6 +37,10 @@ __decorate([
     type_graphql_1.Field(() => String),
     __metadata("design:type", String)
 ], AttendeeInput.prototype, "beemId", void 0);
+__decorate([
+    type_graphql_1.Field(() => Boolean, { defaultValue: false }),
+    __metadata("design:type", Boolean)
+], AttendeeInput.prototype, "isPayingCash", void 0);
 AttendeeInput = __decorate([
     type_graphql_1.InputType()
 ], AttendeeInput);

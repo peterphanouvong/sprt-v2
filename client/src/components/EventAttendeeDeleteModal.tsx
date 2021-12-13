@@ -31,8 +31,6 @@ export const EventAttendeeDeleteModal: React.FC<Props> = ({
     setIsAlertOpen(false);
   };
 
-  // TODO: Have page auto update when deleting attendees
-
   return (
     <>
       <MenuItem color="red.500" onClick={() => setIsAlertOpen(true)}>

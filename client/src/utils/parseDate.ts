@@ -23,3 +23,16 @@ export const convertEpochToDate = (epochString: string | null | undefined) => {
     return null;
   return new Date(parseInt(epochString)).toISOString().replace(/T.*Z/i, "");
 };
+
+export const tableViewFormat = (epochString: string | null | undefined) => {
+  if (epochString === null || epochString === undefined || epochString === "")
+    return null;
+  return new Date(parseInt(epochString)).toLocaleDateString("en-GB", {
+    // weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    day: "2-digit",
+    // year: "",
+    month: "short",
+  });
+};
