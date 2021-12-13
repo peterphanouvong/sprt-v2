@@ -10,7 +10,6 @@ import { EventPageSideNav } from "../../../components/EventPageSideNav";
 import { EventSignUpStuff } from "../../../components/EventSignUpStuff";
 import { useEventQuery } from "../../../generated/graphql";
 import { createUrqlClient } from "../../../utils/createUrqlClient";
-import { useIsAuth } from "../../../utils/useIsAuth";
 import { Event } from "../../../generated/graphql";
 import { EventPageOverview } from "../../../components/EventPageOverview";
 import { useIsMobileScreen } from "../../../utils/useIsMobileScreen";
@@ -18,8 +17,6 @@ import { BaseBreadcrumbs } from "../../../components/BaseBreadcrumbs";
 interface Props {}
 
 const EventJoin: React.FC<Props> = ({}) => {
-  useIsAuth();
-
   const isMobile = useIsMobileScreen();
 
   const router = useRouter();
@@ -57,12 +54,18 @@ const EventJoin: React.FC<Props> = ({}) => {
                 { href: `/events/${id}/attendees`, title: "See who's going" },
               ]}
             />
-            <EventSignUpStuff id={id as string} />
+            <EventSignUpStuff
+              id={id as string}
+              clubBeemId={data!.event.clubBeemId}
+            />
           </>
         ) : (
           <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
             <EventPageSideNav id={id as string} />
-            <EventSignUpStuff id={id as string} />
+            <EventSignUpStuff
+              id={id as string}
+              clubBeemId={data!.event.clubBeemId}
+            />
           </Grid>
         )}
       </BaseContent>

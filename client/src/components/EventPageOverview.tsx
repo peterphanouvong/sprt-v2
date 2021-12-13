@@ -55,7 +55,7 @@ const EventPageOverview: React.FC<Props> = ({ event }) => {
             <VStack alignItems="start">
               <MyGrid>
                 <Text variant="body-3">Price:</Text>
-                <Text variant="body-3">{event.price}</Text>
+                <Text variant="body-3">${event.price?.toFixed(2)}</Text>
               </MyGrid>
               <MyGrid>
                 <Text variant="body-3">Beem ID:</Text>
@@ -98,7 +98,7 @@ const EventPageOverview: React.FC<Props> = ({ event }) => {
             <VStack alignItems="start">
               <MyGrid>
                 <Text variant="body-3">Price:</Text>
-                <Text variant="body-3">{event.price}</Text>
+                <Text variant="body-3">${event.price?.toFixed(2)}</Text>
               </MyGrid>
               <MyGrid>
                 <Text variant="body-3">Beem ID:</Text>

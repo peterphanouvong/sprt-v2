@@ -1,13 +1,14 @@
-import { Alert, AlertIcon, Box } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Text } from "@chakra-ui/react";
 import React from "react";
 import { BaseSection } from "./BaseSection";
 import { EventSignUpForm } from "./EventSignUpForm";
 
 interface Props {
   id: string;
+  clubBeemId: string;
 }
 
-const EventSignUpStuff: React.FC<Props> = ({ id }) => {
+const EventSignUpStuff: React.FC<Props> = ({ id, clubBeemId }) => {
   const [hasSignedUp, setHasSignedUp] = React.useState(
     typeof window !== "undefined"
       ? localStorage.getItem(`event:${id}`) == "true"
@@ -17,12 +18,15 @@ const EventSignUpStuff: React.FC<Props> = ({ id }) => {
     <Box>
       <Alert mb={2} status="success">
         <AlertIcon />
-        You've been added to the waitlist for this event!
+        <Text variant="body-2">
+          You've been added to the waitlist for this event!
+        </Text>
       </Alert>
       <Alert status="info">
         <AlertIcon />
-        {/* TODO: remove hard coding beem id*/}
-        Please pay on beem to confirm your spot 😊 (__some_beem_id__)
+        <Text variant="body-2">
+          Please pay on beem to confirm your spot 😊 ({clubBeemId})
+        </Text>
       </Alert>
     </Box>
   ) : (
