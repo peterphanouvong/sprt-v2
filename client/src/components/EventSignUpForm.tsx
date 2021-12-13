@@ -1,12 +1,4 @@
-import {
-  Button,
-  Checkbox,
-  Flex,
-  FormLabel,
-  Switch,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Button, Checkbox, Flex, Switch, Text, VStack } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React from "react";
 import * as Yup from "yup";
