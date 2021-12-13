@@ -21,6 +21,7 @@ import {
   BaseThead,
   BaseTr,
 } from "./BaseTable";
+import { EventAttendeeDeleteModal } from "./EventAttendeeDeleteModal";
 
 interface Props {
   eventAttendees: EventAttendee[];
@@ -84,14 +85,31 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
                     rounded="full"
                   />
                   <MenuList>
-                    <MenuItem
-                      color="red.500"
-                      onClick={() =>
-                        removeConfirmedAttendee(eventAttendee.attendee)
-                      }
-                    >
-                      Unconfirm
-                    </MenuItem>
+                    {isWaitlist ? (
+                      <>
+                        <MenuItem
+                          color="green.500"
+                          onClick={() =>
+                            confirmWaitlistAttendee(eventAttendee.attendee)
+                          }
+                        >
+                          Confirm
+                        </MenuItem>
+                        <EventAttendeeDeleteModal
+                          attendee={eventAttendee.attendee}
+                          eventId={eventId}
+                        />
+                      </>
+                    ) : (
+                      <MenuItem
+                        color="red.500"
+                        onClick={() =>
+                          removeConfirmedAttendee(eventAttendee.attendee)
+                        }
+                      >
+                        Unconfirm
+                      </MenuItem>
+                    )}
                   </MenuList>
                 </Menu>
               </BaseTd>

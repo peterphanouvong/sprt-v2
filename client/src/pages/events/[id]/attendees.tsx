@@ -1,10 +1,8 @@
 import {
   Box,
-  FormLabel,
+  Flex,
   Grid,
   Heading,
-  HStack,
-  Spacer,
   Spinner,
   Switch,
   Text,
@@ -17,7 +15,6 @@ import { BaseBreadcrumbs } from "../../../components/BaseBreadcrumbs";
 import { BaseContent } from "../../../components/BaseContent";
 import { BaseLayout } from "../../../components/BaseLayout";
 import { BasePageHeader } from "../../../components/BasePageHeader";
-import { BaseSection } from "../../../components/BaseSection";
 import { EventAttendeeTable } from "../../../components/EventAttendeeTable";
 import { EventAttendeeTableAdminView } from "../../../components/EventAttendeeTableAdminView";
 import { EventPageOverview } from "../../../components/EventPageOverview";
@@ -95,70 +92,144 @@ const EventAttendees: React.FC<Props> = ({}) => {
               ]}
             />
 
-            <BaseSection title="Attendees">
+            <Box>
               <Box>
-                <HStack alignItems="center">
-                  <Heading as="h6" variant="h6"></Heading>
-                  <Spacer />
+                <Flex alignItems="center" justifyContent="space-between" mb={4}>
+                  <Heading as="h6" variant="h6">
+                    Attendees
+                  </Heading>
                   {data?.event.owner.id === me?.me?.id && (
-                    <>
-                      <FormLabel htmlFor="admin-toggle">
-                        <Text variant="body-3">View as admin</Text>
-                      </FormLabel>
+                    <Flex alignItems="center">
+                      <Text mr={2} variant="body-3">
+                        View as admin
+                      </Text>
                       <Switch
                         id="admin-toggle"
                         size="md"
                         onChange={() => setIsViewAdmin(!isViewAdmin)}
                       />
-                    </>
+                    </Flex>
                   )}
-                </HStack>
+                </Flex>
                 {isViewAdmin ? (
-                  <EventAttendeeTableAdminView
-                    eventAttendees={attendeeData!.eventAttendees}
-                    eventId={data?.event.id as number}
-                  />
+                  <>
+                    <Text variant="body-3" fontWeight="medium">
+                      Confirmed
+                    </Text>
+                    <EventAttendeeTableAdminView
+                      isWaitlist={false}
+                      eventAttendees={attendeeData!.eventAttendees}
+                      eventId={data?.event.id as number}
+                    />
+
+                    <Box mb={6}></Box>
+
+                    <Text variant="body-3" fontWeight="medium">
+                      Waitlist
+                    </Text>
+                    <EventAttendeeTableAdminView
+                      isWaitlist={true}
+                      eventAttendees={attendeeData!.eventAttendees}
+                      eventId={data?.event.id as number}
+                    />
+                  </>
                 ) : (
-                  <EventAttendeeTable
-                    eventAttendees={attendeeData!.eventAttendees}
-                  />
+                  <>
+                    <Text variant="body-3" fontWeight="medium">
+                      Confirmed
+                    </Text>
+                    <EventAttendeeTableAdminView
+                      isWaitlist={false}
+                      eventAttendees={attendeeData!.eventAttendees}
+                      eventId={data?.event.id as number}
+                    />
+
+                    <Box mb={6}></Box>
+
+                    <Text variant="body-3" fontWeight="medium">
+                      Waitlist
+                    </Text>
+                    <EventAttendeeTable
+                      eventAttendees={attendeeData!.eventAttendees}
+                    />
+                  </>
                 )}
               </Box>
-            </BaseSection>
+            </Box>
           </>
         ) : (
           <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
             <EventPageSideNav id={id as string} />
-            <BaseSection title="Attendees">
+            <Box>
               <Box>
-                <HStack alignItems="center">
-                  <Heading as="h6" variant="h6"></Heading>
-                  <Spacer />
+                <Flex alignItems="center" justifyContent="space-between" mb={4}>
+                  <Heading as="h6" variant="h6">
+                    Attendees
+                  </Heading>
                   {data?.event.owner.id === me?.me?.id && (
-                    <>
-                      <FormLabel htmlFor="admin-toggle">
-                        <Text variant="body-3">View as admin</Text>
-                      </FormLabel>
+                    <Flex alignItems="center">
+                      <Text mr={2} variant="body-3">
+                        View as admin
+                      </Text>
                       <Switch
                         id="admin-toggle"
                         size="md"
                         onChange={() => setIsViewAdmin(!isViewAdmin)}
                       />
-                    </>
+                    </Flex>
                   )}
-                </HStack>
+                </Flex>
                 {isViewAdmin ? (
-                  <EventAttendeeTableAdminView
-                    eventAttendees={attendeeData!.eventAttendees}
-                    eventId={data?.event.id as number}
-                  />
+                  <>
+                    <Text variant="body-3" fontWeight="medium">
+                      Confirmed
+                    </Text>
+                    <EventAttendeeTableAdminView
+                      isWaitlist={false}
+                      eventAttendees={attendeeData!.eventAttendees.filter(
+                        (ea) => ea.isConfirmed
+                      )}
+                      eventId={data?.event.id as number}
+                    />
+
+                    <Box mb={6}></Box>
+
+                    <Text variant="body-3" fontWeight="medium">
+                      Waitlist
+                    </Text>
+                    <EventAttendeeTableAdminView
+                      isWaitlist={true}
+                      eventAttendees={attendeeData!.eventAttendees.filter(
+                        (ea) => !ea.isConfirmed
+                      )}
+                      eventId={data?.event.id as number}
+                    />
+                  </>
                 ) : (
-                  <EventAttendeeTable
-                    eventAttendees={attendeeData!.eventAttendees}
-                  />
+                  <>
+                    <Text variant="body-3" fontWeight="medium">
+                      Confirmed
+                    </Text>
+                    <EventAttendeeTable
+                      eventAttendees={attendeeData!.eventAttendees.filter(
+                        (ea) => ea.isConfirmed
+                      )}
+                    />
+
+                    <Box mb={6}></Box>
+
+                    <Text variant="body-3" fontWeight="medium">
+                      Waitlist
+                    </Text>
+                    <EventAttendeeTable
+                      eventAttendees={attendeeData!.eventAttendees.filter(
+                        (ea) => !ea.isConfirmed
+                      )}
+                    />
+                  </>
                 )}
               </Box>
-            </BaseSection>
+            </Box>
           </Grid>
         )}
       </BaseContent>
