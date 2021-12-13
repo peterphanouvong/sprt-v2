@@ -1,6 +1,6 @@
 import { Grid, VStack, Text } from "@chakra-ui/react";
 import React from "react";
-import { parseDatePretty } from "../utils/parseDate";
+import { convert24hto12h, parseDatePretty } from "../utils/parseDate";
 import { BaseContent } from "./BaseContent";
 import { Event } from "../generated/graphql";
 import { useIsMobileScreen } from "../utils/useIsMobileScreen";
@@ -19,6 +19,8 @@ const MyGrid = ({ children }) => {
 
 const EventPageOverview: React.FC<Props> = ({ event }) => {
   const isMobile = useIsMobileScreen();
+
+  console.log(convert24hto12h("12:00"));
 
   return (
     <BaseContent>
@@ -47,7 +49,8 @@ const EventPageOverview: React.FC<Props> = ({ event }) => {
               <MyGrid>
                 <Text variant="body-3">Time:</Text>
                 <Text variant="body-3">
-                  {event.startTime} - {event.endTime}
+                  {convert24hto12h(event.startTime!.toString())} -{" "}
+                  {convert24hto12h(event.endTime!.toString())}
                 </Text>
               </MyGrid>
             </VStack>
@@ -57,10 +60,12 @@ const EventPageOverview: React.FC<Props> = ({ event }) => {
                 <Text variant="body-3">Price:</Text>
                 <Text variant="body-3">${event.price?.toFixed(2)}</Text>
               </MyGrid>
-              <MyGrid>
-                <Text variant="body-3">Beem ID:</Text>
-                <Text variant="body-3">{event.clubBeemId}</Text>
-              </MyGrid>
+              {event.clubBeemId && (
+                <MyGrid>
+                  <Text variant="body-3">Beem ID:</Text>
+                  <Text variant="body-3">{event.clubBeemId}</Text>
+                </MyGrid>
+              )}
             </VStack>
           </Grid>
         </>
@@ -90,7 +95,8 @@ const EventPageOverview: React.FC<Props> = ({ event }) => {
               <MyGrid>
                 <Text variant="body-3">Time:</Text>
                 <Text variant="body-3">
-                  {event.startTime} - {event.endTime}
+                  {convert24hto12h(event.startTime!.toString())} -{" "}
+                  {convert24hto12h(event.endTime!.toString())}
                 </Text>
               </MyGrid>
             </VStack>
@@ -100,10 +106,12 @@ const EventPageOverview: React.FC<Props> = ({ event }) => {
                 <Text variant="body-3">Price:</Text>
                 <Text variant="body-3">${event.price?.toFixed(2)}</Text>
               </MyGrid>
-              <MyGrid>
-                <Text variant="body-3">Beem ID:</Text>
-                <Text variant="body-3">{event.clubBeemId}</Text>
-              </MyGrid>
+              {event.clubBeemId && (
+                <MyGrid>
+                  <Text variant="body-3">Beem ID:</Text>
+                  <Text variant="body-3">{event.clubBeemId}</Text>
+                </MyGrid>
+              )}
             </VStack>
           </Grid>
         </Grid>

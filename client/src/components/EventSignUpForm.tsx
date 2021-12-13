@@ -108,12 +108,16 @@ const EventSignUpForm: React.FC<Props> = ({
             />
 
             <Flex alignItems="center" py={2}>
-              <FormLabel htmlFor="isPayingCash">Paying by cash?</FormLabel>
+              <Text fontWeight="medium" mr={2} variant="body-3">
+                Paying by cash?
+              </Text>
+
               <Switch
                 id="isPayingCash"
                 onChange={() => {
                   setIsPayingCash(!isPayingCash);
                 }}
+                colorScheme="brand"
               />
             </Flex>
 

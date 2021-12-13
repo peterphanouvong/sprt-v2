@@ -36,3 +36,14 @@ export const tableViewFormat = (epochString: string | null | undefined) => {
     month: "short",
   });
 };
+
+export const convert24hto12h = (time: string) => {
+  const hours = Number(time.substr(0, 2));
+  const minutes = Number(time.substr(3, 2));
+  const AMPM = hours >= 12 ? "PM" : "AM";
+  const hours12 = hours % 12 === 0 ? 12 : hours % 12;
+  return `${hours12}:${minutes.toLocaleString("en-US", {
+    minimumIntegerDigits: 2,
+    useGrouping: false,
+  })} ${AMPM}`;
+};
