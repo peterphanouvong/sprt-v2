@@ -5,6 +5,7 @@ import {
   MenuList,
   MenuItem,
   Box,
+  Td,
 } from "@chakra-ui/react";
 import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -67,7 +68,20 @@ const EventAttendeeTable: React.FC<Props> = ({ eventAttendees }) => {
       </Box>
     </>
   ) : (
-    <div>No attendees yet</div>
+    <Box overflowX="auto">
+      <BaseTable>
+        <BaseThead>
+          <BaseTr>
+            <BaseTh>Position</BaseTh>
+            <BaseTh>Name</BaseTh>
+            <BaseTh width={0}></BaseTh>
+          </BaseTr>
+        </BaseThead>
+        <BaseTbody>
+          <Box padding={2}>Nothing here</Box>
+        </BaseTbody>
+      </BaseTable>
+    </Box>
   );
 };
 

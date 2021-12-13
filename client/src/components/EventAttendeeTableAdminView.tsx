@@ -1,5 +1,6 @@
 import { CheckIcon, CloseIcon, MinusIcon } from "@chakra-ui/icons";
 import {
+  Box,
   IconButton,
   Menu,
   MenuButton,
@@ -52,81 +53,98 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
 
   return eventAttendees.length > 0 ? (
     <>
+      <Box overflowX="auto">
+        <BaseTable>
+          <BaseThead>
+            <BaseTr>
+              <BaseTh>Pos</BaseTh>
+              <BaseTh>Name</BaseTh>
+              <BaseTh>Phone</BaseTh>
+              <BaseTh>BeemID</BaseTh>
+              <BaseTh>Cash</BaseTh>
+              <BaseTh>Joined</BaseTh>
+
+              <BaseTh width={0}></BaseTh>
+            </BaseTr>
+          </BaseThead>
+          <BaseTbody>
+            {eventAttendees.map((eventAttendee, index) => (
+              <BaseTr key={index}>
+                <BaseTd>{index + 1}</BaseTd>
+                <BaseTd>
+                  {eventAttendee.attendee.firstname}{" "}
+                  {eventAttendee.attendee.lastname}
+                </BaseTd>
+                <BaseTd>{eventAttendee.attendee.phoneNumber}</BaseTd>
+                <BaseTd>
+                  {eventAttendee.attendee.beemId || <MinusIcon />}
+                </BaseTd>
+                <BaseTd>
+                  {eventAttendee.isPayingCash ? <CheckIcon /> : <CloseIcon />}
+                </BaseTd>
+                <BaseTd>
+                  {tableViewFormat(eventAttendee.attendee.createdAt)}
+                </BaseTd>
+                <BaseTd width={0}>
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      aria-label="Options"
+                      icon={<BsThreeDotsVertical />}
+                      variant="ghost"
+                      colorScheme="gray"
+                      rounded="full"
+                    />
+                    <MenuList>
+                      {isWaitlist ? (
+                        <>
+                          <MenuItem
+                            color="green.500"
+                            onClick={() =>
+                              confirmWaitlistAttendee(eventAttendee.attendee)
+                            }
+                          >
+                            Confirm
+                          </MenuItem>
+                          <EventAttendeeDeleteModal
+                            attendee={eventAttendee.attendee}
+                            eventId={eventId}
+                          />
+                        </>
+                      ) : (
+                        <MenuItem
+                          color="red.500"
+                          onClick={() =>
+                            removeConfirmedAttendee(eventAttendee.attendee)
+                          }
+                        >
+                          Unconfirm
+                        </MenuItem>
+                      )}
+                    </MenuList>
+                  </Menu>
+                </BaseTd>
+              </BaseTr>
+            ))}
+          </BaseTbody>
+        </BaseTable>
+      </Box>
+    </>
+  ) : (
+    <Box overflowX="auto">
       <BaseTable>
         <BaseThead>
           <BaseTr>
             <BaseTh>Position</BaseTh>
             <BaseTh>Name</BaseTh>
-            <BaseTh>Phone Number</BaseTh>
-            <BaseTh>BeemID</BaseTh>
-            <BaseTh>Paying Cash</BaseTh>
-            <BaseTh>Joined At</BaseTh>
-
             <BaseTh width={0}></BaseTh>
           </BaseTr>
         </BaseThead>
         <BaseTbody>
-          {eventAttendees.map((eventAttendee, index) => (
-            <BaseTr key={index}>
-              <BaseTd>{index + 1}</BaseTd>
-              <BaseTd>
-                {eventAttendee.attendee.firstname}{" "}
-                {eventAttendee.attendee.lastname}
-              </BaseTd>
-              <BaseTd>{eventAttendee.attendee.phoneNumber}</BaseTd>
-              <BaseTd>{eventAttendee.attendee.beemId || <MinusIcon />}</BaseTd>
-              <BaseTd>
-                {eventAttendee.isPayingCash ? <CheckIcon /> : <CloseIcon />}
-              </BaseTd>
-              <BaseTd>
-                {tableViewFormat(eventAttendee.attendee.createdAt)}
-              </BaseTd>
-              <BaseTd width={0}>
-                <Menu>
-                  <MenuButton
-                    as={IconButton}
-                    aria-label="Options"
-                    icon={<BsThreeDotsVertical />}
-                    variant="ghost"
-                    colorScheme="gray"
-                    rounded="full"
-                  />
-                  <MenuList>
-                    {isWaitlist ? (
-                      <>
-                        <MenuItem
-                          color="green.500"
-                          onClick={() =>
-                            confirmWaitlistAttendee(eventAttendee.attendee)
-                          }
-                        >
-                          Confirm
-                        </MenuItem>
-                        <EventAttendeeDeleteModal
-                          attendee={eventAttendee.attendee}
-                          eventId={eventId}
-                        />
-                      </>
-                    ) : (
-                      <MenuItem
-                        color="red.500"
-                        onClick={() =>
-                          removeConfirmedAttendee(eventAttendee.attendee)
-                        }
-                      >
-                        Unconfirm
-                      </MenuItem>
-                    )}
-                  </MenuList>
-                </Menu>
-              </BaseTd>
-            </BaseTr>
-          ))}
+          <Box padding={2}>Nothing here</Box>
         </BaseTbody>
       </BaseTable>
-    </>
-  ) : (
-    <div>No attendees yet</div>
+    </Box>
   );
 };
 
