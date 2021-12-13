@@ -1,4 +1,11 @@
-import { AspectRatio, Button, Grid, Spinner, Text } from "@chakra-ui/react";
+import {
+  AspectRatio,
+  Box,
+  Button,
+  Grid,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import NextLink from "next/link";
@@ -63,12 +70,14 @@ const EventOverview: React.FC<Props> = ({}) => {
             <BaseSection title="Description">
               {data?.event.description !==
               '[{"type":"paragraph","children":[{"text":""}]}]' ? (
-                <BaseDynamicEditor
-                  name="description"
-                  initialValue={parseRichText(data?.event.description || "")}
-                  required
-                  readOnly
-                />
+                <Box mt="-16px" mb={4}>
+                  <BaseDynamicEditor
+                    name="description"
+                    initialValue={parseRichText(data?.event.description || "")}
+                    required
+                    readOnly
+                  />
+                </Box>
               ) : (
                 <Text variant="body-2">No description for this event.</Text>
               )}
@@ -96,14 +105,18 @@ const EventOverview: React.FC<Props> = ({}) => {
             <BaseSection title="Description">
               {data?.event.description !==
               '[{"type":"paragraph","children":[{"text":""}]}]' ? (
-                <BaseDynamicEditor
-                  name="description"
-                  initialValue={parseRichText(data?.event.description || "")}
-                  required
-                  readOnly
-                />
+                <Box mt="-16px" mb={4}>
+                  <BaseDynamicEditor
+                    name="description"
+                    initialValue={parseRichText(data?.event.description || "")}
+                    required
+                    readOnly
+                  />
+                </Box>
               ) : (
-                <Text variant="body-2">No description for this event.</Text>
+                <Text mb={4} variant="body-2">
+                  No description for this event.
+                </Text>
               )}
               {data?.event.youtubeLink && (
                 <AspectRatio ratio={16 / 9}>

@@ -48,6 +48,7 @@ const main = async () => {
 
   // await Event.delete({});
   // await EventAttendee.delete({});
+  // await EventTemplate.delete({});
 
   await conn.runMigrations();
 
