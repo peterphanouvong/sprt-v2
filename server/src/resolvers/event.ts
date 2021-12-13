@@ -130,10 +130,17 @@ export class EventResolver {
     const createAttendee = new AttendeeResolver().createAttendee;
     const res = await createAttendee(input);
 
+    const num = await getConnection().query(`
+      select count(*) 
+      from "event_attendee" ea 
+      where ea."eventId" = ${id};
+    `);
+
     await EventAttendee.insert({
       eventId: id,
       attendeeId: res!.id,
       isPayingCash: input.isPayingCash,
+      position: num[0].count,
     });
 
     pubSub.publish(

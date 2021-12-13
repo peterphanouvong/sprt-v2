@@ -6,6 +6,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Tr,
 } from "@chakra-ui/react";
 import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -24,6 +25,7 @@ import {
   BaseTr,
 } from "./BaseTable";
 import { EventAttendeeDeleteModal } from "./EventAttendeeDeleteModal";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 interface Props {
   eventAttendees: EventAttendee[];
@@ -53,82 +55,132 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
 
   return eventAttendees.length > 0 ? (
     <>
-      <Box overflowX="auto">
-        <BaseTable>
-          <BaseThead>
-            <BaseTr>
-              <BaseTh>Pos</BaseTh>
-              <BaseTh>Name</BaseTh>
-              <BaseTh>Phone</BaseTh>
-              <BaseTh>BeemID</BaseTh>
-              <BaseTh>Cash</BaseTh>
-              <BaseTh>Joined</BaseTh>
+      <DragDropContext
+        onDragEnd={(result) => {
+          const { destination, source, draggableId } = result;
+          if (!destination) {
+            return;
+          }
 
-              <BaseTh width={0}></BaseTh>
-            </BaseTr>
-          </BaseThead>
-          <BaseTbody>
-            {eventAttendees.map((eventAttendee, index) => (
-              <BaseTr key={index}>
-                <BaseTd>{index + 1}</BaseTd>
-                <BaseTd>
-                  {eventAttendee.attendee.firstname}{" "}
-                  {eventAttendee.attendee.lastname}
-                </BaseTd>
-                <BaseTd>{eventAttendee.attendee.phoneNumber}</BaseTd>
-                <BaseTd>
-                  {eventAttendee.attendee.beemId || <MinusIcon />}
-                </BaseTd>
-                <BaseTd>
-                  {eventAttendee.isPayingCash ? <CheckIcon /> : <CloseIcon />}
-                </BaseTd>
-                <BaseTd>
-                  {tableViewFormat(eventAttendee.attendee.createdAt)}
-                </BaseTd>
-                <BaseTd width={0}>
-                  <Menu>
-                    <MenuButton
-                      as={IconButton}
-                      aria-label="Options"
-                      icon={<BsThreeDotsVertical />}
-                      variant="ghost"
-                      colorScheme="gray"
-                      rounded="full"
-                    />
-                    <MenuList>
-                      {isWaitlist ? (
-                        <>
-                          <MenuItem
-                            color="green.500"
-                            onClick={() =>
-                              confirmWaitlistAttendee(eventAttendee.attendee)
-                            }
-                          >
-                            Confirm
-                          </MenuItem>
-                          <EventAttendeeDeleteModal
-                            attendee={eventAttendee.attendee}
-                            eventId={eventId}
-                          />
-                        </>
-                      ) : (
-                        <MenuItem
-                          color="red.500"
-                          onClick={() =>
-                            removeConfirmedAttendee(eventAttendee.attendee)
-                          }
+          // Drop at the same place
+          if (
+            destination.droppableId === source.droppableId &&
+            destination.index === source.index
+          ) {
+            return;
+          }
+          // TODO: finish reordering
+          // database now stores the position -> update the positions after dropping
+        }}
+      >
+        <Droppable droppableId="droppable">
+          {(provided) => (
+            <Box
+              overflowX="auto"
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              <BaseTable>
+                <BaseThead>
+                  <BaseTr>
+                    <BaseTh>Pos</BaseTh>
+                    <BaseTh>Name</BaseTh>
+                    <BaseTh>Phone</BaseTh>
+                    <BaseTh>BeemID</BaseTh>
+                    <BaseTh>Cash</BaseTh>
+                    <BaseTh>Joined</BaseTh>
+
+                    <BaseTh width={0}></BaseTh>
+                  </BaseTr>
+                </BaseThead>
+                <BaseTbody>
+                  {eventAttendees.map((eventAttendee, index) => (
+                    <Draggable
+                      key={index}
+                      draggableId={eventAttendee.attendee.phoneNumber}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <Tr
+                          key={index}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          backgroundColor={"white"}
                         >
-                          Unconfirm
-                        </MenuItem>
+                          <BaseTd>{index + 1}</BaseTd>
+                          <BaseTd>
+                            {eventAttendee.attendee.firstname}{" "}
+                            {eventAttendee.attendee.lastname}
+                          </BaseTd>
+                          <BaseTd>{eventAttendee.attendee.phoneNumber}</BaseTd>
+                          <BaseTd>
+                            {eventAttendee.attendee.beemId || <MinusIcon />}
+                          </BaseTd>
+                          <BaseTd>
+                            {eventAttendee.isPayingCash ? (
+                              <CheckIcon />
+                            ) : (
+                              <CloseIcon />
+                            )}
+                          </BaseTd>
+                          <BaseTd>
+                            {tableViewFormat(eventAttendee.attendee.createdAt)}
+                          </BaseTd>
+                          <BaseTd width={0}>
+                            <Menu>
+                              <MenuButton
+                                as={IconButton}
+                                aria-label="Options"
+                                icon={<BsThreeDotsVertical />}
+                                variant="ghost"
+                                colorScheme="gray"
+                                rounded="full"
+                              />
+                              <MenuList>
+                                {isWaitlist ? (
+                                  <>
+                                    <MenuItem
+                                      color="green.500"
+                                      onClick={() =>
+                                        confirmWaitlistAttendee(
+                                          eventAttendee.attendee
+                                        )
+                                      }
+                                    >
+                                      Confirm
+                                    </MenuItem>
+                                    <EventAttendeeDeleteModal
+                                      attendee={eventAttendee.attendee}
+                                      eventId={eventId}
+                                    />
+                                  </>
+                                ) : (
+                                  <MenuItem
+                                    color="red.500"
+                                    onClick={() =>
+                                      removeConfirmedAttendee(
+                                        eventAttendee.attendee
+                                      )
+                                    }
+                                  >
+                                    Unconfirm
+                                  </MenuItem>
+                                )}
+                              </MenuList>
+                            </Menu>
+                          </BaseTd>
+                        </Tr>
                       )}
-                    </MenuList>
-                  </Menu>
-                </BaseTd>
-              </BaseTr>
-            ))}
-          </BaseTbody>
-        </BaseTable>
-      </Box>
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </BaseTbody>
+              </BaseTable>
+            </Box>
+          )}
+        </Droppable>
+      </DragDropContext>
     </>
   ) : (
     <Box overflowX="auto">

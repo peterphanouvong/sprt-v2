@@ -107,10 +107,16 @@ let EventResolver = class EventResolver {
         console.log("MY INPUT: ", input);
         const createAttendee = new attendee_1.AttendeeResolver().createAttendee;
         const res = await createAttendee(input);
+        const num = await typeorm_1.getConnection().query(`
+      select count(*) 
+      from "event_attendee" ea 
+      where ea."eventId" = ${id};
+    `);
         await EventAttendee_1.EventAttendee.insert({
             eventId: id,
             attendeeId: res.id,
             isPayingCash: input.isPayingCash,
+            position: num[0].count,
         });
         pubSub.publish(`EVENT-${id}`, EventAttendee_1.EventAttendee.find({ where: { eventId: id }, relations: ["attendee"] }));
         return true;

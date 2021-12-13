@@ -4,6 +4,7 @@ subscription eventAttendees($id: Float!) {
     attendeeId
     isConfirmed
     isPayingCash
+    position
     attendee {
       id
       lastname
