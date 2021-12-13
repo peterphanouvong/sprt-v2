@@ -23,6 +23,7 @@ interface Props {
 }
 
 const EventAttendeeTable: React.FC<Props> = ({ eventAttendees }) => {
+  console.log(eventAttendees);
   return eventAttendees.length > 0 ? (
     <>
       <Box overflowX="auto">
@@ -36,7 +37,7 @@ const EventAttendeeTable: React.FC<Props> = ({ eventAttendees }) => {
           </BaseThead>
           <BaseTbody>
             {eventAttendees
-              .filter((eventAttendee) => !eventAttendee.isConfirmed)
+              // .filter((eventAttendee) => !eventAttendee.isConfirmed)
               .map((eventAttendee, index) => (
                 <BaseTr key={index}>
                   <BaseTd>{index + 1}</BaseTd>
