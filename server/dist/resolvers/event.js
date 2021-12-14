@@ -172,6 +172,24 @@ let EventResolver = class EventResolver {
         await Event_1.Event.merge(event, { isCompleted: false }).save();
         return event;
     }
+    async shiftAttendeePosition(src, dest, eventId, attendeeId, pubSub) {
+        if (src > dest) {
+            for (let pos = src - 1; pos >= dest; pos--) {
+                await EventAttendee_1.EventAttendee.update({ eventId, position: pos }, { position: pos + 1 });
+            }
+        }
+        else {
+            for (let pos = src + 1; pos <= dest; pos++) {
+                await EventAttendee_1.EventAttendee.update({ eventId, position: pos }, { position: pos - 1 });
+            }
+        }
+        await EventAttendee_1.EventAttendee.update({ eventId, attendeeId }, { position: dest });
+        pubSub.publish(`EVENT-${eventId}`, EventAttendee_1.EventAttendee.find({
+            where: { eventId: eventId },
+            relations: ["attendee"],
+        }));
+        return false;
+    }
     async deleteEvent(id) {
         await Event_1.Event.delete(id);
         return true;
@@ -337,6 +355,17 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "markEventAsLive", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg("src")),
+    __param(1, type_graphql_1.Arg("dest")),
+    __param(2, type_graphql_1.Arg("eventId")),
+    __param(3, type_graphql_1.Arg("attendeeId")),
+    __param(4, type_graphql_1.PubSub()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number, Number, Number, type_graphql_1.PubSubEngine]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "shiftAttendeePosition", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
     __param(0, type_graphql_1.Arg("id")),

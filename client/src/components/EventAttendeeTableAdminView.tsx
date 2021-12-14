@@ -13,6 +13,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import {
   EventAttendee,
   useConfirmAttendeeMutation,
+  useShiftAttendeePositionMutation,
   useUnconfirmAttendeeMutation,
 } from "../generated/graphql";
 import { tableViewFormat } from "../utils/parseDate";
@@ -40,6 +41,7 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
 }) => {
   const [, confirmAttendee] = useConfirmAttendeeMutation();
   const [, unconfirmAttendee] = useUnconfirmAttendeeMutation();
+  const [, shiftAttendeePosition] = useShiftAttendeePositionMutation();
 
   const confirmWaitlistAttendee = (attendee) => {
     console.log(attendee);
@@ -56,7 +58,8 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
   return eventAttendees.length > 0 ? (
     <>
       <DragDropContext
-        onDragEnd={(result) => {
+        onDragEnd={async (result) => {
+          console.log(result);
           const { destination, source, draggableId } = result;
           if (!destination) {
             return;
@@ -71,6 +74,24 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
           }
           // TODO: finish reordering
           // database now stores the position -> update the positions after dropping
+          // Sort event attendees by position when passing through components
+
+          // if src > dest (moving attendee up table)
+          // for all positions between src and destination:
+          // add one to position
+          // destination = source position
+
+          // if dest > src (moving attendee down table)
+          // for all positions between dest and src
+          // subtract one to position
+          // src = dest
+
+          await shiftAttendeePosition({
+            src: source.index,
+            dest: destination.index,
+            eventId: eventId,
+            attendeeId: parseInt(result.draggableId, 10),
+          });
         }}
       >
         <Droppable droppableId="droppable">
@@ -94,86 +115,95 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
                   </BaseTr>
                 </BaseThead>
                 <BaseTbody>
-                  {eventAttendees.map((eventAttendee, index) => (
-                    <Draggable
-                      key={index}
-                      draggableId={eventAttendee.attendee.phoneNumber}
-                      index={index}
-                    >
-                      {(provided) => (
-                        <Tr
-                          key={index}
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          backgroundColor={"white"}
-                        >
-                          <BaseTd>{index + 1}</BaseTd>
-                          <BaseTd>
-                            {eventAttendee.attendee.firstname}{" "}
-                            {eventAttendee.attendee.lastname}
-                          </BaseTd>
-                          <BaseTd>{eventAttendee.attendee.phoneNumber}</BaseTd>
-                          <BaseTd>
-                            {eventAttendee.attendee.beemId || <MinusIcon />}
-                          </BaseTd>
-                          <BaseTd>
-                            {eventAttendee.isPayingCash ? (
-                              <CheckIcon />
-                            ) : (
-                              <CloseIcon />
-                            )}
-                          </BaseTd>
-                          <BaseTd>
-                            {tableViewFormat(eventAttendee.attendee.createdAt)}
-                          </BaseTd>
-                          <BaseTd width={0}>
-                            <Menu>
-                              <MenuButton
-                                as={IconButton}
-                                aria-label="Options"
-                                icon={<BsThreeDotsVertical />}
-                                variant="ghost"
-                                colorScheme="gray"
-                                rounded="full"
-                              />
-                              <MenuList>
-                                {isWaitlist ? (
-                                  <>
+                  {eventAttendees
+                    .sort(
+                      (a: EventAttendee, b: EventAttendee) =>
+                        a.position - b.position
+                    )
+                    .map((eventAttendee, index) => (
+                      <Draggable
+                        key={eventAttendee.attendeeId}
+                        draggableId={eventAttendee.attendee.id.toString()}
+                        index={index}
+                      >
+                        {(provided) => (
+                          <Tr
+                            key={index}
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            backgroundColor={"white"}
+                          >
+                            <BaseTd>{index + 1}</BaseTd>
+                            <BaseTd>
+                              {eventAttendee.attendee.firstname}{" "}
+                              {eventAttendee.attendee.lastname}
+                            </BaseTd>
+                            <BaseTd>
+                              {eventAttendee.attendee.phoneNumber}
+                            </BaseTd>
+                            <BaseTd>
+                              {eventAttendee.attendee.beemId || <MinusIcon />}
+                            </BaseTd>
+                            <BaseTd>
+                              {eventAttendee.isPayingCash ? (
+                                <CheckIcon />
+                              ) : (
+                                <CloseIcon />
+                              )}
+                            </BaseTd>
+                            <BaseTd>
+                              {tableViewFormat(
+                                eventAttendee.attendee.createdAt
+                              )}
+                            </BaseTd>
+                            <BaseTd width={0}>
+                              <Menu>
+                                <MenuButton
+                                  as={IconButton}
+                                  aria-label="Options"
+                                  icon={<BsThreeDotsVertical />}
+                                  variant="ghost"
+                                  colorScheme="gray"
+                                  rounded="full"
+                                />
+                                <MenuList>
+                                  {isWaitlist ? (
+                                    <>
+                                      <MenuItem
+                                        color="green.500"
+                                        onClick={() =>
+                                          confirmWaitlistAttendee(
+                                            eventAttendee.attendee
+                                          )
+                                        }
+                                      >
+                                        Confirm
+                                      </MenuItem>
+                                      <EventAttendeeDeleteModal
+                                        attendee={eventAttendee.attendee}
+                                        eventId={eventId}
+                                      />
+                                    </>
+                                  ) : (
                                     <MenuItem
-                                      color="green.500"
+                                      color="red.500"
                                       onClick={() =>
-                                        confirmWaitlistAttendee(
+                                        removeConfirmedAttendee(
                                           eventAttendee.attendee
                                         )
                                       }
                                     >
-                                      Confirm
+                                      Unconfirm
                                     </MenuItem>
-                                    <EventAttendeeDeleteModal
-                                      attendee={eventAttendee.attendee}
-                                      eventId={eventId}
-                                    />
-                                  </>
-                                ) : (
-                                  <MenuItem
-                                    color="red.500"
-                                    onClick={() =>
-                                      removeConfirmedAttendee(
-                                        eventAttendee.attendee
-                                      )
-                                    }
-                                  >
-                                    Unconfirm
-                                  </MenuItem>
-                                )}
-                              </MenuList>
-                            </Menu>
-                          </BaseTd>
-                        </Tr>
-                      )}
-                    </Draggable>
-                  ))}
+                                  )}
+                                </MenuList>
+                              </Menu>
+                            </BaseTd>
+                          </Tr>
+                        )}
+                      </Draggable>
+                    ))}
                   {provided.placeholder}
                 </BaseTbody>
               </BaseTable>

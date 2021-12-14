@@ -153,6 +153,7 @@ export type Mutation = {
   unconfirmAttendee: Scalars['Boolean'];
   markEventAsComplete: Event;
   markEventAsLive: Event;
+  shiftAttendeePosition: Scalars['Boolean'];
   deleteEvent: Scalars['Boolean'];
   eventAttendeesTrigger: Array<EventAttendee>;
   createEventTemplate: EventTemplate;
@@ -229,6 +230,14 @@ export type MutationMarkEventAsCompleteArgs = {
 
 export type MutationMarkEventAsLiveArgs = {
   id: Scalars['Float'];
+};
+
+
+export type MutationShiftAttendeePositionArgs = {
+  attendeeId: Scalars['Float'];
+  eventId: Scalars['Float'];
+  dest: Scalars['Float'];
+  src: Scalars['Float'];
 };
 
 
@@ -561,6 +570,16 @@ export type RemoveAttendeeMutationVariables = Exact<{
 
 
 export type RemoveAttendeeMutation = { __typename?: 'Mutation', removeAttendee: boolean };
+
+export type ShiftAttendeePositionMutationVariables = Exact<{
+  attendeeId: Scalars['Float'];
+  eventId: Scalars['Float'];
+  dest: Scalars['Float'];
+  src: Scalars['Float'];
+}>;
+
+
+export type ShiftAttendeePositionMutation = { __typename?: 'Mutation', shiftAttendeePosition: boolean };
 
 export type UnconfirmAttendeeMutationVariables = Exact<{
   attendeeId: Scalars['Float'];
@@ -903,6 +922,20 @@ export const RemoveAttendeeDocument = gql`
 
 export function useRemoveAttendeeMutation() {
   return Urql.useMutation<RemoveAttendeeMutation, RemoveAttendeeMutationVariables>(RemoveAttendeeDocument);
+};
+export const ShiftAttendeePositionDocument = gql`
+    mutation ShiftAttendeePosition($attendeeId: Float!, $eventId: Float!, $dest: Float!, $src: Float!) {
+  shiftAttendeePosition(
+    attendeeId: $attendeeId
+    eventId: $eventId
+    dest: $dest
+    src: $src
+  )
+}
+    `;
+
+export function useShiftAttendeePositionMutation() {
+  return Urql.useMutation<ShiftAttendeePositionMutation, ShiftAttendeePositionMutationVariables>(ShiftAttendeePositionDocument);
 };
 export const UnconfirmAttendeeDocument = gql`
     mutation UnconfirmAttendee($attendeeId: Float!, $eventId: Float!) {

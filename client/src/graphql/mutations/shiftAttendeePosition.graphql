@@ -1,0 +1,13 @@
+mutation ShiftAttendeePosition(
+  $attendeeId: Float!
+  $eventId: Float!
+  $dest: Float!
+  $src: Float!
+) {
+  shiftAttendeePosition(
+    attendeeId: $attendeeId
+    eventId: $eventId
+    dest: $dest
+    src: $src
+  )
+}

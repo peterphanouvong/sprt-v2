@@ -239,6 +239,43 @@ export class EventResolver {
     return event;
   }
 
+  @Mutation(() => Boolean)
+  async shiftAttendeePosition(
+    @Arg("src") src: number,
+    @Arg("dest") dest: number,
+    @Arg("eventId") eventId: number,
+    @Arg("attendeeId") attendeeId: number,
+    @PubSub() pubSub: PubSubEngine
+  ) {
+    // Moving attendee towards top of queue
+    if (src > dest) {
+      for (let pos: number = src - 1; pos >= dest; pos--) {
+        await EventAttendee.update(
+          { eventId, position: pos },
+          { position: pos + 1 }
+        );
+      }
+    } else {
+      // Moving attendee towards bottom of queue
+      for (let pos: number = src + 1; pos <= dest; pos++) {
+        await EventAttendee.update(
+          { eventId, position: pos },
+          { position: pos - 1 }
+        );
+      }
+    }
+    await EventAttendee.update({ eventId, attendeeId }, { position: dest });
+    pubSub.publish(
+      `EVENT-${eventId}`,
+      EventAttendee.find({
+        where: { eventId: eventId },
+        relations: ["attendee"],
+      })
+    );
+
+    return false;
+  }
+
   // delete.
   @Mutation(() => Boolean)
   async deleteEvent(@Arg("id") id: string): Promise<boolean> {
