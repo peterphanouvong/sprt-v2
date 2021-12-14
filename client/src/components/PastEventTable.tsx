@@ -1,26 +1,26 @@
 import {
+  Box,
+  IconButton,
+  Link,
   Menu,
   MenuButton,
-  IconButton,
-  MenuList,
   MenuItem,
-  Link,
+  MenuList,
   useToast,
-  Box,
 } from "@chakra-ui/react";
+import NextLink from "next/link";
 import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Maybe, useMarkEventAsLiveMutation } from "../generated/graphql";
-import { parseDatePretty } from "../utils/parseDate";
+import { parseDateStandard } from "../utils/parseDate";
 import {
   BaseTable,
-  BaseThead,
-  BaseTr,
-  BaseTh,
   BaseTbody,
   BaseTd,
+  BaseTh,
+  BaseThead,
+  BaseTr,
 } from "./BaseTable";
-import NextLink from "next/link";
 import { EventDeleteModal } from "./EventDeleteModal";
 
 interface Props {
@@ -59,7 +59,7 @@ const PastEventTable: React.FC<Props> = ({ pastEvents }) => {
                   <Link>{event.title}</Link>
                 </NextLink>
               </BaseTd>
-              <BaseTd>{parseDatePretty(event.date)}</BaseTd>
+              <BaseTd>{parseDateStandard(event.date)}</BaseTd>
               <BaseTd>
                 {event.capacity
                   ? event.numConfirmed + "/" + event.capacity
