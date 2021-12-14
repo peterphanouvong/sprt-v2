@@ -79,7 +79,7 @@ export class EventResolver {
     const event = await Event.findOne(id, { relations: ["owner"] });
     console.log("event", event);
 
-    return Event.findOne(id, { relations: ["owner"] });
+    return event;
   }
 
   @Query(() => Event)
