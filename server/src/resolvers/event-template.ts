@@ -75,10 +75,11 @@ export class EventTemplateResolver {
     @Arg("input") input: EventTemplateInput,
     @Ctx() { req }: MyContext
   ): Promise<EventTemplate | undefined> {
-    const eventTemplate = await EventTemplate.create(input).save();
-    await EventTemplate.update(eventTemplate.id, {
+    const eventTemplate = await EventTemplate.create({
+      ...input,
       ownerId: req.session.userId,
-    });
+    }).save();
+
     return eventTemplate;
   }
 

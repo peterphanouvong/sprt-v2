@@ -85,10 +85,7 @@ let EventTemplateResolver = class EventTemplateResolver {
         return EventTemplate_1.EventTemplate.findOne({ id });
     }
     async createEventTemplate(input, { req }) {
-        const eventTemplate = await EventTemplate_1.EventTemplate.create(input).save();
-        await EventTemplate_1.EventTemplate.update(eventTemplate.id, {
-            ownerId: req.session.userId,
-        });
+        const eventTemplate = await EventTemplate_1.EventTemplate.create(Object.assign(Object.assign({}, input), { ownerId: req.session.userId })).save();
         return eventTemplate;
     }
     async deleteEventTemplate(templateId) {
