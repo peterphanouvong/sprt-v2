@@ -144,7 +144,7 @@ const EventFreshForm: React.FC<Props> = ({ initialValues }) => {
                   name="capacity"
                   touched={props.touched.capacity as boolean}
                   type="number"
-                  width="200px"
+                  width={20}
                 />
 
                 <BaseInputField
@@ -152,7 +152,7 @@ const EventFreshForm: React.FC<Props> = ({ initialValues }) => {
                   name="clubBeemId"
                   touched={props.touched.clubBeemId as boolean}
                   type="string"
-                  width={20}
+                  width="200px"
                 />
 
                 <BaseDynamicEditor
