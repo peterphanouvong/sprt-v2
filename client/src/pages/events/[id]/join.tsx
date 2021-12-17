@@ -1,4 +1,13 @@
-import { Grid, Spinner } from "@chakra-ui/react";
+import {
+  Flex,
+  Grid,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Spinner,
+} from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -8,12 +17,14 @@ import { BaseLayout } from "../../../components/BaseLayout";
 import { BasePageHeader } from "../../../components/BasePageHeader";
 import { EventPageSideNav } from "../../../components/EventPageSideNav";
 import { EventSignUpStuff } from "../../../components/EventSignUpStuff";
-import { useEventQuery } from "../../../generated/graphql";
+import { useEventQuery, useMeQuery } from "../../../generated/graphql";
 import { createUrqlClient } from "../../../utils/createUrqlClient";
 import { Event } from "../../../generated/graphql";
 import { EventPageOverview } from "../../../components/EventPageOverview";
 import { useIsMobileScreen } from "../../../utils/useIsMobileScreen";
 import { BaseBreadcrumbs } from "../../../components/BaseBreadcrumbs";
+import { SettingsIcon } from "@chakra-ui/icons";
+import { EventDeleteModal } from "../../../components/EventDeleteModal";
 interface Props {}
 
 const EventJoin: React.FC<Props> = ({}) => {
@@ -26,7 +37,7 @@ const EventJoin: React.FC<Props> = ({}) => {
     pause: id === undefined,
     variables: { id: id as string },
   });
-
+  const [{ data: me }] = useMeQuery();
   if (fetching) {
     return <Spinner />;
   }
@@ -40,7 +51,30 @@ const EventJoin: React.FC<Props> = ({}) => {
       <Head>
         <title>EventSignUp | sprt</title>
       </Head>
-      <BasePageHeader>{data?.event.title}</BasePageHeader>
+      <BasePageHeader>
+        <Flex justify="space-between">
+          <div>{data?.event.title}</div>
+
+          {data?.event.owner.id === me?.me?.id && (
+            <div>
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  aria-label="Options"
+                  icon={<SettingsIcon />}
+                  variant="ghost"
+                  colorScheme="gray"
+                  rounded="full"
+                />
+                <MenuList fontSize="md">
+                  <MenuItem>Mark as complete</MenuItem>
+                  <EventDeleteModal event={data!.event} />
+                </MenuList>
+              </Menu>
+            </div>
+          )}
+        </Flex>
+      </BasePageHeader>
 
       <EventPageOverview event={data?.event as Event} />
 

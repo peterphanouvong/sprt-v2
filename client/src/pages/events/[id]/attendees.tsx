@@ -1,8 +1,14 @@
+import { SettingsIcon } from "@chakra-ui/icons";
 import {
   Box,
   Flex,
   Grid,
   Heading,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Spinner,
   Switch,
   Text,
@@ -17,6 +23,7 @@ import { BaseLayout } from "../../../components/BaseLayout";
 import { BasePageHeader } from "../../../components/BasePageHeader";
 import { EventAttendeeTable } from "../../../components/EventAttendeeTable";
 import { EventAttendeeTableAdminView } from "../../../components/EventAttendeeTableAdminView";
+import { EventDeleteModal } from "../../../components/EventDeleteModal";
 import { EventPageOverview } from "../../../components/EventPageOverview";
 import { EventPageSideNav } from "../../../components/EventPageSideNav";
 import {
@@ -56,8 +63,6 @@ const EventAttendees: React.FC<Props> = ({}) => {
 
   const [, trigger] = useEventAttendeesTriggerMutation();
 
-  console.log("attendeeData", attendeeData);
-
   useEffect(() => {
     if (id) {
       console.log("trigger");
@@ -78,7 +83,30 @@ const EventAttendees: React.FC<Props> = ({}) => {
       <Head>
         <title>EventAttendees | sprt</title>
       </Head>
-      <BasePageHeader>{data?.event.title}</BasePageHeader>
+      <BasePageHeader>
+        <Flex justify="space-between">
+          <div>{data?.event.title}</div>
+
+          {data?.event.owner.id === me?.me?.id && (
+            <div>
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  aria-label="Options"
+                  icon={<SettingsIcon />}
+                  variant="ghost"
+                  colorScheme="gray"
+                  rounded="full"
+                />
+                <MenuList fontSize="md">
+                  <MenuItem>Mark as complete</MenuItem>
+                  <EventDeleteModal event={data!.event} />
+                </MenuList>
+              </Menu>
+            </div>
+          )}
+        </Flex>
+      </BasePageHeader>
       <EventPageOverview event={data?.event as Event} />
 
       <BaseContent flex={1}>
