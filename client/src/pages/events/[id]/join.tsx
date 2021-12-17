@@ -1,3 +1,4 @@
+import { SettingsIcon } from "@chakra-ui/icons";
 import {
   Flex,
   Grid,
@@ -12,19 +13,19 @@ import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React from "react";
+import { BaseBreadcrumbs } from "../../../components/BaseBreadcrumbs";
 import { BaseContent } from "../../../components/BaseContent";
 import { BaseLayout } from "../../../components/BaseLayout";
 import { BasePageHeader } from "../../../components/BasePageHeader";
+import { EventDeleteModal } from "../../../components/EventDeleteModal";
+import { EventJoinAttendeeInfoCard } from "../../../components/EventJoinAttendeeInfoCard";
+import { EventPageOverview } from "../../../components/EventPageOverview";
 import { EventPageSideNav } from "../../../components/EventPageSideNav";
 import { EventSignUpStuff } from "../../../components/EventSignUpStuff";
-import { useEventQuery, useMeQuery } from "../../../generated/graphql";
+import { Event, useEventQuery, useMeQuery } from "../../../generated/graphql";
 import { createUrqlClient } from "../../../utils/createUrqlClient";
-import { Event } from "../../../generated/graphql";
-import { EventPageOverview } from "../../../components/EventPageOverview";
 import { useIsMobileScreen } from "../../../utils/useIsMobileScreen";
-import { BaseBreadcrumbs } from "../../../components/BaseBreadcrumbs";
-import { SettingsIcon } from "@chakra-ui/icons";
-import { EventDeleteModal } from "../../../components/EventDeleteModal";
+
 interface Props {}
 
 const EventJoin: React.FC<Props> = ({}) => {
@@ -88,6 +89,11 @@ const EventJoin: React.FC<Props> = ({}) => {
                 { href: `/events/${id}/attendees`, title: "See who's going" },
               ]}
             />
+            \
+            <EventJoinAttendeeInfoCard
+              numConfirmed={data?.event.numConfirmed}
+              id={id as string}
+            />
             <EventSignUpStuff
               id={id as string}
               clubBeemId={data!.event.clubBeemId}
@@ -96,10 +102,16 @@ const EventJoin: React.FC<Props> = ({}) => {
         ) : (
           <Grid templateColumns="1fr 3fr" gridGap={4} alignItems="start">
             <EventPageSideNav id={id as string} />
-            <EventSignUpStuff
-              id={id as string}
-              clubBeemId={data!.event.clubBeemId}
-            />
+            <div>
+              <EventJoinAttendeeInfoCard
+                numConfirmed={data?.event.numConfirmed}
+                id={id as string}
+              />
+              <EventSignUpStuff
+                id={id as string}
+                clubBeemId={data!.event.clubBeemId}
+              />
+            </div>
           </Grid>
         )}
       </BaseContent>
