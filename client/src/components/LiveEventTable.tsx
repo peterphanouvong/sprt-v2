@@ -12,7 +12,7 @@ import NextLink from "next/link";
 import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Maybe, useMarkEventAsCompleteMutation } from "../generated/graphql";
-import { parseDatePretty } from "../utils/parseDate";
+import { parseDateStandard } from "../utils/parseDate";
 import {
   BaseTable,
   BaseTbody,
@@ -60,7 +60,7 @@ const LiveEventTable: React.FC<Props> = ({ liveEvents }) => {
                     <Link>{event.title}</Link>
                   </NextLink>
                 </BaseTd>
-                <BaseTd>{parseDatePretty(event.date)}</BaseTd>
+                <BaseTd>{parseDateStandard(event.date)}</BaseTd>
                 <BaseTd>
                   {event.capacity
                     ? event.numConfirmed + "/" + event.capacity
@@ -80,26 +80,17 @@ const LiveEventTable: React.FC<Props> = ({ liveEvents }) => {
                     <MenuList>
                       <MenuItem
                         onClick={async () => {
-                          const res = await markEventAsComplete({
+                          await markEventAsComplete({
                             id: event.id,
                           });
-                          if (res.data?.markEventAsComplete) {
-                            toast({
-                              description: `${event.title} marked as complete`,
-                              isClosable: true,
-                              position: "top",
-                              status: "success",
-                              variant: "subtle",
-                            });
-                          } else {
-                            toast({
-                              description: "Something went wrong",
-                              isClosable: true,
-                              position: "top",
-                              status: "error",
-                              variant: "subtle",
-                            });
-                          }
+
+                          toast({
+                            description: `${event.title} marked as complete`,
+                            isClosable: true,
+                            position: "top",
+                            status: "success",
+                            variant: "subtle",
+                          });
                         }}
                       >
                         Mark as complete

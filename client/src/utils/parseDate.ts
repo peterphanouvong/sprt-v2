@@ -18,6 +18,12 @@ export const formatDateForPostgres = (dateString: string) => {
   return format(new Date(dateString), "yyyy-MM-dd HH:mm:ss xxx");
 };
 
+export const parseDateStandard = (dateString: string | null | undefined) => {
+  if (dateString === null || dateString === undefined) return null;
+  const date = new Date(parseInt(dateString));
+  return format(date, "dd-MM-yyyy");
+};
+
 export const convertEpochToDate = (epochString: string | null | undefined) => {
   if (epochString === null || epochString === undefined || epochString === "")
     return null;

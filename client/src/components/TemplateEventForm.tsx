@@ -133,10 +133,18 @@ const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
       } else {
         console.log("IT WORKD");
         console.log(data);
-      }
+        // TODO: toast
+        toast({
+          description: "Successfully created event template",
+          isClosable: true,
+          position: "top",
+          status: "success",
+          variant: "subtle",
+        });
 
-      if (onClose) {
-        onClose();
+        if (onClose) {
+          onClose();
+        }
       }
     }
   };
