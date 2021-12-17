@@ -16,18 +16,25 @@ const EventSignUpStuff: React.FC<Props> = ({ id, clubBeemId }) => {
   );
   return hasSignedUp ? (
     <Box>
-      <Alert mb={2} status="success">
+      <Alert alignItems="start" mb={2} status="success">
         <AlertIcon />
-        <Text variant="body-2">
-          You've been added to the waitlist for this event!
-        </Text>
+        <Box>
+          <Text variant="body-2">
+            You've been added to the waitlist for this event!
+          </Text>
+          {clubBeemId && (
+            <Text variant="body-2">
+              Please pay on beem to confirm your spot 😊 ({clubBeemId})
+            </Text>
+          )}
+        </Box>
       </Alert>
-      <Alert status="info">
+      {/* <Alert status="info">
         <AlertIcon />
         <Text variant="body-2">
           Please pay on beem to confirm your spot 😊 ({clubBeemId})
         </Text>
-      </Alert>
+      </Alert> */}
     </Box>
   ) : (
     <BaseSection title="Join event">

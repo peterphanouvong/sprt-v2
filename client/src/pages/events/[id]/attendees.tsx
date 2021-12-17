@@ -54,7 +54,9 @@ const EventAttendees: React.FC<Props> = ({}) => {
     },
   });
 
-  const [{ data: attendeeData }] = useEventAttendeesSubscription({
+  const [
+    { data: attendeeData, fetching: attendeeFetching },
+  ] = useEventAttendeesSubscription({
     pause: id === undefined,
     variables: {
       id: parseInt(id as string),
@@ -70,11 +72,11 @@ const EventAttendees: React.FC<Props> = ({}) => {
     }
   }, [id]);
 
-  if (fetching) {
+  if (fetching || attendeeFetching) {
     return <Spinner />;
   }
 
-  if (!fetching && (!data || !attendeeData)) {
+  if (!data || !attendeeData) {
     return <>no data </>;
   }
 
