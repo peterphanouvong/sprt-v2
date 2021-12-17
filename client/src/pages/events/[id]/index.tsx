@@ -1,8 +1,15 @@
+import { SettingsIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
   Box,
   Button,
+  Flex,
   Grid,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Spinner,
   Text,
 } from "@chakra-ui/react";
@@ -17,9 +24,10 @@ import { BaseDynamicEditor } from "../../../components/BaseDynamicEditor";
 import { BaseLayout } from "../../../components/BaseLayout";
 import { BasePageHeader } from "../../../components/BasePageHeader";
 import { BaseSection } from "../../../components/BaseSection";
+import { EventDeleteModal } from "../../../components/EventDeleteModal";
 import { EventPageOverview } from "../../../components/EventPageOverview";
 import { EventPageSideNav } from "../../../components/EventPageSideNav";
-import { Event, useEventQuery } from "../../../generated/graphql";
+import { Event, useEventQuery, useMeQuery } from "../../../generated/graphql";
 import { createUrqlClient } from "../../../utils/createUrqlClient";
 import { getYoutubeVideoId } from "../../../utils/getYoutubeVideoId";
 import { parseRichText } from "../../../utils/parseRichText";
@@ -40,7 +48,7 @@ const EventOverview: React.FC<Props> = ({}) => {
     },
   });
 
-  console.log(data);
+  const [{ data: me }] = useMeQuery();
 
   if (fetching) {
     return <Spinner />;
@@ -55,7 +63,30 @@ const EventOverview: React.FC<Props> = ({}) => {
       <Head>
         <title>EventOverview | sprt</title>
       </Head>
-      <BasePageHeader>{data?.event.title}</BasePageHeader>
+      <BasePageHeader>
+        <Flex justify="space-between">
+          <div>{data?.event.title}</div>
+
+          {data?.event.owner.id === me?.me?.id && (
+            <div>
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  aria-label="Options"
+                  icon={<SettingsIcon />}
+                  variant="ghost"
+                  colorScheme="gray"
+                  rounded="full"
+                />
+                <MenuList fontSize="md">
+                  <MenuItem>Mark as complete</MenuItem>
+                  <EventDeleteModal event={data!.event} />
+                </MenuList>
+              </Menu>
+            </div>
+          )}
+        </Flex>
+      </BasePageHeader>
       <EventPageOverview event={data?.event as Event} />
       <BaseContent flex={1}>
         {isMobile ? (
