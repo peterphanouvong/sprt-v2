@@ -88,8 +88,8 @@ __decorate([
     __metadata("design:type", Number)
 ], Event.prototype, "capacity", void 0);
 __decorate([
-    type_graphql_1.Field(() => String),
-    typeorm_1.Column(),
+    type_graphql_1.Field(() => String, { nullable: true }),
+    typeorm_1.Column({ nullable: true }),
     __metadata("design:type", String)
 ], Event.prototype, "clubBeemId", void 0);
 __decorate([
