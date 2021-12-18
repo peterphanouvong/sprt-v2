@@ -1,4 +1,12 @@
-import { Button, Checkbox, Flex, Switch, Text, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Checkbox,
+  Flex,
+  Switch,
+  Text,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React from "react";
 import * as Yup from "yup";
@@ -32,14 +40,15 @@ const EventSchema = Yup.object().shape({
 
 const EventSignUpForm: React.FC<Props> = ({
   eventId,
-  isFull,
+  // isFull,
   setHasSignedUp,
 }) => {
   const [, attendeeExists] = useAttendeeExistsMutation();
   const [, addNewAttendee] = useAddNewAttendeeMutation();
   const [isPayingCash, setIsPayingCash] = React.useState<boolean>(false);
+  const toast = useToast();
 
-  console.log(isFull);
+  // console.log(isFull);
 
   return (
     <Formik
@@ -52,8 +61,8 @@ const EventSignUpForm: React.FC<Props> = ({
         isPayingCash: false,
       }}
       validationSchema={EventSchema}
-      onSubmit={async (values) => {
-        console.log("values", values);
+      onSubmit={async (values, actions) => {
+        // console.log("values", values);
         const exists = await attendeeExists({ phoneNumber: values.phone });
 
         if (exists.data?.attendeeExists) {
@@ -72,6 +81,16 @@ const EventSignUpForm: React.FC<Props> = ({
 
         setHasSignedUp(true);
         localStorage.setItem(`event:${eventId}`, "true");
+
+        toast({
+          description: "Success!",
+          isClosable: true,
+          position: "top",
+          status: "success",
+          variant: "subtle",
+        });
+
+        actions.resetForm();
 
         console.log(res);
       }}

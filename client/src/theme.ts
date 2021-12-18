@@ -62,7 +62,7 @@ const theme = extendTheme(
   },
   withDefaultColorScheme({
     colorScheme: "brand",
-    components: ["Button", "Progress", "Spinner"],
+    components: ["Button", "Progress", "Spinner", "Switch"],
   }),
   withDefaultColorScheme({
     colorScheme: "gray",
