@@ -58,23 +58,22 @@ const EventSignUpForm: React.FC<Props> = ({
 
         if (exists.data?.attendeeExists) {
           alert("this guy already exists in the db");
-        } else {
-          const res = await addNewAttendee({
-            eventId: eventId,
-            input: {
-              firstname: values.firstName,
-              lastname: values.lastName,
-              beemId: values.beemId,
-              phoneNumber: values.phone,
-              isPayingCash: isPayingCash,
-            },
-          });
-
-          setHasSignedUp(true);
-          localStorage.setItem(`event:${eventId}`, "true");
-
-          console.log(res);
         }
+        const res = await addNewAttendee({
+          eventId: eventId,
+          input: {
+            firstname: values.firstName,
+            lastname: values.lastName,
+            beemId: values.beemId,
+            phoneNumber: values.phone,
+            isPayingCash: isPayingCash,
+          },
+        });
+
+        setHasSignedUp(true);
+        localStorage.setItem(`event:${eventId}`, "true");
+
+        console.log(res);
       }}
     >
       {(props) => (

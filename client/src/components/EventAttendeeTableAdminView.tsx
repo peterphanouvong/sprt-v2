@@ -1,14 +1,6 @@
 import { CheckIcon, CloseIcon, MinusIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-} from "@chakra-ui/react";
+import { Box, Button, ButtonGroup } from "@chakra-ui/react";
 import React from "react";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import {
   EventAttendee,
   useConfirmAttendeeMutation,
@@ -53,7 +45,7 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
 
   return eventAttendees.length > 0 ? (
     <>
-      <Box overflowX="auto">
+      <Box overflowX="auto" maxW="100%">
         <BaseTable>
           <BaseThead>
             <BaseTr>
@@ -86,43 +78,34 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
                   {tableViewFormat(eventAttendee.attendee.createdAt)}
                 </BaseTd>
                 <BaseTd width={0}>
-                  <Menu>
-                    <MenuButton
-                      as={IconButton}
-                      aria-label="Options"
-                      icon={<BsThreeDotsVertical />}
-                      variant="ghost"
-                      colorScheme="gray"
-                      rounded="full"
-                    />
-                    <MenuList>
-                      {isWaitlist ? (
-                        <>
-                          <MenuItem
-                            color="green.500"
-                            onClick={() =>
-                              confirmWaitlistAttendee(eventAttendee.attendee)
-                            }
-                          >
-                            Confirm
-                          </MenuItem>
-                          <EventAttendeeDeleteModal
-                            attendee={eventAttendee.attendee}
-                            eventId={eventId}
-                          />
-                        </>
-                      ) : (
-                        <MenuItem
-                          color="red.500"
-                          onClick={() =>
-                            removeConfirmedAttendee(eventAttendee.attendee)
-                          }
-                        >
-                          Unconfirm
-                        </MenuItem>
-                      )}
-                    </MenuList>
-                  </Menu>
+                  {isWaitlist ? (
+                    <ButtonGroup>
+                      <Button
+                        colorScheme="green"
+                        size="sm"
+                        onClick={() =>
+                          confirmWaitlistAttendee(eventAttendee.attendee)
+                        }
+                      >
+                        Confirm
+                      </Button>
+                      <EventAttendeeDeleteModal
+                        attendee={eventAttendee.attendee}
+                        eventId={eventId}
+                        as="button"
+                      />
+                    </ButtonGroup>
+                  ) : (
+                    <Button
+                      colorScheme="red"
+                      size="sm"
+                      onClick={() =>
+                        removeConfirmedAttendee(eventAttendee.attendee)
+                      }
+                    >
+                      Unconfirm
+                    </Button>
+                  )}
                 </BaseTd>
               </BaseTr>
             ))}
