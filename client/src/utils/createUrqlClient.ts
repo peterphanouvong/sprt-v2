@@ -10,7 +10,6 @@ import {
 } from "urql";
 import { pipe, tap } from "wonka";
 import {
-  CreateEventMutation,
   CreateEventTemplateMutation,
   DeleteEventMutationVariables,
   DeleteEventTemplateMutationVariables,
@@ -34,18 +33,16 @@ import {
 import { betterUpdateQuery } from "./betterUpdateQuery";
 import { isServer } from "./isServer";
 
-const errorExchange: Exchange =
-  ({ forward }) =>
-  (ops$) => {
-    return pipe(
-      forward(ops$),
-      tap(({ error }) => {
-        if (error?.message.includes("not authenticated")) {
-          router.replace("/login");
-        }
-      })
-    );
-  };
+const errorExchange: Exchange = ({ forward }) => (ops$) => {
+  return pipe(
+    forward(ops$),
+    tap(({ error }) => {
+      if (error?.message.includes("not authenticated")) {
+        router.replace("/login");
+      }
+    })
+  );
+};
 
 export const cursorPagination = (): Resolver => {
   return (_parent, fieldArgs, cache, info) => {
@@ -234,18 +231,6 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 __typename: "Event",
                 id: (args as DeleteEventMutationVariables).id,
               });
-            },
-            createEvent: (_result, _args, cache, _info) => {
-              betterUpdateQuery<CreateEventMutation, LiveEventsQuery>(
-                cache,
-                {
-                  query: LiveEventsDocument,
-                },
-                _result,
-                (res, data) => {
-                  return { liveEvents: [res.createEvent, ...data.liveEvents] };
-                }
-              );
             },
             joinQuickEvent: (_result, _args, cache, _info) => {
               betterUpdateQuery<JoinQuickEventMutation, QuickEventQuery>(

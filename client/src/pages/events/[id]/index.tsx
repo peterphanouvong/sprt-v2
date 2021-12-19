@@ -1,4 +1,18 @@
-import { AspectRatio, Button, Grid, Spinner, Text } from "@chakra-ui/react";
+import { SettingsIcon } from "@chakra-ui/icons";
+import {
+  AspectRatio,
+  Box,
+  Button,
+  Flex,
+  Grid,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import NextLink from "next/link";
@@ -10,9 +24,10 @@ import { BaseDynamicEditor } from "../../../components/BaseDynamicEditor";
 import { BaseLayout } from "../../../components/BaseLayout";
 import { BasePageHeader } from "../../../components/BasePageHeader";
 import { BaseSection } from "../../../components/BaseSection";
+import { EventDeleteModal } from "../../../components/EventDeleteModal";
 import { EventPageOverview } from "../../../components/EventPageOverview";
 import { EventPageSideNav } from "../../../components/EventPageSideNav";
-import { Event, useEventQuery } from "../../../generated/graphql";
+import { Event, useEventQuery, useMeQuery } from "../../../generated/graphql";
 import { createUrqlClient } from "../../../utils/createUrqlClient";
 import { getYoutubeVideoId } from "../../../utils/getYoutubeVideoId";
 import { parseRichText } from "../../../utils/parseRichText";
@@ -33,7 +48,7 @@ const EventOverview: React.FC<Props> = ({}) => {
     },
   });
 
-  console.log(data);
+  const [{ data: me }] = useMeQuery();
 
   if (fetching) {
     return <Spinner />;
@@ -48,7 +63,30 @@ const EventOverview: React.FC<Props> = ({}) => {
       <Head>
         <title>EventOverview | sprt</title>
       </Head>
-      <BasePageHeader>{data?.event.title}</BasePageHeader>
+      <BasePageHeader>
+        <Flex justify="space-between">
+          <div>{data?.event.title}</div>
+
+          {data?.event.owner.id === me?.me?.id && (
+            <div>
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  aria-label="Options"
+                  icon={<SettingsIcon />}
+                  variant="ghost"
+                  colorScheme="gray"
+                  rounded="full"
+                />
+                <MenuList fontSize="md">
+                  <MenuItem>Mark as complete</MenuItem>
+                  <EventDeleteModal event={data!.event} />
+                </MenuList>
+              </Menu>
+            </div>
+          )}
+        </Flex>
+      </BasePageHeader>
       <EventPageOverview event={data?.event as Event} />
       <BaseContent flex={1}>
         {isMobile ? (
@@ -63,12 +101,14 @@ const EventOverview: React.FC<Props> = ({}) => {
             <BaseSection title="Description">
               {data?.event.description !==
               '[{"type":"paragraph","children":[{"text":""}]}]' ? (
-                <BaseDynamicEditor
-                  name="description"
-                  initialValue={parseRichText(data?.event.description || "")}
-                  required
-                  readOnly
-                />
+                <Box mt="-16px" mb={4}>
+                  <BaseDynamicEditor
+                    name="description"
+                    initialValue={parseRichText(data?.event.description || "")}
+                    required
+                    readOnly
+                  />
+                </Box>
               ) : (
                 <Text variant="body-2">No description for this event.</Text>
               )}
@@ -96,14 +136,18 @@ const EventOverview: React.FC<Props> = ({}) => {
             <BaseSection title="Description">
               {data?.event.description !==
               '[{"type":"paragraph","children":[{"text":""}]}]' ? (
-                <BaseDynamicEditor
-                  name="description"
-                  initialValue={parseRichText(data?.event.description || "")}
-                  required
-                  readOnly
-                />
+                <Box mt="-16px" mb={4}>
+                  <BaseDynamicEditor
+                    name="description"
+                    initialValue={parseRichText(data?.event.description || "")}
+                    required
+                    readOnly
+                  />
+                </Box>
               ) : (
-                <Text variant="body-2">No description for this event.</Text>
+                <Text mb={4} variant="body-2">
+                  No description for this event.
+                </Text>
               )}
               {data?.event.youtubeLink && (
                 <AspectRatio ratio={16 / 9}>

@@ -2,9 +2,9 @@ import {
   Button,
   Checkbox,
   Flex,
-  FormLabel,
   Switch,
   Text,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
@@ -40,14 +40,15 @@ const EventSchema = Yup.object().shape({
 
 const EventSignUpForm: React.FC<Props> = ({
   eventId,
-  isFull,
+  // isFull,
   setHasSignedUp,
 }) => {
   const [, attendeeExists] = useAttendeeExistsMutation();
   const [, addNewAttendee] = useAddNewAttendeeMutation();
   const [isPayingCash, setIsPayingCash] = React.useState<boolean>(false);
+  const toast = useToast();
 
-  console.log(isFull);
+  // console.log(isFull);
 
   return (
     <Formik
@@ -60,29 +61,38 @@ const EventSignUpForm: React.FC<Props> = ({
         isPayingCash: false,
       }}
       validationSchema={EventSchema}
-      onSubmit={async (values) => {
-        console.log("values", values);
+      onSubmit={async (values, actions) => {
+        // console.log("values", values);
         const exists = await attendeeExists({ phoneNumber: values.phone });
 
         if (exists.data?.attendeeExists) {
           alert("this guy already exists in the db");
-        } else {
-          const res = await addNewAttendee({
-            eventId: eventId,
-            input: {
-              firstname: values.firstName,
-              lastname: values.lastName,
-              beemId: values.beemId,
-              phoneNumber: values.phone,
-              isPayingCash: isPayingCash,
-            },
-          });
-
-          setHasSignedUp(true);
-          localStorage.setItem(`event:${eventId}`, "true");
-
-          console.log(res);
         }
+        const res = await addNewAttendee({
+          eventId: eventId,
+          input: {
+            firstname: values.firstName,
+            lastname: values.lastName,
+            beemId: values.beemId,
+            phoneNumber: values.phone,
+            isPayingCash: isPayingCash,
+          },
+        });
+
+        setHasSignedUp(true);
+        localStorage.setItem(`event:${eventId}`, "true");
+
+        toast({
+          description: "Success!",
+          isClosable: true,
+          position: "top",
+          status: "success",
+          variant: "subtle",
+        });
+
+        actions.resetForm();
+
+        console.log(res);
       }}
     >
       {(props) => (
@@ -108,12 +118,16 @@ const EventSignUpForm: React.FC<Props> = ({
             />
 
             <Flex alignItems="center" py={2}>
-              <FormLabel htmlFor="isPayingCash">Paying by cash?</FormLabel>
+              <Text fontWeight="medium" mr={2} variant="body-3">
+                Paying by cash?
+              </Text>
+
               <Switch
                 id="isPayingCash"
                 onChange={() => {
                   setIsPayingCash(!isPayingCash);
                 }}
+                colorScheme="brand"
               />
             </Flex>
 

@@ -1,5 +1,6 @@
-import { Box, Button, Flex, useToast, VStack } from "@chakra-ui/react";
+import { Box, Button, Flex, Link, useToast, VStack } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
+import { useRouter } from "next/router";
 import React from "react";
 import {
   EventTemplate,
@@ -18,6 +19,7 @@ interface Props {
 }
 
 const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
+  const router = useRouter();
   const toast = useToast();
   const isMobile = useIsMobileScreen();
   const [, updateTemplate] = useUpdateEventTemplateMutation();
@@ -96,7 +98,19 @@ const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
         });
       } else {
         toast({
-          description: "Changes saved",
+          description: (
+            <div>
+              Changes saved successfully.{" "}
+              <Link
+                onClick={() => {
+                  router.push(`/new-event/from-template/${template?.id}`);
+                }}
+                fontWeight="semibold"
+              >
+                Create event
+              </Link>
+            </div>
+          ),
           isClosable: true,
           position: "top",
           status: "success",
@@ -119,10 +133,18 @@ const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
       } else {
         console.log("IT WORKD");
         console.log(data);
-      }
+        // TODO: toast
+        toast({
+          description: "Successfully created event template",
+          isClosable: true,
+          position: "top",
+          status: "success",
+          variant: "subtle",
+        });
 
-      if (onClose) {
-        onClose();
+        if (onClose) {
+          onClose();
+        }
       }
     }
   };
@@ -195,6 +217,7 @@ const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
               name="price"
               touched={props.touched.price as boolean}
               width={20}
+              type="number"
             />
 
             <BaseInputField
@@ -209,6 +232,7 @@ const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
               name="capacity"
               touched={props.touched.capacity as boolean}
               width={20}
+              type="number"
             />
 
             <BaseDynamicEditor
@@ -227,7 +251,7 @@ const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
 
             <Button
               isLoading={props.isSubmitting}
-              size={isMobile ? "md" : "lg"}
+              size={isMobile ? "sm" : "md"}
               type="submit"
             >
               {template ? "Save changes" : "Create template"}

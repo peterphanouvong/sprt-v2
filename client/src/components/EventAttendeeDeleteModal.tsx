@@ -14,11 +14,13 @@ import { Attendee, useRemoveAttendeeMutation } from "../generated/graphql";
 interface Props {
   attendee: Attendee;
   eventId: number;
+  as?: "button" | "menu";
 }
 
 export const EventAttendeeDeleteModal: React.FC<Props> = ({
   attendee,
   eventId,
+  as = "menu",
 }) => {
   const [isAlertOpen, setIsAlertOpen] = React.useState(false);
   const cancelRef = React.useRef<HTMLButtonElement>(null);
@@ -33,9 +35,19 @@ export const EventAttendeeDeleteModal: React.FC<Props> = ({
 
   return (
     <>
-      <MenuItem color="red.500" onClick={() => setIsAlertOpen(true)}>
-        Delete
-      </MenuItem>
+      {as === "button" ? (
+        <Button
+          colorScheme="red"
+          size="sm"
+          onClick={() => setIsAlertOpen(true)}
+        >
+          Delete
+        </Button>
+      ) : (
+        <MenuItem color="red.500" onClick={() => setIsAlertOpen(true)}>
+          Delete
+        </MenuItem>
+      )}
 
       <AlertDialog
         isOpen={isAlertOpen}

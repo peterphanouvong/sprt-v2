@@ -77,7 +77,7 @@ let EventResolver = class EventResolver {
         const { id } = await Event_1.Event.create(Object.assign(Object.assign({}, input), { ownerId: req.session.userId })).save();
         const event = await Event_1.Event.findOne(id, { relations: ["owner"] });
         console.log("event", event);
-        return Event_1.Event.findOne(id, { relations: ["owner"] });
+        return event;
     }
     async event(id) {
         return Event_1.Event.findOne(id, { relations: ["owner"] });
