@@ -60,7 +60,7 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
       <DragDropContext
         onDragEnd={async (result) => {
           console.log(result);
-          const { destination, source, draggableId } = result;
+          const { destination, source } = result;
           if (!destination) {
             return;
           }
@@ -72,19 +72,6 @@ const EventAttendeeTableAdminView: React.FC<Props> = ({
           ) {
             return;
           }
-          // TODO: finish reordering
-          // database now stores the position -> update the positions after dropping
-          // Sort event attendees by position when passing through components
-
-          // if src > dest (moving attendee up table)
-          // for all positions between src and destination:
-          // add one to position
-          // destination = source position
-
-          // if dest > src (moving attendee down table)
-          // for all positions between dest and src
-          // subtract one to position
-          // src = dest
 
           await shiftAttendeePosition({
             src: source.index,
