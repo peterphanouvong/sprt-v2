@@ -37,6 +37,11 @@ __decorate([
     __metadata("design:type", Boolean)
 ], EventAttendee.prototype, "isPayingCash", void 0);
 __decorate([
+    typeorm_1.Column(),
+    type_graphql_1.Field(() => Number),
+    __metadata("design:type", Number)
+], EventAttendee.prototype, "position", void 0);
+__decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     __metadata("design:type", Date)
 ], EventAttendee.prototype, "joinTime", void 0);

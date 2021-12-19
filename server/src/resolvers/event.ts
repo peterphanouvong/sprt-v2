@@ -130,10 +130,20 @@ export class EventResolver {
     const createAttendee = new AttendeeResolver().createAttendee;
     const res = await createAttendee(input);
 
+    const num = await getConnection().query(`
+      select max(position) 
+      from "event_attendee" ea 
+      where ea."isConfirmed" = false and 
+      ea."eventId" = ${id};
+    `);
+
+    console.log("NUM IS: ", num);
+
     await EventAttendee.insert({
       eventId: id,
       attendeeId: res!.id,
       isPayingCash: input.isPayingCash,
+      position: num[0].max !== null ? num[0].max + 1 : 0,
     });
 
     pubSub.publish(
@@ -161,6 +171,7 @@ export class EventResolver {
     return true;
   }
 
+  // Might have to add logic to position when inserting
   @Mutation(() => Boolean)
   async addExistingAttendee(
     @Arg("id") id: number,
@@ -182,7 +193,38 @@ export class EventResolver {
   ): Promise<boolean> {
     console.log(eventId);
     console.log(attendeeId);
-    await EventAttendee.update({ eventId, attendeeId }, { isConfirmed: true });
+
+    // Adjust position after confirming
+    const position = await getConnection().query(`
+      select "position" 
+      from "event_attendee" ea 
+      where ea."attendeeId" = ${attendeeId}
+      and ea."eventId" = ${eventId};
+    `);
+    const pivot = position[0].position;
+    console.log("asd position is: ", pivot);
+
+    const attendeesAfterPivot = await getConnection().query(`
+      select ea."attendeeId", ea."position" 
+      from "event_attendee" ea 
+      where ea."position" > ${pivot}; 
+    `);
+
+    // update position of other attendees after confirming
+    attendeesAfterPivot.forEach(
+      (a: { attendeeId: number; position: number }) => {
+        EventAttendee.update(
+          { eventId, attendeeId: a.attendeeId },
+          { position: a.position - 1 }
+        );
+      }
+    );
+
+    await EventAttendee.update(
+      { eventId, attendeeId },
+      { isConfirmed: true, position: 0 }
+    );
+
     pubSub.publish(
       `EVENT-${eventId}`,
       EventAttendee.find({
@@ -201,7 +243,16 @@ export class EventResolver {
   ): Promise<boolean> {
     console.log(eventId);
     console.log(attendeeId);
-    await EventAttendee.update({ eventId, attendeeId }, { isConfirmed: false });
+    const num = await getConnection().query(`
+      select max(position) 
+      from "event_attendee" ea 
+      where ea."isConfirmed" = false and 
+      ea."eventId" = ${eventId};
+    `);
+    await EventAttendee.update(
+      { eventId, attendeeId },
+      { isConfirmed: false, position: num[0].max !== null ? num[0].max + 1 : 0 }
+    );
     pubSub.publish(
       `EVENT-${eventId}`,
       EventAttendee.find({
@@ -230,6 +281,45 @@ export class EventResolver {
     }
     await Event.merge(event, { isCompleted: false }).save();
     return event;
+  }
+
+  @Mutation(() => Boolean)
+  async shiftAttendeePosition(
+    @Arg("src") src: number,
+    @Arg("dest") dest: number,
+    @Arg("eventId") eventId: number,
+    @Arg("attendeeId") attendeeId: number,
+    @PubSub() pubSub: PubSubEngine
+  ) {
+    // Moving attendee towards top of queue
+    if (src > dest) {
+      for (let pos: number = src - 1; pos >= dest; pos--) {
+        await EventAttendee.update(
+          { eventId, position: pos },
+          { position: pos + 1 }
+        );
+      }
+    } else {
+      // Moving attendee towards bottom of queue
+      for (let pos: number = src + 1; pos <= dest; pos++) {
+        console.log("pos is: ", pos);
+        await EventAttendee.update(
+          { eventId, position: pos },
+          { position: pos - 1 }
+        );
+      }
+    }
+    await EventAttendee.update({ eventId, isConfirmed: true }, { position: 0 });
+    await EventAttendee.update({ eventId, attendeeId }, { position: dest });
+    pubSub.publish(
+      `EVENT-${eventId}`,
+      EventAttendee.find({
+        where: { eventId: eventId },
+        relations: ["attendee"],
+      })
+    );
+
+    return true;
   }
 
   // delete.

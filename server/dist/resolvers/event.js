@@ -107,10 +107,18 @@ let EventResolver = class EventResolver {
         console.log("MY INPUT: ", input);
         const createAttendee = new attendee_1.AttendeeResolver().createAttendee;
         const res = await createAttendee(input);
+        const num = await typeorm_1.getConnection().query(`
+      select max(position) 
+      from "event_attendee" ea 
+      where ea."isConfirmed" = false and 
+      ea."eventId" = ${id};
+    `);
+        console.log("NUM IS: ", num);
         await EventAttendee_1.EventAttendee.insert({
             eventId: id,
             attendeeId: res.id,
             isPayingCash: input.isPayingCash,
+            position: num[0].max !== null ? num[0].max + 1 : 0,
         });
         pubSub.publish(`EVENT-${id}`, EventAttendee_1.EventAttendee.find({ where: { eventId: id }, relations: ["attendee"] }));
         return true;
@@ -133,7 +141,23 @@ let EventResolver = class EventResolver {
     async confirmAttendee(eventId, attendeeId, pubSub) {
         console.log(eventId);
         console.log(attendeeId);
-        await EventAttendee_1.EventAttendee.update({ eventId, attendeeId }, { isConfirmed: true });
+        const position = await typeorm_1.getConnection().query(`
+      select "position" 
+      from "event_attendee" ea 
+      where ea."attendeeId" = ${attendeeId}
+      and ea."eventId" = ${eventId};
+    `);
+        const pivot = position[0].position;
+        console.log("asd position is: ", pivot);
+        const attendeesAfterPivot = await typeorm_1.getConnection().query(`
+      select ea."attendeeId", ea."position" 
+      from "event_attendee" ea 
+      where ea."position" > ${pivot}; 
+    `);
+        attendeesAfterPivot.forEach((a) => {
+            EventAttendee_1.EventAttendee.update({ eventId, attendeeId: a.attendeeId }, { position: a.position - 1 });
+        });
+        await EventAttendee_1.EventAttendee.update({ eventId, attendeeId }, { isConfirmed: true, position: 0 });
         pubSub.publish(`EVENT-${eventId}`, EventAttendee_1.EventAttendee.find({
             where: { eventId: eventId },
             relations: ["attendee"],
@@ -143,7 +167,13 @@ let EventResolver = class EventResolver {
     async unconfirmAttendee(eventId, attendeeId, pubSub) {
         console.log(eventId);
         console.log(attendeeId);
-        await EventAttendee_1.EventAttendee.update({ eventId, attendeeId }, { isConfirmed: false });
+        const num = await typeorm_1.getConnection().query(`
+      select max(position) 
+      from "event_attendee" ea 
+      where ea."isConfirmed" = false and 
+      ea."eventId" = ${eventId};
+    `);
+        await EventAttendee_1.EventAttendee.update({ eventId, attendeeId }, { isConfirmed: false, position: num[0].max !== null ? num[0].max + 1 : 0 });
         pubSub.publish(`EVENT-${eventId}`, EventAttendee_1.EventAttendee.find({
             where: { eventId: eventId },
             relations: ["attendee"],
@@ -165,6 +195,26 @@ let EventResolver = class EventResolver {
         }
         await Event_1.Event.merge(event, { isCompleted: false }).save();
         return event;
+    }
+    async shiftAttendeePosition(src, dest, eventId, attendeeId, pubSub) {
+        if (src > dest) {
+            for (let pos = src - 1; pos >= dest; pos--) {
+                await EventAttendee_1.EventAttendee.update({ eventId, position: pos }, { position: pos + 1 });
+            }
+        }
+        else {
+            for (let pos = src + 1; pos <= dest; pos++) {
+                console.log("pos is: ", pos);
+                await EventAttendee_1.EventAttendee.update({ eventId, position: pos }, { position: pos - 1 });
+            }
+        }
+        await EventAttendee_1.EventAttendee.update({ eventId, isConfirmed: true }, { position: 0 });
+        await EventAttendee_1.EventAttendee.update({ eventId, attendeeId }, { position: dest });
+        pubSub.publish(`EVENT-${eventId}`, EventAttendee_1.EventAttendee.find({
+            where: { eventId: eventId },
+            relations: ["attendee"],
+        }));
+        return true;
     }
     async deleteEvent(id) {
         await Event_1.Event.delete(id);
@@ -331,6 +381,17 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "markEventAsLive", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    __param(0, type_graphql_1.Arg("src")),
+    __param(1, type_graphql_1.Arg("dest")),
+    __param(2, type_graphql_1.Arg("eventId")),
+    __param(3, type_graphql_1.Arg("attendeeId")),
+    __param(4, type_graphql_1.PubSub()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number, Number, Number, type_graphql_1.PubSubEngine]),
+    __metadata("design:returntype", Promise)
+], EventResolver.prototype, "shiftAttendeePosition", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
     __param(0, type_graphql_1.Arg("id")),
