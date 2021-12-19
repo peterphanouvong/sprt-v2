@@ -43,7 +43,7 @@ const EventAttendees: React.FC<Props> = ({}) => {
 
   const router = useRouter();
   const { id } = router.query;
-  const [isViewAdmin, setIsViewAdmin] = React.useState<boolean>(true);
+  const [isViewAdmin, setIsViewAdmin] = React.useState<boolean>(false);
 
   const [{ data: me }] = useMeQuery();
 
