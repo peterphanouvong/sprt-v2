@@ -1,5 +1,13 @@
 import { Attendee } from "../entities/Attendee";
-import { Query, Mutation, Arg, Resolver, Field, InputType } from "type-graphql";
+import {
+  Query,
+  Mutation,
+  Arg,
+  Resolver,
+  Field,
+  InputType,
+  Int,
+} from "type-graphql";
 
 @InputType()
 export class AttendeeInput {
@@ -43,15 +51,15 @@ export class AttendeeResolver {
     return attendee;
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => Int)
   async attendeeExists(
     @Arg("phoneNumber") phoneNumber: string
-  ): Promise<boolean> {
+  ): Promise<number> {
     const res = await Attendee.findOne({ where: { phoneNumber } });
     if (res) {
-      return true;
+      return res.id;
     }
-    return false;
+    return -1;
   }
 
   // @FieldResolver()

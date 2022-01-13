@@ -164,11 +164,13 @@ export class EventResolver {
   @Mutation(() => Boolean)
   async addExistingAttendee(
     @Arg("id") id: number,
-    @Arg("attendeeId") attendeeId: number
+    @Arg("attendeeId") attendeeId: number,
+    @Arg("isPayingCash") isPayingCash: boolean
   ): Promise<boolean> {
     await EventAttendee.insert({
       eventId: id,
       attendeeId: attendeeId,
+      isPayingCash: isPayingCash,
     });
 
     return true;

@@ -13,6 +13,7 @@ import * as Yup from "yup";
 import {
   useAddNewAttendeeMutation,
   useAttendeeExistsMutation,
+  useAddExistingAttendeeMutation,
 } from "../generated/graphql";
 import { BaseInputField } from "./BaseInputField";
 
@@ -45,6 +46,7 @@ const EventSignUpForm: React.FC<Props> = ({
 }) => {
   const [, attendeeExists] = useAttendeeExistsMutation();
   const [, addNewAttendee] = useAddNewAttendeeMutation();
+  const [, addExistingAttendee] = useAddExistingAttendeeMutation();
   const [isPayingCash, setIsPayingCash] = React.useState<boolean>(false);
   const toast = useToast();
 
@@ -64,35 +66,49 @@ const EventSignUpForm: React.FC<Props> = ({
       onSubmit={async (values, actions) => {
         // console.log("values", values);
         const exists = await attendeeExists({ phoneNumber: values.phone });
+        let res;
 
-        if (exists.data?.attendeeExists) {
+        if (exists.data?.attendeeExists !== -1) {
           console.log("this guy already exists in the db");
-        }
-        const res = await addNewAttendee({
-          eventId: eventId,
-          input: {
-            firstname: values.firstName,
-            lastname: values.lastName,
-            beemId: values.beemId,
-            phoneNumber: values.phone,
+          res = await addExistingAttendee({
+            eventId: eventId,
+            attendeeId: exists.data?.attendeeExists!,
             isPayingCash: isPayingCash,
-          },
-        });
+          });
+        } else {
+          res = await addNewAttendee({
+            eventId: eventId,
+            input: {
+              firstname: values.firstName,
+              lastname: values.lastName,
+              beemId: values.beemId,
+              phoneNumber: values.phone,
+              isPayingCash: isPayingCash,
+            },
+          });
+        }
 
         setHasSignedUp(true);
         localStorage.setItem(`event:${eventId}`, "true");
+        if (res.error) {
+          toast({
+            description: "Something went wrong!",
+            isClosable: true,
+            position: "top",
+            status: "error",
+            variant: "subtle",
+          });
+        } else {
+          toast({
+            description: "Success!",
+            isClosable: true,
+            position: "top",
+            status: "success",
+            variant: "subtle",
+          });
 
-        toast({
-          description: "Success!",
-          isClosable: true,
-          position: "top",
-          status: "success",
-          variant: "subtle",
-        });
-
-        actions.resetForm();
-
-        console.log(res);
+          actions.resetForm();
+        }
       }}
     >
       {(props) => (
