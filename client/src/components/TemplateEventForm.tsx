@@ -42,6 +42,8 @@ const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
           logoImageLink: "",
           bannerImageLink: "",
           clubBeemId: "",
+          bsb: "",
+          accountNumber: "",
         }
       : {
           templateName: template.templateName ? template.templateName : "",
@@ -62,6 +64,8 @@ const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
             ? template.bannerImageLink
             : "",
           clubBeemId: template.clubBeemId ? template.clubBeemId : "",
+          bsb: template.bsb ? template.bsb : "",
+          accountNumber: template.accountNumber ? template.accountNumber : "",
         };
 
   const onSubmit = async (values) => {
@@ -83,6 +87,8 @@ const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
           bannerImageLink: values.bannerImageLink,
           clubBeemId: values.clubBeemId,
           description: JSON.stringify(values.description),
+          bsb: values.bsb,
+          accountNumber: values.accountNumber,
         },
         updateEventTemplateId: template.id,
       });
@@ -226,6 +232,24 @@ const TemplateEventForm: React.FC<Props> = ({ template, onClose }) => {
               touched={props.touched.clubBeemId as boolean}
               width="200px"
             />
+
+            <Flex width="90%">
+              <BaseInputField
+                label="BSB"
+                name="bsb"
+                touched={props.touched.bsb as boolean}
+                width="200px"
+              />
+
+              <Box mr={4} />
+
+              <BaseInputField
+                label="Account Number"
+                name="accountNumber"
+                touched={props.touched.accountNumber as boolean}
+                width="200px"
+              />
+            </Flex>
 
             <BaseInputField
               label="Capacity"
