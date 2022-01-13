@@ -66,7 +66,7 @@ const EventSignUpForm: React.FC<Props> = ({
         const exists = await attendeeExists({ phoneNumber: values.phone });
 
         if (exists.data?.attendeeExists) {
-          alert("this guy already exists in the db");
+          console.log("this guy already exists in the db");
         }
         const res = await addNewAttendee({
           eventId: eventId,
