@@ -53,7 +53,7 @@ export type Event = {
   logoImageLink?: Maybe<Scalars['String']>;
   bannerImageLink?: Maybe<Scalars['String']>;
   capacity?: Maybe<Scalars['Float']>;
-  clubBeemId: Scalars['String'];
+  clubBeemId?: Maybe<Scalars['String']>;
   attendeeConnection: Array<EventAttendee>;
   ownerId: Scalars['Float'];
   owner: User;
@@ -142,7 +142,7 @@ export type FieldError = {
 export type Mutation = {
   __typename?: 'Mutation';
   createAttendee: Attendee;
-  attendeeExists: Scalars['Boolean'];
+  attendeeExists: Scalars['Int'];
   createEvent: Event;
   updateEvent: Event;
   addNewAttendee: Scalars['Boolean'];
@@ -204,6 +204,7 @@ export type MutationRemoveAttendeeArgs = {
 
 
 export type MutationAddExistingAttendeeArgs = {
+  isPayingCash: Scalars['Boolean'];
   attendeeId: Scalars['Float'];
   id: Scalars['Float'];
 };
@@ -431,6 +432,15 @@ export type RegularUserFragment = { __typename?: 'User', id: number, clubName: s
 
 export type RegularUserResponseFragment = { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string }>>, user?: Maybe<{ __typename?: 'User', id: number, clubName: string, email: string }> };
 
+export type AddExistingAttendeeMutationVariables = Exact<{
+  attendeeId: Scalars['Float'];
+  eventId: Scalars['Float'];
+  isPayingCash: Scalars['Boolean'];
+}>;
+
+
+export type AddExistingAttendeeMutation = { __typename?: 'Mutation', addExistingAttendee: boolean };
+
 export type AddNewAttendeeMutationVariables = Exact<{
   input: AttendeeInput;
   eventId: Scalars['Float'];
@@ -444,7 +454,7 @@ export type AttendeeExistsMutationVariables = Exact<{
 }>;
 
 
-export type AttendeeExistsMutation = { __typename?: 'Mutation', attendeeExists: boolean };
+export type AttendeeExistsMutation = { __typename?: 'Mutation', attendeeExists: number };
 
 export type ChangePasswordMutationVariables = Exact<{
   newPassword: Scalars['String'];
@@ -597,7 +607,7 @@ export type EventQueryVariables = Exact<{
 }>;
 
 
-export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', venue?: Maybe<string>, address?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, clubBeemId: string, price?: Maybe<number>, youtubeLink?: Maybe<string>, description?: Maybe<string>, id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number, owner: { __typename?: 'User', id: number, email: string, clubName: string }, attendees: Array<{ __typename?: 'Attendee', id: number, firstname: string, lastname: string, email?: Maybe<string>, phoneNumber: string, beemId: string, updatedAt: string, createdAt: string }>, attendeeConnection: Array<{ __typename?: 'EventAttendee', attendeeId: number, isConfirmed?: Maybe<boolean> }> } };
+export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', venue?: Maybe<string>, address?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, clubBeemId?: Maybe<string>, price?: Maybe<number>, youtubeLink?: Maybe<string>, description?: Maybe<string>, id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number, owner: { __typename?: 'User', id: number, email: string, clubName: string }, attendees: Array<{ __typename?: 'Attendee', id: number, firstname: string, lastname: string, email?: Maybe<string>, phoneNumber: string, beemId: string, updatedAt: string, createdAt: string }>, attendeeConnection: Array<{ __typename?: 'EventAttendee', attendeeId: number, isConfirmed?: Maybe<boolean> }> } };
 
 export type EventTemplateQueryVariables = Exact<{
   eventTemplateId: Scalars['Float'];
@@ -704,6 +714,19 @@ export const RegularUserResponseFragmentDoc = gql`
 }
     ${RegularErrorFragmentDoc}
 ${RegularUserFragmentDoc}`;
+export const AddExistingAttendeeDocument = gql`
+    mutation AddExistingAttendee($attendeeId: Float!, $eventId: Float!, $isPayingCash: Boolean!) {
+  addExistingAttendee(
+    attendeeId: $attendeeId
+    id: $eventId
+    isPayingCash: $isPayingCash
+  )
+}
+    `;
+
+export function useAddExistingAttendeeMutation() {
+  return Urql.useMutation<AddExistingAttendeeMutation, AddExistingAttendeeMutationVariables>(AddExistingAttendeeDocument);
+};
 export const AddNewAttendeeDocument = gql`
     mutation AddNewAttendee($input: AttendeeInput!, $eventId: Float!) {
   addNewAttendee(input: $input, id: $eventId)

@@ -123,10 +123,11 @@ let EventResolver = class EventResolver {
         }));
         return true;
     }
-    async addExistingAttendee(id, attendeeId) {
+    async addExistingAttendee(id, attendeeId, isPayingCash) {
         await EventAttendee_1.EventAttendee.insert({
             eventId: id,
             attendeeId: attendeeId,
+            isPayingCash: isPayingCash,
         });
         return true;
     }
@@ -295,8 +296,9 @@ __decorate([
     type_graphql_1.Mutation(() => Boolean),
     __param(0, type_graphql_1.Arg("id")),
     __param(1, type_graphql_1.Arg("attendeeId")),
+    __param(2, type_graphql_1.Arg("isPayingCash")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:paramtypes", [Number, Number, Boolean]),
     __metadata("design:returntype", Promise)
 ], EventResolver.prototype, "addExistingAttendee", null);
 __decorate([
