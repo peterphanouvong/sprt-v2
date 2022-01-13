@@ -56,6 +56,14 @@ __decorate([
 __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),
     __metadata("design:type", String)
+], EventInput.prototype, "bsb", void 0);
+__decorate([
+    type_graphql_1.Field(() => String, { nullable: true }),
+    __metadata("design:type", String)
+], EventInput.prototype, "accountNumber", void 0);
+__decorate([
+    type_graphql_1.Field(() => String, { nullable: true }),
+    __metadata("design:type", String)
 ], EventInput.prototype, "venue", void 0);
 __decorate([
     type_graphql_1.Field(() => String, { nullable: true }),

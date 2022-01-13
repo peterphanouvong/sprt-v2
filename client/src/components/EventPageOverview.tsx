@@ -21,7 +21,7 @@ const EventPageOverview: React.FC<Props> = ({ event }) => {
   const isMobile = useIsMobileScreen();
 
   console.log(convert24hto12h("12:00"));
-
+  console.log(event);
   return (
     <BaseContent>
       {isMobile ? (
@@ -64,6 +64,18 @@ const EventPageOverview: React.FC<Props> = ({ event }) => {
                 <MyGrid>
                   <Text variant="body-3">Beem ID:</Text>
                   <Text variant="body-3">{event.clubBeemId}</Text>
+                </MyGrid>
+              )}
+              {event.bsb && (
+                <MyGrid>
+                  <Text variant="body-3">BSB:</Text>
+                  <Text variant="body-3">{event.bsb}</Text>
+                </MyGrid>
+              )}
+              {event.accountNumber && (
+                <MyGrid>
+                  <Text variant="body-3">Account Num:</Text>
+                  <Text variant="body-3">{event.accountNumber}</Text>
                 </MyGrid>
               )}
             </VStack>
@@ -110,6 +122,18 @@ const EventPageOverview: React.FC<Props> = ({ event }) => {
                 <MyGrid>
                   <Text variant="body-3">Beem ID:</Text>
                   <Text variant="body-3">{event.clubBeemId}</Text>
+                </MyGrid>
+              )}
+              {event.bsb && (
+                <MyGrid>
+                  <Text variant="body-3">BSB:</Text>
+                  <Text variant="body-3">{event.bsb}</Text>
+                </MyGrid>
+              )}
+              {event.accountNumber && (
+                <MyGrid>
+                  <Text variant="body-3">Account Num:</Text>
+                  <Text variant="body-3">{event.accountNumber}</Text>
                 </MyGrid>
               )}
             </VStack>

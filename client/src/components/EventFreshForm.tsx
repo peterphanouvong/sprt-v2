@@ -22,6 +22,8 @@ interface Props {
     capacity: string | undefined | null;
     youtubeLink: string | undefined | null;
     clubBeemId: string | undefined | null;
+    bsb: string | undefined | null;
+    accountNumber: string | undefined | null;
   };
 }
 
@@ -52,6 +54,8 @@ const EventFreshForm: React.FC<Props> = ({ initialValues }) => {
                   capacity: "",
                   youtubeLink: "",
                   clubBeemId: "",
+                  bsb: "",
+                  accountNumber: "",
                 }
           }
           onSubmit={async (values) => {
@@ -154,6 +158,24 @@ const EventFreshForm: React.FC<Props> = ({ initialValues }) => {
                   type="string"
                   width="200px"
                 />
+
+                <Flex width="90%">
+                  <BaseInputField
+                    label="BSB"
+                    name="bsb"
+                    touched={props.touched.bsb as boolean}
+                    width="200px"
+                  />
+
+                  <Box mr={4} />
+
+                  <BaseInputField
+                    label="Account Number"
+                    name="accountNumber"
+                    touched={props.touched.accountNumber as boolean}
+                    width="200px"
+                  />
+                </Flex>
 
                 <BaseDynamicEditor
                   label="Description"

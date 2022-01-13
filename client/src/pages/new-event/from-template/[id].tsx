@@ -86,6 +86,8 @@ const Home: React.FC<Props> = ({}) => {
                   : undefined,
                 youtubeLink: data?.eventTemplate.youtubeLink,
                 clubBeemId: data?.eventTemplate.clubBeemId,
+                bsb: data?.eventTemplate.bsb,
+                accountNumber: data?.eventTemplate.accountNumber,
               }}
             />
           </>
@@ -111,6 +113,8 @@ const Home: React.FC<Props> = ({}) => {
                   : undefined,
                 youtubeLink: data?.eventTemplate.youtubeLink,
                 clubBeemId: data?.eventTemplate.clubBeemId,
+                bsb: data?.eventTemplate.bsb,
+                accountNumber: data?.eventTemplate.accountNumber,
               }}
             />
           </Grid>

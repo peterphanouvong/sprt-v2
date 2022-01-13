@@ -47,6 +47,12 @@ class EventInput {
   clubBeemId: string;
 
   @Field(() => String, { nullable: true })
+  bsb: string;
+
+  @Field(() => String, { nullable: true })
+  accountNumber: string;
+
+  @Field(() => String, { nullable: true })
   venue: string;
 
   @Field(() => String, { nullable: true })
@@ -75,7 +81,6 @@ export class EventResolver {
       ...input,
       ownerId: req.session.userId,
     }).save();
-
     const event = await Event.findOne(id, { relations: ["owner"] });
     console.log("event", event);
 

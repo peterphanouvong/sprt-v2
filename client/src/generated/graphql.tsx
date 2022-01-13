@@ -53,7 +53,9 @@ export type Event = {
   logoImageLink?: Maybe<Scalars['String']>;
   bannerImageLink?: Maybe<Scalars['String']>;
   capacity?: Maybe<Scalars['Float']>;
-  clubBeemId: Scalars['String'];
+  clubBeemId?: Maybe<Scalars['String']>;
+  bsb?: Maybe<Scalars['String']>;
+  accountNumber?: Maybe<Scalars['String']>;
   attendeeConnection: Array<EventAttendee>;
   ownerId: Scalars['Float'];
   owner: User;
@@ -86,6 +88,8 @@ export type EventInput = {
   endTime?: Maybe<Scalars['String']>;
   capacity?: Maybe<Scalars['Float']>;
   clubBeemId?: Maybe<Scalars['String']>;
+  bsb?: Maybe<Scalars['String']>;
+  accountNumber?: Maybe<Scalars['String']>;
   venue?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   price?: Maybe<Scalars['Float']>;
@@ -109,6 +113,8 @@ export type EventTemplate = {
   bannerImageLink?: Maybe<Scalars['String']>;
   capacity?: Maybe<Scalars['Float']>;
   clubBeemId?: Maybe<Scalars['String']>;
+  bsb?: Maybe<Scalars['String']>;
+  accountNumber?: Maybe<Scalars['String']>;
   owner: User;
   ownerId: Scalars['Float'];
   createdAt: Scalars['String'];
@@ -123,6 +129,8 @@ export type EventTemplateInput = {
   description?: Maybe<Scalars['String']>;
   capacity?: Maybe<Scalars['Float']>;
   clubBeemId?: Maybe<Scalars['String']>;
+  bsb?: Maybe<Scalars['String']>;
+  accountNumber?: Maybe<Scalars['String']>;
   venue?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   price?: Maybe<Scalars['Float']>;
@@ -435,7 +443,7 @@ export type RegularErrorFragment = { __typename?: 'FieldError', message: string,
 
 export type RegularEventFragment = { __typename?: 'Event', id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number };
 
-export type RegularEventTemplateFragment = { __typename?: 'EventTemplate', templateName?: Maybe<string>, id: number, title: string, date?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, venue?: Maybe<string>, address?: Maybe<string>, price?: Maybe<number>, description?: Maybe<string>, youtubeLink?: Maybe<string>, logoImageLink?: Maybe<string>, bannerImageLink?: Maybe<string>, capacity?: Maybe<number>, clubBeemId?: Maybe<string>, createdAt: string, updatedAt: string, level?: Maybe<string>, mixed?: Maybe<string> };
+export type RegularEventTemplateFragment = { __typename?: 'EventTemplate', templateName?: Maybe<string>, id: number, title: string, date?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, venue?: Maybe<string>, address?: Maybe<string>, price?: Maybe<number>, description?: Maybe<string>, youtubeLink?: Maybe<string>, logoImageLink?: Maybe<string>, bannerImageLink?: Maybe<string>, capacity?: Maybe<number>, clubBeemId?: Maybe<string>, createdAt: string, updatedAt: string, level?: Maybe<string>, mixed?: Maybe<string>, bsb?: Maybe<string>, accountNumber?: Maybe<string> };
 
 export type RegularUserFragment = { __typename?: 'User', id: number, clubName: string, email: string };
 
@@ -484,7 +492,7 @@ export type CreateEventTemplateMutationVariables = Exact<{
 }>;
 
 
-export type CreateEventTemplateMutation = { __typename?: 'Mutation', createEventTemplate: { __typename?: 'EventTemplate', templateName?: Maybe<string>, id: number, title: string, date?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, venue?: Maybe<string>, address?: Maybe<string>, price?: Maybe<number>, description?: Maybe<string>, youtubeLink?: Maybe<string>, logoImageLink?: Maybe<string>, bannerImageLink?: Maybe<string>, capacity?: Maybe<number>, clubBeemId?: Maybe<string>, createdAt: string, updatedAt: string, level?: Maybe<string>, mixed?: Maybe<string> } };
+export type CreateEventTemplateMutation = { __typename?: 'Mutation', createEventTemplate: { __typename?: 'EventTemplate', templateName?: Maybe<string>, id: number, title: string, date?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, venue?: Maybe<string>, address?: Maybe<string>, price?: Maybe<number>, description?: Maybe<string>, youtubeLink?: Maybe<string>, logoImageLink?: Maybe<string>, bannerImageLink?: Maybe<string>, capacity?: Maybe<number>, clubBeemId?: Maybe<string>, createdAt: string, updatedAt: string, level?: Maybe<string>, mixed?: Maybe<string>, bsb?: Maybe<string>, accountNumber?: Maybe<string> } };
 
 export type CreateQuickEventMutationVariables = Exact<{
   createQuickEventInput: QuickEventInput;
@@ -603,7 +611,7 @@ export type UpdateEventTemplateMutationVariables = Exact<{
 }>;
 
 
-export type UpdateEventTemplateMutation = { __typename?: 'Mutation', updateEventTemplate?: Maybe<{ __typename?: 'EventTemplate', templateName?: Maybe<string>, id: number, title: string, date?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, venue?: Maybe<string>, address?: Maybe<string>, price?: Maybe<number>, description?: Maybe<string>, youtubeLink?: Maybe<string>, logoImageLink?: Maybe<string>, bannerImageLink?: Maybe<string>, capacity?: Maybe<number>, clubBeemId?: Maybe<string>, createdAt: string, updatedAt: string, level?: Maybe<string>, mixed?: Maybe<string> }> };
+export type UpdateEventTemplateMutation = { __typename?: 'Mutation', updateEventTemplate?: Maybe<{ __typename?: 'EventTemplate', templateName?: Maybe<string>, id: number, title: string, date?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, venue?: Maybe<string>, address?: Maybe<string>, price?: Maybe<number>, description?: Maybe<string>, youtubeLink?: Maybe<string>, logoImageLink?: Maybe<string>, bannerImageLink?: Maybe<string>, capacity?: Maybe<number>, clubBeemId?: Maybe<string>, createdAt: string, updatedAt: string, level?: Maybe<string>, mixed?: Maybe<string>, bsb?: Maybe<string>, accountNumber?: Maybe<string> }> };
 
 export type AttendeeQueryVariables = Exact<{
   id: Scalars['String'];
@@ -617,19 +625,19 @@ export type EventQueryVariables = Exact<{
 }>;
 
 
-export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', venue?: Maybe<string>, address?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, clubBeemId: string, price?: Maybe<number>, youtubeLink?: Maybe<string>, description?: Maybe<string>, id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number, owner: { __typename?: 'User', id: number, email: string, clubName: string }, attendees: Array<{ __typename?: 'Attendee', id: number, firstname: string, lastname: string, email?: Maybe<string>, phoneNumber: string, beemId: string, updatedAt: string, createdAt: string }>, attendeeConnection: Array<{ __typename?: 'EventAttendee', attendeeId: number, isConfirmed?: Maybe<boolean> }> } };
+export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', venue?: Maybe<string>, address?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, clubBeemId?: Maybe<string>, bsb?: Maybe<string>, accountNumber?: Maybe<string>, price?: Maybe<number>, youtubeLink?: Maybe<string>, description?: Maybe<string>, id: number, title: string, date?: Maybe<string>, capacity?: Maybe<number>, numWaitlist: number, numConfirmed: number, owner: { __typename?: 'User', id: number, email: string, clubName: string }, attendees: Array<{ __typename?: 'Attendee', id: number, firstname: string, lastname: string, email?: Maybe<string>, phoneNumber: string, beemId: string, updatedAt: string, createdAt: string }>, attendeeConnection: Array<{ __typename?: 'EventAttendee', attendeeId: number, isConfirmed?: Maybe<boolean> }> } };
 
 export type EventTemplateQueryVariables = Exact<{
   eventTemplateId: Scalars['Float'];
 }>;
 
 
-export type EventTemplateQuery = { __typename?: 'Query', eventTemplate: { __typename?: 'EventTemplate', templateName?: Maybe<string>, id: number, title: string, date?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, venue?: Maybe<string>, address?: Maybe<string>, price?: Maybe<number>, description?: Maybe<string>, youtubeLink?: Maybe<string>, logoImageLink?: Maybe<string>, bannerImageLink?: Maybe<string>, capacity?: Maybe<number>, clubBeemId?: Maybe<string>, createdAt: string, updatedAt: string, level?: Maybe<string>, mixed?: Maybe<string> } };
+export type EventTemplateQuery = { __typename?: 'Query', eventTemplate: { __typename?: 'EventTemplate', templateName?: Maybe<string>, id: number, title: string, date?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, venue?: Maybe<string>, address?: Maybe<string>, price?: Maybe<number>, description?: Maybe<string>, youtubeLink?: Maybe<string>, logoImageLink?: Maybe<string>, bannerImageLink?: Maybe<string>, capacity?: Maybe<number>, clubBeemId?: Maybe<string>, createdAt: string, updatedAt: string, level?: Maybe<string>, mixed?: Maybe<string>, bsb?: Maybe<string>, accountNumber?: Maybe<string> } };
 
 export type EventTemplatesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type EventTemplatesQuery = { __typename?: 'Query', eventTemplates: Array<{ __typename?: 'EventTemplate', templateName?: Maybe<string>, id: number, title: string, date?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, venue?: Maybe<string>, address?: Maybe<string>, price?: Maybe<number>, description?: Maybe<string>, youtubeLink?: Maybe<string>, logoImageLink?: Maybe<string>, bannerImageLink?: Maybe<string>, capacity?: Maybe<number>, clubBeemId?: Maybe<string>, createdAt: string, updatedAt: string, level?: Maybe<string>, mixed?: Maybe<string> }> };
+export type EventTemplatesQuery = { __typename?: 'Query', eventTemplates: Array<{ __typename?: 'EventTemplate', templateName?: Maybe<string>, id: number, title: string, date?: Maybe<string>, startTime?: Maybe<string>, endTime?: Maybe<string>, venue?: Maybe<string>, address?: Maybe<string>, price?: Maybe<number>, description?: Maybe<string>, youtubeLink?: Maybe<string>, logoImageLink?: Maybe<string>, bannerImageLink?: Maybe<string>, capacity?: Maybe<number>, clubBeemId?: Maybe<string>, createdAt: string, updatedAt: string, level?: Maybe<string>, mixed?: Maybe<string>, bsb?: Maybe<string>, accountNumber?: Maybe<string> }> };
 
 export type LiveEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -698,6 +706,8 @@ export const RegularEventTemplateFragmentDoc = gql`
   updatedAt
   level
   mixed
+  bsb
+  accountNumber
 }
     `;
 export const RegularErrorFragmentDoc = gql`
@@ -1000,6 +1010,8 @@ export const EventDocument = gql`
     startTime
     endTime
     clubBeemId
+    bsb
+    accountNumber
     price
     youtubeLink
     description

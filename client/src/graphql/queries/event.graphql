@@ -6,6 +6,8 @@ query Event($id: String!) {
     startTime
     endTime
     clubBeemId
+    bsb
+    accountNumber
     price
     youtubeLink
     description
