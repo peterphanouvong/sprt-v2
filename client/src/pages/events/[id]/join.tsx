@@ -96,7 +96,7 @@ const EventJoin: React.FC<Props> = ({}) => {
             />
             <EventSignUpStuff
               id={id as string}
-              clubBeemId={data!.event.clubBeemId}
+              clubBeemId={data!.event.clubBeemId as string}
             />
           </>
         ) : (
@@ -109,7 +109,7 @@ const EventJoin: React.FC<Props> = ({}) => {
               />
               <EventSignUpStuff
                 id={id as string}
-                clubBeemId={data!.event.clubBeemId}
+                clubBeemId={data!.event.clubBeemId as string}
               />
             </div>
           </Grid>

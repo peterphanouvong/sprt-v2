@@ -1,0 +1,11 @@
+mutation AddExistingAttendee(
+  $attendeeId: Float!
+  $eventId: Float!
+  $isPayingCash: Boolean!
+) {
+  addExistingAttendee(
+    attendeeId: $attendeeId
+    id: $eventId
+    isPayingCash: $isPayingCash
+  )
+}
