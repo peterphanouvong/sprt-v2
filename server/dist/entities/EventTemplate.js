@@ -91,6 +91,16 @@ __decorate([
     __metadata("design:type", String)
 ], EventTemplate.prototype, "clubBeemId", void 0);
 __decorate([
+    type_graphql_1.Field(() => String, { nullable: true }),
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], EventTemplate.prototype, "bsb", void 0);
+__decorate([
+    type_graphql_1.Field(() => String, { nullable: true }),
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], EventTemplate.prototype, "accountNumber", void 0);
+__decorate([
     type_graphql_1.Field(() => User_1.User),
     typeorm_1.ManyToOne(() => User_1.User, (user) => user.eventTemplates),
     __metadata("design:type", User_1.User)

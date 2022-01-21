@@ -47,6 +47,12 @@ class EventInput {
   clubBeemId: string;
 
   @Field(() => String, { nullable: true })
+  bsb: string;
+
+  @Field(() => String, { nullable: true })
+  accountNumber: string;
+
+  @Field(() => String, { nullable: true })
   venue: string;
 
   @Field(() => String, { nullable: true })

@@ -75,6 +75,14 @@ export class Event extends BaseEntity {
   @Column({ nullable: true })
   clubBeemId: string;
 
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  bsb: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  accountNumber: string;
+
   @Field(() => [EventAttendee])
   @ManyToOne(() => EventAttendee, (ea) => ea.event)
   attendeeConnection: EventAttendee[];

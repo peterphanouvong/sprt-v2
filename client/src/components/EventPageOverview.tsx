@@ -112,6 +112,20 @@ const EventPageOverview: React.FC<Props> = ({ event }) => {
                   <Text variant="body-3">{event.clubBeemId}</Text>
                 </MyGrid>
               )}
+
+              {event.bsb && (
+                <MyGrid>
+                  <Text variant="body-3">BSB:</Text>
+                  <Text variant="body-3">{event.bsb}</Text>
+                </MyGrid>
+              )}
+
+              {event.accountNumber && (
+                <MyGrid>
+                  <Text variant="body-3">Account Num:</Text>
+                  <Text variant="body-3">{event.accountNumber}</Text>
+                </MyGrid>
+              )}
             </VStack>
           </Grid>
         </Grid>

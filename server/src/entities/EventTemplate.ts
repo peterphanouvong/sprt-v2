@@ -73,6 +73,14 @@ export class EventTemplate extends BaseEntity {
   @Column({ nullable: true })
   clubBeemId: string;
 
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  bsb: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true })
+  accountNumber: string;
+
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.eventTemplates)
   owner: User;
