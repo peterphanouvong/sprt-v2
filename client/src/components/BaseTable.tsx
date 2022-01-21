@@ -6,7 +6,7 @@ interface Props {}
 
 const BaseTable: React.FC<Props> = (props) => {
   return (
-    <Table minW={"400px"} mt={4}>
+    <Table minW={"400px"} mt={4} overflow="hidden">
       {props.children}
     </Table>
   );
