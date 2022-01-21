@@ -45,7 +45,7 @@ const EventAttendeeTable: React.FC<Props> = ({ eventAttendees }) => {
                   <BaseTd>{index + 1}</BaseTd>
                   <BaseTd
                     className={cx({
-                      [styles["text-bounce"]]: eventAttendee.attendeeId === 30,
+                      [styles["text-bounce"]]: eventAttendee.attendeeId === 23,
                       [styles["text-cindy"]]: eventAttendee.attendeeId === 103,
                       [styles["text-tom"]]: eventAttendee.attendeeId === 18,
                     })}
