@@ -17,13 +17,15 @@ import {
   BaseThead,
   BaseTr,
 } from "./BaseTable";
+import cx from "classnames";
+import styles from "./EventAttendeeTable.module.css";
 
 interface Props {
   eventAttendees: EventAttendee[];
 }
 
 const EventAttendeeTable: React.FC<Props> = ({ eventAttendees }) => {
-  console.log(eventAttendees);
+  console.log(styles);
   return eventAttendees.length > 0 ? (
     <>
       <Box overflowX="auto">
@@ -41,7 +43,15 @@ const EventAttendeeTable: React.FC<Props> = ({ eventAttendees }) => {
               .map((eventAttendee, index) => (
                 <BaseTr key={index}>
                   <BaseTd>{index + 1}</BaseTd>
-                  <BaseTd>
+                  <BaseTd
+                    className={cx({
+                      [styles["text-bounce"]]:
+                        eventAttendee.attendeeId === 23 ||
+                        eventAttendee.attendeeId === 68,
+                      [styles["text-cindy"]]: eventAttendee.attendeeId === 103,
+                      [styles["text-tom"]]: eventAttendee.attendeeId === 18,
+                    })}
+                  >
                     {eventAttendee.attendee.firstname}{" "}
                     {eventAttendee.attendee.lastname}
                   </BaseTd>
