@@ -48,7 +48,7 @@ const EventAttendeeTable: React.FC<Props> = ({ eventAttendees }) => {
                       [styles["text-bounce"]]:
                         eventAttendee.attendeeId === 23 ||
                         eventAttendee.attendeeId === 68,
-                      [styles["text-cindy"]]: eventAttendee.attendeeId === 103,
+                      [styles["text-cindy"]]: eventAttendee.attendeeId === 180,
                       [styles["text-tom"]]: eventAttendee.attendeeId === 18,
                     })}
                   >
