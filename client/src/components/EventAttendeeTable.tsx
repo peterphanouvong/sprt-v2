@@ -43,17 +43,22 @@ const EventAttendeeTable: React.FC<Props> = ({ eventAttendees }) => {
               .map((eventAttendee, index) => (
                 <BaseTr key={index}>
                   <BaseTd>{index + 1}</BaseTd>
-                  <BaseTd
-                    className={cx({
-                      [styles["text-bounce"]]:
-                        eventAttendee.attendeeId === 23 ||
-                        eventAttendee.attendeeId === 68,
-                      [styles["text-cindy"]]: eventAttendee.attendeeId === 180,
-                      [styles["text-tom"]]: eventAttendee.attendeeId === 18,
-                    })}
-                  >
-                    {eventAttendee.attendee.firstname}{" "}
-                    {eventAttendee.attendee.lastname}
+                  <BaseTd>
+                    <span
+                      className={cx({
+                        [styles["text-bounce"]]:
+                          eventAttendee.attendeeId === 23 ||
+                          eventAttendee.attendeeId === 68,
+                        [styles["text-cindy"]]:
+                          eventAttendee.attendeeId === 180,
+                        [styles["text-tom"]]: eventAttendee.attendeeId === 18,
+                        [styles["text-sausanne"]]:
+                          eventAttendee.attendeeId === 118,
+                      })}
+                    >
+                      {eventAttendee.attendee.firstname}{" "}
+                      {eventAttendee.attendee.lastname}
+                    </span>
                   </BaseTd>
                   <BaseTd width={0}>
                     <Menu>
